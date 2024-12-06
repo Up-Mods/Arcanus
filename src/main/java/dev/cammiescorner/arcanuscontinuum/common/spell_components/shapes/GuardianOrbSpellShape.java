@@ -16,6 +16,7 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class GuardianOrbSpellShape extends SpellShape {
 	public GuardianOrbSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
@@ -29,8 +30,10 @@ public class GuardianOrbSpellShape extends SpellShape {
 		LivingEntity targetEntity = castSource instanceof LivingEntity livingEntity ? livingEntity : caster;
 
 		if(targetEntity != null && guardianOrb != null) {
-			List<? extends GuardianOrbEntity> oldOrbs = world.getEntitiesByType(ArcanusEntities.GUARDIAN_ORB.get(), t -> caster != null && t.getCaster().getUuid() == caster.getUuid());
-			oldOrbs.forEach(Entity::kill);
+			if(caster != null) {
+				List<? extends GuardianOrbEntity> oldOrbs = world.getEntitiesByType(ArcanusEntities.GUARDIAN_ORB.get(), t -> Optional.ofNullable(t.getCaster()).map(Entity::getUuid).filter(caster.getUuid()::equals).isPresent());
+				oldOrbs.forEach(Entity::discard);
+			}
 
 			guardianOrb.setProperties(caster, targetEntity, stack, effects, spellGroups, groupIndex, Arcanus.DEFAULT_MAGIC_COLOUR, potency);
 			guardianOrb.setPosition(castFrom);
