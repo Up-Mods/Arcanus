@@ -30,18 +30,19 @@ public class LotusHaloFeatureRenderer<T extends PlayerEntity, M extends EntityMo
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertices, int light, T player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		if(player.getUuidAsString().equals("6147825f-5493-4154-87c5-5c03c6b0a7c2") && !player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+		if ((player.getUuidAsString().equals("6147825f-5493-4154-87c5-5c03c6b0a7c2") || player.getUuidAsString().equals("883a7a9a-ecca-48fd-9d8c-5ba5c0175eb4")) && !player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get())) {
 			model.setAngles(player, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
 			model.spinny.yaw = (float) Math.toRadians((player.age + player.getId() + tickDelta) * 2);
 			model.spinny.pivotZ = -3;
 
 			matrices.push();
 
-			if(ArcanusComponents.isCasting(player) && player.getMainHandStack().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF)
+			if (ArcanusComponents.isCasting(player) && player.getMainHandStack().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF)
 				matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(player.getMainArm() == Arm.RIGHT ? 65 : -65));
 
 			model.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), 15728850, OverlayTexture.DEFAULT_UV, 1F, 1F, 1F, 1F);
 			matrices.pop();
 		}
+
 	}
 }
