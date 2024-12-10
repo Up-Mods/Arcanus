@@ -19,8 +19,16 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Axis;
 
+import java.util.Set;
+import java.util.UUID;
+
 public class LotusHaloFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
+
 	private static final Identifier TEXTURE = Arcanus.id("textures/entity/feature/lotus_halo.png");
+	private static final Set<UUID> PLAYERS = Set.of(
+		UUID.fromString("6147825f-5493-4154-87c5-5c03c6b0a7c2"), // Lotus
+		UUID.fromString("883a7a9a-ecca-48fd-9d8c-5ba5c0175eb4") // Twilight
+	);
 	private final LotusHaloModel<T> model;
 
 	public LotusHaloFeatureRenderer(FeatureRendererContext<T, M> context) {
@@ -30,7 +38,7 @@ public class LotusHaloFeatureRenderer<T extends PlayerEntity, M extends EntityMo
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertices, int light, T player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		if ((player.getUuidAsString().equals("6147825f-5493-4154-87c5-5c03c6b0a7c2") || player.getUuidAsString().equals("883a7a9a-ecca-48fd-9d8c-5ba5c0175eb4")) && !player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+		if (PLAYERS.contains(player.getGameProfile().getId()) && !player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get())) {
 			model.setAngles(player, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
 			model.spinny.yaw = (float) Math.toRadians((player.age + player.getId() + tickDelta) * 2);
 			model.spinny.pivotZ = -3;
