@@ -77,7 +77,7 @@ public class BoltSpellShape extends SpellShape {
 			ArcanusComponents.setBoltAge(livingEntity, 0);
 		}
 
-		castNext(caster, castAt, castSource, world, stack, spellGroups, groupIndex, potency);
+		castNext(caster, castAt, entityTarget, world, stack, spellGroups, groupIndex, potency);
 	}
 
 	@Nullable

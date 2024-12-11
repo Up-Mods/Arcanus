@@ -79,7 +79,10 @@ public class BeamEntity extends Entity implements Targetable {
 				for(SpellEffect effect : new HashSet<>(effects))
 					effect.effect(getCaster(), this, getWorld(), target, effects, stack, potency + 0.15);
 
-				SpellShape.castNext(getCaster(), target.getPos(), this, (ServerWorld) getWorld(), stack, groups, groupIndex, potency);
+				if(target instanceof EntityHitResult entityHit)
+					SpellShape.castNext(getCaster(), target.getPos(), entityHit.getEntity(), (ServerWorld) getWorld(), stack, groups, groupIndex, potency);
+				else
+					SpellShape.castNext(getCaster(), target.getPos(), this, (ServerWorld) getWorld(), stack, groups, groupIndex, potency);
 			}
 		}
 
