@@ -11,6 +11,7 @@ import dev.cammiescorner.arcanuscontinuum.common.components.chunk.WardedBlocksCo
 import dev.cammiescorner.arcanuscontinuum.common.components.entity.*;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.*;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.onyxstudios.cca.api.v3.chunk.ChunkComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.chunk.ChunkComponentInitializer;
 import dev.onyxstudios.cca.api.v3.component.Component;
@@ -104,7 +105,10 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 		registry.beginRegistration(PlayerEntity.class, PORTAL_COOL_DOWN_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(PortalCoolDownComponent::new);
 		registry.beginRegistration(LivingEntity.class, COUNTER_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(CounterComponent::new);
 
-		ArcanusCompat.PEHKUI.ifEnabled(() -> () -> PehkuiCompat.registerEntityComponents(registry));
+		ArcanusCompat.PEHKUI.ifEnabled(() -> () -> {
+			PehkuiCompat.registerEntityComponents(registry);
+			PehkuiCompat.registerModifiers();
+		});
 	}
 
 	private static <T extends Component> ComponentKey<T> createComponent(String name, Class<T> component) {
@@ -260,12 +264,12 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 		QUEST_COMPONENT.get(player).setLastCompletedQuestTime(time);
 	}
 
-	public static int getColour(Entity entity) {
-		return MAGIC_COLOUR.get(entity).getColour();
+	public static Color getColor(Entity entity) {
+		return MAGIC_COLOUR.get(entity).getColor();
 	}
 
-	public static void setColour(Entity entity, int colour) {
-		MAGIC_COLOUR.get(entity).setColour(colour);
+	public static void setColor(Entity entity, Color colour) {
+		MAGIC_COLOUR.get(entity).setColor(colour);
 	}
 
 	public static Vec3d getBoltPos(LivingEntity entity) {
@@ -368,8 +372,8 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 		return player.getComponent(PORTAL_COOL_DOWN_COMPONENT).hasCoolDown();
 	}
 
-	public static void setCounterProperties(LivingEntity entity, @Nullable LivingEntity caster, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, int colour, double potency, long worldTime) {
-		entity.getComponent(COUNTER_COMPONENT).setProperties(caster, stack, effects, groups, groupIndex, colour, potency, worldTime);
+	public static void setCounterProperties(LivingEntity entity, @Nullable LivingEntity caster, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, Color color, double potency, long worldTime) {
+		entity.getComponent(COUNTER_COMPONENT).setProperties(caster, stack, effects, groups, groupIndex, color, potency, worldTime);
 	}
 
 	public static void removeCounter(LivingEntity entity) {
@@ -384,8 +388,8 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 		return entity.getComponent(COUNTER_COMPONENT).hasCounterActive(entity.getWorld());
 	}
 
-	public static int getCounterColour(LivingEntity entity) {
-		return entity.getComponent(COUNTER_COMPONENT).getColour();
+	public static Color getCounterColor(LivingEntity entity) {
+		return entity.getComponent(COUNTER_COMPONENT).getColor();
 	}
 
 	public static long getCounterEnd(LivingEntity entity) {

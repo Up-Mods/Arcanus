@@ -1,18 +1,16 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
-import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectileEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -56,11 +54,7 @@ public class ProjectileSpellShape extends SpellShape {
 				MagicProjectileEntity projectile = ArcanusEntities.MAGIC_PROJECTILE.get().create(world);
 
 				if(projectile != null) {
-					projectile.setProperties(caster, castSource, this, stack, effects, spellGroups, groupIndex, potency, ArcanusSpellComponents.LOB.is(this) ? lobSpeed : projectileSpeed, !ArcanusSpellComponents.LOB.is(this), Arcanus.DEFAULT_MAGIC_COLOUR);
-
-					if(caster instanceof PlayerEntity player)
-						projectile.setColour(Arcanus.getMagicColour(player.getGameProfile().getId()));
-
+					projectile.setProperties(caster, castSource, this, stack, effects, spellGroups, groupIndex, potency, ArcanusSpellComponents.LOB.is(this) ? lobSpeed : projectileSpeed, !ArcanusSpellComponents.LOB.is(this), ArcanusHelper.getMagicColor(caster));
 					world.spawnEntity(projectile);
 				}
 			}

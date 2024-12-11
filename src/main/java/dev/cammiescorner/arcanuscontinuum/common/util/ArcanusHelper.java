@@ -5,22 +5,53 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.supporters.WizardData;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Ownable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.RaycastContext;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
+import java.util.UUID;
+
 public class ArcanusHelper {
+
+	public static Color getMagicColor(@Nullable Entity entity) {
+		if(entity == null) {
+			return Arcanus.DEFAULT_MAGIC_COLOUR;
+		}
+
+		if(entity instanceof PlayerEntity player) {
+			return getMagicColor(player.getGameProfile().getId());
+		}
+
+		if(entity instanceof Ownable ownable) {
+			var owner = ownable.getOwner();
+			if(owner != null) {
+				return getMagicColor(owner);
+			}
+		}
+
+		return Arcanus.DEFAULT_MAGIC_COLOUR;
+	}
+
+	public static Color getMagicColor(UUID playerId) {
+		return WizardData.getOrEmpty(playerId).magicColor();
+	}
+
 	public static HitResult raycast(Entity origin, double maxDistance, boolean includeEntities, boolean includeFluids) {
 		Vec3d startPos = origin.getCameraPosVec(1F);
 		Vec3d rotation = origin.getRotationVec(1F);
@@ -43,13 +74,12 @@ public class ArcanusHelper {
 			VertexConsumer vertex = vertices.getBuffer(ArcanusClient.getMagicCircles(ArcanusClient.WHITE));
 			RandomGenerator random = RandomGenerator.createLegacy((entity.age + entity.getId()) / 2);
 			Vec3d endPos = ArcanusComponents.getBoltPos(entity);
-			int colour = entity instanceof PlayerEntity player ? Arcanus.getMagicColour(player.getGameProfile().getId()) : Arcanus.DEFAULT_MAGIC_COLOUR;
-			float r = (colour >> 16 & 255) / 255F;
-			float g = (colour >> 8 & 255) / 255F;
-			float b = (colour & 255) / 255F;
+
+			var color = getMagicColor(entity);
+
 			int steps = (int) (startPos.distanceTo(endPos) * 5);
 
-			renderBolt(matrices, vertex, random, startPos, endPos, steps, 0, true, r, g, b, OverlayTexture.DEFAULT_UV, 15728850);
+			renderBolt(matrices, vertex, random, startPos, endPos, steps, 0, true, color.redF(), color.greenF(), color.blueF(), OverlayTexture.DEFAULT_UV, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 		}
 	}
 
@@ -113,4 +143,9 @@ public class ArcanusHelper {
 	public static Vec3d crossProduct(Vec3d vec1, Vec3d vec2) {
 		return vec1.crossProduct(vec2);
 	}
+
+    public static ItemStack applyColorToItem(ItemStack stack, int color) {
+        stack.getOrCreateSubNbt(ItemStack.DISPLAY_KEY).putInt(ItemStack.COLOR_KEY, color);
+        return stack;
+    }
 }

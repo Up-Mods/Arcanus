@@ -90,7 +90,7 @@ dependencies {
 
 	modImplementation libs.quilt.loader
 	modImplementation libs.quilted.fabric.api
-	modRuntimeOnly (libs.quilted.fabric.api.deprecated) {
+	modLocalRuntime (libs.quilted.fabric.api.deprecated) {
 		exclude(group: "org.quiltmc", module: "quilt-loader")
 	}
 
@@ -103,7 +103,7 @@ dependencies {
 	modImplementation libs.trinkets
 
 	modCompileOnly libs.patchouli
-	modLocalRuntime libs.patchouli
+	modRuntimeOnly libs.patchouli
 
 	modImplementation libs.smartbrainlib
 	modImplementation libs.resourceful.config
@@ -111,29 +111,40 @@ dependencies {
 	modImplementation libs.reach.attr
 	include libs.reach.attr
 
+	modImplementation libs.datasync.fabric
+	include libs.datasync.fabric
+
 	// first person model
-	modImplementation libs.firstperson
+	modCompileOnly libs.firstperson
+//	modLocalRuntime libs.firstperson
 
 	// sodium
-	modImplementation libs.sodium
+	modCompileOnly libs.sodium
+//	modLocalRuntime libs.sodium
 
 	// iris
-	modImplementation libs.iris
+	modCompileOnly libs.iris
+//	modLocalRuntime libs.iris
 
 	// explosive enhancement
-	modImplementation libs.explosive.enhancement
+	modCompileOnly libs.explosive.enhancement
+//	modLocalRuntime libs.explosive.enhancement
 
 	// pehkui
 	modCompileOnly libs.pehkui
-	modRuntimeOnly libs.pehkui
-	modLocalRuntime libs.kanos
+	modLocalRuntime libs.bundles.pehkui.runtime
 
 	// lambdynamiclights
-	modImplementation libs.lambdynamiclights
-	modLocalRuntime libs.spruceui
+	modCompileOnly libs.lambdynamiclights
+	modLocalRuntime libs.bundles.lambdynamiclights.runtime
 
 	// modmenu
 	modImplementation libs.modmenu
+
+	// emi
+	modCompileOnly variantOf(libs.emi) { classifier 'api' }
+	modLocalRuntime libs.emi
+
 
 	// LazyDFU
 	modLocalRuntime libs.lazydfu
@@ -148,6 +159,25 @@ loom {
 	}
 
 	accessWidenerPath.set(project.file("src/main/resources/arcanuscontinuum.accesswidener"))
+
+	runs {
+		client {
+			ideConfigGenerated(true)
+			runDir("run")
+
+			if (project.hasProperty('mc_uuid')) {
+				programArg("--uuid=${project.findProperty('mc_uuid')}")
+			}
+
+			if (project.hasProperty('mc_username')) {
+				programArg("--username=${project.findProperty('mc_username')}")
+			}
+
+			if (project.hasProperty('mc_java_agent_path')) {
+				vmArg("-javaagent:${project.findProperty('mc_java_agent_path')}")
+			}
+		}
+	}
 }
 
 processResources {

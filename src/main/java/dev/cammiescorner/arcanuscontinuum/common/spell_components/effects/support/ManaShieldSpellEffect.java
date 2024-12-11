@@ -8,6 +8,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShieldEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,11 +37,7 @@ public class ManaShieldSpellEffect extends SpellEffect {
 			ManaShieldEntity manaShield = ArcanusEntities.MANA_SHIELD.get().create(world);
 
 			if(manaShield != null) {
-				manaShield.setProperties(caster.getUuid(), target.getPos().add(0, -0.7, 0), Arcanus.DEFAULT_MAGIC_COLOUR, (int) ((ArcanusConfig.SupportEffects.ManaShieldEffectProperties.baseLifeSpan + ArcanusConfig.SupportEffects.ManaShieldEffectProperties.lifeSpanModifier * (effects.stream().filter(ArcanusSpellComponents.MANA_SHIELD::is).count() - 1)) * potency));
-
-				if(caster instanceof PlayerEntity player)
-					manaShield.setColour(Arcanus.getMagicColour(player.getGameProfile().getId()));
-
+				manaShield.setProperties(caster.getUuid(), target.getPos().add(0.0D, -0.7D, 0.0D), ArcanusHelper.getMagicColor(caster), (int) ((ArcanusConfig.SupportEffects.ManaShieldEffectProperties.baseLifeSpan + ArcanusConfig.SupportEffects.ManaShieldEffectProperties.lifeSpanModifier * (effects.stream().filter(ArcanusSpellComponents.MANA_SHIELD::is).count() - 1)) * potency));
 				world.spawnEntity(manaShield);
 			}
 		}

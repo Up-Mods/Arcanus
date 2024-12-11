@@ -229,8 +229,9 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	))
 	private Vec3d arcanuscontinuum$floatAround(LivingEntity livingEntity, Operation<Vec3d> original, Vec3d movementInput, float slipperiness) {
 		// FIXME smooth out vertical movement, currently a bit jolting
-		if(hasStatusEffect(ArcanusStatusEffects.FLOAT.get()))
+		if(hasStatusEffect(ArcanusStatusEffects.FLOAT.get())) {
 			return getVelocity().add(0, jumping ? getMovementSpeed() : isSneaking() ? -getMovementSpeed() : 0, 0);
+		}
 
 		return original.call(livingEntity);
 	}

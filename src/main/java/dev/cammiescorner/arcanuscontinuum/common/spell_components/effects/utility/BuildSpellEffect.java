@@ -8,6 +8,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -36,8 +37,8 @@ public class BuildSpellEffect extends SpellEffect {
 				world.setBlockState(pos, ArcanusBlocks.MAGIC_BLOCK.get().getDefaultState(), Block.NOTIFY_LISTENERS);
 				world.scheduleBlockTick(pos, world.getBlockState(pos).getBlock(), (int) (ArcanusConfig.UtilityEffects.BuildEffectProperties.baseLifeSpan * effects.stream().filter(ArcanusSpellComponents.BUILD::is).count() * potency));
 
-				if(world.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock && caster instanceof PlayerEntity player)
-					magicBlock.setColour(Arcanus.getMagicColour(player.getGameProfile().getId()));
+				if(world.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock)
+					magicBlock.setColor(ArcanusHelper.getMagicColor(caster));
 			}
 		}
 	}

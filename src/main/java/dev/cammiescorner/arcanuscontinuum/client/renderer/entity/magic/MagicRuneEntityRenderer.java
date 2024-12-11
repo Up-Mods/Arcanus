@@ -4,7 +4,9 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicRuneEntityModel;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicRuneEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -39,16 +41,17 @@ public class MagicRuneEntityRenderer extends EntityRenderer<MagicRuneEntity> {
 	@Override
 	public void render(MagicRuneEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertices, light);
-		int colour = entity.getColour();
+		Color color = entity.getColor();
 		float alpha = keyFrames[entity.age % keyFrames.length] / 16F;
-		float r = (colour >> 16 & 255) / 255F * alpha;
-		float g = (colour >> 8 & 255) / 255F * alpha;
-		float b = (colour & 255) / 255F * alpha;
+		float r = color.redF() * alpha;
+		float g = color.greenF() * alpha;
+		float b = color.blueF() * alpha;
+		color = Color.fromFloatsRGB(r, g, b);
 
 		matrices.push();
 		matrices.translate(0, Math.sin((entity.age + tickDelta) * 0.125) * 0.05, 0);
 		matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(entity.age + tickDelta));
-		model.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), 15728850, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+		model.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), color.alphaF());
 		matrices.pop();
 	}
 

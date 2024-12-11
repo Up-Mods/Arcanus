@@ -38,10 +38,7 @@ public class BeamSpellShape extends SpellShape {
 			BeamEntity beam = ArcanusEntities.BEAM.get().create(world);
 
 			if(beam != null) {
-				beam.setProperties(caster, stack, effects, spellGroups, groupIndex, ArcanusConfig.SpellShapes.BeamShapeProperties.delay, Arcanus.DEFAULT_MAGIC_COLOUR, potency, target.getType() == HitResult.Type.ENTITY);
-
-				if(caster instanceof PlayerEntity player)
-					beam.setColour(Arcanus.getMagicColour(player.getGameProfile().getId()));
+				beam.setProperties(caster, stack, effects, spellGroups, groupIndex, ArcanusConfig.SpellShapes.BeamShapeProperties.delay, ArcanusHelper.getMagicColor(caster), potency, target.getType() == HitResult.Type.ENTITY);
 
 				beam.setPosition(target.getPos());
 

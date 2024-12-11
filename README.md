@@ -16,7 +16,7 @@ The mod's main goal is to maintain simplicity above all else, to make for an acc
         <th><b>Join my Ko-Fi!</b></th>
     </tr>
     <tr>
-        <th><a href="https://discord.gg/f5dFYWX"><img src="https://cammiescorner.dev/images/extras/discord.png" width="150" height="150" title="Cammie's Corner Discord" alt="Cammie's Corner Discord"></a></th>
+        <th><a href="https://mods.upcraft.dev/discord"><img src="https://cammiescorner.dev/images/extras/discord.png" width="150" height="150" title="Cammie's Corner Discord" alt="Cammie's Corner Discord"></a></th>
         <th><a href="https://www.ko-fi.com/camellias_"><img src="https://cammiescorner.dev/images/extras/kofi.png" width="150" height="150" title="Cammie's Corner Ko-Fi" alt="Cammie's Corner Ko-Fi"></a></th>
     </tr>
 </table>

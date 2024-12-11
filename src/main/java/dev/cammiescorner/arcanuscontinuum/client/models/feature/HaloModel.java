@@ -9,12 +9,12 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 
-public class LotusHaloModel<T extends PlayerEntity> extends BipedEntityModel<T> {
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Arcanus.id("lotus_halo"), "main");
+public class HaloModel<T extends PlayerEntity> extends BipedEntityModel<T> {
+	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Arcanus.id("halo"), "main");
 	public final ModelPart halo;
 	public final ModelPart spinny;
 
-	public LotusHaloModel(ModelPart root) {
+	public HaloModel(ModelPart root) {
 		super(root);
 		this.halo = head.getChild("halo");
 		this.spinny = halo.getChild("spinny");

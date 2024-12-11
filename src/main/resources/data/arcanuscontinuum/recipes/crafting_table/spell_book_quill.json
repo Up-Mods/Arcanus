@@ -4,10 +4,7 @@
   "group": "arcanuscontinuum:spell_book",
   "ingredients": [
     {
-      "item": "minecraft:book"
-    },
-    {
-      "tag": "c:feathers"
+      "item": "minecraft:writable_book"
     },
     {
       "item": "minecraft:glow_ink_sac"

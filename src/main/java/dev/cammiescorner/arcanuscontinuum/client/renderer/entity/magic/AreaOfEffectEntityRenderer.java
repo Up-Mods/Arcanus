@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.AreaOfEffectEntityModel;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -25,11 +26,12 @@ public class AreaOfEffectEntityRenderer extends EntityRenderer<AreaOfEffectEntit
 	@Override
 	public void render(AreaOfEffectEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertices, light);
-		int colour = entity.getColour();
+		Color color = entity.getColor();
 		float alpha = 1 - (MathHelper.clamp(entity.getTrueAge() - 80, 0, 20) / 20F);
-		float r = (colour >> 16 & 255) / 255F * alpha;
-		float g = (colour >> 8 & 255) / 255F * alpha;
-		float b = (colour & 255) / 255F * alpha;
+		float r = color.redF() * alpha;
+		float g = color.greenF() * alpha;
+		float b = color.blueF() * alpha;
+		color = Color.fromFloatsRGB(r, g, b);
 
 		matrices.push();
 		matrices.multiply(Axis.X_POSITIVE.rotationDegrees(180));
@@ -37,7 +39,7 @@ public class AreaOfEffectEntityRenderer extends EntityRenderer<AreaOfEffectEntit
 		model.base.yaw = (entity.age + tickDelta) * 0.015F;
 		model.pillar.yaw = -model.base.yaw;
 		model.walls.yaw = -(entity.age + tickDelta) * 0.035F;
-		model.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), light, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+		model.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), light, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), color.alphaF());
 		matrices.pop();
 	}
 

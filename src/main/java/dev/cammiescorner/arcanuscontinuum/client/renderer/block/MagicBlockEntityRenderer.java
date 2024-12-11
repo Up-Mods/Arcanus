@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -31,7 +32,7 @@ public class MagicBlockEntityRenderer implements BlockEntityRenderer<MagicBlockE
 			VertexConsumer consumer = vertices.getBuffer(LAYER);
 			Matrix4f matrix4f = matrices.peek().getModel();
 			Matrix3f matrix3f = matrices.peek().getNormal();
-			int colour = entity.getColour();
+			Color color = entity.getColor();
 
 			for(Direction direction : Direction.values()) {
 				BlockPos blockToSide = entity.getPos().offset(direction);
@@ -41,12 +42,12 @@ public class MagicBlockEntityRenderer implements BlockEntityRenderer<MagicBlockE
 					continue;
 
 				switch(direction) {
-					case SOUTH -> renderSide(matrix4f, consumer, 0F, 1F, 0F, 1F, 1F, 1F, 1F, 1F, colour, light, overlay, matrix3f, Direction.SOUTH); // south
-					case NORTH -> renderSide(matrix4f, consumer, 0F, 1F, 1F, 0F, 0F, 0F, 0F, 0F, colour, light, overlay, matrix3f, Direction.NORTH); // north
-					case EAST -> renderSide(matrix4f, consumer, 1F, 1F, 1F, 0F, 0F, 1F, 1F, 0F, colour, light, overlay, matrix3f, Direction.EAST); // east
-					case WEST -> renderSide(matrix4f, consumer, 0F, 0F, 0F, 1F, 0F, 1F, 1F, 0F, colour, light, overlay, matrix3f, Direction.WEST); // west
-					case DOWN -> renderSide(matrix4f, consumer, 0F, 1F, 0F, 0F, 0F, 0F, 1F, 1F, colour, light, overlay, matrix3f, Direction.DOWN); // down
-					case UP -> renderSide(matrix4f, consumer, 0F, 1F, 1F, 1F, 1F, 1F, 0F, 0F, colour, light, overlay, matrix3f, Direction.UP); // up
+					case SOUTH -> renderSide(matrix4f, consumer, 0F, 1F, 0F, 1F, 1F, 1F, 1F, 1F, color, light, overlay, matrix3f, Direction.SOUTH); // south
+					case NORTH -> renderSide(matrix4f, consumer, 0F, 1F, 1F, 0F, 0F, 0F, 0F, 0F, color, light, overlay, matrix3f, Direction.NORTH); // north
+					case EAST -> renderSide(matrix4f, consumer, 1F, 1F, 1F, 0F, 0F, 1F, 1F, 0F, color, light, overlay, matrix3f, Direction.EAST); // east
+					case WEST -> renderSide(matrix4f, consumer, 0F, 0F, 0F, 1F, 0F, 1F, 1F, 0F, color, light, overlay, matrix3f, Direction.WEST); // west
+					case DOWN -> renderSide(matrix4f, consumer, 0F, 1F, 0F, 0F, 0F, 0F, 1F, 1F, color, light, overlay, matrix3f, Direction.DOWN); // down
+					case UP -> renderSide(matrix4f, consumer, 0F, 1F, 1F, 1F, 1F, 1F, 0F, 0F, color, light, overlay, matrix3f, Direction.UP); // up
 				}
 			}
 		}

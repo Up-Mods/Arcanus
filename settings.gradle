@@ -1,14 +1,32 @@
 pluginManagement {
 	repositories {
+		gradlePluginPortal()
 		maven {
 			name = 'Quilt'
 			url = 'https://maven.quiltmc.org/repository/release'
 		}
-		// Currently needed for Intermediary and other temporary dependencies
 		maven {
 			name = 'Fabric'
 			url = 'https://maven.fabricmc.net/'
 		}
-		gradlePluginPortal()
+	}
+}
+
+plugins {
+	id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
+def ENV = System.getenv()
+
+buildCache {
+	remote(HttpBuildCache) {
+		url = "https://ci-cache.uuid.gg/cache"
+		if (ENV.CI && ENV.GRADLE_BUILD_CACHE_USER && ENV.GRADLE_BUILD_CACHE_TOKEN) {
+			push = true
+			credentials {
+				username = ENV.GRADLE_BUILD_CACHE_USER
+				password = ENV.GRADLE_BUILD_CACHE_TOKEN
+			}
+		}
 	}
 }
