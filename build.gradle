@@ -111,6 +111,9 @@ dependencies {
 	modImplementation libs.reach.attr
 	include libs.reach.attr
 
+	modImplementation libs.datasync.fabric
+	include libs.datasync.fabric
+
 	// first person model
 	modImplementation libs.firstperson
 
@@ -148,6 +151,25 @@ loom {
 	}
 
 	accessWidenerPath.set(project.file("src/main/resources/arcanuscontinuum.accesswidener"))
+
+	runs {
+		client {
+			ideConfigGenerated(true)
+			runDir("run")
+
+			if (project.hasProperty('mc_uuid')) {
+				programArg("--uuid=${project.findProperty('mc_uuid')}")
+			}
+
+			if (project.hasProperty('mc_username')) {
+				programArg("--username=${project.findProperty('mc_username')}")
+			}
+
+			if (project.hasProperty('mc_java_agent_path')) {
+				vmArg("-javaagent:${project.findProperty('mc_java_agent_path')}")
+			}
+		}
+	}
 }
 
 processResources {

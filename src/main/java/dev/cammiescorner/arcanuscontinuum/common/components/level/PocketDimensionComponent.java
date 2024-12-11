@@ -8,6 +8,7 @@ import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntit
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -187,6 +188,8 @@ public class PocketDimensionComponent implements Component {
 			return false;
 		}
 
+		var color = ArcanusHelper.getMagicColor(player);
+
 		for (BlockPos pos : BlockPos.iterate((int) Math.round(box.minX), (int) Math.round(box.minY), (int) Math.round(box.minZ), (int) Math.round(box.maxX - 1), (int) Math.round(box.maxY - 1), (int) Math.round(box.maxZ - 1))) {
 			if (pos.getX() > box.minX && pos.getX() < box.maxX - 1 && pos.getY() > box.minY && pos.getY() < box.maxY - 1 && pos.getZ() > box.minZ && pos.getZ() < box.maxZ - 1)
 				continue;
@@ -194,7 +197,7 @@ public class PocketDimensionComponent implements Component {
 			pocketDim.setBlockState(pos, ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get().getDefaultState());
 
 			if (pocketDim.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock)
-				magicBlock.setColour(Arcanus.getMagicColour(player.getGameProfile().getId()));
+				magicBlock.setColor(color);
 		}
 
 		for (int x = 0; x < 4; x++) {
@@ -227,11 +230,11 @@ public class PocketDimensionComponent implements Component {
 					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT.get().getDefaultState().with(SpatialRiftExitBlock.ACTIVE, x == 1 && z == 1));
 
 					if (pocketDim.getBlockEntity(pos) instanceof SpatialRiftExitBlockEntity exitBlockEntity)
-						exitBlockEntity.setColour(Arcanus.getMagicColour(player.getGameProfile().getId()));
+						exitBlockEntity.setColor(color);
 				}
 
 				if (pocketDim.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock)
-					magicBlock.setColour(Arcanus.getMagicColour(player.getGameProfile().getId()));
+					magicBlock.setColor(color);
 			}
 		}
 

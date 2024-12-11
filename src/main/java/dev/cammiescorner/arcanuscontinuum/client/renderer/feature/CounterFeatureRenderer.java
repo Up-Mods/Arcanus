@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanuscontinuum.client.renderer.feature;
 
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -23,17 +24,17 @@ public class CounterFeatureRenderer<T extends LivingEntity, M extends EntityMode
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider verticies, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
 		if(ArcanusComponents.isCounterActive(entity)) {
-			int colour = ArcanusComponents.getCounterColour(entity);
+			Color color = ArcanusComponents.getCounterColor(entity);
 			long endTime = ArcanusComponents.getCounterEnd(entity);
 			long timer = endTime - entity.getWorld().getTime();
 			float alpha = timer > 20 ? 1f : timer / 20f;
-			float r = ((colour >> 16 & 255) / 255F) * alpha;
-			float g = ((colour >> 8 & 255) / 255F) * alpha;
-			float b = ((colour & 255) / 255F) * alpha;
+			float r = color.redF() * alpha;
+			float g = color.greenF() * alpha;
+			float b = color.blueF() * alpha;
 
 			matrices.push();
-			matrices.scale(1.1f, 1.1f, 1.1f);
-			model.render(matrices, verticies.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), light, OverlayTexture.DEFAULT_UV, r, g, b, 1f);
+			matrices.scale(1.1F, 1.1F, 1.1F);
+			model.render(matrices, verticies.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), light, OverlayTexture.DEFAULT_UV, r, g, b, 1.0F);
 			matrices.pop();
 		}
 	}

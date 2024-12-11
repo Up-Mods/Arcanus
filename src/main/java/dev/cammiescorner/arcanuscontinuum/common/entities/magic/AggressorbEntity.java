@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
@@ -205,12 +206,12 @@ public class AggressorbEntity extends ThrownEntity implements Targetable {
 		return sqDistance <= 64 * 64;
 	}
 
-	public int getColour() {
-		return ArcanusComponents.getColour(this);
+	public Color getColor() {
+		return ArcanusComponents.getColor(this);
 	}
 
-	public void setColour(int colour) {
-		ArcanusComponents.setColour(this, colour);
+	public void setColour(Color color) {
+		ArcanusComponents.setColor(this, color);
 	}
 
 	public LivingEntity getCaster() {
@@ -239,12 +240,12 @@ public class AggressorbEntity extends ThrownEntity implements Targetable {
 		this.boundToTarget = boundToTarget;
 	}
 
-	public void setProperties(@Nullable LivingEntity caster, LivingEntity target, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, int colour, double potency) {
+	public void setProperties(@Nullable LivingEntity caster, LivingEntity target, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, Color color, double potency) {
 		this.effects.clear();
 		this.groups.clear();
 		this.effects.addAll(effects);
 		this.groups.addAll(groups);
-		setColour(colour);
+		this.setColour(color);
 
 		if(caster != null) {
 			this.casterId = caster.getUuid();

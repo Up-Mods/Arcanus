@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShieldEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -49,7 +50,7 @@ public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
 		matrices.multiply(Axis.X_NEGATIVE.rotationDegrees(90));
 		matrices.multiply(Axis.Z_POSITIVE.rotationDegrees((entity.age + tickDelta) * 0.25F));
 		matrices.scale(3 * alpha, 3 * alpha, 3 * alpha);
-		drawIcosahedron(matrices, vertices.getBuffer(LAYER), entity.getColour(), alpha, light, OverlayTexture.DEFAULT_UV);
+		drawIcosahedron(matrices, vertices.getBuffer(LAYER), entity.getColor(), alpha, light, OverlayTexture.DEFAULT_UV);
 		matrices.pop();
 	}
 
@@ -58,12 +59,12 @@ public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
 		return TEXTURE;
 	}
 
-	public static void drawIcosahedron(MatrixStack matrices, VertexConsumer consumer, int colour, float alpha, int light, int overlay) {
+	public static void drawIcosahedron(MatrixStack matrices, VertexConsumer consumer, Color color, float alpha, int light, int overlay) {
 		Matrix4f matrix4f = matrices.peek().getModel();
 		Matrix3f matrix3f = matrices.peek().getNormal();
-		float r = ((colour >> 16 & 255) / 255F) * alpha;
-		float g = ((colour >> 8 & 255) / 255F) * alpha;
-		float b = ((colour & 255) / 255F) * alpha;
+		float r = color.redF() * alpha;
+		float g = color.greenF() * alpha;
+		float b = color.blueF() * alpha;
 
 		for(Vector3i face : FACES) {
 			Vector3f vert1 = ManaShieldEntityRenderer.VERTICES.get(face.x);
@@ -73,9 +74,9 @@ public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
 			Vector3f v = new Vector3f(vert3.x - vert1.x, vert3.y - vert1.y, vert3.z - vert1.z);
 			Vector3f normal = u.cross(v);
 
-			consumer.vertex(matrix4f, vert1.x, vert1.y, vert1.z).color(r, g, b, 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
-			consumer.vertex(matrix4f, vert2.x, vert2.y, vert2.z).color(r, g, b, 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
-			consumer.vertex(matrix4f, vert3.x, vert3.y, vert3.z).color(r, g, b, 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+			consumer.vertex(matrix4f, vert1.x, vert1.y, vert1.z).color(r, g, b, 1.0F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+			consumer.vertex(matrix4f, vert2.x, vert2.y, vert2.z).color(r, g, b, 1.0F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+			consumer.vertex(matrix4f, vert3.x, vert3.y, vert3.z).color(r, g, b, 1.0F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
 		}
 	}
 }

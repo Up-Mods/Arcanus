@@ -29,10 +29,10 @@ public class WizardEntityRenderer extends MobEntityRenderer<WizardEntity, Wizard
 	public void render(WizardEntity wizard, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
 		super.render(wizard, yaw, tickDelta, matrices, vertices, light);
 
-		int hexColour = wizard.getRobesColour();
-		float r = (hexColour >> 16 & 255) / 255F;
-		float g = (hexColour >> 8 & 255) / 255F;
-		float b = (hexColour & 255) / 255F;
+		int hexColor = wizard.getRobeColor();
+		float r = (hexColor >> 16 & 255) / 255F;
+		float g = (hexColor >> 8 & 255) / 255F;
+		float b = (hexColor & 255) / 255F;
 
 		if(wizard.hasCustomName() && wizard.getName().getString().equals("jeb_")) {
 			int m = 15;

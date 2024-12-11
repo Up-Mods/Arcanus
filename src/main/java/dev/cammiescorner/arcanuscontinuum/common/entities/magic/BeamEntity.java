@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -145,12 +146,12 @@ public class BeamEntity extends Entity implements Targetable {
 		return sqDistance <= 64 * 64;
 	}
 
-	public int getColour() {
-		return ArcanusComponents.getColour(this);
+	public Color getColor() {
+		return ArcanusComponents.getColor(this);
 	}
 
-	public void setColour(int colour) {
-		ArcanusComponents.setColour(this, colour);
+	public void setColor(Color color) {
+		ArcanusComponents.setColor(this, color);
 	}
 
 	public Vec3d getBeamPos(float tickDelta) {
@@ -170,12 +171,12 @@ public class BeamEntity extends Entity implements Targetable {
 		return null;
 	}
 
-	public void setProperties(@Nullable LivingEntity caster, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, int maxAge, int colour, double potency, boolean isOnEntity) {
+	public void setProperties(@Nullable LivingEntity caster, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, int maxAge, Color color, double potency, boolean isOnEntity) {
 		this.effects.clear();
 		this.groups.clear();
 		this.effects.addAll(effects);
 		this.groups.addAll(groups);
-		setColour(colour);
+		this.setColor(color);
 
 		if(caster != null) {
 			casterId = caster.getUuid();

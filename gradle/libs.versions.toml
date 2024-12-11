@@ -1,10 +1,10 @@
 [versions]
-quilt_loom = "1.7.4"
+quilt_loom = "1.8.5"
 
 # The latest versions are available at https://lambdaurora.dev/tools/import_quilt.html
 minecraft = "1.20.1"
 quilt_mappings = "1.20.1+build.23"
-quilt_loader = "0.26.3"
+quilt_loader = "0.27.1-beta.1"
 
 quilted_fabric_api = "7.6.0+0.92.2-1.20.1"
 cca = "5.2.2"
@@ -24,6 +24,7 @@ spruceui = "5.0.2+1.20"
 sodium = "mc1.20.1-0.5.3"
 iris = "1.6.11+1.20.1"
 explosive_enhancement = "1.2.2-1.20.x"
+datasync = "0.7.1"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -40,6 +41,7 @@ trinkets = { module = "dev.emi:trinkets", version.ref = "trinkets" }
 sparkweave = { module = "dev.upcraft.sparkweave:Sparkweave-Quilt", version.ref = "sparkweave" }
 patchouli = { module = "vazkii.patchouli:Patchouli", version.ref = "patchouli" }
 reach_attr = { module = "com.jamieswhiteshirt:reach-entity-attributes", version.ref = "reach_attr" }
+datasync_fabric = { module = "dev.upcraft.datasync:datasync-minecraft-1.20.1-fabric", version.ref = "datasync" }
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 lazydfu = { module = "maven.modrinth:lazydfu", version.ref = "lazydfu" }
 smartbrainlib = { module = "curse.maven:smartbrainlib-661293", version.ref = "smartbrainlib" }

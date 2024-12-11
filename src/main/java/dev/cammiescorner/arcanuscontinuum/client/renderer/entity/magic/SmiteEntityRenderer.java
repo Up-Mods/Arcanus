@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.SmiteEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -31,17 +32,17 @@ public class SmiteEntityRenderer extends EntityRenderer<SmiteEntity> {
 	}
 
 	public void renderBeam(SmiteEntity entity, MatrixStack matrices, VertexConsumerProvider provider, float x, float y, float z, float tickDelta, int overlay, int light) {
-		final int maxQuads = 16;
-		final float radius = 2.25F;
-		final int colour = entity.getColour();
+		int maxQuads = 16;
+		float radius = 2.25F;
+		Color color = entity.getColor();
 		float squaredLength = x * x + y * y + z * z;
 		float length = MathHelper.sqrt(squaredLength);
 		float ageDelta = (entity.age - 1) + tickDelta;
 		float scale = MathHelper.clamp(ageDelta < 3 ? (ageDelta) / 3F : ageDelta > 9 ? 1 - ((ageDelta - 9F) / 15F) : 1F, 0F, 1F);
 		float alpha = ageDelta < 3 ? 1 : MathHelper.clamp(1 - ((ageDelta - 3) / 23F), 0, 1);
-		float r = ((colour >> 16 & 255) / 255F) * alpha;
-		float g = ((colour >> 8 & 255) / 255F) * alpha;
-		float b = ((colour & 255) / 255F) * alpha;
+		float r = color.redF() * alpha;
+		float g = color.greenF() * alpha;
+		float b = color.blueF() * alpha;
 
 		matrices.push();
 		matrices.multiply(Axis.X_POSITIVE.rotationDegrees(-90));
@@ -61,10 +62,10 @@ public class SmiteEntityRenderer extends EntityRenderer<SmiteEntity> {
 			Vector3f v = new Vector3f(vertX1 - vertX2, vertY1 - vertY2, -length);
 			Vector3f normal = u.cross(v);
 
-			vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(r, g, b, 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
-			vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(r, g, b, 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
-			vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(r, g, b, 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
-			vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(r, g, g, 1F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+			vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(r, g, b, 1.0F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+			vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(r, g, b, 1.0F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+			vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(r, g, b, 1.0F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
+			vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(r, g, g, 1.0F).uv(0, 0).overlay(overlay).light(light).normal(matrix3f, normal.x, normal.y, normal.z).next();
 
 			vertX1 = vertX2;
 			vertY1 = vertY2;

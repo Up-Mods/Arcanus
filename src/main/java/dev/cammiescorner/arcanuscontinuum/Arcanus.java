@@ -9,12 +9,14 @@ import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicDoorBlockE
 import dev.cammiescorner.arcanuscontinuum.common.packets.c2s.*;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncConfigValuesPacket;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncStatusEffectPacket;
-import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncSupporterData;
 import dev.cammiescorner.arcanuscontinuum.common.registry.*;
 import dev.cammiescorner.arcanuscontinuum.common.structures.WizardTowerProcessor;
-import dev.cammiescorner.arcanuscontinuum.common.util.SupporterData;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
+import dev.cammiescorner.arcanuscontinuum.common.util.supporters.HaloData;
+import dev.cammiescorner.arcanuscontinuum.common.util.supporters.WizardData;
+import dev.upcraft.datasync.api.DataSyncAPI;
+import dev.upcraft.datasync.api.SyncToken;
 import dev.upcraft.sparkweave.api.registry.RegistryService;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -29,7 +31,6 @@ import net.minecraft.registry.DefaultedRegistry;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.structure.processor.StructureProcessorList;
 import net.minecraft.structure.processor.StructureProcessorType;
@@ -41,32 +42,20 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.loader.api.ModMetadata;
-import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
-import org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents;
 import org.quiltmc.qsl.networking.api.EntityTrackingEvents;
 import org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import org.quiltmc.qsl.registry.api.event.RegistryEvents;
-import org.quiltmc.qsl.resource.loader.api.ResourceLoaderEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.HttpsURLConnection;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.DecimalFormat;
-import java.time.Instant;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BooleanSupplier;
+import java.util.List;
 
 public class Arcanus implements ModInitializer {
 	public static final Configurator configurator = new Configurator();
-	public static final String URL = "https://cammiescorner.dev/data/supporters.json";
 	public static final String MOD_ID = "arcanuscontinuum";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##,####.##");
@@ -75,32 +64,10 @@ public class Arcanus implements ModInitializer {
 	public static final DefaultedRegistry<SpellComponent> SPELL_COMPONENTS = FabricRegistryBuilder.createDefaulted(SPELL_COMPONENTS_REGISTRY_KEY, id("empty")).buildAndRegister();
 	public static final StructureProcessorType<WizardTowerProcessor> WIZARD_TOWER_PROCESSOR = StructureProcessorType.register(Arcanus.id("wizard_tower_processor").toString(), WizardTowerProcessor.CODEC);
 	public static final StructureProcessorList WIZARD_TOWER_PROCESSOR_LIST = new StructureProcessorList(List.of(WizardTowerProcessor.INSTANCE));
-	public static final SupporterStorage STORAGE = new SupporterStorage();
-	public static final int DEFAULT_MAGIC_COLOUR = 0x68e1ff;
+	public static final Color DEFAULT_MAGIC_COLOUR = Color.fromInt(0x68e1ff, Color.Ordering.RGB);
 
-	public static BooleanSupplier supporterCheck = () -> false;
-
-	public static int getMagicColour(UUID playerUuid) {
-		SupporterData.Supporter supporter = getSupporters().get(playerUuid);
-
-		if(supporter != null)
-			return supporter.magicColour();
-
-		return DEFAULT_MAGIC_COLOUR;
-	}
-
-	public static boolean isCurrentPlayerSupporter() {
-		return supporterCheck.getAsBoolean();
-	}
-
-	public static boolean isPlayerSupporter(UUID uuid) {
-		return getSupporters().containsKey(uuid);
-	}
-
-	public static class SupporterStorage {
-		public final Map<UUID, SupporterData.Supporter> supporters = new Object2ObjectOpenHashMap<>();
-		public Instant lastRefreshedSupporters = Instant.EPOCH;
-	}
+	public static final SyncToken<WizardData> WIZARD_DATA = DataSyncAPI.register(WizardData.class, WizardData.ID, WizardData.CODEC);
+	public static final SyncToken<HaloData> HALO_DATA = DataSyncAPI.register(HaloData.class, HaloData.ID, HaloData.CODEC);
 
 	@Override
 	public void onInitialize(ModContainer mod) {
@@ -130,16 +97,14 @@ public class Arcanus implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register(ArcanusCommands::init);
 
-		ServerLifecycleEvents.STARTING.register(server -> Arcanus.refreshSupporterData(server, true));
-
 		EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> entity.hasStatusEffect(ArcanusStatusEffects.MANA_WINGS.get()));
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			if(!server.isSingleplayer())
+			var hostProfile = server.getHostProfile();
+			if(hostProfile == null || !hostProfile.getId().equals(handler.player.getGameProfile().getId())) {
 				SyncConfigValuesPacket.send(handler.player);
+			}
 
-			Arcanus.refreshSupporterData(server, false);
-			SyncSupporterData.send(handler.player);
 			SyncStatusEffectPacket.sendToAll(handler.player, ArcanusStatusEffects.ANONYMITY.get(), handler.player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get()));
 		});
 
@@ -155,12 +120,6 @@ public class Arcanus implements ModInitializer {
 			// FIXME temporal dilation no worky
 //			if(trackedEntity instanceof LivingEntity livingEntity)
 //				SyncStatusEffectPacket.sendTo(player, livingEntity, ArcanusStatusEffects.TEMPORAL_DILATION.get(), livingEntity.hasStatusEffect(ArcanusStatusEffects.TEMPORAL_DILATION.get()));
-		});
-
-		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register(ctx -> {
-			var server = ctx.server();
-			if (server != null)
-				Arcanus.refreshSupporterData(server, true);
 		});
 
 		EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
@@ -231,39 +190,6 @@ public class Arcanus implements ModInitializer {
 //		});
 	}
 
-	public static void refreshSupporterData(MinecraftServer server, boolean force) {
-		Instant currentTime = Instant.now();
-
-		if(force || currentTime.isAfter(STORAGE.lastRefreshedSupporters.plus(10, TimeUnit.MINUTES.toChronoUnit()))) {
-			CompletableFuture.supplyAsync(() -> {
-				LOGGER.info("Updating supporter data...");
-
-				try {
-					HttpsURLConnection connection = (HttpsURLConnection) new URL(URL).openConnection();
-					ModMetadata metadata = QuiltLoader.getModContainer(MOD_ID).orElseThrow().metadata();
-					connection.setRequestProperty("User-Agent", metadata.id() + "/" + metadata.version().raw());
-
-					try(InputStream stream = connection.getInputStream()) {
-						STORAGE.lastRefreshedSupporters = currentTime;
-						return Arrays.asList(SupporterData.fromJson(stream).supporters);
-					}
-				}
-				catch(Exception e) {
-					LOGGER.error("Failed to read supporter JSON!", e);
-					return List.<SupporterData.Supporter>of();
-				}
-			}).thenAcceptAsync(supporters -> {
-				STORAGE.supporters.clear();
-				supporters.forEach(supporter -> STORAGE.supporters.put(supporter.uuid(), supporter));
-				SyncSupporterData.sendToAll(server);
-			}, server);
-		}
-	}
-
-	public static Map<UUID, SupporterData.Supporter> getSupporters() {
-		return STORAGE.supporters;
-	}
-
 	public static Identifier id(String name) {
 		return new Identifier(MOD_ID, name);
 	}
@@ -323,7 +249,6 @@ public class Arcanus implements ModInitializer {
 			default -> "ERROR";
 		};
 
-		MutableText text = Text.literal(string);
-		return text.setStyle(text.getStyle().withFont(Arcanus.id("magic_symbols")));
+		return Text.literal(string).styled(style -> style.withFont(Arcanus.id("magic_symbols")));
 	}
 }

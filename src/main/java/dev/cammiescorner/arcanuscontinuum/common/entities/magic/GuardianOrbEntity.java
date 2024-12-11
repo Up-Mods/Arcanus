@@ -7,6 +7,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -61,13 +62,13 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		LivingEntity caster = getCaster();
 		LivingEntity target = getTarget();
 
-		if(caster == null || (!getWorld().isClient && !ArcanusComponents.getGuardianOrbId(caster).equals(getUuid())) || target == null || caster.squaredDistanceTo(target) > 32 * 32) {
+		if (caster == null || (!getWorld().isClient && !ArcanusComponents.getGuardianOrbId(caster).equals(getUuid())) || target == null || caster.squaredDistanceTo(target) > 32 * 32) {
 			kill();
 			return;
 		}
 
-		if(!getWorld().isClient() && dataTracker.get(TARGET_ID) == -1)
-				dataTracker.set(TARGET_ID, target.getId());
+		if (!getWorld().isClient() && dataTracker.get(TARGET_ID) == -1)
+			dataTracker.set(TARGET_ID, target.getId());
 
 		setYaw(target.getYaw());
 		setBodyYaw(target.bodyYaw);
@@ -81,15 +82,15 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		Vec3d direction = targetPos.subtract(getPos());
 		move(MovementType.SELF, direction.multiply(0.25f));
 
-		if(age % 8 == 0) {
+		if (age % 8 == 0) {
 			Vec3d vel = (direction.lengthSquared() <= 1 ? direction : direction.normalize()).multiply(0.125f);
 			getWorld().addParticle(ParticleTypes.END_ROD, getX(), getY() + getHeight() / 2, getZ(), vel.getX(), vel.getY(), vel.getZ());
 		}
 
-		if(age % 100 == 0 && ArcanusComponents.drainMana(caster, ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.baseManaDrain * effects.size(), false)) {
+		if (age % 100 == 0 && ArcanusComponents.drainMana(caster, ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.baseManaDrain * effects.size(), false)) {
 			EntityHitResult hitResult = new EntityHitResult(target);
 
-			for(SpellEffect effect : new HashSet<>(effects))
+			for (SpellEffect effect : new HashSet<>(effects))
 				effect.effect(caster, this, getWorld(), hitResult, effects, stack, potency);
 		}
 
@@ -109,8 +110,9 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 
 	@Override
 	public void remove(RemovalReason reason) {
-		if(reason == RemovalReason.KILLED && !getWorld().isClient() && getCaster() != null && getTarget() != null)
+		if (reason == RemovalReason.KILLED && !getWorld().isClient() && getCaster() != null && getTarget() != null) {
 			SpellShape.castNext(getCaster(), getTarget().getPos(), getTarget(), (ServerWorld) getWorld(), stack, groups, groupIndex, potency);
+		}
 
 		super.remove(reason);
 	}
@@ -134,9 +136,9 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		NbtList effectList = tag.getList("Effects", NbtElement.STRING_TYPE);
 		NbtList groupsList = tag.getList("SpellGroups", NbtElement.COMPOUND_TYPE);
 
-		for(int i = 0; i < effectList.size(); i++)
+		for (int i = 0; i < effectList.size(); i++)
 			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new Identifier(effectList.getString(i))));
-		for(int i = 0; i < groupsList.size(); i++)
+		for (int i = 0; i < groupsList.size(); i++)
 			groups.add(SpellGroup.fromNbt(groupsList.getCompound(i)));
 	}
 
@@ -151,9 +153,9 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		tag.putInt("GroupIndex", groupIndex);
 		tag.putDouble("Potency", potency);
 
-		for(SpellEffect effect : effects)
+		for (SpellEffect effect : effects)
 			effectList.add(NbtString.of(Arcanus.SPELL_COMPONENTS.getId(effect).toString()));
-		for(SpellGroup group : groups)
+		for (SpellGroup group : groups)
 			groupsList.add(group.toNbt());
 
 		tag.put("Effects", effectList);
@@ -165,40 +167,44 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		return sqDistance <= 64 * 64;
 	}
 
-	public int getColour() {
-		return ArcanusComponents.getColour(this);
+	public Color getColor() {
+		return ArcanusComponents.getColor(this);
 	}
 
-	public void setColour(int colour) {
-		ArcanusComponents.setColour(this, colour);
+	public void setColor(Color color) {
+		ArcanusComponents.setColor(this, color);
+	}
+
+	public UUID getCasterId() {
+		return casterId;
 	}
 
 	public LivingEntity getCaster() {
-		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(casterId) instanceof LivingEntity caster)
+		if (getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(getCasterId()) instanceof LivingEntity caster)
 			return caster;
-		else if(getWorld().isClient() && getWorld().getEntityById(dataTracker.get(OWNER_ID)) instanceof LivingEntity caster)
+		else if (getWorld().isClient() && getWorld().getEntityById(dataTracker.get(OWNER_ID)) instanceof LivingEntity caster)
 			return caster;
 
 		return null;
 	}
 
 	public LivingEntity getTarget() {
-		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(targetId) instanceof LivingEntity target)
+		if (getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(targetId) instanceof LivingEntity target)
 			return target;
-		else if(getWorld().isClient() && getWorld().getEntityById(dataTracker.get(TARGET_ID)) instanceof LivingEntity target)
+		else if (getWorld().isClient() && getWorld().getEntityById(dataTracker.get(TARGET_ID)) instanceof LivingEntity target)
 			return target;
 
 		return null;
 	}
 
-	public void setProperties(@Nullable LivingEntity caster, LivingEntity target, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, int colour, double potency) {
+	public void setProperties(@Nullable LivingEntity caster, LivingEntity target, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, Color color, double potency) {
 		this.effects.clear();
 		this.groups.clear();
 		this.effects.addAll(effects);
 		this.groups.addAll(groups);
-		setColour(colour);
+		this.setColor(color);
 
-		if(caster != null) {
+		if (caster != null) {
 			this.casterId = caster.getUuid();
 			this.dataTracker.set(OWNER_ID, caster.getId());
 

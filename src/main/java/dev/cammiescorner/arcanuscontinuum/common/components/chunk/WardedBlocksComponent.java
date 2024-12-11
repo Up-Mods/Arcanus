@@ -1,8 +1,10 @@
 package dev.cammiescorner.arcanuscontinuum.common.components.chunk;
 
+import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.fabricmc.api.EnvType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -11,6 +13,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.Chunk;
+import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,6 +37,11 @@ public class WardedBlocksComponent implements AutoSyncedComponent {
 			NbtCompound compound = nbtList.getCompound(i);
 			NbtList blockPosList = compound.getList("BlockPosList", NbtElement.COMPOUND_TYPE);
 			UUID ownerUuid = compound.getUuid("OwnerUuid");
+
+			// make sure we have the data cached when we need it
+			if(MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT) {
+				Arcanus.WIZARD_DATA.get(ownerUuid);
+			}
 
 			for(int j = 0; j < blockPosList.size(); j++)
 				wardedBlocks.put(NbtHelper.toBlockPos(blockPosList.getCompound(j)), ownerUuid);

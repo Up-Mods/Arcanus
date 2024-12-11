@@ -5,8 +5,11 @@ import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.feature.SpellPatternModel;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.StaffType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -33,10 +36,7 @@ public class SpellPatternFeatureRenderer<T extends PlayerEntity, M extends Entit
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertices, int light, PlayerEntity player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
 		ItemStack stack = player.getMainHandStack();
-		int colour = Arcanus.getMagicColour(player.getGameProfile().getId());
-		float r = (colour >> 16 & 255) / 255F;
-		float g = (colour >> 8 & 255) / 255F;
-		float b = (colour & 255) / 255F;
+		Color color = ArcanusHelper.getMagicColor(player);
 
 		model.showMagicCircles(ArcanusComponents.getPattern(player));
 
@@ -67,17 +67,17 @@ public class SpellPatternFeatureRenderer<T extends PlayerEntity, M extends Entit
 
 		matrices.push();
 		matrices.translate(0, 0, MathHelper.sin((player.age + player.getId() + client.getTickDelta()) / (MathHelper.PI * 2)) * 0.05F);
-		model.first.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), 15728850, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+		model.first.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), color.alphaF());
 		matrices.pop();
 
 		matrices.push();
 		matrices.translate(0, 0, MathHelper.cos((player.age + player.getId() + client.getTickDelta()) / (MathHelper.PI * 2)) * 0.05F);
-		model.second.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), 15728850, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+		model.second.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), color.alphaF());
 		matrices.pop();
 
 		matrices.push();
 		matrices.translate(0, 0, MathHelper.sin((player.age + player.getId() + client.getTickDelta()) / (MathHelper.PI * 2)) * 0.05F);
-		model.third.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), 15728850, OverlayTexture.DEFAULT_UV, r, g, b, 1F);
+		model.third.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), color.alphaF());
 		matrices.pop();
 
 		matrices.pop();

@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanuscontinuum.common.entities.magic;
 
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -121,26 +122,30 @@ public class ManaShieldEntity extends Entity implements Targetable {
 		return dataTracker.get(MAX_AGE);
 	}
 
+	public void setMaxAge(int maxAge) {
+		dataTracker.set(MAX_AGE, maxAge);
+	}
+
 	public int getTrueAge() {
 		return dataTracker.get(TRUE_AGE);
 	}
 
-	public int getColour() {
-		return ArcanusComponents.getColour(this);
+	public Color getColor() {
+		return ArcanusComponents.getColor(this);
 	}
 
-	public void setColour(int colour) {
-		ArcanusComponents.setColour(this, colour);
+	public void setColor(Color color) {
+		ArcanusComponents.setColor(this, color);
 	}
 
 	public UUID getOwnerId() {
 		return ownerId;
 	}
 
-	public void setProperties(UUID ownerId, Vec3d pos, int colour, int maxAge) {
-		setPosition(pos);
-		setColour(colour);
-		dataTracker.set(MAX_AGE, maxAge);
+	public void setProperties(UUID ownerId, Vec3d pos, Color color, int maxAge) {
+		this.setPosition(pos);
+		this.setColor(color);
+		this.setMaxAge(maxAge);
 		this.ownerId = ownerId;
 	}
 }

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.BeamEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.OverlayTexture;
@@ -38,10 +39,7 @@ public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
 			Vec3d endPos = beamEntity.getBeamPos(tickDelta);
 			Vector3d axis = new Vector3d(endPos.getX() - startPos.getX(), endPos.getY() - startPos.getY(), endPos.getZ() - startPos.getZ()).normalize();
 			VertexConsumer vertex = vertices.getBuffer(LAYER);
-			int colour = beamEntity.getColour();
-			float r = (colour >> 16 & 255) / 255F;
-			float g = (colour >> 8 & 255) / 255F;
-			float b = (colour & 255) / 255F;
+			Color color = beamEntity.getColor();
 			float distance = beamEntity.distanceTo(caster) / 2F;
 
 			matrices.push();
@@ -69,10 +67,10 @@ public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
 					maxV = 1 - maxV;
 				}
 
-				vertex(vertex, matrices, vert4, r, g, b, maxU, minV);
-				vertex(vertex, matrices, vert3, r, g, b, minU, minV);
-				vertex(vertex, matrices, vert1, r, g, b, minU, maxV);
-				vertex(vertex, matrices, vert2, r, g, b, maxU, maxV);
+				vertex(vertex, matrices, vert4, color, maxU, minV);
+				vertex(vertex, matrices, vert3, color, minU, minV);
+				vertex(vertex, matrices, vert1, color, minU, maxV);
+				vertex(vertex, matrices, vert2, color, maxU, maxV);
 			}
 
 			matrices.pop();
@@ -84,11 +82,11 @@ public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
 		return true;
 	}
 
-	private static void vertex(VertexConsumer vertex, MatrixStack matrices, Vec3d vert, float r, float g, float b, float u, float v) {
+	private static void vertex(VertexConsumer vertex, MatrixStack matrices, Vec3d vert, Color color, float u, float v) {
 		Matrix4f modelMatrix = matrices.peek().getModel();
 		Matrix3f normalMatrix = matrices.peek().getNormal();
 
-		vertex.vertex(modelMatrix, (float) vert.getX(), (float) vert.getY(), (float) vert.getZ()).color(r, g, b, 1F).uv(u, v).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(normalMatrix, 0F, 1F, 0F).next();
+		vertex.vertex(modelMatrix, (float) vert.getX(), (float) vert.getY(), (float) vert.getZ()).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u, v).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(normalMatrix, 0F, 1F, 0F).next();
 	}
 
 	@Override

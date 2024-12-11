@@ -10,6 +10,7 @@ import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.PocketDimen
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.SpatialRiftEntitySigilModel;
 import dev.cammiescorner.arcanuscontinuum.client.utils.StencilBuffer;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.PocketDimensionPortalEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.OverlayTexture;
@@ -42,10 +43,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		StencilBuffer stencilBuffer = ((StencilBuffer) client.getFramebuffer());
 		RenderLayer layer = ArcanusClient.getMagicPortal(TEXTURE);
 		RenderLayer sigilLayer = ArcanusClient.getMagicPortal(SIGIL_TEXTURE);
-		int colour = entity.getColour();
-		float r = (colour >> 16 & 255) / 255F;
-		float g = (colour >> 8 & 255) / 255F;
-		float b = (colour & 255) / 255F;
+		Color color = entity.getColor();
 		float ageDelta = entity.getTrueAge() + tickDelta;
 		float maxScale = 0.75f;
 		float scale = entity.getTrueAge() <= 100 ? Math.min(maxScale, (ageDelta / 100f) * maxScale) : entity.getTrueAge() > 700 ? Math.max(0, (1 - (ageDelta - 700) / 20f) * maxScale) : maxScale;
@@ -90,7 +88,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		matrices.translate(-0.375, 0, 0);
 		matrices.multiply(Axis.Z_POSITIVE.rotationDegrees(90));
 		matrices.scale(maxScale, maxScale, maxScale);
-		model.render(matrices, vertices.getBuffer(layer), light, OverlayTexture.DEFAULT_UV, r, g, b, 1f);
+		model.render(matrices, vertices.getBuffer(layer), light, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), 1.0F);
 		matrices.pop();
 
 		if(vertices instanceof VertexConsumerProvider.Immediate immediate) {
@@ -120,11 +118,11 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		matrices.pop();
 
 		matrices.push();
-		matrices.translate(0, 1.51, 0);
-		matrices.multiply(Axis.X_POSITIVE.rotationDegrees(180));
-		matrices.scale(scale / maxScale, 1, scale / maxScale);
+		matrices.translate(0.0D, 1.51D, 0.0D);
+		matrices.multiply(Axis.X_POSITIVE.rotationDegrees(180.0F));
+		matrices.scale(scale / maxScale, 1.0F, scale / maxScale);
 		sigilModel.sigil.yaw = (entity.age + tickDelta) * 0.015F;
-		sigilModel.render(matrices, vertices.getBuffer(sigilLayer), light, OverlayTexture.DEFAULT_UV, r, g, b, 1f);
+		sigilModel.render(matrices, vertices.getBuffer(sigilLayer), light, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), 1.0F);
 		matrices.pop();
 	}
 

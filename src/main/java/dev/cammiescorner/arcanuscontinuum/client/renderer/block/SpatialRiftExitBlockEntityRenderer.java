@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.SpatialRiftEntitySigilModel;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -25,17 +26,14 @@ public class SpatialRiftExitBlockEntityRenderer implements BlockEntityRenderer<S
 		World world = entity.getWorld();
 
 		if(world != null) {
-			int colour = entity.getColour();
-			float r = (colour >> 16 & 255) / 255F;
-			float g = (colour >> 8 & 255) / 255F;
-			float b = (colour & 255) / 255F;
+			Color color = entity.getColor();
 			float ageDelta = world.getTime() + tickDelta;
 
 			matrices.push();
-			matrices.translate(1, 0, 1);
-			matrices.scale(0.75f, 0.75f, 0.75f);
+			matrices.translate(1.0F, 0.0F, 1.0F);
+			matrices.scale(0.75F, 0.75F, 0.75F);
 			sigilModel.sigil.yaw = ageDelta * 0.015F;
-			sigilModel.render(matrices, vertices.getBuffer(LAYER), light, OverlayTexture.DEFAULT_UV, r, g, b, 1f);
+			sigilModel.render(matrices, vertices.getBuffer(LAYER), light, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), 1.0F);
 			matrices.pop();
 		}
 	}

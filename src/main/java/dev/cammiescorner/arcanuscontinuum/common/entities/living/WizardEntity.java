@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTradeOffers;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.entity.*;
@@ -26,7 +27,6 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.HoverEvent;
-import net.minecraft.text.MutableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -60,9 +60,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class WizardEntity extends MerchantEntity implements SmartBrainOwner<WizardEntity>, Angerable {
-	private static final TrackedData<Integer> ROBES_COLOUR = DataTracker.registerData(WizardEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final MutableText PUT_ON_ROBES = Arcanus.translate("wizard_dialogue", "put_on_robes").formatted(Formatting.AQUA, Formatting.ITALIC);
-	private static final MutableText LOOK_LIKE_A_WIZARD = Arcanus.translate("wizard_dialogue", "no_wizard_armour").formatted(Formatting.DARK_PURPLE, Formatting.ITALIC).styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, PUT_ON_ROBES)));
+	private static final TrackedData<Integer> ROBE_COLOR = DataTracker.registerData(WizardEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	public WizardEntity(EntityType<? extends MerchantEntity> entityType, World world) {
 		super(entityType, world);
@@ -78,18 +76,19 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 
 	@Override
 	protected void initEquipment(RandomGenerator random, LocalDifficulty difficulty) {
-		dataTracker.set(ROBES_COLOUR, newRandomRobeColour(random));
-		equipStack(EquipmentSlot.HEAD, getColouredRobes(ArcanusItems.WIZARD_HAT.get()));
-		equipStack(EquipmentSlot.CHEST, getColouredRobes(ArcanusItems.WIZARD_ROBES.get()));
-		equipStack(EquipmentSlot.LEGS, getColouredRobes(ArcanusItems.WIZARD_PANTS.get()));
-		equipStack(EquipmentSlot.FEET, getColouredRobes(ArcanusItems.WIZARD_BOOTS.get()));
+		var robeColor = newRandomRobeColor(random);
+		setRobeColor(robeColor);
+		equipStack(EquipmentSlot.HEAD, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_HAT.get()), robeColor));
+		equipStack(EquipmentSlot.CHEST, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_ROBES.get()), robeColor));
+		equipStack(EquipmentSlot.LEGS, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_PANTS.get()), robeColor));
+		equipStack(EquipmentSlot.FEET, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_BOOTS.get()), robeColor));
 		equipStack(EquipmentSlot.MAINHAND, getRandomStaff(random));
 	}
 
 	@Override
 	protected void initDataTracker() {
 		super.initDataTracker();
-		dataTracker.startTracking(ROBES_COLOUR, 0);
+		dataTracker.startTracking(ROBE_COLOR, 0xFFFFFF);
 	}
 
 	@Override
@@ -143,7 +142,7 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 					sendOffers(player, getDisplayName(), 1);
 				}
 			} else {
-				player.sendMessage(LOOK_LIKE_A_WIZARD, false);
+				player.sendMessage(Arcanus.translate("wizard_dialogue", "no_wizard_armour").formatted(Formatting.DARK_PURPLE, Formatting.ITALIC).styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Arcanus.translate("wizard_dialogue", "put_on_robes").formatted(Formatting.AQUA, Formatting.ITALIC)))), false);
 			}
 		}
 
@@ -154,14 +153,15 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 	public void readCustomDataFromNbt(NbtCompound nbt) {
 		super.readCustomDataFromNbt(nbt);
 
-		if (nbt.contains("RobesColour", NbtElement.NUMBER_TYPE))
-			dataTracker.set(ROBES_COLOUR, nbt.getInt("RobesColour"));
+		if (nbt.contains("RobeColor", NbtElement.NUMBER_TYPE)) {
+			dataTracker.set(ROBE_COLOR, nbt.getInt("RobeColor"));
+		}
 	}
 
 	@Override
 	public void writeCustomDataToNbt(NbtCompound nbt) {
 		super.writeCustomDataToNbt(nbt);
-		nbt.putInt("RobesColour", getRobesColour());
+		nbt.putInt("RobesColor", getRobeColor());
 	}
 
 	@Override
@@ -223,6 +223,7 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 	}
 
 	private ItemStack getRandomStaff(RandomGenerator random) {
+		// TODO use a tag for this
 		List<Item> staves = List.of(
 			ArcanusItems.WOODEN_STAFF.get(),
 			ArcanusItems.CRYSTAL_STAFF.get(),
@@ -234,51 +235,46 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 		return new ItemStack(staves.get(random.nextInt(staves.size())));
 	}
 
-	public int getRobesColour() {
-		return dataTracker.get(ROBES_COLOUR);
+	public void setRobeColor(int color) {
+		dataTracker.set(ROBE_COLOR, color);
 	}
 
-	public ItemStack getColouredRobes(Item robes) {
-		ItemStack stack = new ItemStack(robes);
-		stack.getOrCreateSubNbt("display").putInt("color", getRobesColour());
-		return stack;
+	public int getRobeColor() {
+		return dataTracker.get(ROBE_COLOR);
 	}
 
-	private int newRandomRobeColour(RandomGenerator random) {
-		// Rare Colours
+	private int newRandomRobeColor(RandomGenerator random) {
+		// Rare Colors
 		if (random.nextDouble() <= 0.1) {
-			int chance = random.nextInt(2);
-
-			return switch (chance) {
-				case 0 -> 0xff005a; // Folly Red
-				case 1 -> 0xf2dd50; // Lotus Gold
-				default -> throw new IllegalStateException("Unexpected value: " + chance);
-			};
+			var list = List.of(
+				0xff005a, // Folly Red
+				0xf2dd50 // Lotus Gold
+			);
+			return list.get(random.nextInt(list.size()));
 		}
 
-		// Normal Colours
-		int chance = random.nextInt(17);
+		// Normal Colors
+		var list = List.of(
+			0xffffff,
+			0xf9801d,
+			0xc74ebd,
+			0x3ab3da,
+			0xfed83d,
+			0x80c71f,
+			0xf38baa,
+			0x474f52,
+			0x9d9d97,
+			0x169c9c,
+			0x8932b8,
+			0x52392a,
+			0x3c44aa,
+			0x5e7c16,
+			0xb02e26,
+			0x1d1d21,
+			0xfcc973
+		);
 
-		return switch (chance) {
-			case 0 -> 0xffffff;
-			case 1 -> 0xf9801d;
-			case 2 -> 0xc74ebd;
-			case 3 -> 0x3ab3da;
-			case 4 -> 0xfed83d;
-			case 5 -> 0x80c71f;
-			case 6 -> 0xf38baa;
-			case 7 -> 0x474f52;
-			case 8 -> 0x9d9d97;
-			case 9 -> 0x169c9c;
-			case 10 -> 0x8932b8;
-			case 11 -> 0x52392a;
-			case 12 -> 0x3c44aa;
-			case 13 -> 0x5e7c16;
-			case 14 -> 0xb02e26;
-			case 15 -> 0x1d1d21;
-			case 16 -> 0xfcc973;
-			default -> throw new IllegalStateException("Unexpected value: " + chance);
-		};
+		return list.get(random.nextInt(list.size()));
 	}
 
 	@Override

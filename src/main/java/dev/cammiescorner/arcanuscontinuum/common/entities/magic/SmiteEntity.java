@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSoundEvents;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -138,23 +139,23 @@ public class SmiteEntity extends Entity implements Targetable {
 		return null;
 	}
 
-	public int getColour() {
-		return ArcanusComponents.getColour(this);
+	public Color getColor() {
+		return ArcanusComponents.getColor(this);
 	}
 
-	public void setColour(int colour) {
-		ArcanusComponents.setColour(this, colour);
+	public void setColor(Color color) {
+		ArcanusComponents.setColor(this, color);
 	}
 
-	public void setProperties(UUID casterId, Entity sourceEntity, Vec3d pos, ItemStack stack, List<SpellEffect> effects, double potency, int colour) {
-		setPosition(pos);
-		setNoGravity(true);
-		setYaw(sourceEntity.getYaw());
-		setPitch(sourceEntity.getPitch());
+	public void setProperties(UUID casterId, Entity sourceEntity, Vec3d pos, ItemStack stack, List<SpellEffect> effects, double potency, Color color) {
+		this.setPosition(pos);
+		this.setNoGravity(true);
+		this.setYaw(sourceEntity.getYaw());
+		this.setPitch(sourceEntity.getPitch());
 		this.casterId = casterId;
 		this.stack = stack;
 		this.effects = effects;
 		this.potency = potency;
-		ArcanusComponents.setColour(this, colour);
+		this.setColor(color);
 	}
 }

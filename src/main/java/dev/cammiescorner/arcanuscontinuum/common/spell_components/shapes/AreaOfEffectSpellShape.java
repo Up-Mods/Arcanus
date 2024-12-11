@@ -1,15 +1,14 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.TypeFilter;
@@ -37,11 +36,7 @@ public class AreaOfEffectSpellShape extends SpellShape {
 			Entity sourceEntity = castSource != null ? castSource : caster;
 
 			if(areaOfEffect != null) {
-				areaOfEffect.setProperties(caster.getUuid(), sourceEntity, castFrom, stack, effects, potency, spellGroups, groupIndex, Arcanus.DEFAULT_MAGIC_COLOUR);
-
-				if(caster instanceof PlayerEntity player)
-					areaOfEffect.setColour(Arcanus.getMagicColour(player.getGameProfile().getId()));
-
+				areaOfEffect.setProperties(caster.getUuid(), sourceEntity, castFrom, stack, effects, potency, spellGroups, groupIndex, ArcanusHelper.getMagicColor(caster));
 				world.spawnEntity(areaOfEffect);
 			}
 		}

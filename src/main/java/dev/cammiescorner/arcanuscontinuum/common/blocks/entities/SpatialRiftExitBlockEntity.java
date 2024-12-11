@@ -2,6 +2,8 @@ package dev.cammiescorner.arcanuscontinuum.common.blocks.entities;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlockEntities;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
+import dev.cammiescorner.arcanuscontinuum.common.util.NBTHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -12,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class SpatialRiftExitBlockEntity extends BlockEntity {
-	private int colour = Arcanus.DEFAULT_MAGIC_COLOUR;
+	private Color color = Arcanus.DEFAULT_MAGIC_COLOUR;
 
 	public SpatialRiftExitBlockEntity(BlockPos pos, BlockState state) {
 		super(ArcanusBlockEntities.SPATIAL_RIFT_EXIT.get(), pos, state);
@@ -21,13 +23,13 @@ public class SpatialRiftExitBlockEntity extends BlockEntity {
 	@Override
 	public void readNbt(NbtCompound nbt) {
 		super.readNbt(nbt);
-		colour = nbt.getInt("MagicColour");
+		color = NBTHelper.readColor(nbt, "MagicColour");
 	}
 
 	@Override
 	protected void writeNbt(NbtCompound nbt) {
 		super.writeNbt(nbt);
-		nbt.putInt("MagicColour", colour);
+		NBTHelper.writeColor(nbt, this.color, "MagicColour");
 	}
 
 	@Override
@@ -43,11 +45,12 @@ public class SpatialRiftExitBlockEntity extends BlockEntity {
 		return BlockEntityUpdateS2CPacket.of(this);
 	}
 
-	public int getColour() {
-		return colour;
+	public Color getColor() {
+		return color;
 	}
 
-	public void setColour(int colour) {
-		this.colour = colour;
+	public void setColor(Color color) {
+		this.color = color;
+		this.markDirty();
 	}
 }

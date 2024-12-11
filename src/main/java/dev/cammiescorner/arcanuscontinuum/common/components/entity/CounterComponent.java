@@ -6,6 +6,8 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
+import dev.cammiescorner.arcanuscontinuum.common.util.NBTHelper;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.entity.LivingEntity;
@@ -34,7 +36,7 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 	private final List<SpellGroup> groups = new ArrayList<>();
 	private UUID casterId = Util.NIL_UUID;
 	private ItemStack stack = ItemStack.EMPTY;
-	private int colour = Arcanus.DEFAULT_MAGIC_COLOUR;
+	private Color color = Arcanus.DEFAULT_MAGIC_COLOUR;
 	private int groupIndex = 0;
 	private double potency = 1F;
 	private long endTime = 0;
@@ -51,13 +53,13 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 
 	@Override
 	public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
-		buf.writeInt(colour);
+		buf.writeInt(color.asInt(Color.Ordering.ARGB));
 		buf.writeLong(endTime);
 	}
 
 	@Override
 	public void applySyncPacket(PacketByteBuf buf) {
-		colour = buf.readInt();
+		color = Color.fromInt(buf.readInt(), Color.Ordering.ARGB);
 		endTime = buf.readLong();
 	}
 
@@ -68,7 +70,7 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 
 		casterId = tag.getUuid("CasterId");
 		stack = ItemStack.fromNbt(tag.getCompound("ItemStack"));
-		colour = tag.getInt("Color");
+		color = NBTHelper.readColor(tag, "Color");
 		groupIndex = tag.getInt("GroupIndex");
 		potency = tag.getDouble("Potency");
 		endTime = tag.getLong("EndTime");
@@ -89,7 +91,7 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 
 		tag.putUuid("CasterId", casterId);
 		tag.put("ItemStack", stack.writeNbt(new NbtCompound()));
-		tag.putInt("Color", colour);
+		NBTHelper.writeColor(tag, color, "Color");
 		tag.putInt("GroupIndex", groupIndex);
 		tag.putDouble("Potency", potency);
 		tag.putLong("EndTime", endTime);
@@ -108,7 +110,7 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 		groups.clear();
 		casterId = Util.NIL_UUID;
 		stack = ItemStack.EMPTY;
-		colour = Arcanus.DEFAULT_MAGIC_COLOUR;
+		color = Arcanus.DEFAULT_MAGIC_COLOUR;
 		groupIndex = 0;
 		potency = 1;
 		endTime = 0;
@@ -116,7 +118,7 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 		entity.syncComponent(ArcanusComponents.COUNTER_COMPONENT);
 	}
 
-	public void setProperties(@Nullable LivingEntity caster, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, int colour, double potency, long worldTime) {
+	public void setProperties(@Nullable LivingEntity caster, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, Color color, double potency, long worldTime) {
 		this.effects.clear();
 		this.groups.clear();
 		this.effects.addAll(effects);
@@ -126,7 +128,7 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 			this.casterId = caster.getUuid();
 
 		this.stack = stack;
-		this.colour = colour;
+		this.color = color;
 		this.groupIndex = groupIndex;
 		this.potency = potency;
 		this.endTime = worldTime + ArcanusConfig.SpellShapes.CounterShapeProperties.baseEffectDuration;
@@ -152,8 +154,8 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 		return world.getTime() <= endTime;
 	}
 
-	public int getColour() {
-		return colour;
+	public Color getColor() {
+		return color;
 	}
 
 	public long getEndTime() {

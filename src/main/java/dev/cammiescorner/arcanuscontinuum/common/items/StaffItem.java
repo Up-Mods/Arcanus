@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Spell;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.StaffType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -37,15 +38,15 @@ public class StaffItem extends Item {
 	public static final UUID ATTACK_RANGE_MODIFIER_ID = UUID.fromString("05869d86-c861-4954-9079-68c380ad063c");
 	private final Supplier<Multimap<EntityAttribute, EntityAttributeModifier>> attributeModifiers;
 	public final StaffType staffType;
-	public final int defaultPrimaryColour;
-	public final int defaultSecondaryColour;
+	public final Color defaultPrimaryColor;
+	public final Color defaultSecondaryColor;
 	public final boolean isDonorOnly;
 
-	public StaffItem(StaffType staffType, int defaultPrimaryColour, int defaultSecondaryColour) {
-		this(staffType, defaultPrimaryColour, defaultSecondaryColour, false);
+	public StaffItem(StaffType staffType, Color defaultPrimaryColor, Color defaultSecondaryColor) {
+		this(staffType, defaultPrimaryColor, defaultSecondaryColor, false);
 	}
 
-	public StaffItem(StaffType staffType, int defaultPrimaryColour, int defaultSecondaryColour, boolean isDonorOnly) {
+	public StaffItem(StaffType staffType, Color defaultPrimaryColor, Color defaultSecondaryColor, boolean isDonorOnly) {
 		super(new QuiltItemSettings().maxCount(1));
 		this.attributeModifiers = Suppliers.memoize(() -> ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
 			.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -1, EntityAttributeModifier.Operation.ADDITION))
@@ -53,8 +54,8 @@ public class StaffItem extends Item {
 			.build()
 		);
 		this.staffType = staffType;
-		this.defaultPrimaryColour = defaultPrimaryColour;
-		this.defaultSecondaryColour = defaultSecondaryColour;
+		this.defaultPrimaryColor = defaultPrimaryColor;
+		this.defaultSecondaryColor = defaultSecondaryColor;
 		this.isDonorOnly = isDonorOnly;
 	}
 
@@ -95,8 +96,8 @@ public class StaffItem extends Item {
 	@Override
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
 		NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
-		int primaryColour = getPrimaryColour(stack);
-		int secondaryColour = getSecondaryColour(stack);
+		int primaryColour = getPrimaryColorRGB(stack);
+		int secondaryColour = getSecondaryColorRGB(stack);
 
 		tooltip.add(Arcanus.translate("staff", "primary_color").styled(style -> style.withColor(primaryColour)).append(Text.literal(": " + String.format(Locale.ROOT, "#%06X", primaryColour)).formatted(Formatting.GRAY)));
 		tooltip.add(Arcanus.translate("staff", "secondary_color").styled(style -> style.withColor(secondaryColour)).append(Text.literal(": " + String.format(Locale.ROOT, "#%06X", secondaryColour)).formatted(Formatting.GRAY)));
@@ -129,31 +130,46 @@ public class StaffItem extends Item {
 		return slot == EquipmentSlot.MAINHAND ? attributeModifiers.get() : super.getAttributeModifiers(slot);
 	}
 
-	public static void setPrimaryColour(ItemStack stack, int colour) {
-		stack.getOrCreateSubNbt(Arcanus.MOD_ID).putInt("PrimaryColour", colour);
+	public static void setPrimaryColor(ItemStack stack, Color color) {
+		stack.getOrCreateSubNbt(Arcanus.MOD_ID).putInt("PrimaryColor", color.asInt(Color.Ordering.RGB));
 	}
 
-	public static int getPrimaryColour(ItemStack stack) {
-		NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
-		int colour = ((StaffItem) stack.getItem()).defaultPrimaryColour;
+	public static Color getPrimaryColor(ItemStack stack) {
+		var color = ((StaffItem) stack.getItem()).defaultPrimaryColor;
+		var tag = stack.getSubNbt(Arcanus.MOD_ID);
 
-		if (tag != null && tag.contains("PrimaryColour", NbtElement.INT_TYPE))
-			colour = tag.getInt("PrimaryColour");
+		if (tag != null && tag.contains("PrimaryColor", NbtElement.INT_TYPE)) {
+			color = Color.fromInt(tag.getInt("PrimaryColor"), Color.Ordering.RGB);
+		}
 
-		return colour;
+		return color;
 	}
 
-	public static void setSecondaryColour(ItemStack stack, int colour) {
-		stack.getOrCreateSubNbt(Arcanus.MOD_ID).putInt("SecondaryColour", colour);
+	public static int getPrimaryColorRGB(ItemStack stack) {
+		return getPrimaryColor(stack).asInt(Color.Ordering.RGB);
 	}
 
-	public static int getSecondaryColour(ItemStack stack) {
-		NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
-		int colour = ((StaffItem) stack.getItem()).defaultSecondaryColour;
+	public static void setSecondaryColor(ItemStack stack, Color color) {
+		stack.getOrCreateSubNbt(Arcanus.MOD_ID).putInt("SecondaryColor", color.asInt(Color.Ordering.RGB));
+	}
 
-		if (tag != null && tag.contains("SecondaryColour", NbtElement.INT_TYPE))
-			colour = tag.getInt("SecondaryColour");
+	public static Color getSecondaryColor(ItemStack stack) {
+		var color = ((StaffItem) stack.getItem()).defaultSecondaryColor;
+		var tag = stack.getSubNbt(Arcanus.MOD_ID);
+		if (tag != null && tag.contains("SecondaryColor", NbtElement.INT_TYPE)) {
+			color = Color.fromInt(tag.getInt("SecondaryColor"), Color.Ordering.RGB);
+		}
 
-		return colour;
+		return color;
+	}
+
+	public static int getSecondaryColorRGB(ItemStack stack) {
+		return getSecondaryColor(stack).asInt(Color.Ordering.RGB);
+	}
+
+	public static ItemStack setCraftedBy(ItemStack stack, UUID uuid) {
+		NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
+		tag.putUuid("OwnerId", uuid);
+		return stack;
 	}
 }
