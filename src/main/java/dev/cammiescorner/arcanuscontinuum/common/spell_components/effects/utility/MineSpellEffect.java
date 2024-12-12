@@ -39,7 +39,7 @@ public class MineSpellEffect extends SpellEffect {
 					if(count < 4 && state.isIn(BlockTags.NEEDS_DIAMOND_TOOL))
 						return;
 
-					world.breakBlock(blockHit.getBlockPos(), true);
+					world.breakBlock(blockHit.getBlockPos(), true, caster);
 				}
 			}
 		}

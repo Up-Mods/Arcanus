@@ -110,9 +110,8 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 
 	@Override
 	public void remove(RemovalReason reason) {
-		if (reason == RemovalReason.KILLED && !getWorld().isClient() && getCaster() != null && getTarget() != null) {
+		if(reason == RemovalReason.KILLED && !getWorld().isClient() && getCaster() != null && getTarget() != null)
 			SpellShape.castNext(getCaster(), getTarget().getPos(), getTarget(), (ServerWorld) getWorld(), stack, groups, groupIndex, potency);
-		}
 
 		super.remove(reason);
 	}
