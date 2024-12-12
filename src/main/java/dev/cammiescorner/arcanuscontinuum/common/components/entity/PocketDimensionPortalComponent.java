@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 
+import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.PocketDimensionPortalEntity;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.onyxstudios.cca.api.v3.component.Component;
@@ -54,8 +54,9 @@ public class PocketDimensionPortalComponent implements Component {
 			if(otherWorld != null) {
 				Entity oldPortal = otherWorld.getEntity(portalId);
 
-				if(oldPortal != null)
+				if(oldPortal != null) {
 					oldPortal.remove(Entity.RemovalReason.DISCARDED);
+				}
 			}
 		}
 
@@ -66,7 +67,7 @@ public class PocketDimensionPortalComponent implements Component {
 			worldKey = world.getRegistryKey();
 			portalPos = pos;
 
-			world.getProperties().getComponent(ArcanusComponents.POCKET_DIMENSION_COMPONENT).setExit(player, world, pos);
+			PocketDimensionComponent.get(world).setExit(player, world, pos);
 			portal.setProperties(player.getUuid(), pos, pullStrength, ArcanusHelper.getMagicColor(player));
 			world.spawnEntity(portal);
 		}

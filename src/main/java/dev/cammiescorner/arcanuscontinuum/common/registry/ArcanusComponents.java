@@ -20,18 +20,18 @@ import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
-import dev.onyxstudios.cca.api.v3.level.LevelComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.level.LevelComponentInitializer;
+import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
+import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.EmptyChunk;
 import org.jetbrains.annotations.Nullable;
@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class ArcanusComponents implements EntityComponentInitializer, LevelComponentInitializer, ChunkComponentInitializer {
-	// ----- Level Components ----- \\
+public class ArcanusComponents implements ChunkComponentInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
+	// ----- Scoreboard Components ----- \\
 	public static final ComponentKey<PocketDimensionComponent> POCKET_DIMENSION_COMPONENT = createComponent("pocket_dimension", PocketDimensionComponent.class);
 
 	// ----- Chunk Components ----- \\
@@ -56,7 +56,7 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 	public static final ComponentKey<LastCastTimeComponent> LAST_CAST_TIME_COMPONENT = createComponent("last_cast_time", LastCastTimeComponent.class);
 	public static final ComponentKey<StunComponent> STUN_COMPONENT = createComponent("stun", StunComponent.class);
 	public static final ComponentKey<QuestComponent> QUEST_COMPONENT = createComponent("quests", QuestComponent.class);
-	public static final ComponentKey<MagicColourComponent> MAGIC_COLOUR = createComponent("magic_colour", MagicColourComponent.class);
+	public static final ComponentKey<MagicColorComponent> MAGIC_COLOR = createComponent("magic_color", MagicColorComponent.class);
 	public static final ComponentKey<BoltTargetComponent> BOLT_TARGET = createComponent("bolt_target", BoltTargetComponent.class);
 	public static final ComponentKey<SpellShapeComponent> SPELL_SHAPE = createComponent("spell_shape", SpellShapeComponent.class);
 	public static final ComponentKey<SizeComponent> SIZE = createComponent("size", SizeComponent.class);
@@ -66,11 +66,6 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 	public static final ComponentKey<GuardianOrbComponent> GUARDIAN_ORB_COMPONENT = createComponent("guardian_orb", GuardianOrbComponent.class);
 	public static final ComponentKey<PortalCoolDownComponent> PORTAL_COOL_DOWN_COMPONENT = createComponent("portal_cool_down", PortalCoolDownComponent.class);
 	public static final ComponentKey<CounterComponent> COUNTER_COMPONENT = createComponent("counter", CounterComponent.class);
-
-	@Override
-	public void registerLevelComponentFactories(LevelComponentFactoryRegistry registry) {
-		registry.register(POCKET_DIMENSION_COMPONENT, PocketDimensionComponent::new);
-	}
 
 	@Override
 	public void registerChunkComponentFactories(ChunkComponentFactoryRegistry registry) {
@@ -88,15 +83,15 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 		registry.beginRegistration(LivingEntity.class, LAST_CAST_TIME_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(LastCastTimeComponent::new);
 		registry.beginRegistration(LivingEntity.class, STUN_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(StunComponent::new);
 		registry.beginRegistration(PlayerEntity.class, QUEST_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(QuestComponent::new);
-		registry.beginRegistration(ManaShieldEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
-		registry.beginRegistration(SmiteEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
-		registry.beginRegistration(MagicRuneEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
-		registry.beginRegistration(MagicProjectileEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
-		registry.beginRegistration(AreaOfEffectEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
-		registry.beginRegistration(BeamEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
-		registry.beginRegistration(GuardianOrbEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
-		registry.beginRegistration(AggressorbEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
-		registry.beginRegistration(PocketDimensionPortalEntity.class, MAGIC_COLOUR).end(MagicColourComponent::new);
+		registry.beginRegistration(ManaShieldEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
+		registry.beginRegistration(SmiteEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
+		registry.beginRegistration(MagicRuneEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
+		registry.beginRegistration(MagicProjectileEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
+		registry.beginRegistration(AreaOfEffectEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
+		registry.beginRegistration(BeamEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
+		registry.beginRegistration(GuardianOrbEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
+		registry.beginRegistration(AggressorbEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
+		registry.beginRegistration(PocketDimensionPortalEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
 		registry.beginRegistration(LivingEntity.class, BOLT_TARGET).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(BoltTargetComponent::new);
 		registry.beginRegistration(MagicProjectileEntity.class, SPELL_SHAPE).end(SpellShapeComponent::new);
 		registry.beginRegistration(Entity.class, SLOW_TIME_COMPONENT).end(SlowTimeComponent::new);
@@ -122,8 +117,8 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 	}
 
 	// ----- Helper Methods ----- //
-	public static void teleportToPocketDimension(WorldProperties properties, PlayerEntity ownerOfPocket, Entity entity) {
-		POCKET_DIMENSION_COMPONENT.get(properties).teleportToPocketDimension(ownerOfPocket, entity);
+	public static void teleportToPocketDimension(MinecraftServer server, PlayerEntity ownerOfPocket, Entity entity) {
+		PocketDimensionComponent.get(server).teleportToPocketDimension(ownerOfPocket, entity);
 	}
 
 	public static void addWardedBlock(PlayerEntity player, BlockPos pos) {
@@ -265,11 +260,11 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 	}
 
 	public static Color getColor(Entity entity) {
-		return MAGIC_COLOUR.get(entity).getColor();
+		return MAGIC_COLOR.get(entity).getColor();
 	}
 
 	public static void setColor(Entity entity, Color colour) {
-		MAGIC_COLOUR.get(entity).setColor(colour);
+		MAGIC_COLOR.get(entity).setColor(colour);
 	}
 
 	public static Vec3d getBoltPos(LivingEntity entity) {
@@ -394,5 +389,10 @@ public class ArcanusComponents implements EntityComponentInitializer, LevelCompo
 
 	public static long getCounterEnd(LivingEntity entity) {
 		return entity.getComponent(COUNTER_COMPONENT).getEndTime();
+	}
+
+	@Override
+	public void registerScoreboardComponentFactories(ScoreboardComponentFactoryRegistry registry) {
+		registry.registerScoreboardComponent(POCKET_DIMENSION_COMPONENT, PocketDimensionComponent::new);
 	}
 }

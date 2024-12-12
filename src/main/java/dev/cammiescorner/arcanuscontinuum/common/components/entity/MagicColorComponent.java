@@ -7,11 +7,11 @@ import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 
-public class MagicColourComponent implements AutoSyncedComponent {
+public class MagicColorComponent implements AutoSyncedComponent {
 	private final Entity entity;
 	private Color color = Arcanus.DEFAULT_MAGIC_COLOUR;
 
-	public MagicColourComponent(Entity entity) {
+	public MagicColorComponent(Entity entity) {
 		this.entity = entity;
 	}
 
@@ -31,6 +31,6 @@ public class MagicColourComponent implements AutoSyncedComponent {
 
 	public void setColor(Color color) {
 		this.color = color;
-		ArcanusComponents.MAGIC_COLOUR.sync(entity);
+		ArcanusComponents.MAGIC_COLOR.sync(entity);
 	}
 }

@@ -31,47 +31,53 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 
 	@Override
 	public void tick() {
-		if(!getWorld().isClient() && (getCaster() == null || !getCaster().isAlive()) || getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan + 20) {
+		if (!getWorld().isClient() && (getCaster() == null || !getCaster().isAlive()) || getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan + 20) {
 			kill();
 			return;
 		}
 
-		if(getTrueAge() <= ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan) {
+		if (getTrueAge() <= ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan) {
 			Box box = new Box(0, 0, 0, 0, 0, 0).expand(4 + pullStrength).offset(getPos());
 			double boxRadius = box.getXLength() / 2;
 			double boxRadiusSq = boxRadius * boxRadius;
 
-			if(getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.portalGrowTime) {
-				getWorld().getEntitiesByClass(Entity.class, getBoundingBox(), entity -> entity.canUsePortals() && !entity.isSpectator() && (!(entity instanceof PlayerEntity player) || !ArcanusComponents.hasPortalCoolDown(player))).forEach(entity -> {
-					if(!(entity instanceof PocketDimensionPortalEntity))
-						ArcanusComponents.teleportToPocketDimension(getWorld().getProperties(), getCaster(), entity);
-				});
-
-				if(ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.canSuckEntitiesIn) {
-					getWorld().getEntitiesByClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && !(entity instanceof PlayerEntity player && (player.isCreative() || ArcanusComponents.hasPortalCoolDown(player)))).forEach(entity -> {
-						double distanceSq = getPos().squaredDistanceTo(entity.getPos());
-
-						if(!(entity instanceof PocketDimensionPortalEntity) && distanceSq <= boxRadiusSq && distanceSq != 0) {
-							Vec3d direction = getPos().subtract(entity.getPos()).normalize();
-							double inverseSq = 1 / distanceSq;
-
-							entity.addVelocity(direction.multiply(inverseSq));
-							entity.velocityModified = true;
-						}
+			// TODO tag for entities that are immune to portals, which should include portals themselves
+			if (!getWorld().isClient()) {
+				if (getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.portalGrowTime) {
+					getWorld().getOtherEntities(this, getBoundingBox(), entity -> entity.canUsePortals() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && (!(entity instanceof PlayerEntity player) || !ArcanusComponents.hasPortalCoolDown(player))).forEach(entity -> {
+						ArcanusComponents.teleportToPocketDimension(getServer(), getCaster(), entity);
 					});
+
+					if (ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.canSuckEntitiesIn) {
+						getWorld().getOtherEntities(this, box, entity -> entity.isAlive() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && !(entity instanceof PlayerEntity player && (player.isCreative() || ArcanusComponents.hasPortalCoolDown(player)))).forEach(entity -> {
+							double distanceSq = getPos().squaredDistanceTo(entity.getPos());
+
+							if (distanceSq <= boxRadiusSq && distanceSq != 0) {
+								Vec3d direction = getPos().subtract(entity.getPos()).normalize();
+								double inverseSq = 1 / distanceSq;
+
+								entity.addVelocity(direction.multiply(inverseSq));
+								entity.velocityModified = true;
+							}
+						});
+					}
+				}
+			}
+			else {
+				for (int i = 0; i < boxRadius * 2; ++i) {
+					double particleX = getPos().getX() + random.nextGaussian() * boxRadius;
+					double particleY = getPos().getY();
+					double particleZ = getPos().getZ() + random.nextGaussian() * boxRadius;
+					Vec3d particlePos = new Vec3d(particleX, particleY, particleZ);
+					Vec3d particleVelocity = particlePos.subtract(getPos());
+
+					if (particlePos.squaredDistanceTo(getPos()) <= boxRadiusSq) {
+						getWorld().addParticle(ParticleTypes.PORTAL, particleX, particleY, particleZ, particleVelocity.getX(), particleVelocity.getY(), particleVelocity.getZ());
+					}
 				}
 			}
 
-			for(int i = 0; i < boxRadius * 2; ++i) {
-				double particleX = getPos().getX() + random.nextGaussian() * boxRadius;
-				double particleY = getPos().getY();
-				double particleZ = getPos().getZ() + random.nextGaussian() * boxRadius;
-				Vec3d particlePos = new Vec3d(particleX, particleY, particleZ);
-				Vec3d particleVelocity = particlePos.subtract(getPos());
 
-				if(particlePos.squaredDistanceTo(getPos()) <= boxRadiusSq)
-					getWorld().addParticle(ParticleTypes.PORTAL, particleX, particleY, particleZ, particleVelocity.getX(), particleVelocity.getY(), particleVelocity.getZ());
-			}
 		}
 
 		super.tick();
@@ -103,10 +109,14 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	}
 
 	private PlayerEntity getCaster() {
-		if(getWorld().getServer() != null)
-			for(ServerWorld serverWorld : getWorld().getServer().getWorlds())
-				if(serverWorld.getEntity(casterId) instanceof PlayerEntity caster)
+		var server = getServer();
+		if (server != null) {
+			for (ServerWorld serverWorld : server.getWorlds()) {
+				if (serverWorld.getEntity(casterId) instanceof PlayerEntity caster) {
 					return caster;
+				}
+			}
+		}
 
 		return null;
 	}

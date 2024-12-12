@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -27,7 +26,7 @@ public class RegeneratePocketDimensionCommand {
 
 	public static int regeneratePocket(CommandContext<ServerCommandSource> context, ServerPlayerEntity player) throws CommandSyntaxException {
 		var pocketDimension = context.getSource().getServer().getWorld(PocketDimensionComponent.POCKET_DIM);
-		var component = context.getSource().getWorld().getProperties().getComponent(ArcanusComponents.POCKET_DIMENSION_COMPONENT);
+		var component = PocketDimensionComponent.get(context.getSource().getServer());
 
 		if (!component.generatePlotSpace(player, pocketDimension)) {
 			context.getSource().sendError(Text.literal("Pocket dimension location not found for player %s".formatted(player.getEntityName())));

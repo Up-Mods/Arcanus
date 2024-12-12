@@ -17,6 +17,8 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
@@ -24,7 +26,6 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.math.*;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 import org.quiltmc.qsl.worldgen.dimension.api.QuiltDimensions;
 
 import java.util.*;
@@ -34,10 +35,22 @@ public class PocketDimensionComponent implements Component {
 	private final Map<UUID, Box> existingPlots = new HashMap<>();
 	private final Map<UUID, Pair<RegistryKey<World>, Vec3d>> exitSpot = new HashMap<>();
 	private final Random random = new Random();
-	private final WorldProperties properties;
+	private final MinecraftServer server;
 
-	public PocketDimensionComponent(WorldProperties properties) {
-		this.properties = properties;
+	public PocketDimensionComponent(Scoreboard scoreboard, MinecraftServer server) {
+		this.server = server;
+	}
+
+	public static PocketDimensionComponent get(MinecraftServer server) {
+		return server.getScoreboard().getComponent(ArcanusComponents.POCKET_DIMENSION_COMPONENT);
+	}
+
+	public static PocketDimensionComponent get(World world) {
+		if (world instanceof ServerWorld serverWorld) {
+			serverWorld.getScoreboard().getComponent(ArcanusComponents.POCKET_DIMENSION_COMPONENT);
+		}
+
+		throw new IllegalStateException("World is not a ServerWorld!");
 	}
 
 	@Override

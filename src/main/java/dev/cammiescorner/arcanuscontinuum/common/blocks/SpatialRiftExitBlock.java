@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanuscontinuum.common.blocks;
 
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -33,8 +33,9 @@ public class SpatialRiftExitBlock extends Block implements BlockEntityProvider {
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if(player instanceof ServerPlayerEntity serverPlayer)
-			world.getProperties().getComponent(ArcanusComponents.POCKET_DIMENSION_COMPONENT).teleportOutOfPocketDimension(serverPlayer);
+		if(player instanceof ServerPlayerEntity serverPlayer) {
+			PocketDimensionComponent.get(world).teleportOutOfPocketDimension(serverPlayer);
+		}
 
 		return ActionResult.success(world.isClient());
 	}

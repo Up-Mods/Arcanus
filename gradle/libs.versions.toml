@@ -35,9 +35,9 @@ quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loade
 quilted_fabric_api = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api", version.ref = "quilted_fabric_api" }
 quilted_fabric_api_deprecated = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated", version.ref = "quilted_fabric_api" }
 cca_base = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-base", version.ref = "cca" }
-cca_entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
-cca_level = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-level", version.ref = "cca" }
 cca_chunk = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-chunk", version.ref = "cca" }
+cca_entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
+cca_scoreboard = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-scoreboard", version.ref = "cca" }
 trinkets = { module = "dev.emi:trinkets", version.ref = "trinkets" }
 sparkweave = { module = "dev.upcraft.sparkweave:Sparkweave-Quilt", version.ref = "sparkweave" }
 patchouli = { module = "vazkii.patchouli:Patchouli", version.ref = "patchouli" }
@@ -60,7 +60,7 @@ explosive_enhancement = { module = "maven.modrinth:explosive-enhancement", versi
 # If you have multiple similar dependencies, you can declare a dependency bundle and reference it on the build script with "libs.bundles.example".
 [bundles]
 quilted_fabric_api = ["quilted_fabric_api", "quilted_fabric_api_deprecated"]
-cca = ["cca_base", "cca_entity", "cca_level", "cca_chunk"]
+cca = ["cca_base", "cca_chunk", "cca_entity", "cca_scoreboard"]
 lambdynamiclights_runtime = ["lambdynamiclights", "spruceui"]
 pehkui_runtime = ["pehkui", "kanos"]
 
