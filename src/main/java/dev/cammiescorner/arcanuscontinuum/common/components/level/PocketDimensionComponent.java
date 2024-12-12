@@ -34,7 +34,6 @@ public class PocketDimensionComponent implements Component {
 	public static final RegistryKey<World> POCKET_DIM = RegistryKey.of(RegistryKeys.WORLD, Arcanus.id("pocket_dimension"));
 	private final Map<UUID, Box> existingPlots = new HashMap<>();
 	private final Map<UUID, Pair<RegistryKey<World>, Vec3d>> exitSpot = new HashMap<>();
-	private final Random random = new Random();
 	private final MinecraftServer server;
 
 	public PocketDimensionComponent(Scoreboard scoreboard, MinecraftServer server) {
@@ -129,7 +128,7 @@ public class PocketDimensionComponent implements Component {
 			if (pocketDim != null) {
 				Box plot = existingPlots.get(ownerOfPocket.getUuid());
 				if (plot == null) {
-					plot = assignNewPlot(ownerOfPocket, pocketDim);
+					plot = assignNewPlot(ownerOfPocket);
 					generatePlotSpace(ownerOfPocket, pocketDim);
 				}
 				else if (!chunksExist(plot, pocketDim)) {
@@ -177,20 +176,20 @@ public class PocketDimensionComponent implements Component {
 		}
 	}
 
-	public Box assignNewPlot(PlayerEntity player, ServerWorld pocketDim) {
+	public Box assignNewPlot(PlayerEntity player) {
 		int pocketWidth = Math.round(ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.pocketWidth / 2f) + 1;
 		int pocketHeight = Math.round(ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.pocketHeight / 2f) + 1;
 
-		var boxContainer = new Object() {
-			Box box = new Box(-pocketWidth, -pocketHeight, -pocketWidth, pocketWidth, pocketHeight, pocketWidth);
-		};
+		var existingPlotsWithSpacing = existingPlots.values().stream().map(existing -> existing.expand(38)).toList();
+		Box box = new Box(-pocketWidth, -pocketHeight, -pocketWidth, pocketWidth, pocketHeight, pocketWidth);
 
-		while (existingPlots.entrySet().stream().anyMatch(entry -> entry.getValue().intersects(boxContainer.box.expand(38))))
-			boxContainer.box = boxContainer.box.offset(random.nextInt(-468748, 468749) * 64, random.nextInt(-3, 4) * 64, random.nextInt(-468748, 468749) * 64);
+		while (existingPlotsWithSpacing.stream().anyMatch(box::intersects)) {
+			box = new Box(-pocketWidth, -pocketHeight, -pocketWidth, pocketWidth, pocketHeight, pocketWidth).offset(player.getRandom().rangeClosed(-468748, 468748) * 64, player.getRandom().rangeClosed(-3, 3) * 64, player.getRandom().rangeClosed(-468748, 468748) * 64);
+		}
 
-		existingPlots.put(player.getUuid(), boxContainer.box);
+		existingPlots.put(player.getUuid(), box);
 
-		return boxContainer.box;
+		return box;
 	}
 
 	public boolean generatePlotSpace(PlayerEntity player, ServerWorld pocketDim) {
