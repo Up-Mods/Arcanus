@@ -65,6 +65,10 @@ public class Spell {
 		return name;
 	}
 
+	public boolean isEmpty() {
+		return groups.isEmpty() || groups.get(0).isEmpty();
+	}
+
 	public Weight getWeight() {
 		int averageWeightIndex = 0;
 

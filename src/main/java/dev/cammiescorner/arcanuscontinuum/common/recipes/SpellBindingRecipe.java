@@ -4,10 +4,10 @@ import com.google.common.collect.Lists;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Spell;
 import dev.cammiescorner.arcanuscontinuum.common.items.SpellBookItem;
-import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusRecipes;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
 import net.minecraft.inventory.RecipeInputInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -20,20 +20,26 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
 import java.util.List;
 
+//TODO use tag for spell books
 public class SpellBindingRecipe extends SpecialCraftingRecipe {
 	public SpellBindingRecipe(Identifier identifier, CraftingCategory category) {
 		super(identifier, category);
 	}
 
+	private static final int[] INDICES = new int[]{7, 0, 1, 6, 0, 2, 5, 4, 3};
+
 	@Override
 	public DefaultedList<ItemStack> getRemainder(RecipeInputInventory inventory) {
 		DefaultedList<ItemStack> list = DefaultedList.ofSize(inventory.size(), ItemStack.EMPTY);
 
-		for(int i = 0; i < list.size(); ++i)
-			if(inventory.getStack(i).getItem() instanceof SpellBookItem)
+		for (int i = 0; i < list.size(); ++i) {
+			if (inventory.getStack(i).getItem() instanceof SpellBookItem) {
 				list.set(i, inventory.getStack(i).copy());
+			}
+		}
 
 		return list;
 	}
@@ -43,23 +49,22 @@ public class SpellBindingRecipe extends SpecialCraftingRecipe {
 		List<ItemStack> list = Lists.newArrayList();
 		ItemStack result = ItemStack.EMPTY;
 
-		for(int i = 0; i < inv.size(); ++i) {
+		for (int i = 0; i < inv.size(); ++i) {
 			ItemStack stack = inv.getStack(i);
 
-			if(!stack.isEmpty()) {
-				Item item = stack.getItem();
-
-				if(item instanceof StaffItem) {
-					if(!result.isEmpty() || i != 4)
+			if (!stack.isEmpty()) {
+				if(stack.isIn(ArcanusTags.STAVES)) {
+					if (i != 4) {
 						return false;
+					}
 
 					result = stack.copy();
 				}
-				else {
-					if(!(item instanceof SpellBookItem) || i == 4)
-						return false;
-
+				else if(stack.isOf(ArcanusItems.SPELL_BOOK.get())) {
 					list.add(stack);
+				}
+				else {
+					return false;
 				}
 			}
 		}
@@ -70,65 +75,61 @@ public class SpellBindingRecipe extends SpecialCraftingRecipe {
 
 	@Override
 	public ItemStack craft(RecipeInputInventory inv, DynamicRegistryManager manager) {
-		DefaultedList<Spell> spells = DefaultedList.ofSize(8, new Spell());
-		ItemStack result = ItemStack.EMPTY;
+		ItemStack result = inv.getStack(4).copy();
 
-		if(inv.getStack(4).getItem() instanceof StaffItem) {
-			if(!result.isEmpty())
-				return ItemStack.EMPTY;
-
-			result = inv.getStack(4).copy();
+		if (!result.isIn(ArcanusTags.STAVES)) {
+			return ItemStack.EMPTY;
 		}
 
-		for(int i = 0; i < inv.size(); i++) {
-			if(i == 4)
-				continue;
+		NbtCompound tag = result.getOrCreateSubNbt(Arcanus.MOD_ID);
+		NbtList list = tag.getList("Spells", NbtElement.COMPOUND_TYPE);
 
-			ItemStack stack = inv.getStack(i);
+		var spells = new Spell[8];
+		Arrays.fill(spells, new Spell());
 
-			if(!stack.isEmpty()) {
-				Spell spell = new Spell();
-				int[] indices = new int[] { 7, 0, 1, 6, 0, 2, 5, 4, 3 };
-
-				if(stack.getItem() instanceof SpellBookItem)
-					spell = SpellBookItem.getSpell(stack);
-
-				spells.set(indices[i], spell);
+		for (int i = 0; i < list.size(); i++) {
+			try {
+				spells[i] = Spell.fromNbt(list.getCompound(i));
+			} catch (Exception e) {
+				Arcanus.LOGGER.error("Failed to load spell from NBT", e);
 			}
 		}
 
-		return !result.isEmpty() && !spells.isEmpty() ? applySpells(result, spells) : ItemStack.EMPTY;
+		int count = 0;
+
+		for (int i = 0; i < inv.size(); i++) {
+			if (i == 4) {
+				continue;
+			}
+
+			ItemStack stack = inv.getStack(i);
+			if (stack.isOf(ArcanusItems.SPELL_BOOK.get())) {
+				spells[INDICES[i]] = SpellBookItem.getSpell(stack);
+				count++;
+			}
+		}
+
+		if(count == 0 || result.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+
+		list.clear();
+		for (Spell spell : spells) {
+			list.add(spell.toNbt());
+		}
+		tag.put("Spells", list);
+
+		return result;
 	}
 
 	@Override
 	public boolean fits(int width, int height) {
-		return width * height == 9;
+		// need the exact size because of the shape
+		return width == 3 && height == 3;
 	}
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return ArcanusRecipes.SPELL_BINDING.get();
-	}
-
-	private ItemStack applySpells(ItemStack stack, List<Spell> spells) {
-		NbtCompound tag = stack.getSubNbt(Arcanus.MOD_ID);
-
-		if(tag == null || tag.isEmpty())
-			return ItemStack.EMPTY;
-
-		NbtList list = tag.getList("Spells", NbtElement.COMPOUND_TYPE);
-
-		for(int i = 0; i < spells.size(); i++) {
-			Spell spell = spells.get(i);
-
-			if(spell.getComponentGroups().get(0).isEmpty())
-				continue;
-
-			list.set(i, spell.toNbt());
-		}
-
-		tag.put("Spells", list);
-
-		return stack;
 	}
 }

@@ -114,7 +114,7 @@ public class StaffItem extends Item {
 					return;
 				}
 
-				MutableText text = Text.literal(spell.getName()).formatted(spell.getComponentGroups().get(0).isEmpty() ? Formatting.GRAY : Formatting.GREEN);
+				MutableText text = Text.literal(spell.getName()).formatted(spell.isEmpty() ? Formatting.GRAY : Formatting.GREEN);
 				tooltip.add(text.append(Text.literal(" (").formatted(Formatting.DARK_GRAY)).append(Arcanus.getSpellPatternAsText(i).formatted(Formatting.GRAY)).append(Text.literal(")").formatted(Formatting.DARK_GRAY)));
 			}
 		}

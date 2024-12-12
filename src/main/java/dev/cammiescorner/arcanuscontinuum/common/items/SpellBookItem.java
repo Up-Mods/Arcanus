@@ -77,7 +77,7 @@ public class SpellBookItem extends Item {
 		ItemStack stack = player.getStackInHand(hand);
 		Spell spell = getSpell(stack);
 
-		if(spell.getComponentGroups().get(0).isEmpty())
+		if(spell.isEmpty())
 			return super.use(world, player, hand);
 
 		player.openHandledScreen(new ExtendedScreenHandlerFactory() {
