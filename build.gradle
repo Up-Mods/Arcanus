@@ -120,11 +120,11 @@ dependencies {
 
 	// sodium
 	modCompileOnly libs.sodium
-//	modLocalRuntime libs.sodium
+	modLocalRuntime libs.sodium
 
 	// iris
 	modCompileOnly libs.iris
-//	modLocalRuntime libs.iris
+	modLocalRuntime libs.iris
 
 	// explosive enhancement
 	modCompileOnly libs.explosive.enhancement
