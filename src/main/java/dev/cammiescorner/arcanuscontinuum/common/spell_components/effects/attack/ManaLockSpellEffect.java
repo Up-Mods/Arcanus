@@ -9,6 +9,7 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -26,8 +27,12 @@ public class ManaLockSpellEffect extends SpellEffect {
 	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, World world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.ENTITY) {
 			EntityHitResult entityHit = (EntityHitResult) target;
+			Entity entity = entityHit.getEntity();
 
-			if(entityHit.getEntity() instanceof LivingEntity livingEntity)
+			if(entity instanceof PlayerEntity playerTarget && caster instanceof PlayerEntity playerCaster && !playerCaster.shouldDamagePlayer(playerTarget))
+				return;
+
+			if(entity instanceof LivingEntity livingEntity)
 				livingEntity.addStatusEffect(new StatusEffectInstance(ArcanusStatusEffects.MANA_LOCK.get(), ArcanusConfig.AttackEffects.ManaLockEffectProperties.baseEffectDuration, (int) ((effects.stream().filter(ArcanusSpellComponents.MANA_LOCK::is).count() - 1) * potency), true, false));
 		}
 	}

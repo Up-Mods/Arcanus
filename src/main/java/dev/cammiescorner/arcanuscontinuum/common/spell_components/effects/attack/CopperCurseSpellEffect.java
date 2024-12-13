@@ -9,6 +9,7 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -26,8 +27,12 @@ public class CopperCurseSpellEffect extends SpellEffect {
 	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, World world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.ENTITY) {
 			EntityHitResult hitResult = (EntityHitResult) target;
+			Entity entity = hitResult.getEntity();
 
-			if(hitResult.getEntity() instanceof LivingEntity livingEntity)
+			if(entity instanceof PlayerEntity playerTarget && caster instanceof PlayerEntity playerCaster && !playerCaster.shouldDamagePlayer(playerTarget))
+				return;
+
+			if(entity instanceof LivingEntity livingEntity)
 				livingEntity.addStatusEffect(new StatusEffectInstance(ArcanusStatusEffects.COPPER_CURSE.get(), ArcanusConfig.AttackEffects.CopperCurseEffectProperties.baseEffectDuration + (ArcanusConfig.AttackEffects.CopperCurseEffectProperties.effectDurationModifier * ((int) ((effects.stream().filter(ArcanusSpellComponents.COPPER_CURSE::is).count() - 1) * potency))), 0, true, false));
 		}
 	}

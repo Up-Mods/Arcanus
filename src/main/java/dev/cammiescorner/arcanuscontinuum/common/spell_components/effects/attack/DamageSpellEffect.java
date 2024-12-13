@@ -9,6 +9,7 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusDamageTypes;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.EntityHitResult;
@@ -29,6 +30,9 @@ public class DamageSpellEffect extends SpellEffect {
 			EntityHitResult entityHit = (EntityHitResult) target;
 			Entity entity = entityHit.getEntity();
 			float damage = ArcanusConfig.AttackEffects.DamageEffectProperties.baseDamage;
+
+			if(entity instanceof PlayerEntity playerTarget && caster instanceof PlayerEntity playerCaster && !playerCaster.shouldDamagePlayer(playerTarget))
+				return;
 
 			if(caster != null && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted()) {
 				if(entity.isWet() && effects.contains(ArcanusSpellComponents.ELECTRIC.get()))

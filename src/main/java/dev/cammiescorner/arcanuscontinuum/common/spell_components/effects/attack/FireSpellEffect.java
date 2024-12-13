@@ -11,6 +11,7 @@ import net.minecraft.block.FireBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -31,8 +32,12 @@ public class FireSpellEffect extends SpellEffect {
 	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, World world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.ENTITY) {
 			EntityHitResult entityHit = (EntityHitResult) target;
+			Entity entity = entityHit.getEntity();
 
-			if(entityHit.getEntity() instanceof LivingEntity livingEntity)
+			if(entity instanceof PlayerEntity playerTarget && caster instanceof PlayerEntity playerCaster && !playerCaster.shouldDamagePlayer(playerTarget))
+				return;
+
+			if(entity instanceof LivingEntity livingEntity)
 				livingEntity.setOnFireFor((int) (ArcanusConfig.AttackEffects.FireEffectProperties.baseTimeOnFire * effects.stream().filter(ArcanusSpellComponents.FIRE::is).count() * potency));
 		}
 		else if(target.getType() == HitResult.Type.BLOCK) {

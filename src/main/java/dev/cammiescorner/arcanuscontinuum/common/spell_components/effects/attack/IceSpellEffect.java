@@ -9,6 +9,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.BlockHitResult;
@@ -29,8 +30,12 @@ public class IceSpellEffect extends SpellEffect {
 	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, World world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.ENTITY) {
 			EntityHitResult entityHit = (EntityHitResult) target;
+			Entity entity = entityHit.getEntity();
 
-			if(entityHit.getEntity() instanceof LivingEntity livingEntity)
+			if(entity instanceof PlayerEntity playerTarget && caster instanceof PlayerEntity playerCaster && !playerCaster.shouldDamagePlayer(playerTarget))
+				return;
+
+			if(entity instanceof LivingEntity livingEntity)
 				livingEntity.setFrozenTicks(livingEntity.getFrozenTicks() + (int) (ArcanusConfig.AttackEffects.IceEffectProperties.baseFreezingTime * effects.stream().filter(ArcanusSpellComponents.ICE::is).count() * potency));
 		}
 		else if(target.getType() == HitResult.Type.BLOCK) {
