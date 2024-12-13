@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.recipe.book.RecipeBookWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 
 import java.util.UUID;
@@ -33,13 +34,13 @@ public class SupporterScreen extends Screen {
 		Color haloColor = HaloData.getOrEmpty(playerId).color();
 		int xMiddle = (int) (width * 0.5);
 		int yMiddle = (int) (height * 0.5);
-		int yOffset = 0;
+		int yOffset = 15;
 
 		if(client != null && Entitlements.getOrEmpty(playerId).keys().contains(HaloData.ID)) {
-			haloColorField = new TextFieldWidget(textRenderer, xMiddle - 75, yMiddle - 10, 150, 20, Text.empty());
-			haloToggle = new ToggleButtonWidget(xMiddle + 80, yMiddle - 10, 20, 20, true);
+			haloColorField = new TextFieldWidget(textRenderer, xMiddle + 11, yMiddle - 35, 64, 20, Text.empty());
+			haloToggle = new ToggleButtonWidget(xMiddle + 80, yMiddle - 35, 20, 20, true);
 			haloToggle.setTextureUV(1, 208, 13, 18, RecipeBookWidget.TEXTURE);
-			yOffset = 10;
+			yOffset = 5;
 
 			addDrawableChild(haloColorField);
 			addDrawableChild(haloToggle);
@@ -47,7 +48,7 @@ public class SupporterScreen extends Screen {
 			haloColorField.setText(String.format("#%06X", haloColor.asInt(Color.Ordering.RGBA)));
 		}
 
-		magicColorField = new TextFieldWidget(textRenderer, (int) (width * 0.5) - 75, (int) (height * 0.5) + yOffset, 150, 20, Text.empty());
+		magicColorField = new TextFieldWidget(textRenderer, xMiddle + 11, yMiddle - yOffset, 64, 20, Text.empty());
 		addDrawableChild(magicColorField);
 		magicColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.magic_color"));
 		magicColorField.setText(String.format("#%06X", magicColor.asInt(Color.Ordering.RGBA)));
@@ -63,6 +64,17 @@ public class SupporterScreen extends Screen {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		renderBackground(graphics);
+		graphics.setShaderColor(0.125f, 0.125f, 0.125f, 1f);
+		graphics.drawTexture(Screen.OPTIONS_BACKGROUND_TEXTURE, 16, 32, 0, 0, width - 32, height - 65, 32, 32);
+		graphics.setShaderColor(1f, 1f, 1f, 1f);
+		graphics.fillGradient(RenderLayer.getGuiOverlay(), 16, 32, width - 16, 36, -16777216, 0, 0); // top shadow
+		graphics.fillGradient(RenderLayer.getGuiOverlay(), 16, height - 37, width - 16, height - 33, 0, -16777216, 0); // bottom shadow
+
+		int xMiddle = (int) (width * 0.5);
+		int yMiddle = (int) (height * 0.5);
+
+		graphics.drawText(textRenderer, "Halo Color:", xMiddle - 50, yMiddle - 29, 0xffffff, false);
+		graphics.drawText(textRenderer, "Magic Color:", xMiddle - 55, yMiddle + 1, 0xffffff, false);
 		super.render(graphics, mouseX, mouseY, delta);
 	}
 
