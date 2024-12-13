@@ -114,15 +114,12 @@ public class NecroSkeletonEntity extends AbstractSkeletonEntity implements Smart
 	@Override
 	public List<ExtendedSensor<NecroSkeletonEntity>> getSensors() {
 		return ObjectArrayList.of(
-				new NearbyPlayersSensor<>(),
-				new NearbyLivingEntitySensor<NecroSkeletonEntity>().setPredicate((target, entity) ->
+				new NearbyPlayersSensor<NecroSkeletonEntity>().setPredicate((target, skeleton) -> !(getCaster() instanceof PlayerEntity owner) || owner.shouldDamagePlayer(target)),
+				new NearbyLivingEntitySensor<NecroSkeletonEntity>().setPredicate((target, skeleton) ->
 						!target.getUuid().equals(ownerId) &&
 						(!(target instanceof NecroSkeletonEntity other) || !other.ownerId.equals(ownerId)) &&
 						(!(target instanceof Tameable tameable) || !ownerId.equals(tameable.getOwnerUuid())) &&
-						(target instanceof PlayerEntity ||
-						target instanceof IronGolemEntity ||
-						target instanceof WolfEntity ||
-						target instanceof HostileEntity)
+						(target instanceof IronGolemEntity || target instanceof WolfEntity || target instanceof HostileEntity)
 				)
 		);
 	}
@@ -170,6 +167,7 @@ public class NecroSkeletonEntity extends AbstractSkeletonEntity implements Smart
 	private LivingEntity getCaster() {
 		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(ownerId) instanceof LivingEntity caster)
 			return caster;
+
 		return null;
 	}
 
