@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 // TODO replace with SparkWeave's Color class in 1.21
 public class Color {
-
+	public static final Color WHITE = Color.fromRGBA(255, 255, 255, 255);
 	public static final Ordering DEFAULT_ORDERING = Color.Ordering.RGBA;
 	private final byte[] rgba;
 

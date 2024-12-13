@@ -7,5 +7,6 @@ accessible       field     net/minecraft/item/SmithingTemplateItem              
 accessible       field     net/minecraft/entity/mob/CreeperEntity                          CHARGED          Lnet/minecraft/entity/data/TrackedData;
 accessible       field     net/minecraft/client/world/ClientChunkManager                   chunks           Lnet/minecraft/client/world/ClientChunkManager$ClientChunkMap;
 accessible       field     net/minecraft/client/world/ClientChunkManager$ClientChunkMap    chunks           Ljava/util/concurrent/atomic/AtomicReferenceArray;
+accessible       field     net/minecraft/client/gui/screen/recipe/book/RecipeBookWidget TEXTURE Lnet/minecraft/util/Identifier;
 extendable       method    net/minecraft/entity/mob/AbstractSkeletonEntity                 getStepSound     ()Lnet/minecraft/sound/SoundEvent;
 accessible       method    net/minecraft/item/SmithingTemplateItem                         getArmorIcons    ()Ljava/util/List;

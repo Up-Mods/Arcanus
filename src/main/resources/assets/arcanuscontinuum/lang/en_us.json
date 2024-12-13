@@ -233,6 +233,10 @@
 	"config.arcanuscontinuum.supportEffectsCategory": "Support Effects",
 	"config.arcanuscontinuum.utilityEffectsCategory": "Utility Effects",
 	"config.arcanuscontinuum.movementEffectsCategory": "Movement Effects",
+  "config.arcanuscontinuum.supporter_settings": "Supporter Settings",
+  "config.arcanuscontinuum.supporter_settings.halo_color": "Halo Color",
+  "config.arcanuscontinuum.supporter_settings.magic_color": "Magic Color",
+  "config.arcanuscontinuum.supporter_settings.done": "Done",
 
 	"config.arcanuscontinuum.castingSpeedHasCoolDown": "Use Attack Cool Down for Casting?",
 	"config.arcanuscontinuum.sizeChangingIsPermanent": "Size Changing Effects are Permanent for Players and Tamed Animals (Requires Pehkui)",

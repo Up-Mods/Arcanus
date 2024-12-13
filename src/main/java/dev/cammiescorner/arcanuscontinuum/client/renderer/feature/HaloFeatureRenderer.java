@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanuscontinuum.client.models.feature.HaloModel;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
+import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.StaffType;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.HaloData;
 import net.minecraft.client.MinecraftClient;
@@ -33,9 +34,12 @@ public class HaloFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumerProvider vertices, int light, T player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		if (!player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get())) {
-			var data = player.datasync$getOrDefault(Arcanus.HALO_DATA, HaloData.empty());
-			data.color().ifPresent(color -> {
+		if(!player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+			HaloData data = player.datasync$getOrDefault(Arcanus.HALO_DATA, HaloData.empty());
+
+			if(data.shouldShow()) {
+				Color color = data.color();
+
 				model.setAngles(player, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
 				model.spinny.yaw = (float) Math.toRadians((player.age + player.getId() + tickDelta) * 2);
 				model.spinny.pivotZ = -3;
@@ -47,10 +51,7 @@ public class HaloFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T
 
 				model.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), color.alphaF());
 				matrices.pop();
-			});
-
-
+			}
 		}
-
 	}
 }

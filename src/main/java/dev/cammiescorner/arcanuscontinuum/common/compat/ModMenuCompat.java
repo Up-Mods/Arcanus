@@ -1,11 +1,11 @@
 package dev.cammiescorner.arcanuscontinuum.common.compat;
 
-import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
+import dev.cammiescorner.arcanuscontinuum.client.gui.screens.ArcanusConfigScreen;
 
 public class ModMenuCompat implements ModMenuApi {
 	@Override
@@ -16,7 +16,7 @@ public class ModMenuCompat implements ModMenuApi {
 			if(config == null)
 				return null;
 
-			return new ConfigScreen(null, config);
+			return new ArcanusConfigScreen(null, config);
 		};
 	}
 }
