@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public record HaloData(Color color, boolean shouldShow) {
 	public static final Identifier ID = Arcanus.id("halo");
-	private static final HaloData EMPTY = new HaloData(Color.WHITE, false);
+	private static final HaloData EMPTY = new HaloData(Color.fromInt(0xf2dd50, Color.Ordering.RGB), false);
 	public static final Codec<HaloData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		Color.CODEC.fieldOf("color").forGetter(HaloData::color),
 		Codec.BOOL.fieldOf("shouldShow").forGetter(HaloData::shouldShow)
