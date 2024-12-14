@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.client.gui.screens;
 
+import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.HaloData;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.WizardData;
@@ -45,15 +46,45 @@ public class SupporterScreen extends Screen {
 			addDrawableChild(haloColorField);
 			addDrawableChild(haloToggle);
 			haloColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.halo_color"));
-			haloColorField.setText(String.format("#%06X", haloColor.asInt(Color.Ordering.RGBA)));
+			haloColorField.setText(String.format("#%06X", haloColor.asInt(Color.Ordering.RGB)));
+			haloColorField.setMaxLength(7);
 		}
 
 		magicColorField = new TextFieldWidget(textRenderer, xMiddle + 11, yMiddle - yOffset, 64, 20, Text.empty());
 		addDrawableChild(magicColorField);
 		magicColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.magic_color"));
-		magicColorField.setText(String.format("#%06X", magicColor.asInt(Color.Ordering.RGBA)));
+		magicColorField.setText(String.format("#%06X", magicColor.asInt(Color.Ordering.RGB)));
+		magicColorField.setMaxLength(7);
 
 		addDrawableChild(ButtonWidget.builder(Text.translatable("config.arcanuscontinuum.supporter_settings.done"), buttonWidget -> {
+			if(haloColorField != null && haloToggle != null) {
+				int newHaloColor;
+
+				try {
+					String fieldText = haloColorField.getText().replace("#", "");
+					newHaloColor = Integer.parseInt(fieldText, 16);
+				}
+				catch(NumberFormatException e) {
+					Arcanus.LOGGER.warn("Halo Color value {} is invalid! Must be a hex code!", haloColorField.getText());
+					return;
+				}
+
+				Arcanus.HALO_DATA.setData(new HaloData(Color.fromInt(newHaloColor, Color.Ordering.RGB), haloToggle.isToggled()));
+			}
+
+			int newMagicColor;
+
+			try {
+				String fieldText = magicColorField.getText().replace("#", "");
+				newMagicColor = Integer.parseInt(fieldText, 16);
+			}
+			catch(NumberFormatException e) {
+				Arcanus.LOGGER.warn("Magic Color value {} is invalid! Must be a hex code!", magicColorField.getText());
+				return;
+			}
+
+			Arcanus.WIZARD_DATA.setData(new WizardData(Color.fromInt(newMagicColor, Color.Ordering.RGB)));
+
 			if(client != null)
 				client.setScreen(parent);
 			else
