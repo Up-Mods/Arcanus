@@ -23,4 +23,12 @@ public record HaloData(Color color, boolean shouldShow) {
 	public static HaloData getOrEmpty(UUID uuid) {
 		return Arcanus.HALO_DATA.getOrDefault(uuid, HaloData.empty());
 	}
+
+	public HaloData withEnabled(boolean enabled) {
+		return new HaloData(this.color(), enabled);
+	}
+
+	public HaloData withColor(Color color) {
+		return new HaloData(color, this.shouldShow());
+	}
 }

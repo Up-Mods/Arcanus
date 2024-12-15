@@ -212,6 +212,17 @@
 	"screen.arcanuscontinuum.tooltip.cycle_up": "Previous Skin",
 	"screen.arcanuscontinuum.tooltip.cycle_down": "Next Skin",
 
+  "screen.arcanuscontinuum.check.enabled": "✓",
+  "screen.arcanuscontinuum.check.disabled": "✘",
+
+  "config.arcanuscontinuum.supporter_settings": "Supporter Settings",
+  "config.arcanuscontinuum.supporter_settings.magic_color": "Magic Color",
+  "config.arcanuscontinuum.supporter_settings.halo_color": "Halo Color",
+  "config.arcanuscontinuum.supporter_settings.halo_enabled": "Halo Enabled",
+  "config.arcanuscontinuum.supporter_settings.halo_disabled": "Halo Disabled",
+  "config.arcanuscontinuum.supporter_settings.save_and_exit": "Save and Exit",
+  "screen.arcanuscontinuum.supporter_settings.saving": "Saving...",
+
 	"wizard_dialogue.arcanuscontinuum.no_wizard_armour": "Come back to me when you look like a wizard.",
 	"wizard_dialogue.arcanuscontinuum.put_on_robes": "Maybe wearing Wizard Robes will help...",
 	"scroll_of_knowledge.arcanuscontinuum.level_up": "You feel a little smarter...",
@@ -233,10 +244,6 @@
 	"config.arcanuscontinuum.supportEffectsCategory": "Support Effects",
 	"config.arcanuscontinuum.utilityEffectsCategory": "Utility Effects",
 	"config.arcanuscontinuum.movementEffectsCategory": "Movement Effects",
-  "config.arcanuscontinuum.supporter_settings": "Supporter Settings",
-  "config.arcanuscontinuum.supporter_settings.halo_color": "Halo Color",
-  "config.arcanuscontinuum.supporter_settings.magic_color": "Magic Color",
-  "config.arcanuscontinuum.supporter_settings.done": "Done",
 
 	"config.arcanuscontinuum.castingSpeedHasCoolDown": "Use Attack Cool Down for Casting?",
 	"config.arcanuscontinuum.sizeChangingIsPermanent": "Size Changing Effects are Permanent for Players and Tamed Animals (Requires Pehkui)",
