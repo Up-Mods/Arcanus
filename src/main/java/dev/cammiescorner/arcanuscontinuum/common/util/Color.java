@@ -6,6 +6,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.dynamic.Codecs;
+import net.minecraft.util.math.MathHelper;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 import org.joml.Vector4f;
 import org.joml.Vector4fc;
 
@@ -53,7 +56,7 @@ public class Color {
 	}
 
 	public static Color fromFloatsRGBA(float red, float green, float blue, float alpha) {
-		return fromRGBA((int) (red * 255.0F), (int) (green * 255.0F), (int) (blue * 255.0F), (int)(alpha * 255.0F));
+		return fromRGBA((int) (red * 255.0F), (int) (green * 255.0F), (int) (blue * 255.0F), (int) (alpha * 255.0F));
 	}
 
 	public static Color fromFloatsRGB(float red, float green, float blue) {
@@ -62,10 +65,10 @@ public class Color {
 
 	public static Color fromIntArray(Color.Ordering ordering, int... values) {
 		Preconditions.checkElementIndex(ordering.expectedLength() - 1, values.length);
-		int red = ordering.hasRed() ? values[ordering.iR()] : 0;
-		int green = ordering.hasGreen() ? values[ordering.iG()] : 0;
-		int blue = ordering.hasBlue() ? values[ordering.iB()] : 0;
-		int alpha = ordering.hasAlpha() ? values[ordering.iA()] : 255;
+		int red = ordering.hasRed() ? values[ordering.iR()] : 0x00;
+		int green = ordering.hasGreen() ? values[ordering.iG()] : 0x00;
+		int blue = ordering.hasBlue() ? values[ordering.iB()] : 0x00;
+		int alpha = ordering.hasAlpha() ? values[ordering.iA()] : 0xFF;
 		return fromRGBA(red, green, blue, alpha);
 	}
 
@@ -137,17 +140,23 @@ public class Color {
 
 	public int asInt(Color.Ordering ordering) {
 		int value = 0;
+		int maxIdx = ordering.expectedLength() - 1;
+
 		if (ordering.hasRed()) {
-			value |= red() << ((ordering.expectedLength - ordering.iR()) * 8);
+			assert ordering.iR() <= maxIdx;
+			value |= red() << ((maxIdx - ordering.iR()) * 8);
 		}
 		if (ordering.hasGreen()) {
-			value |= green() << ((ordering.expectedLength - ordering.iG()) * 8);
+			assert ordering.iG() <= maxIdx;
+			value |= green() << ((maxIdx - ordering.iG()) * 8);
 		}
 		if (ordering.hasBlue()) {
-			value |= blue() << ((ordering.expectedLength - ordering.iB()) * 8);
+			assert ordering.iB() <= maxIdx;
+			value |= blue() << ((maxIdx - ordering.iB()) * 8);
 		}
 		if (ordering.hasAlpha()) {
-			value |= alpha() << ((ordering.expectedLength - ordering.iA()) * 8);
+			assert ordering.iA() <= maxIdx;
+			value |= alpha() << ((maxIdx - ordering.iA()) * 8);
 		}
 		return value;
 	}
@@ -156,13 +165,17 @@ public class Color {
 		return new Vector4f(redF(), greenF(), blueF(), alphaF());
 	}
 
-	public java.awt.Color asAwt() {
-		var intValue = asInt(Color.Ordering.ARGB);
-		return new java.awt.Color(intValue, true);
+	public Vector3fc asVec3() {
+		return new Vector3f(redF(), greenF(), blueF());
 	}
 
-	public static Color fromInt(int intValue, Color.Ordering ordering) {
-		return fromIntArray(ordering, intValue >> 24 & 255, intValue >> 16 & 255, intValue >> 8 & 255, intValue & 255);
+	public static Color fromInt(int intValue, Ordering ordering) {
+		int c1 = intValue >> 24 & 255;
+		int c2 = intValue >> 16 & 255;
+		int c3 = intValue >> 8 & 255;
+		int c4 = intValue & 255;
+		int[] array = ordering.expectedLength == 3 ? new int[]{c2, c3, c4} : new int[]{c1, c2, c3, c4};
+		return fromIntArray(ordering, array);
 	}
 
 	public static Color fromARGB(int argb) {
@@ -170,19 +183,15 @@ public class Color {
 	}
 
 	/**
-	 * also known as HSV (hue, saturation, value)
+	 * HSV (hue, saturation, value), also known as HSB (hue, saturation, brightness)
 	 *
 	 * @param hue        angle as [0, 1], where 1.0 means a full circle and overflows back to 0.0
 	 * @param saturation saturation in [0, 1]
-	 * @param brightness brightness in [0, 1]
+	 * @param value      brightness in [0, 1]
 	 */
-	public static Color fromHSB(float hue, float saturation, float brightness) {
-		int argb = java.awt.Color.HSBtoRGB(hue, saturation, brightness);
-		return Color.fromInt(argb, Color.Ordering.ARGB);
-	}
-
-	public static Color fromAwt(java.awt.Color color) {
-		return fromInt(color.getRGB(), Color.Ordering.ARGB);
+	public static Color fromHSV(float hue, float saturation, float value) {
+		int argb = MathHelper.hsvToRgb(hue, saturation, value);
+		return Color.fromInt(argb, Ordering.ARGB);
 	}
 
 	public static final Codec<Color> CODEC_ARGB = Codec.INT.xmap(intValue -> Color.fromInt(intValue, Ordering.ARGB), Color::asIntARGB);
