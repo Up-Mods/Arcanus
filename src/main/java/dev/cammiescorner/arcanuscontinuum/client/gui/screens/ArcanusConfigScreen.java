@@ -21,7 +21,7 @@ public class ArcanusConfigScreen extends ConfigScreen {
 			addDrawableChild(ButtonWidget.builder(Text.translatable("config.arcanuscontinuum.supporter_settings"), buttonWidget -> {
 				if(client != null)
 					client.setScreen(new SupporterScreen(this));
-			}).positionAndSize((int) (width * 0.35) + 24, height - 27, 120, 20).build());
+			}).positionAndSize(width / 2 - 55, height - 27, 110, 20).build());
 		}
 	}
 }

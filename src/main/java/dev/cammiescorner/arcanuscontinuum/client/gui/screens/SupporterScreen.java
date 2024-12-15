@@ -8,53 +8,82 @@ import dev.upcraft.datasync.api.util.Entitlements;
 import dev.upcraft.datasync.api.util.GameProfileHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.recipe.book.RecipeBookWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.ToggleButtonWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class SupporterScreen extends Screen {
 	private final ArcanusConfigScreen parent;
+
+	private Entitlements userEntitlements;
+
+	@Nullable
+	private WizardData wizardData;
+
+	@Nullable
+	private HaloData haloData;
+
+	// primary group
 	private TextFieldWidget magicColorField;
+
+	// secondary group
 	private TextFieldWidget haloColorField;
 	private ToggleButtonWidget haloToggle;
 
 	public SupporterScreen(ArcanusConfigScreen parent) {
 		super(Text.empty());
 		this.parent = parent;
+
+		UUID playerId = GameProfileHelper.getClientProfile().getId();
+		this.userEntitlements = Entitlements.getOrEmpty(playerId);
+
+		if(userEntitlements.keys().contains(WizardData.ID)) {
+			this.wizardData = Arcanus.WIZARD_DATA.getOrDefault(playerId, WizardData.empty());
+		}
+		if(userEntitlements.keys().contains(HaloData.ID)) {
+			this.haloData = Arcanus.HALO_DATA.getOrDefault(playerId, HaloData.empty());
+		}
+	}
+
+	private boolean hasWizardData() {
+		return wizardData != null;
+	}
+
+	private boolean hasHaloData() {
+		return haloData != null;
 	}
 
 	@Override
 	protected void init() {
-		UUID playerId = GameProfileHelper.getClientProfile().getId();
-		Color magicColor = WizardData.getOrEmpty(playerId).magicColor();
-		Color haloColor = HaloData.getOrEmpty(playerId).color();
-		int xMiddle = (int) (width * 0.5);
-		int yMiddle = (int) (height * 0.5);
+		int centerX = width / 2;
+		int centerY = height / 2;
 		int yOffset = 15;
 
-		if(client != null && Entitlements.getOrEmpty(playerId).keys().contains(HaloData.ID)) {
-			haloColorField = new TextFieldWidget(textRenderer, xMiddle + 11, yMiddle - 35, 64, 20, Text.empty());
-			haloToggle = new ToggleButtonWidget(xMiddle + 80, yMiddle - 35, 20, 20, true);
-			haloToggle.setTextureUV(1, 208, 13, 18, RecipeBookWidget.TEXTURE);
-			yOffset = 5;
+//		if (hasHaloData()) {
+//			haloColorField = new TextFieldWidget(textRenderer, centerX + 11, centerY - 35, 64, 20, Text.empty());
+//			haloToggle = new ToggleButtonWidget(centerX + 80, centerY - 35, 20, 20, true);
+//			haloToggle.setTextureUV(1, 208, 13, 18, RecipeBookWidget.TEXTURE);
+//			yOffset = 5;
+//
+//			addDrawableChild(haloColorField);
+//			addDrawableChild(haloToggle);
+//			haloColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.halo_color"));
+//			haloColorField.setText(String.format("#%06X", haloData.color().asInt(Color.Ordering.RGB)));
+//			haloColorField.setMaxLength(7);
+//		}
 
-			addDrawableChild(haloColorField);
-			addDrawableChild(haloToggle);
-			haloColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.halo_color"));
-			haloColorField.setText(String.format("#%06X", haloColor.asInt(Color.Ordering.RGB)));
-			haloColorField.setMaxLength(7);
+		if (hasWizardData()) {
+			magicColorField = new TextFieldWidget(textRenderer, centerX + 11, centerY - yOffset, 64, 20, Text.empty());
+			addDrawableChild(magicColorField);
+			magicColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.magic_color"));
+			magicColorField.setText(String.format("#%06X", wizardData.magicColor().asInt(Color.Ordering.RGB)));
+			magicColorField.setMaxLength(7);
 		}
-
-		magicColorField = new TextFieldWidget(textRenderer, xMiddle + 11, yMiddle - yOffset, 64, 20, Text.empty());
-		addDrawableChild(magicColorField);
-		magicColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.magic_color"));
-		magicColorField.setText(String.format("#%06X", magicColor.asInt(Color.Ordering.RGB)));
-		magicColorField.setMaxLength(7);
 
 		addDrawableChild(ButtonWidget.builder(Text.translatable("config.arcanuscontinuum.supporter_settings.done"), buttonWidget -> {
 			if(haloColorField != null && haloToggle != null) {
@@ -89,7 +118,7 @@ public class SupporterScreen extends Screen {
 				client.setScreen(parent);
 			else
 				closeScreen();
-		}).positionAndSize(xMiddle - 50, height - 27, 100, 20).build());
+		}).positionAndSize(centerX - 55, height - 27, 110, 20).build());
 	}
 
 	@Override
@@ -101,19 +130,16 @@ public class SupporterScreen extends Screen {
 		graphics.fillGradient(RenderLayer.getGuiOverlay(), 16, 32, width - 16, 36, -16777216, 0, 0); // top shadow
 		graphics.fillGradient(RenderLayer.getGuiOverlay(), 16, height - 37, width - 16, height - 33, 0, -16777216, 0); // bottom shadow
 
-		int xMiddle = (int) (width * 0.5);
-		int yMiddle = (int) (height * 0.5);
+		int centerX = width / 2;
+		int centerY = height / 2;
 
-		graphics.drawText(textRenderer, "Halo Color:", xMiddle - 50, yMiddle - 29, 0xffffff, false);
-		graphics.drawText(textRenderer, "Magic Color:", xMiddle - 55, yMiddle + 1, 0xffffff, false);
+		graphics.drawText(textRenderer, "Halo Color:", centerX - 50, centerY - 29, 0xffffff, false);
+		graphics.drawText(textRenderer, "Magic Color:", centerX - 55, centerY + 1, 0xffffff, false);
 		super.render(graphics, mouseX, mouseY, delta);
 	}
 
 	@Override
 	public void closeScreen() {
-		if(client != null)
-			client.setScreen(parent);
-		else
-			super.closeScreen();
+		client.setScreen(parent);
 	}
 }
