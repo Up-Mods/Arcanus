@@ -26,7 +26,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -117,10 +116,6 @@ public class ArcanusComponents implements ChunkComponentInitializer, EntityCompo
 	}
 
 	// ----- Helper Methods ----- //
-	public static void teleportToPocketDimension(MinecraftServer server, PlayerEntity ownerOfPocket, Entity entity) {
-		PocketDimensionComponent.get(server).teleportToPocketDimension(ownerOfPocket, entity);
-	}
-
 	public static void addWardedBlock(PlayerEntity player, BlockPos pos) {
 		WardedBlocksComponent component = getWardedBlocksComponent(player.getWorld(), pos);
 		if(component != null)

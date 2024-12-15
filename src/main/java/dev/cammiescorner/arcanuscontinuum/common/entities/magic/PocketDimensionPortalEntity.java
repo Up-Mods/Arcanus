@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanuscontinuum.common.entities.magic;
 
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
+import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.entity.Entity;
@@ -12,6 +13,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.Box;
@@ -31,7 +33,8 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 
 	@Override
 	public void tick() {
-		if (!getWorld().isClient() && (getCaster() == null || !getCaster().isAlive()) || getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan + 20) {
+		var caster = getCaster();
+		if (!getWorld().isClient() && (caster == null || !caster.isAlive()) || getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan + 20) {
 			kill();
 			return;
 		}
@@ -42,10 +45,11 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 			double boxRadiusSq = boxRadius * boxRadius;
 
 			// TODO tag for entities that are immune to portals, which should include portals themselves
-			if (!getWorld().isClient()) {
+			// TODO should probably also exclude fake players
+			if (caster instanceof ServerPlayerEntity serverCaster) {
 				if (getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.portalGrowTime) {
 					getWorld().getOtherEntities(this, getBoundingBox(), entity -> entity.canUsePortals() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && (!(entity instanceof PlayerEntity player) || !ArcanusComponents.hasPortalCoolDown(player))).forEach(entity -> {
-						ArcanusComponents.teleportToPocketDimension(getServer(), getCaster(), entity);
+						PocketDimensionComponent.get(getServer()).teleportToPocketDimension(serverCaster, entity);
 					});
 
 					if (ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.canSuckEntitiesIn) {
