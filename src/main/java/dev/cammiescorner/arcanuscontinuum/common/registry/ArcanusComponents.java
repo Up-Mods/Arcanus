@@ -354,12 +354,12 @@ public class ArcanusComponents implements ChunkComponentInitializer, EntityCompo
 		entity.getComponent(GUARDIAN_ORB_COMPONENT).setManaLock(orbId, strength);
 	}
 
-	public static void setPortalCoolDown(PlayerEntity player, int coolDown) {
-		player.getComponent(PORTAL_COOL_DOWN_COMPONENT).setCoolDown(coolDown);
+	public static void setPortalCoolDown(Entity entity, int cooldownTicks) {
+		PORTAL_COOL_DOWN_COMPONENT.maybeGet(entity).ifPresent(component -> component.setCoolDown(cooldownTicks));
 	}
 
-	public static boolean hasPortalCoolDown(PlayerEntity player) {
-		return player.getComponent(PORTAL_COOL_DOWN_COMPONENT).hasCoolDown();
+	public static boolean hasPortalCoolDown(Entity entity) {
+		return PORTAL_COOL_DOWN_COMPONENT.maybeGet(entity).map(PortalCoolDownComponent::hasCoolDown).orElse(false);
 	}
 
 	public static void setCounterProperties(LivingEntity entity, @Nullable LivingEntity caster, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, Color color, double potency, long worldTime) {

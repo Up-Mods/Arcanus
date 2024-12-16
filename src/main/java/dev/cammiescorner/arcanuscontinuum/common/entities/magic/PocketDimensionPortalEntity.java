@@ -49,7 +49,7 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 			if (caster instanceof ServerPlayerEntity serverCaster) {
 				if (getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.portalGrowTime) {
 					getWorld().getOtherEntities(this, getBoundingBox(), entity -> entity.canUsePortals() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && (!(entity instanceof PlayerEntity player) || !ArcanusComponents.hasPortalCoolDown(player))).forEach(entity -> {
-						PocketDimensionComponent.get(getServer()).teleportToPocketDimension(serverCaster, entity);
+						PocketDimensionComponent.get(getServer()).teleportToPocketDimension(serverCaster.getGameProfile(), entity);
 					});
 
 					if (ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.canSuckEntitiesIn) {

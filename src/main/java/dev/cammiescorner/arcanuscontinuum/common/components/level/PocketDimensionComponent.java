@@ -1,5 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.common.components.level;
 
+import com.google.common.base.Preconditions;
+import com.mojang.authlib.GameProfile;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.SpatialRiftExitBlock;
@@ -9,9 +11,11 @@ import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExit
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
+import dev.cammiescorner.arcanuscontinuum.common.util.PlayerHelper;
 import dev.onyxstudios.cca.api.v3.component.Component;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -21,24 +25,32 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.Clearable;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.*;
+import net.minecraft.util.random.RandomGenerator;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.worldgen.dimension.api.QuiltDimensions;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class PocketDimensionComponent implements Component {
 	public static final RegistryKey<World> POCKET_DIM = RegistryKey.of(RegistryKeys.WORLD, Arcanus.id("pocket_dimension"));
 
+	private static final int REPLACE_FLAGS = Block.NOTIFY_LISTENERS | Block.SKIP_DROPS;
 	private static final int DIMENSION_PADDING_Y = 8;
 	private static final int DIMENSION_PADDING_XZ = 24;
 	private static final int POCKET_MARGIN = 24;
 
-	private final Map<UUID, Box> existingPlots = new HashMap<>();
+	private final Map<UUID, PocketDimensionPlot> existingPlots = new HashMap<>();
 	private final Map<UUID, Pair<RegistryKey<World>, Vec3d>> exitSpot = new HashMap<>();
 	private final MinecraftServer server;
 
@@ -52,7 +64,7 @@ public class PocketDimensionComponent implements Component {
 
 	public static PocketDimensionComponent get(World world) {
 		if (world instanceof ServerWorld serverWorld) {
-			serverWorld.getScoreboard().getComponent(ArcanusComponents.POCKET_DIMENSION_COMPONENT);
+			return serverWorld.getScoreboard().getComponent(ArcanusComponents.POCKET_DIMENSION_COMPONENT);
 		}
 
 		throw new IllegalStateException("World is not a ServerWorld!");
@@ -67,8 +79,10 @@ public class PocketDimensionComponent implements Component {
 		exitSpot.clear();
 
 		for (int i = 0; i < plotNbtList.size(); i++) {
-			NbtCompound entry = plotNbtList.getCompound(i);
-			existingPlots.put(entry.getUuid("OwnerUuid"), new Box(entry.getInt("MinX"), entry.getInt("MinY"), entry.getInt("MinZ"), entry.getInt("MaxX"), entry.getInt("MaxY"), entry.getInt("MaxZ")));
+			var entry = PocketDimensionPlot.fromNbt(plotNbtList.getCompound(i));
+			if (entry != null) {
+				existingPlots.put(entry.ownerId(), entry);
+			}
 		}
 
 		for (int i = 0; i < exitNbtList.size(); i++) {
@@ -82,16 +96,8 @@ public class PocketDimensionComponent implements Component {
 		NbtList plotNbtList = new NbtList();
 		NbtList exitNbtList = new NbtList();
 
-		existingPlots.forEach((uuid, box) -> {
-			NbtCompound entry = new NbtCompound();
-			entry.putUuid("OwnerUuid", uuid);
-			entry.putInt("MinX", (int) box.minX);
-			entry.putInt("MinY", (int) box.minY);
-			entry.putInt("MinZ", (int) box.minZ);
-			entry.putInt("MaxX", (int) box.maxX);
-			entry.putInt("MaxY", (int) box.maxY);
-			entry.putInt("MaxZ", (int) box.maxZ);
-			plotNbtList.add(entry);
+		existingPlots.forEach((uuid, plot) -> {
+			plotNbtList.add(plot.toNbt());
 		});
 
 		exitSpot.forEach((uuid, pair) -> {
@@ -110,176 +116,229 @@ public class PocketDimensionComponent implements Component {
 
 	// FIXME this check is too eager sometimes.
 	//  not too bad for the moment but should be looked into.
-	private static boolean chunksExist(Box plot, ServerWorld pocketDim) {
+	private static boolean chunksExist(PocketDimensionPlot plot, ServerWorld pocketDim) {
 		var chunkManager = pocketDim.getChunkManager();
 
-		return BlockPos.stream(plot).map(ChunkPos::new).distinct().map(cPos -> chunkManager.getWorldChunk(cPos.x, cPos.z, false)).noneMatch(Objects::isNull);
+		return BlockPos.stream(plot.min(), plot.max()).map(ChunkPos::new).distinct().map(cPos -> chunkManager.getWorldChunk(cPos.x, cPos.z, false)).noneMatch(Objects::isNull);
 	}
 
-	public void teleportToPocketDimension(ServerPlayerEntity ownerOfPocket, Entity entity) {
+	public void teleportToPocketDimension(GameProfile pocketOwner, Entity entity) {
 		if (!entity.getWorld().isClient()) {
-			ServerWorld pocketDim = entity.getServer().getWorld(POCKET_DIM);
+			ServerWorld pocketDim = server.getWorld(POCKET_DIM);
 			if (pocketDim != null) {
-				Box plot = existingPlots.get(ownerOfPocket.getUuid());
+				var plot = getAssignedPlotSpace(pocketOwner.getId());
 				if (plot == null) {
-					plot = assignNewPlot(ownerOfPocket);
-					generatePlotSpace(ownerOfPocket, pocketDim);
+					plot = assignNewPlot(pocketDim, pocketOwner, entity.getWorld().getRandom());
+					replacePlotSpace(pocketOwner.getId(), pocketDim, false);
 				} else if (!chunksExist(plot, pocketDim)) {
-					Arcanus.LOGGER.warn("Pocket dimension plot for player {} failed integrity check! regenerating boundary...", ownerOfPocket.getGameProfile().getName());
-					generatePlotSpace(ownerOfPocket, pocketDim);
+					Arcanus.LOGGER.warn("Pocket dimension plot for player {} ({}) failed integrity check! regenerating boundary...", pocketOwner.getName(), pocketOwner.getId());
+					replacePlotSpace(pocketOwner.getId(), pocketDim, false);
 				}
 
-				QuiltDimensions.teleport(entity, pocketDim, new TeleportTarget(plot.getCenter().subtract(0, 11, 0), Vec3d.ZERO, entity.getYaw(), entity.getPitch()));
+				var bottomCenterPos = Vec3d.ofBottomCenter(plot.getBounds().getCenter().withY(plot.min().getY() + 1));
+				QuiltDimensions.teleport(entity, pocketDim, new TeleportTarget(bottomCenterPos, Vec3d.ZERO, entity.getYaw(), entity.getPitch()));
 			}
 		}
 	}
 
-	public void teleportOutOfPocketDimension(ServerPlayerEntity player) {
-		if (player.getWorld().getRegistryKey() == POCKET_DIM) {
-			Optional<Map.Entry<UUID, Box>> entry = existingPlots.entrySet().stream().filter(entry1 -> entry1.getValue().intersects(player.getBoundingBox())).findFirst();
-
-			if (entry.isPresent()) {
-				UUID ownerId = entry.get().getKey();
-				Pair<RegistryKey<World>, Vec3d> pair = exitSpot.get(ownerId);
-
-				ServerWorld targetWorld;
-				Vec3d targetPos;
-
-				if (pair == null || (targetWorld = player.getServer().getWorld(pair.getLeft())) == null) {
-					targetWorld = player.getServer().getOverworld();
-					targetPos = Vec3d.ofBottomCenter(targetWorld.getSpawnPos());
-				} else {
-					targetPos = pair.getRight();
-				}
-
-				ArcanusComponents.setPortalCoolDown(player, 200);
-				QuiltDimensions.teleport(player, targetWorld, new TeleportTarget(targetPos, Vec3d.ZERO, player.getYaw(), player.getPitch()));
-			} else {
-				var spawnPos = player.getSpawnPointPosition();
-				var angle = player.getSpawnAngle();
-				var world = player.getServer().getWorld(player.getSpawnPointDimension());
-				if (!player.isSpawnPointSet() || world == null || spawnPos == null) {
-					world = player.getServer().getOverworld();
-					spawnPos = world.getSpawnPos();
-					angle = player.getYaw();
-				}
-				QuiltDimensions.teleport(player, world, new TeleportTarget(Vec3d.ofBottomCenter(spawnPos), Vec3d.ZERO, angle, player.getPitch()));
-			}
-		}
-	}
-
-	public Box assignNewPlot(ServerPlayerEntity player) {
-		int pocketRadiusXZ = MathHelper.ceil(ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.pocketWidth / 2f) + 1;
-		int pocketRadiusY = MathHelper.ceil(ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.pocketHeight / 2f) + 1;
-		final Box originalBox = new Box(-pocketRadiusXZ, -pocketRadiusY, -pocketRadiusXZ, pocketRadiusXZ, pocketRadiusY, pocketRadiusXZ);
-
-		var serverWorld = player.getServerWorld();
-		var worldBorder = serverWorld.getWorldBorder();
-
-		if (worldBorder.getMaxRadius() - worldBorder.getWarningBlocks() - DIMENSION_PADDING_XZ < pocketRadiusXZ) {
-			Arcanus.LOGGER.error("Pocket dimension plot for player {} ({}) failed integrity check! world border too small!", player.getGameProfile().getName(), player.getGameProfile().getId());
-			return originalBox;
-		}
-
-		int maxOffsetXZ = worldBorder.getMaxRadius() - worldBorder.getWarningBlocks() - pocketRadiusXZ - DIMENSION_PADDING_XZ;
-
-		var minY = serverWorld.getBottomY() + pocketRadiusY + DIMENSION_PADDING_Y;
-		var maxY = serverWorld.getTopY() - pocketRadiusY - DIMENSION_PADDING_Y;
-
-		var existingPlotsWithSpacing = existingPlots.values().stream().map(existing -> existing.expand(POCKET_MARGIN)).toList();
-
-		// TODO better algorithm for finding plot spaces that does not rely on random
-		Box box = originalBox;
-		for (int attempts = 0; attempts < 100; attempts++) {
-			if (isValidBounds(serverWorld, box, worldBorder) && existingPlotsWithSpacing.stream().noneMatch(box::intersects)) {
-				existingPlots.put(player.getUuid(), box);
-				return box;
-			}
-
-			var dX = player.getRandom().rangeClosed(MathHelper.floor(worldBorder.getCenterX()) - maxOffsetXZ, MathHelper.ceil(worldBorder.getCenterX()) + maxOffsetXZ);
-			var dZ = player.getRandom().rangeClosed(MathHelper.floor(worldBorder.getCenterZ()) - maxOffsetXZ, MathHelper.ceil(worldBorder.getCenterZ()) + maxOffsetXZ);
-			var dY = player.getRandom().rangeClosed(minY, maxY);
-			box = originalBox.offset(dX, dY, dZ);
-		}
-
-		Arcanus.LOGGER.error("Unable to generate pocket dimension for player {} ({}) after 100 attempts, defaultin to center pos!", player.getEntityName(), player.getGameProfile().getId());
-		return originalBox;
-	}
-
-	private boolean isValidBounds(ServerWorld world, Box box, WorldBorder worldBorder) {
-		var bottomY = world.getBottomY();
-		// need to use logical height because mojank;
-		// else we can get weirdness with chorus fruits etc
-		var topY = bottomY + world.getLogicalHeight();
-
-		return box.minY >= bottomY && box.maxY <= topY && worldBorder.contains(box);
-	}
-
-	public boolean generatePlotSpace(PlayerEntity player, ServerWorld pocketDim) {
-		var box = existingPlots.get(player.getUuid());
-
-		// might happen if the command is ran before a player first enters their pocket dimension
-		if (box == null) {
+	public boolean teleportOutOfPocketDimension(Entity entity) {
+		if (PlayerHelper.isFakePlayer(entity) || entity.getWorld().isClient() || entity.getWorld().getRegistryKey() != POCKET_DIM) {
 			return false;
 		}
 
-		var color = ArcanusHelper.getMagicColor(player);
+		ArcanusComponents.setPortalCoolDown(entity, 200);
 
-		for (BlockPos pos : BlockPos.iterate((int) Math.round(box.minX), (int) Math.round(box.minY), (int) Math.round(box.minZ), (int) Math.round(box.maxX - 1), (int) Math.round(box.maxY - 1), (int) Math.round(box.maxZ - 1))) {
-			if (pos.getX() > box.minX && pos.getX() < box.maxX - 1 && pos.getY() > box.minY && pos.getY() < box.maxY - 1 && pos.getZ() > box.minZ && pos.getZ() < box.maxZ - 1) {
-				continue;
+		UUID ownerId = existingPlots.values().stream().filter(plot -> entity.getBoundingBox().intersects(Box.from(plot.getBounds()))).map(PocketDimensionPlot::ownerId).findFirst().orElse(null);
+		if (ownerId != null) {
+			Pair<RegistryKey<World>, Vec3d> pair = exitSpot.get(ownerId);
+			if (pair != null) {
+				ServerWorld targetWorld = server.getWorld(pair.getLeft());
+				Vec3d targetPos = pair.getRight();
+
+				if (targetWorld == null) {
+					Arcanus.LOGGER.error("Unable to find dimension {}, defaulting to overworld", pair.getLeft().getValue());
+					targetWorld = server.getOverworld();
+					targetPos = Vec3d.ofBottomCenter(targetWorld.getSpawnPos());
+				}
+
+				QuiltDimensions.teleport(entity, targetWorld, new TeleportTarget(targetPos, Vec3d.ZERO, entity.getYaw(), entity.getPitch()));
+				return true;
+			}
+		}
+
+		if (entity instanceof ServerPlayerEntity player) {
+			var profile = player.getGameProfile();
+			Arcanus.LOGGER.warn("Failed to determine pocket dimension exit spot for player {} ({}), sending them to their spawn position!", profile.getName(), profile.getId());
+
+			var spawnPos = player.getSpawnPointPosition();
+			var angle = player.getSpawnAngle();
+			var world = server.getWorld(player.getSpawnPointDimension());
+			if (!player.isSpawnPointSet() || world == null || spawnPos == null) {
+				world = server.getOverworld();
+				spawnPos = world.getSpawnPos();
+				angle = entity.getYaw();
+			}
+			QuiltDimensions.teleport(entity, world, new TeleportTarget(Vec3d.ofBottomCenter(spawnPos), Vec3d.ZERO, angle, entity.getPitch()));
+		}
+
+		Arcanus.LOGGER.warn("Unable to teleport entity out of pocket dimension: {} ({})", entity.getEntityName(), entity.getUuid());
+		return false;
+	}
+
+	public PocketDimensionPlot assignNewPlot(ServerWorld pocketDimension, GameProfile target, RandomGenerator random) {
+		Preconditions.checkArgument(ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.pocketWidth >= 1, "Pocket dimension plots must be at least 1x2, width is too small. Please fix the config values!");
+		Preconditions.checkArgument(ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.pocketHeight >= 2, "Pocket dimension plots must be at least 1x2, height is too small. Please fix the config values!");
+		var pocketWidth = ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.pocketWidth;
+		var pocketHeight = ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.pocketHeight;
+		var halfWidth = MathHelper.ceil(pocketWidth / 2.0F);
+
+		final BlockBox originalBox = new BlockBox(0, 0, 0, pocketWidth + 1, pocketHeight + 1, pocketWidth + 1).offset(-halfWidth, 0, -halfWidth);
+
+		var worldBorder = pocketDimension.getWorldBorder();
+
+		if (worldBorder.getMaxRadius() - worldBorder.getWarningBlocks() - DIMENSION_PADDING_XZ < halfWidth) {
+			Arcanus.LOGGER.error("Pocket dimension plot for player {} ({}) failed integrity check! world border too small!", target.getName(), target.getId());
+			return PocketDimensionPlot.of(target.getId(), originalBox);
+		}
+
+		int maxOffsetXZ = worldBorder.getMaxRadius() - worldBorder.getWarningBlocks() - halfWidth - DIMENSION_PADDING_XZ;
+
+		var minY = pocketDimension.getBottomY() + DIMENSION_PADDING_Y;
+		var maxY = pocketDimension.getTopY() - DIMENSION_PADDING_Y - pocketHeight;
+
+		var existingPlotsWithSpacing = existingPlots.values().stream().map(existing -> existing.getBounds().expand(POCKET_MARGIN)).toList();
+
+		// TODO better algorithm for finding plot spaces that does not rely on random
+		BlockBox box = originalBox;
+		for (int attempts = 0; attempts < 100; attempts++) {
+			if (isValidBounds(pocketDimension, box, worldBorder) && existingPlotsWithSpacing.stream().noneMatch(box::intersects)) {
+				var plot = PocketDimensionPlot.of(target.getId(), box);
+				existingPlots.put(plot.ownerId(), plot);
+				return plot;
 			}
 
-			pocketDim.setBlockState(pos, ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get().getDefaultState());
+			var dX = random.rangeClosed(MathHelper.floor(worldBorder.getCenterX()) - maxOffsetXZ, MathHelper.ceil(worldBorder.getCenterX()) + maxOffsetXZ);
+			var dZ = random.rangeClosed(MathHelper.floor(worldBorder.getCenterZ()) - maxOffsetXZ, MathHelper.ceil(worldBorder.getCenterZ()) + maxOffsetXZ);
+			var dY = random.rangeClosed(minY, maxY);
+			box = originalBox.offset(dX, dY, dZ);
+		}
+
+		Arcanus.LOGGER.error("Unable to assign pocket dimension plot for player {} ({}) after 100 attempts, defaulting to center pos!", target.getName(), target.getId());
+		return PocketDimensionPlot.of(target.getId(), originalBox);
+	}
+
+	private boolean isValidBounds(ServerWorld world, BlockBox box, WorldBorder worldBorder) {
+		var bottomY = world.getBottomY() + DIMENSION_PADDING_Y;
+		// need to use logical height because mojank;
+		// else we can get weirdness with chorus fruits etc
+		var topY = world.getBottomY() + world.getLogicalHeight() - DIMENSION_PADDING_Y;
+
+		return box.getMinY() >= bottomY && box.getMaxY() <= topY && worldBorder.contains(Box.from(box));
+	}
+
+	@Nullable
+	public PocketDimensionPlot getAssignedPlotSpace(UUID target) {
+		return existingPlots.get(target);
+	}
+
+	/**
+	 * fills the plot with empty space and builds walls around it
+	 *
+	 * @param clear whether to remove existing blocks and entities
+	 */
+	public boolean replacePlotSpace(UUID target, ServerWorld pocketDim, boolean clear) {
+		var plot = getAssignedPlotSpace(target);
+
+		// might happen if the command is ran before a player first enters their pocket dimension
+		if (plot == null) {
+			return false;
+		}
+
+		if (clear) {
+			pocketDim.getNonSpectatingEntities(Entity.class, Box.from(plot.getBounds())).forEach(entity -> {
+				if (PlayerHelper.isFakePlayer(entity) || !(entity instanceof ServerPlayerEntity player)) {
+					entity.discard();
+					return;
+				}
+
+				var overworld = server.getOverworld();
+				QuiltDimensions.teleport(player, overworld, new TeleportTarget(Vec3d.ofBottomCenter(overworld.getSpawnPos()), Vec3d.ZERO, overworld.getSpawnAngle(), 0.0F));
+
+				// TODO make translatable
+				player.sendSystemMessage(Text.literal("The pocket dimension plot you were in has been cleared by an admin."));
+			});
+		}
+
+		var color = ArcanusHelper.getMagicColor(target);
+
+		BlockPos.stream(plot.min(), plot.max()).forEach(pos -> {
+			var isNotWall = pos.getX() != plot.min().getX() && pos.getX() != plot.max().getX() && pos.getY() != plot.min().getY() && pos.getY() != plot.max().getY() && pos.getZ() != plot.min().getZ() && pos.getZ() != plot.max().getZ();
+			if (isNotWall) {
+				if (clear) {
+					Clearable.clear(pocketDim.getBlockEntity(pos));
+					pocketDim.setBlockState(pos, Blocks.AIR.getDefaultState(), REPLACE_FLAGS);
+				}
+				return;
+			}
+
+			pocketDim.setBlockState(pos, ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get().getDefaultState(), REPLACE_FLAGS);
 
 			if (pocketDim.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock) {
 				magicBlock.setColor(color);
 			}
-		}
+		});
 
+		var center = plot.getBounds().getCenter().withY(plot.min().getY());
+		var pos = center.mutableCopy();
 		for (int x = 0; x < 4; x++) {
 			for (int z = 0; z < 4; z++) {
-				BlockPos pos = new BlockPos((int) Math.round(box.getCenter().getX()) + (x - 2), (int) Math.round(box.minY), (int) Math.round(box.getCenter().getZ()) + (z - 2));
+				pos.set(center.getX() + x - 2, center.getY(), center.getZ() + z - 2);
 
 				if (x == 0) {
 					switch (z) {
 						case 0 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.CORNER, true));
+							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 						case 1, 2 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.WEST));
+							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.WEST), REPLACE_FLAGS);
 						case 3 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.WEST).with(SpatialRiftExitEdgeBlock.CORNER, true));
+							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.WEST).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 					}
 				} else if (x == 3) {
 					switch (z) {
 						case 0 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.EAST).with(SpatialRiftExitEdgeBlock.CORNER, true));
+							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.EAST).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 						case 1, 2 ->
 							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.EAST));
 						case 3 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH).with(SpatialRiftExitEdgeBlock.CORNER, true));
+							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 					}
 				} else if (z == 0) {
-					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.NORTH));
+					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.NORTH), REPLACE_FLAGS);
 				} else if (z == 3) {
-					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH));
+					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH), REPLACE_FLAGS);
 				} else {
-					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT.get().getDefaultState().with(SpatialRiftExitBlock.ACTIVE, x == 1 && z == 1));
+					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT.get().getDefaultState().with(SpatialRiftExitBlock.ACTIVE, x == 1 && z == 1), REPLACE_FLAGS);
 
 					if (pocketDim.getBlockEntity(pos) instanceof SpatialRiftExitBlockEntity exitBlockEntity) {
 						exitBlockEntity.setColor(color);
 					}
 				}
 
-				if (pocketDim.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock)
+				if (pocketDim.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock) {
 					magicBlock.setColor(color);
+				}
 			}
 		}
+
+		BlockPos.stream(plot.min(), plot.max()).forEach(toUpdate -> {
+			var block = pocketDim.getBlockState(toUpdate).getBlock();
+			pocketDim.updateNeighbors(toUpdate, block);
+		});
 
 		return true;
 	}
 
-	public void setExit(PlayerEntity ownerOfPocket, World world, Vec3d pos) {
-		exitSpot.put(ownerOfPocket.getUuid(), new Pair<>(world.getRegistryKey(), pos));
+	public void setExit(UUID ownerId, World world, Vec3d pos) {
+		exitSpot.put(ownerId, new Pair<>(world.getRegistryKey(), pos));
 	}
 }

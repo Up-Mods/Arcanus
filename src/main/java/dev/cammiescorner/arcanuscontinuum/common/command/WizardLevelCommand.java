@@ -19,17 +19,16 @@ public class WizardLevelCommand {
 		builder.then(CommandManager.literal("wizard_level")
 			.then(CommandManager.literal("set")
 				.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(CommandManager.GAME_MASTER_PERMISSION_LEVEL))
-				.then(CommandManager.argument("player", EntityArgumentType.player())
-					.then(CommandManager.argument("level", IntegerArgumentType.integer(0, 10))
+				.then(CommandManager.argument("level", IntegerArgumentType.integer(0, 10))
+					.then(CommandManager.argument("player", EntityArgumentType.player())
 						.executes(context -> WizardLevelCommand.setLevel(context, EntityArgumentType.getPlayer(context, "player")))
 					)
-				)
-				.then(CommandManager.argument("level", IntegerArgumentType.integer(0, 10))
 					.executes(context -> WizardLevelCommand.setLevel(context, context.getSource().getPlayerOrThrow()))
 				)
 			)
 			.then(CommandManager.literal("get")
 				.then(CommandManager.argument("player", EntityArgumentType.player())
+					.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(CommandManager.GAME_MASTER_PERMISSION_LEVEL))
 					.executes(context -> WizardLevelCommand.getLevel(context, EntityArgumentType.getPlayer(context, "player")))
 				)
 				.executes(context -> WizardLevelCommand.getLevel(context, context.getSource().getPlayerOrThrow()))
@@ -48,7 +47,7 @@ public class WizardLevelCommand {
 		int level = IntegerArgumentType.getInteger(context, "level");
 		ArcanusComponents.setWizardLevel(player, level);
 
-		context.getSource().sendFeedback(() -> Text.literal(String.format("Set %s's level to %s", player.getEntityName(), level)), false);
+		context.getSource().sendFeedback(() -> Text.literal(String.format("Set %s's level to %s", player.getEntityName(), level)), true);
 
 		return Command.SINGLE_SUCCESS;
 	}

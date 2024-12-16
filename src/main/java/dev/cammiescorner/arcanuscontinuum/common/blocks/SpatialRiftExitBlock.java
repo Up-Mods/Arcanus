@@ -8,7 +8,6 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -24,17 +23,14 @@ public class SpatialRiftExitBlock extends Block implements BlockEntityProvider {
 	public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
 
 	public SpatialRiftExitBlock() {
-		super(QuiltBlockSettings.copyOf(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
-				.sounds(BlockSoundGroup.STONE)
-				.luminance(value -> 7)
-		);
+		super(QuiltBlockSettings.copyOf(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get()).sounds(BlockSoundGroup.STONE).luminance(value -> 7));
 		setDefaultState(getStateManager().getDefaultState().with(ACTIVE, false));
 	}
 
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if(player instanceof ServerPlayerEntity serverPlayer) {
-			PocketDimensionComponent.get(world).teleportOutOfPocketDimension(serverPlayer);
+		if (!world.isClient() && !PocketDimensionComponent.get(world).teleportOutOfPocketDimension(player)) {
+			return ActionResult.FAIL;
 		}
 
 		return ActionResult.success(world.isClient());
@@ -48,7 +44,7 @@ public class SpatialRiftExitBlock extends Block implements BlockEntityProvider {
 	@Nullable
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-		if(state.get(ACTIVE))
+		if (state.get(ACTIVE))
 			return new SpatialRiftExitBlockEntity(pos, state);
 
 		return null;
