@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.api.Rectangle;
+import dev.cammiescorner.arcanuscontinuum.api.util.Rectangle;
 import dev.cammiescorner.arcanuscontinuum.api.spells.*;
 import dev.cammiescorner.arcanuscontinuum.client.gui.util.Action;
 import dev.cammiescorner.arcanuscontinuum.client.gui.util.UndoRedoStack;

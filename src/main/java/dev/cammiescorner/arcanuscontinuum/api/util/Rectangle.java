@@ -1,4 +1,4 @@
-package dev.cammiescorner.arcanuscontinuum.api;
+package dev.cammiescorner.arcanuscontinuum.api.util;
 
 public record Rectangle(int x, int y, int width, int height) {
 	public int x2() {
