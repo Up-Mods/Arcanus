@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
@@ -32,7 +33,7 @@ public class MagicBlockEntityRenderer implements BlockEntityRenderer<MagicBlockE
 			VertexConsumer consumer = vertices.getBuffer(LAYER);
 			Matrix4f matrix4f = matrices.peek().getModel();
 			Matrix3f matrix3f = matrices.peek().getNormal();
-			Color color = entity.getColor();
+			Color color = ArcanusHelper.getMagicColor(entity);
 
 			for(Direction direction : Direction.values()) {
 				BlockPos blockToSide = entity.getPos().offset(direction);

@@ -7,19 +7,18 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class EntityMagicColorComponent implements MagicColorComponent, AutoSyncedComponent {
-	private final Entity entity;
+public class GenericMagicColorComponent implements MagicColorComponent, AutoSyncedComponent {
+	private final Object provider;
 	private UUID sourceId = Util.NIL_UUID;
 
-	public EntityMagicColorComponent(Entity entity) {
-		this.entity = entity;
+	public GenericMagicColorComponent(Object provider) {
+		this.provider = provider;
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class EntityMagicColorComponent implements MagicColorComponent, AutoSynce
 	@Override
 	public void setSourceId(@Nullable UUID ownerId) {
 		this.sourceId = MoreObjects.firstNonNull(ownerId, Util.NIL_UUID);
-		ArcanusComponents.MAGIC_COLOR.sync(entity);
+		ArcanusComponents.MAGIC_COLOR.sync(provider);
 		updateStoredColor();
 	}
 

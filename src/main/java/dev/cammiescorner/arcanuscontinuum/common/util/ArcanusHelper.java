@@ -30,17 +30,18 @@ import java.util.UUID;
 
 public class ArcanusHelper {
 
-	public static Color getMagicColor(@Nullable Entity entity) {
-		if(entity == null) {
+	public static Color getMagicColor(@Nullable Object provider) {
+		if(provider == null) {
 			return Arcanus.DEFAULT_MAGIC_COLOUR;
 		}
 
-		var component = ArcanusComponents.MAGIC_COLOR.getNullable(entity);
+		var component = ArcanusComponents.MAGIC_COLOR.getNullable(provider);
 		if (component != null) {
 			return component.getColor();
 		}
 
-		if (entity instanceof Ownable ownable) {
+		// if Entity
+		if (provider instanceof Ownable ownable) {
 			var owner = ownable.getOwner();
 			if (owner != null) {
 				return getMagicColor(owner);

@@ -6,11 +6,8 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.SpatialRiftExitBlock;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.SpatialRiftExitEdgeBlock;
-import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
-import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.PlayerHelper;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.block.Block;
@@ -37,10 +34,7 @@ import net.minecraft.world.border.WorldBorder;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.worldgen.dimension.api.QuiltDimensions;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class PocketDimensionComponent implements Component {
 	public static final RegistryKey<World> POCKET_DIM = RegistryKey.of(RegistryKeys.WORLD, Arcanus.id("pocket_dimension"));
@@ -269,8 +263,6 @@ public class PocketDimensionComponent implements Component {
 			});
 		}
 
-		var color = ArcanusHelper.getMagicColor(target);
-
 		BlockPos.stream(plot.min(), plot.max()).forEach(pos -> {
 			var isNotWall = pos.getX() != plot.min().getX() && pos.getX() != plot.max().getX() && pos.getY() != plot.min().getY() && pos.getY() != plot.max().getY() && pos.getZ() != plot.min().getZ() && pos.getZ() != plot.max().getZ();
 			if (isNotWall) {
@@ -283,9 +275,9 @@ public class PocketDimensionComponent implements Component {
 
 			pocketDim.setBlockState(pos, ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get().getDefaultState(), REPLACE_FLAGS);
 
-			if (pocketDim.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock) {
-				magicBlock.setColor(color);
-			}
+			Optional.ofNullable(pocketDim.getBlockEntity(pos))
+				.flatMap(ArcanusComponents.MAGIC_COLOR::maybeGet)
+				.ifPresent(component -> component.setSourceId(target));
 		});
 
 		var center = plot.getBounds().getCenter().withY(plot.min().getY());
@@ -318,15 +310,11 @@ public class PocketDimensionComponent implements Component {
 					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH), REPLACE_FLAGS);
 				} else {
 					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT.get().getDefaultState().with(SpatialRiftExitBlock.ACTIVE, x == 1 && z == 1), REPLACE_FLAGS);
-
-					if (pocketDim.getBlockEntity(pos) instanceof SpatialRiftExitBlockEntity exitBlockEntity) {
-						exitBlockEntity.setColor(color);
-					}
 				}
 
-				if (pocketDim.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock) {
-					magicBlock.setColor(color);
-				}
+				Optional.ofNullable(pocketDim.getBlockEntity(pos))
+					.flatMap(ArcanusComponents.MAGIC_COLOR::maybeGet)
+					.ifPresent(component -> component.setSourceId(target));
 			}
 		}
 

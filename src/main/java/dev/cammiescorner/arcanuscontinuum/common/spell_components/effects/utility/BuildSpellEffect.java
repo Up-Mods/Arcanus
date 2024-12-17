@@ -1,11 +1,10 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.utility;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
-import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlockEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
@@ -37,8 +36,9 @@ public class BuildSpellEffect extends SpellEffect {
 				world.setBlockState(pos, ArcanusBlocks.MAGIC_BLOCK.get().getDefaultState(), Block.NOTIFY_LISTENERS);
 				world.scheduleBlockTick(pos, world.getBlockState(pos).getBlock(), (int) (ArcanusConfig.UtilityEffects.BuildEffectProperties.baseLifeSpan * effects.stream().filter(ArcanusSpellComponents.BUILD::is).count() * potency));
 
-				if(world.getBlockEntity(pos) instanceof MagicBlockEntity magicBlock)
-					magicBlock.setColor(ArcanusHelper.getMagicColor(caster));
+				if(caster != null) {
+					world.getBlockEntity(pos, ArcanusBlockEntities.MAGIC_BLOCK.get()).ifPresent(blockEntity -> ArcanusHelper.copyMagicColor(blockEntity, caster));
+				}
 			}
 		}
 	}

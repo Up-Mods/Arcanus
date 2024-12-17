@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.SpatialRiftEntitySigilModel;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -26,7 +27,7 @@ public class SpatialRiftExitBlockEntityRenderer implements BlockEntityRenderer<S
 		World world = entity.getWorld();
 
 		if(world != null) {
-			Color color = entity.getColor();
+			Color color = ArcanusHelper.getMagicColor(entity);
 			float ageDelta = world.getTime() + tickDelta;
 
 			matrices.push();

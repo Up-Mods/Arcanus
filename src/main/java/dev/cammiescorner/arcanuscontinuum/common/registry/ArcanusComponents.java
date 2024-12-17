@@ -5,16 +5,20 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Pattern;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
+import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.compat.ArcanusCompat;
 import dev.cammiescorner.arcanuscontinuum.common.compat.PehkuiCompat;
 import dev.cammiescorner.arcanuscontinuum.common.components.MagicColorComponent;
 import dev.cammiescorner.arcanuscontinuum.common.components.chunk.WardedBlocksComponent;
-import dev.cammiescorner.arcanuscontinuum.common.components.color.EntityMagicColorComponent;
+import dev.cammiescorner.arcanuscontinuum.common.components.color.GenericMagicColorComponent;
 import dev.cammiescorner.arcanuscontinuum.common.components.color.PlayerMagicColorComponent;
 import dev.cammiescorner.arcanuscontinuum.common.components.entity.*;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.*;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
+import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
+import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer;
 import dev.onyxstudios.cca.api.v3.chunk.ChunkComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.chunk.ChunkComponentInitializer;
 import dev.onyxstudios.cca.api.v3.component.Component;
@@ -42,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class ArcanusComponents implements ChunkComponentInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
+public class ArcanusComponents implements BlockComponentInitializer, ChunkComponentInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
 
 	public static final ComponentKey<MagicColorComponent> MAGIC_COLOR = createComponent("magic_color", MagicColorComponent.class);
 
@@ -70,6 +74,16 @@ public class ArcanusComponents implements ChunkComponentInitializer, EntityCompo
 	public static final ComponentKey<GuardianOrbComponent> GUARDIAN_ORB_COMPONENT = createComponent("guardian_orb", GuardianOrbComponent.class);
 	public static final ComponentKey<PortalCoolDownComponent> PORTAL_COOL_DOWN_COMPONENT = createComponent("portal_cool_down", PortalCoolDownComponent.class);
 	public static final ComponentKey<CounterComponent> COUNTER_COMPONENT = createComponent("counter", CounterComponent.class);
+
+	@Override
+	public void registerBlockComponentFactories(BlockComponentFactoryRegistry registry) {
+		registry.beginRegistration(MagicBlockEntity.class, MAGIC_COLOR)
+			.impl(GenericMagicColorComponent.class)
+			.end(GenericMagicColorComponent::new);
+		registry.beginRegistration(SpatialRiftExitBlockEntity.class, MAGIC_COLOR)
+			.impl(GenericMagicColorComponent.class)
+			.end(GenericMagicColorComponent::new);
+	}
 
 	@Override
 	public void registerChunkComponentFactories(ChunkComponentFactoryRegistry registry) {
@@ -107,8 +121,8 @@ public class ArcanusComponents implements ChunkComponentInitializer, EntityCompo
 			SmiteEntity.class
 		).forEach(type ->
 			registry.beginRegistration(type, MAGIC_COLOR)
-				.impl(EntityMagicColorComponent.class)
-				.end(EntityMagicColorComponent::new)
+				.impl(GenericMagicColorComponent.class)
+				.end(GenericMagicColorComponent::new)
 		);
 		registry.registerForPlayers(MAGIC_COLOR, PlayerMagicColorComponent::new, RespawnCopyStrategy.NEVER_COPY);
 
