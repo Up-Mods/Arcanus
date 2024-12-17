@@ -8,7 +8,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import dev.cammiescorner.arcanuscontinuum.common.util.Color;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -150,15 +150,7 @@ public class MagicProjectileEntity extends PersistentProjectileEntity implements
 		return ArcanusComponents.getSpellShape(this);
 	}
 
-	public Color getColor() {
-		return ArcanusComponents.getColor(this);
-	}
-
-	public void setColor(Color colour) {
-		ArcanusComponents.setColor(this, colour);
-	}
-
-	public void setProperties(Entity caster, @Nullable Entity castSource, SpellShape shape, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, double potency, float speed, boolean noGravity, Color color) {
+	public void setProperties(Entity caster, @Nullable Entity castSource, SpellShape shape, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> groups, int groupIndex, double potency, float speed, boolean noGravity) {
 		Entity sourceEntity = castSource != null ? castSource : caster;
 		setProperties(sourceEntity, sourceEntity.getPitch(), sourceEntity.getYaw(), 0F, speed, 1F);
 		setOwner(caster);
@@ -171,6 +163,6 @@ public class MagicProjectileEntity extends PersistentProjectileEntity implements
 		this.spellGroups = groups;
 		this.groupIndex = groupIndex;
 		this.potency = potency;
-		ArcanusComponents.setColor(this, color);
+		ArcanusHelper.copyMagicColor(this, caster);
 	}
 }

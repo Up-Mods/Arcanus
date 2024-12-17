@@ -36,7 +36,8 @@ public class RuneSpellShape extends SpellShape {
 			Entity sourceEntity = castSource != null ? castSource : caster;
 
 			if(magicRune != null) {
-				magicRune.setProperties(caster.getUuid(), sourceEntity, castFrom, stack, effects, potency, spellGroups, groupIndex, ArcanusHelper.getMagicColor(caster));
+				magicRune.setProperties(caster.getUuid(), sourceEntity, castFrom, stack, effects, potency, spellGroups, groupIndex);
+				ArcanusHelper.copyMagicColor(magicRune, caster);
 				world.spawnEntity(magicRune);
 			}
 		}

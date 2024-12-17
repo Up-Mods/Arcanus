@@ -7,6 +7,7 @@ import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicLobEnt
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicProjectileEntityModel;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectileEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -33,7 +34,7 @@ public class MagicProjectileEntityRenderer extends ProjectileEntityRenderer<Magi
 	public void render(MagicProjectileEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
 		VertexConsumer consumer = vertices.getBuffer(ArcanusClient.getMagicCircles(getTexture(entity)));
 		boolean isProjectile = ArcanusSpellComponents.PROJECTILE.is(entity.getShape());
-		Color color = entity.getColor();
+		Color color = ArcanusHelper.getMagicColor(entity);
 
 		matrices.push();
 

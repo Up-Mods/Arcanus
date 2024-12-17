@@ -6,8 +6,6 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -128,15 +126,7 @@ public class MagicRuneEntity extends Entity implements Targetable {
 		return null;
 	}
 
-	public Color getColor() {
-		return ArcanusComponents.getColor(this);
-	}
-
-	public void setColor(Color color) {
-		ArcanusComponents.setColor(this, color);
-	}
-
-	public void setProperties(UUID casterId, Entity sourceEntity, Vec3d pos, ItemStack stack, List<SpellEffect> effects, double potency, List<SpellGroup> groups, int groupIndex, Color color) {
+	public void setProperties(UUID casterId, Entity sourceEntity, Vec3d pos, ItemStack stack, List<SpellEffect> effects, double potency, List<SpellGroup> groups, int groupIndex) {
 		setPos(pos.getX(), pos.getY(), pos.getZ());
 		setYaw(sourceEntity.getYaw());
 		setPitch(sourceEntity.getPitch());
@@ -146,6 +136,5 @@ public class MagicRuneEntity extends Entity implements Targetable {
 		this.spellGroups = groups;
 		this.groupIndex = groupIndex;
 		this.potency = potency;
-		this.setColor(color);
 	}
 }

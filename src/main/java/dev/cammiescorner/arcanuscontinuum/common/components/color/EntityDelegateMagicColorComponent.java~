@@ -1,0 +1,4 @@
+package dev.cammiescorner.arcanuscontinuum.common.components.color;
+
+public class EntityDelegateMagicColorComponent {
+}

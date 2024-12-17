@@ -36,7 +36,8 @@ public class AreaOfEffectSpellShape extends SpellShape {
 			Entity sourceEntity = castSource != null ? castSource : caster;
 
 			if(areaOfEffect != null) {
-				areaOfEffect.setProperties(caster.getUuid(), sourceEntity, castFrom, stack, effects, potency, spellGroups, groupIndex, ArcanusHelper.getMagicColor(caster));
+				areaOfEffect.setProperties(caster.getUuid(), sourceEntity, castFrom, stack, effects, potency, spellGroups, groupIndex);
+				ArcanusHelper.copyMagicColor(areaOfEffect, caster);
 				world.spawnEntity(areaOfEffect);
 			}
 		}

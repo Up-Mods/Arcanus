@@ -4,7 +4,6 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -129,18 +128,9 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 		return dataTracker.get(TRUE_AGE);
 	}
 
-	public Color getColor() {
-		return ArcanusComponents.getColor(this);
-	}
-
-	public void setColor(Color color) {
-		ArcanusComponents.setColor(this, color);
-	}
-
-	public void setProperties(UUID casterId, Vec3d pos, double pullStrength, Color color) {
+	public void setProperties(UUID casterId, Vec3d pos, double pullStrength) {
 		setPosition(pos);
 		this.casterId = casterId;
 		this.pullStrength = pullStrength;
-		this.setColor(color);
 	}
 }

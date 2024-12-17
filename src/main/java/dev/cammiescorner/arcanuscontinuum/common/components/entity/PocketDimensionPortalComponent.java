@@ -68,7 +68,8 @@ public class PocketDimensionPortalComponent implements Component {
 			portalPos = pos;
 
 			PocketDimensionComponent.get(world).setExit(player.getGameProfile().getId(), world, pos);
-			portal.setProperties(player.getUuid(), pos, pullStrength, ArcanusHelper.getMagicColor(player));
+			portal.setProperties(player.getUuid(), pos, pullStrength);
+			ArcanusHelper.copyMagicColor(portal, player);
 			world.spawnEntity(portal);
 		}
 	}

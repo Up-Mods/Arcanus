@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
+import dev.cammiescorner.arcanuscontinuum.common.components.MagicColorComponent;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.WizardData;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -13,9 +14,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Ownable;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Util;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.random.RandomGenerator;
@@ -34,13 +35,14 @@ public class ArcanusHelper {
 			return Arcanus.DEFAULT_MAGIC_COLOUR;
 		}
 
-		if(entity instanceof PlayerEntity player) {
-			return getMagicColor(player.getGameProfile().getId());
+		var component = ArcanusComponents.MAGIC_COLOR.getNullable(entity);
+		if (component != null) {
+			return component.getColor();
 		}
 
-		if(entity instanceof Ownable ownable) {
+		if (entity instanceof Ownable ownable) {
 			var owner = ownable.getOwner();
-			if(owner != null) {
+			if (owner != null) {
 				return getMagicColor(owner);
 			}
 		}
@@ -48,7 +50,11 @@ public class ArcanusHelper {
 		return Arcanus.DEFAULT_MAGIC_COLOUR;
 	}
 
-	public static Color getMagicColor(UUID playerId) {
+	public static Color getMagicColor(@Nullable UUID playerId) {
+		if (playerId == null || Util.NIL_UUID.equals(playerId)) {
+			return Arcanus.DEFAULT_MAGIC_COLOUR;
+		}
+
 		return WizardData.getOrEmpty(playerId).magicColor();
 	}
 
@@ -62,7 +68,7 @@ public class ArcanusHelper {
 		maxDistance *= maxDistance;
 		HitResult entityHitResult = ProjectileUtil.raycast(origin, startPos, endPos, origin.getBoundingBox().stretch(rotation.multiply(maxDistance)).expand(1.0D, 1D, 1D), entity -> !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted(), maxDistance);
 
-		if(includeEntities && entityHitResult != null)
+		if (includeEntities && entityHitResult != null)
 			hitResult = entityHitResult;
 
 		return hitResult;
@@ -70,7 +76,7 @@ public class ArcanusHelper {
 
 	@ClientOnly
 	public static void renderBolts(LivingEntity entity, Vec3d startPos, MatrixStack matrices, VertexConsumerProvider vertices) {
-		if(ArcanusComponents.shouldRenderBolt(entity)) {
+		if (ArcanusComponents.shouldRenderBolt(entity)) {
 			VertexConsumer vertex = vertices.getBuffer(ArcanusClient.getMagicCircles(ArcanusClient.WHITE));
 			RandomGenerator random = RandomGenerator.createLegacy((entity.age + entity.getId()) / 2);
 			Vec3d endPos = ArcanusComponents.getBoltPos(entity);
@@ -90,33 +96,33 @@ public class ArcanusHelper {
 		Matrix4f modelMatrix = matrices.peek().getModel();
 		Matrix3f normalMatrix = matrices.peek().getNormal();
 
-		for(int i = currentStep; i < steps; i++) {
+		for (int i = currentStep; i < steps; i++) {
 			Vec3d randomOffset = new Vec3d(random.nextGaussian(), random.range(-1 / (steps * 2), 1 / (steps * 2)), random.nextGaussian());
 			Vec3d nextPos = startPos.add(direction.multiply((i + 1) / (float) steps)).add(randomOffset.multiply(1 / 12F));
 
-			for(int j = 0; j < 4; j++) {
-				Vec3d vert1 = switch(j) {
+			for (int j = 0; j < 4; j++) {
+				Vec3d vert1 = switch (j) {
 					case 0 -> lastPos.add(0.025, 0.025, 0);
 					case 1 -> lastPos.add(-0.025, 0.025, 0);
 					case 2 -> lastPos.add(-0.025, -0.025, 0);
 					case 3 -> lastPos.add(0.025, -0.025, 0);
 					default -> lastPos;
 				};
-				Vec3d vert2 = switch(j) {
+				Vec3d vert2 = switch (j) {
 					case 0 -> lastPos.add(-0.025, 0.025, 0);
 					case 1 -> lastPos.add(-0.025, -0.025, 0);
 					case 2 -> lastPos.add(0.025, -0.025, 0);
 					case 3 -> lastPos.add(0.025, 0.025, 0);
 					default -> lastPos;
 				};
-				Vec3d vert3 = switch(j) {
+				Vec3d vert3 = switch (j) {
 					case 0 -> nextPos.add(0.025, 0.025, 0);
 					case 1 -> nextPos.add(-0.025, 0.025, 0);
 					case 2 -> nextPos.add(-0.025, -0.025, 0);
 					case 3 -> nextPos.add(0.025, -0.025, 0);
 					default -> nextPos;
 				};
-				Vec3d vert4 = switch(j) {
+				Vec3d vert4 = switch (j) {
 					case 0 -> nextPos.add(-0.025, 0.025, 0);
 					case 1 -> nextPos.add(-0.025, -0.025, 0);
 					case 2 -> nextPos.add(0.025, -0.025, 0);
@@ -131,7 +137,7 @@ public class ArcanusHelper {
 				vertex.vertex(modelMatrix, (float) vert1.getX(), (float) vert1.getY(), (float) vert1.getZ()).color(r, g, b, 0.6F).uv(0, 0).overlay(overlay).light(light).normal(normalMatrix, (float) normal.getX(), (float) normal.getY(), (float) normal.getZ()).next();
 			}
 
-			while(recurse && random.nextFloat() < 0.2F) {
+			while (recurse && random.nextFloat() < 0.2F) {
 				Vec3d randomOffset1 = new Vec3d(random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
 				renderBolt(matrices, vertex, random, lastPos, endPos.add(randomOffset1.multiply(Math.min(random.nextFloat(), 0.6F))), steps, i + 1, false, r, g, b, overlay, light);
 			}
@@ -144,8 +150,28 @@ public class ArcanusHelper {
 		return vec1.crossProduct(vec2);
 	}
 
-    public static ItemStack applyColorToItem(ItemStack stack, int color) {
-        stack.getOrCreateSubNbt(ItemStack.DISPLAY_KEY).putInt(ItemStack.COLOR_KEY, color);
-        return stack;
-    }
+	public static ItemStack applyColorToItem(ItemStack stack, int color) {
+		stack.getOrCreateSubNbt(ItemStack.DISPLAY_KEY).putInt(ItemStack.COLOR_KEY, color);
+		return stack;
+	}
+
+	/**
+	 * sets the magic color if the entity can store it
+	 *
+	 * @param sourceId the UUID of the source player to get the magic color from
+	 */
+	public static void setMagicColorSource(Object obj, UUID sourceId) {
+		ArcanusComponents.MAGIC_COLOR.maybeGet(obj).ifPresent(component -> component.setSourceId(sourceId));
+	}
+
+	/**
+	 * sets the magic color if the entity can store it
+	 *
+	 * @param from the entity to take the color from.
+	 *               If this entity does not have an attached {@link MagicColorComponent},
+	 *               will default to {@link Arcanus#DEFAULT_MAGIC_COLOUR}
+	 */
+	public static void copyMagicColor(Object to, Entity from) {
+		ArcanusComponents.MAGIC_COLOR.maybeGet(from).ifPresent(sourceComponent -> setMagicColorSource(to, sourceComponent.getSourceId()));
+	}
 }

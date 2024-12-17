@@ -9,7 +9,6 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
-import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +35,7 @@ public class AggressorbSpellShape extends SpellShape {
 				AggressorbEntity aggressorb = ArcanusEntities.AGGRESSORB.get().create(world);
 
 				if(aggressorb != null) {
-					aggressorb.setProperties(caster, target, stack, effects, spellGroups, groupIndex, ArcanusHelper.getMagicColor(caster), potency);
+					aggressorb.setProperties(caster, target, stack, effects, spellGroups, groupIndex, potency);
 					aggressorb.setPosition(castFrom);
 					world.spawnEntity(aggressorb);
 				}

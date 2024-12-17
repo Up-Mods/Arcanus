@@ -6,7 +6,6 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.GuardianOrbEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
-import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -27,7 +26,7 @@ public class GuardianOrbSpellShape extends SpellShape {
 
 		if(targetEntity != null) {
 			GuardianOrbEntity orb = ArcanusEntities.GUARDIAN_ORB.get().create(world);
-			orb.setProperties(caster, targetEntity, stack, effects, spellGroups, groupIndex, ArcanusHelper.getMagicColor(caster), potency + getPotencyModifier());
+			orb.setProperties(caster, targetEntity, stack, effects, spellGroups, groupIndex, potency + getPotencyModifier());
 			orb.setPosition(castFrom);
 			world.spawnEntity(orb);
 

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.BeamEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Frustum;
@@ -30,20 +31,20 @@ public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
 	}
 
 	@Override
-	public void render(BeamEntity beamEntity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
-		LivingEntity caster = beamEntity.getCaster();
+	public void render(BeamEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
+		LivingEntity caster = entity.getCaster();
 		Vec3d cam = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
 
 		if(caster != null) {
 			Vec3d startPos = caster.getLerpedPos(tickDelta).add(0, caster.getEyeHeight(caster.getPose()) * 0.9F, 0);
-			Vec3d endPos = beamEntity.getBeamPos(tickDelta);
+			Vec3d endPos = entity.getBeamPos(tickDelta);
 			Vector3d axis = new Vector3d(endPos.getX() - startPos.getX(), endPos.getY() - startPos.getY(), endPos.getZ() - startPos.getZ()).normalize();
 			VertexConsumer vertex = vertices.getBuffer(LAYER);
-			Color color = beamEntity.getColor();
-			float distance = beamEntity.distanceTo(caster) / 2F;
+			Color color = ArcanusHelper.getMagicColor(entity);
+			float distance = entity.distanceTo(caster) / 2F;
 
 			matrices.push();
-			matrices.translate(-beamEntity.getX(), -beamEntity.getY(), -beamEntity.getZ());
+			matrices.translate(-entity.getX(), -entity.getY(), -entity.getZ());
 
 			for(int i = 0; i < 2; i++) {
 				Vector3d vec = new Vector3d(cam.getX(), cam.getY(), cam.getZ()).sub(startPos.getX(), startPos.getY(), startPos.getZ()).cross(axis).normalize().mul(0.2);
@@ -52,7 +53,7 @@ public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
 				Vec3d vert2 = startPos.subtract(vec.x, vec.y, vec.z);
 				Vec3d vert3 = endPos.add(vec.x, vec.y, vec.z);
 				Vec3d vert4 = endPos.subtract(vec.x, vec.y, vec.z);
-				float beamProgress = beamEntity.getBeamProgress(tickDelta) * 2F;
+				float beamProgress = entity.getBeamProgress(tickDelta) * 2F;
 
 				if(i > 0)
 					beamProgress *= -1F;

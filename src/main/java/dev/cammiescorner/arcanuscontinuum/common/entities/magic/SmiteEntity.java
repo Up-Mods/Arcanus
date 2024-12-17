@@ -3,9 +3,7 @@ package dev.cammiescorner.arcanuscontinuum.common.entities.magic;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSoundEvents;
-import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -139,15 +137,7 @@ public class SmiteEntity extends Entity implements Targetable {
 		return null;
 	}
 
-	public Color getColor() {
-		return ArcanusComponents.getColor(this);
-	}
-
-	public void setColor(Color color) {
-		ArcanusComponents.setColor(this, color);
-	}
-
-	public void setProperties(UUID casterId, Entity sourceEntity, Vec3d pos, ItemStack stack, List<SpellEffect> effects, double potency, Color color) {
+	public void setProperties(UUID casterId, Entity sourceEntity, Vec3d pos, ItemStack stack, List<SpellEffect> effects, double potency) {
 		this.setPosition(pos);
 		this.setNoGravity(true);
 		this.setYaw(sourceEntity.getYaw());
@@ -156,6 +146,5 @@ public class SmiteEntity extends Entity implements Targetable {
 		this.stack = stack;
 		this.effects = effects;
 		this.potency = potency;
-		this.setColor(color);
 	}
 }

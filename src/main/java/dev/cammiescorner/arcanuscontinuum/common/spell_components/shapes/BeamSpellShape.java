@@ -1,6 +1,5 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
@@ -11,7 +10,6 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
@@ -38,7 +36,7 @@ public class BeamSpellShape extends SpellShape {
 			BeamEntity beam = ArcanusEntities.BEAM.get().create(world);
 
 			if(beam != null) {
-				beam.setProperties(caster, stack, effects, spellGroups, groupIndex, ArcanusConfig.SpellShapes.BeamShapeProperties.delay, ArcanusHelper.getMagicColor(caster), potency, target.getType() == HitResult.Type.ENTITY);
+				beam.setProperties(caster, stack, effects, spellGroups, groupIndex, ArcanusConfig.SpellShapes.BeamShapeProperties.delay, potency, target.getType() == HitResult.Type.ENTITY);
 
 				beam.setPosition(target.getPos());
 

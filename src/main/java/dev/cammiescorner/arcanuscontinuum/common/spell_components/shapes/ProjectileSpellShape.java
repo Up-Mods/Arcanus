@@ -54,7 +54,7 @@ public class ProjectileSpellShape extends SpellShape {
 				MagicProjectileEntity projectile = ArcanusEntities.MAGIC_PROJECTILE.get().create(world);
 
 				if(projectile != null) {
-					projectile.setProperties(caster, castSource, this, stack, effects, spellGroups, groupIndex, potency, ArcanusSpellComponents.LOB.is(this) ? lobSpeed : projectileSpeed, !ArcanusSpellComponents.LOB.is(this), ArcanusHelper.getMagicColor(caster));
+					projectile.setProperties(caster, castSource, this, stack, effects, spellGroups, groupIndex, potency, ArcanusSpellComponents.LOB.is(this) ? lobSpeed : projectileSpeed, !ArcanusSpellComponents.LOB.is(this));
 					world.spawnEntity(projectile);
 				}
 			}

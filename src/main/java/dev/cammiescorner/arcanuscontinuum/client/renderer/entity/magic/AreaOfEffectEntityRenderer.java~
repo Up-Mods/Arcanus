@@ -4,7 +4,6 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.AreaOfEffectEntityModel;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
-import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -27,7 +26,7 @@ public class AreaOfEffectEntityRenderer extends EntityRenderer<AreaOfEffectEntit
 	@Override
 	public void render(AreaOfEffectEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertices, light);
-		Color color = ArcanusHelper.getMagicColor(entity);
+		Color color = entity.getMagicColor();
 		float alpha = 1 - (MathHelper.clamp(entity.getTrueAge() - 80, 0, 20) / 20F);
 		float r = color.redF() * alpha;
 		float g = color.greenF() * alpha;

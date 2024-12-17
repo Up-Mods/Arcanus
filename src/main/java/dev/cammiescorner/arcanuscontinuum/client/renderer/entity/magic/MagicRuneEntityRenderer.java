@@ -4,6 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicRuneEntityModel;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicRuneEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -41,7 +42,7 @@ public class MagicRuneEntityRenderer extends EntityRenderer<MagicRuneEntity> {
 	@Override
 	public void render(MagicRuneEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertices, light);
-		Color color = entity.getColor();
+		Color color = ArcanusHelper.getMagicColor(entity);
 		float alpha = keyFrames[entity.age % keyFrames.length] / 16F;
 		float r = color.redF() * alpha;
 		float g = color.greenF() * alpha;

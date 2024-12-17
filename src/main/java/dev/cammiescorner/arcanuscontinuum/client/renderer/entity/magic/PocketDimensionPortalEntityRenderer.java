@@ -10,6 +10,7 @@ import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.PocketDimen
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.SpatialRiftEntitySigilModel;
 import dev.cammiescorner.arcanuscontinuum.client.utils.StencilBuffer;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.PocketDimensionPortalEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
@@ -43,7 +44,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		StencilBuffer stencilBuffer = ((StencilBuffer) client.getFramebuffer());
 		RenderLayer layer = ArcanusClient.getMagicPortal(TEXTURE);
 		RenderLayer sigilLayer = ArcanusClient.getMagicPortal(SIGIL_TEXTURE);
-		Color color = entity.getColor();
+		Color color = ArcanusHelper.getMagicColor(entity);
 		float ageDelta = entity.getTrueAge() + tickDelta;
 		float maxScale = 0.75f;
 		float scale = entity.getTrueAge() <= 100 ? Math.min(maxScale, (ageDelta / 100f) * maxScale) : entity.getTrueAge() > 700 ? Math.max(0, (1 - (ageDelta - 700) / 20f) * maxScale) : maxScale;

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShieldEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -50,7 +51,7 @@ public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
 		matrices.multiply(Axis.X_NEGATIVE.rotationDegrees(90));
 		matrices.multiply(Axis.Z_POSITIVE.rotationDegrees((entity.age + tickDelta) * 0.25F));
 		matrices.scale(3 * alpha, 3 * alpha, 3 * alpha);
-		drawIcosahedron(matrices, vertices.getBuffer(LAYER), entity.getColor(), alpha, light, OverlayTexture.DEFAULT_UV);
+		drawIcosahedron(matrices, vertices.getBuffer(LAYER), ArcanusHelper.getMagicColor(entity), alpha, light, OverlayTexture.DEFAULT_UV);
 		matrices.pop();
 	}
 

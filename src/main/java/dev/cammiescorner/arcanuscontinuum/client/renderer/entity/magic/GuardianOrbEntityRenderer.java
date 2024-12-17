@@ -5,6 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.GuardianOrbEntityModel;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.GuardianOrbEntity;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -25,7 +26,7 @@ public class GuardianOrbEntityRenderer extends EntityRenderer<GuardianOrbEntity>
 	@Override
 	public void render(GuardianOrbEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
 		VertexConsumer consumer = vertices.getBuffer(ArcanusClient.getMagicCircles(getTexture(entity)));
-		Color color = entity.getColor();
+		Color color = ArcanusHelper.getMagicColor(entity);
 
 		matrices.push();
 		matrices.translate(0, 0.2, 0);

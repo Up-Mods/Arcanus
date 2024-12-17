@@ -215,7 +215,7 @@
   "screen.arcanuscontinuum.check.enabled": "✓",
   "screen.arcanuscontinuum.check.disabled": "✘",
 
-  "config.arcanuscontinuum.supporter_settings": "Supporter Settings",
+  "config.arcanuscontinuum.supporter_settings": "Supporter Perks",
   "config.arcanuscontinuum.supporter_settings.magic_color": "Magic Color",
   "config.arcanuscontinuum.supporter_settings.halo_color": "Halo Color",
   "config.arcanuscontinuum.supporter_settings.halo_enabled": "Halo Enabled",

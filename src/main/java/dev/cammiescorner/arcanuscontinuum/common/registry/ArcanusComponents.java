@@ -7,7 +7,10 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.compat.ArcanusCompat;
 import dev.cammiescorner.arcanuscontinuum.common.compat.PehkuiCompat;
+import dev.cammiescorner.arcanuscontinuum.common.components.MagicColorComponent;
 import dev.cammiescorner.arcanuscontinuum.common.components.chunk.WardedBlocksComponent;
+import dev.cammiescorner.arcanuscontinuum.common.components.color.EntityMagicColorComponent;
+import dev.cammiescorner.arcanuscontinuum.common.components.color.PlayerMagicColorComponent;
 import dev.cammiescorner.arcanuscontinuum.common.components.entity.*;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.*;
@@ -40,6 +43,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ArcanusComponents implements ChunkComponentInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
+
+	public static final ComponentKey<MagicColorComponent> MAGIC_COLOR = createComponent("magic_color", MagicColorComponent.class);
+
 	// ----- Scoreboard Components ----- \\
 	public static final ComponentKey<PocketDimensionComponent> POCKET_DIMENSION_COMPONENT = createComponent("pocket_dimension", PocketDimensionComponent.class);
 
@@ -55,7 +61,6 @@ public class ArcanusComponents implements ChunkComponentInitializer, EntityCompo
 	public static final ComponentKey<LastCastTimeComponent> LAST_CAST_TIME_COMPONENT = createComponent("last_cast_time", LastCastTimeComponent.class);
 	public static final ComponentKey<StunComponent> STUN_COMPONENT = createComponent("stun", StunComponent.class);
 	public static final ComponentKey<QuestComponent> QUEST_COMPONENT = createComponent("quests", QuestComponent.class);
-	public static final ComponentKey<MagicColorComponent> MAGIC_COLOR = createComponent("magic_color", MagicColorComponent.class);
 	public static final ComponentKey<BoltTargetComponent> BOLT_TARGET = createComponent("bolt_target", BoltTargetComponent.class);
 	public static final ComponentKey<SpellShapeComponent> SPELL_SHAPE = createComponent("spell_shape", SpellShapeComponent.class);
 	public static final ComponentKey<SizeComponent> SIZE = createComponent("size", SizeComponent.class);
@@ -82,15 +87,6 @@ public class ArcanusComponents implements ChunkComponentInitializer, EntityCompo
 		registry.beginRegistration(LivingEntity.class, LAST_CAST_TIME_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(LastCastTimeComponent::new);
 		registry.beginRegistration(LivingEntity.class, STUN_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(StunComponent::new);
 		registry.beginRegistration(PlayerEntity.class, QUEST_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(QuestComponent::new);
-		registry.beginRegistration(ManaShieldEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
-		registry.beginRegistration(SmiteEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
-		registry.beginRegistration(MagicRuneEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
-		registry.beginRegistration(MagicProjectileEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
-		registry.beginRegistration(AreaOfEffectEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
-		registry.beginRegistration(BeamEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
-		registry.beginRegistration(GuardianOrbEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
-		registry.beginRegistration(AggressorbEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
-		registry.beginRegistration(PocketDimensionPortalEntity.class, MAGIC_COLOR).end(MagicColorComponent::new);
 		registry.beginRegistration(LivingEntity.class, BOLT_TARGET).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(BoltTargetComponent::new);
 		registry.beginRegistration(MagicProjectileEntity.class, SPELL_SHAPE).end(SpellShapeComponent::new);
 		registry.beginRegistration(Entity.class, SLOW_TIME_COMPONENT).end(SlowTimeComponent::new);
@@ -98,6 +94,23 @@ public class ArcanusComponents implements ChunkComponentInitializer, EntityCompo
 		registry.beginRegistration(LivingEntity.class, GUARDIAN_ORB_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(GuardianOrbComponent::new);
 		registry.beginRegistration(PlayerEntity.class, PORTAL_COOL_DOWN_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(PortalCoolDownComponent::new);
 		registry.beginRegistration(LivingEntity.class, COUNTER_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(CounterComponent::new);
+
+		List.of(
+			AggressorbEntity.class,
+			AreaOfEffectEntity.class,
+			BeamEntity.class,
+			GuardianOrbEntity.class,
+			MagicProjectileEntity.class,
+			MagicRuneEntity.class,
+			ManaShieldEntity.class,
+			PocketDimensionPortalEntity.class,
+			SmiteEntity.class
+		).forEach(type ->
+			registry.beginRegistration(type, MAGIC_COLOR)
+				.impl(EntityMagicColorComponent.class)
+				.end(EntityMagicColorComponent::new)
+		);
+		registry.registerForPlayers(MAGIC_COLOR, PlayerMagicColorComponent::new, RespawnCopyStrategy.NEVER_COPY);
 
 		ArcanusCompat.PEHKUI.ifEnabled(() -> () -> {
 			PehkuiCompat.registerEntityComponents(registry);
@@ -256,10 +269,6 @@ public class ArcanusComponents implements ChunkComponentInitializer, EntityCompo
 
 	public static Color getColor(Entity entity) {
 		return MAGIC_COLOR.get(entity).getColor();
-	}
-
-	public static void setColor(Entity entity, Color colour) {
-		MAGIC_COLOR.get(entity).setColor(colour);
 	}
 
 	public static Vec3d getBoltPos(LivingEntity entity) {
