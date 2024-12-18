@@ -123,10 +123,10 @@ public class PocketDimensionComponent implements Component {
 				var plot = getAssignedPlotSpace(pocketOwner.getId());
 				if (plot == null) {
 					plot = assignNewPlot(pocketDim, pocketOwner, entity.getWorld().getRandom());
-					replacePlotSpace(pocketOwner.getId(), pocketDim, false);
+					replacePlotSpace(pocketOwner.getId(), pocketDim, RegenerateType.FULL);
 				} else if (!chunksExist(plot, pocketDim)) {
 					Arcanus.LOGGER.warn("Pocket dimension plot for player {} ({}) failed integrity check! regenerating boundary...", pocketOwner.getName(), pocketOwner.getId());
-					replacePlotSpace(pocketOwner.getId(), pocketDim, false);
+					replacePlotSpace(pocketOwner.getId(), pocketDim, RegenerateType.WALLS_ONLY);
 				}
 
 				var bottomCenterPos = Vec3d.ofBottomCenter(plot.getBounds().getCenter().withY(plot.min().getY() + 1));
@@ -235,12 +235,26 @@ public class PocketDimensionComponent implements Component {
 		return existingPlots.get(target);
 	}
 
+	public enum RegenerateType {
+		INTERIOR_ONLY,
+		WALLS_ONLY,
+		FULL;
+
+		public boolean placeWalls() {
+			return this != INTERIOR_ONLY;
+		}
+
+		public boolean clearInterior() {
+			return this != WALLS_ONLY;
+		}
+	}
+
 	/**
 	 * fills the plot with empty space and builds walls around it
 	 *
-	 * @param clear whether to remove existing blocks and entities
+	 * @param regenerateType whether to force-replace the interior space and/or walls
 	 */
-	public boolean replacePlotSpace(UUID target, ServerWorld pocketDim, boolean clear) {
+	public boolean replacePlotSpace(UUID target, ServerWorld pocketDim, RegenerateType regenerateType) {
 		var plot = getAssignedPlotSpace(target);
 
 		// might happen if the command is ran before a player first enters their pocket dimension
@@ -248,7 +262,7 @@ public class PocketDimensionComponent implements Component {
 			return false;
 		}
 
-		if (clear) {
+		if (regenerateType.clearInterior()) {
 			pocketDim.getNonSpectatingEntities(Entity.class, Box.from(plot.getBounds())).forEach(entity -> {
 				if (PlayerHelper.isFakePlayer(entity) || !(entity instanceof ServerPlayerEntity player)) {
 					entity.discard();
@@ -266,10 +280,13 @@ public class PocketDimensionComponent implements Component {
 		BlockPos.stream(plot.min(), plot.max()).forEach(pos -> {
 			var isNotWall = pos.getX() != plot.min().getX() && pos.getX() != plot.max().getX() && pos.getY() != plot.min().getY() && pos.getY() != plot.max().getY() && pos.getZ() != plot.min().getZ() && pos.getZ() != plot.max().getZ();
 			if (isNotWall) {
-				if (clear) {
+				if (regenerateType.clearInterior()) {
 					Clearable.clear(pocketDim.getBlockEntity(pos));
 					pocketDim.setBlockState(pos, Blocks.AIR.getDefaultState(), REPLACE_FLAGS);
 				}
+				return;
+			}
+			else if(!regenerateType.placeWalls()) {
 				return;
 			}
 
@@ -280,41 +297,41 @@ public class PocketDimensionComponent implements Component {
 				.ifPresent(component -> component.setSourceId(target));
 		});
 
-		var center = plot.getBounds().getCenter().withY(plot.min().getY());
-		var pos = center.mutableCopy();
-		for (int x = 0; x < 4; x++) {
-			for (int z = 0; z < 4; z++) {
-				pos.set(center.getX() + x - 2, center.getY(), center.getZ() + z - 2);
+		if(regenerateType.placeWalls()) {
+			var center = plot.getBounds().getCenter().withY(plot.min().getY());
+			var pos = center.mutableCopy();
+			for (int x = 0; x < 4; x++) {
+				for (int z = 0; z < 4; z++) {
+					pos.set(center.getX() + x - 2, center.getY(), center.getZ() + z - 2);
 
-				if (x == 0) {
-					switch (z) {
-						case 0 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
-						case 1, 2 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.WEST), REPLACE_FLAGS);
-						case 3 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.WEST).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+					if (x == 0) {
+						switch (z) {
+							case 0 ->
+								pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+							case 1, 2 ->
+								pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.WEST), REPLACE_FLAGS);
+							case 3 ->
+								pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.WEST).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+						}
+					} else if (x == 3) {
+						switch (z) {
+							case 0 ->
+								pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.EAST).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+							case 1, 2 ->
+								pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.EAST));
+							case 3 ->
+								pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+						}
+					} else if (z == 0) {
+						pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.NORTH), REPLACE_FLAGS);
+					} else if (z == 3) {
+						pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH), REPLACE_FLAGS);
+					} else {
+						pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT.get().getDefaultState().with(SpatialRiftExitBlock.ACTIVE, x == 1 && z == 1), REPLACE_FLAGS);
 					}
-				} else if (x == 3) {
-					switch (z) {
-						case 0 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.EAST).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
-						case 1, 2 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.EAST));
-						case 3 ->
-							pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH).with(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
-					}
-				} else if (z == 0) {
-					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.NORTH), REPLACE_FLAGS);
-				} else if (z == 3) {
-					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().getDefaultState().with(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH), REPLACE_FLAGS);
-				} else {
-					pocketDim.setBlockState(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT.get().getDefaultState().with(SpatialRiftExitBlock.ACTIVE, x == 1 && z == 1), REPLACE_FLAGS);
+
+					Optional.ofNullable(pocketDim.getBlockEntity(pos)).flatMap(ArcanusComponents.MAGIC_COLOR::maybeGet).ifPresent(component -> component.setSourceId(target));
 				}
-
-				Optional.ofNullable(pocketDim.getBlockEntity(pos))
-					.flatMap(ArcanusComponents.MAGIC_COLOR::maybeGet)
-					.ifPresent(component -> component.setSourceId(target));
 			}
 		}
 
