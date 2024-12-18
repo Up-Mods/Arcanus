@@ -8,19 +8,23 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncExplosionParticlesPacket;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.*;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
 
@@ -34,12 +38,12 @@ public class ExplosionSpellShape extends SpellShape {
 	}
 
 	@Override
-	public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		Entity sourceEntity = castSource != null ? castSource : caster;
 		potency += getPotencyModifier();
 		float strength = ArcanusConfig.SpellShapes.ExplosionShapeProperties.strength;
 
-		world.emitGameEvent(caster, GameEvent.EXPLODE, new Vec3d(castFrom.getX(), castFrom.getY(), castFrom.getZ()));
+		world.gameEvent(caster, GameEvent.EXPLODE, new Vec3(castFrom.x(), castFrom.y(), castFrom.z()));
 		Set<BlockPos> affectedBlocks = Sets.newHashSet();
 
 		for(int j = 0; j < 16; ++j) {
@@ -54,22 +58,22 @@ public class ExplosionSpellShape extends SpellShape {
 						e /= g;
 						f /= g;
 						float h = strength * (0.7F + world.random.nextFloat() * 0.6F);
-						double m = castFrom.getX();
-						double n = castFrom.getY();
-						double o = castFrom.getZ();
+						double m = castFrom.x();
+						double n = castFrom.y();
+						double o = castFrom.z();
 
 						for(float p = 0.3F; h > 0F; h -= 0.225F) {
 							BlockPos blockPos = new BlockPos((int) m, (int) n, (int) o);
 							BlockState blockState = world.getBlockState(blockPos);
 							FluidState fluidState = world.getFluidState(blockPos);
 
-							if(!world.isInBuildLimit(blockPos))
+							if(!world.isInWorldBounds(blockPos))
 								break;
 
 							if(!blockState.isAir() || !fluidState.isEmpty())
-								h -= (Math.max(blockState.getBlock().getBlastResistance(), fluidState.getBlastResistance()) + 0.3F) * 0.3F;
+								h -= (Math.max(blockState.getBlock().getExplosionResistance(), fluidState.getExplosionResistance()) + 0.3F) * 0.3F;
 
-							if(!world.isAir(blockPos))
+							if(!world.isEmptyBlock(blockPos))
 								affectedBlocks.add(blockPos);
 
 							m += d * 0.3F;
@@ -82,13 +86,13 @@ public class ExplosionSpellShape extends SpellShape {
 		}
 
 		float f = strength * 2;
-		int k = MathHelper.floor(castFrom.getX() - f - 1);
-		int l = MathHelper.floor(castFrom.getX() + f + 1);
-		int r = MathHelper.floor(castFrom.getY() - f - 1);
-		int s = MathHelper.floor(castFrom.getY() + f + 1);
-		int t = MathHelper.floor(castFrom.getZ() - f - 1);
-		int u = MathHelper.floor(castFrom.getZ() + f + 1);
-		List<Entity> affectedEntities = world.getOtherEntities(sourceEntity == caster ? caster : null, new Box(k, r, t, l, s, u), entity -> entity.isAlive() && !entity.isSpectator()).stream().toList();
+		int k = Mth.floor(castFrom.x() - f - 1);
+		int l = Mth.floor(castFrom.x() + f + 1);
+		int r = Mth.floor(castFrom.y() - f - 1);
+		int s = Mth.floor(castFrom.y() + f + 1);
+		int t = Mth.floor(castFrom.z() - f - 1);
+		int u = Mth.floor(castFrom.z() + f + 1);
+		List<Entity> affectedEntities = world.getEntities(sourceEntity == caster ? caster : null, new AABB(k, r, t, l, s, u), entity -> entity.isAlive() && !entity.isSpectator()).stream().toList();
 
 		for(SpellEffect effect : new HashSet<>(effects)) {
 			if(effect.shouldTriggerOnceOnExplosion()) {
@@ -99,13 +103,13 @@ public class ExplosionSpellShape extends SpellShape {
 			for(Entity entity : affectedEntities)
 				effect.effect(caster, sourceEntity, world, new EntityHitResult(entity), effects, stack, potency);
 			for(BlockPos blockPos : affectedBlocks)
-				effect.effect(caster, sourceEntity, world, new BlockHitResult(Vec3d.ofCenter(blockPos), Direction.UP, blockPos, true), effects, stack, potency);
+				effect.effect(caster, sourceEntity, world, new BlockHitResult(Vec3.atCenterOf(blockPos), Direction.UP, blockPos, true), effects, stack, potency);
 		}
 
-		world.playSound(null, castFrom.getX(), castFrom.getY(), castFrom.getZ(), SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4F, (1F + (world.random.nextFloat() - world.random.nextFloat()) * 0.2F) * 0.7F, 1L);
+		world.playSeededSound(null, castFrom.x(), castFrom.y(), castFrom.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4F, (1F + (world.random.nextFloat() - world.random.nextFloat()) * 0.2F) * 0.7F, 1L);
 
-		for(ServerPlayerEntity player : PlayerLookup.tracking(world, BlockPos.create(castFrom.getX(), castFrom.getY(), castFrom.getZ())))
-			SyncExplosionParticlesPacket.send(player, castFrom.getX(), castFrom.getY(), castFrom.getZ(), strength, effects.contains(ArcanusSpellComponents.MINE.get()));
+		for(ServerPlayer player : PlayerLookup.tracking(world, BlockPos.containing(castFrom.x(), castFrom.y(), castFrom.z())))
+			SyncExplosionParticlesPacket.send(player, castFrom.x(), castFrom.y(), castFrom.z(), strength, effects.contains(ArcanusSpellComponents.MINE.get()));
 
 		castNext(caster, castFrom, castSource, world, stack, spellGroups, groupIndex, potency);
 	}

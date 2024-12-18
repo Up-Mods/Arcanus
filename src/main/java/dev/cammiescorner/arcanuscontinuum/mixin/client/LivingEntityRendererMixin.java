@@ -1,25 +1,25 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.client.renderer.feature.CounterFeatureRenderer;
 import dev.cammiescorner.arcanuscontinuum.client.renderer.feature.ManaWingsFeatureRenderer;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.StaffType;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Arm;
-import net.minecraft.util.math.Axis;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,34 +27,34 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends EntityRenderer<T> implements FeatureRendererContext<T, M> {
-	@Shadow protected abstract boolean addFeature(FeatureRenderer<T, M> feature);
+public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends EntityRenderer<T> implements RenderLayerParent<T, M> {
+	@Shadow protected abstract boolean addLayer(RenderLayer<T, M> feature);
 
-	protected LivingEntityRendererMixin(EntityRendererFactory.Context context) { super(context); }
+	protected LivingEntityRendererMixin(EntityRendererProvider.Context context) { super(context); }
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void arcanuscontinuum$init(EntityRendererFactory.Context ctx, EntityModel model, float shadowRadius, CallbackInfo ci) {
-		addFeature(new ManaWingsFeatureRenderer<>(this));
-		addFeature(new CounterFeatureRenderer<>(this));
+	private void arcanuscontinuum$init(EntityRendererProvider.Context ctx, EntityModel model, float shadowRadius, CallbackInfo ci) {
+		addLayer(new ManaWingsFeatureRenderer<>(this));
+		addLayer(new CounterFeatureRenderer<>(this));
 	}
 
-	@Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/render/entity/EntityRenderer;render(Lnet/minecraft/entity/Entity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"
+	@Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
 	))
-	private void arcanuscontinuum$boltRenderer(T livingEntity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, CallbackInfo info) {
-		Vec3d offset = new Vec3d(MathHelper.lerp(tickDelta, livingEntity.lastRenderX, livingEntity.getX()), MathHelper.lerp(tickDelta, livingEntity.lastRenderY, livingEntity.getY()), MathHelper.lerp(tickDelta, livingEntity.lastRenderZ, livingEntity.getZ())).add(getPositionOffset(livingEntity, tickDelta));
+	private void arcanuscontinuum$boltRenderer(T livingEntity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light, CallbackInfo info) {
+		Vec3 offset = new Vec3(Mth.lerp(tickDelta, livingEntity.xOld, livingEntity.getX()), Mth.lerp(tickDelta, livingEntity.yOld, livingEntity.getY()), Mth.lerp(tickDelta, livingEntity.zOld, livingEntity.getZ())).add(getRenderOffset(livingEntity, tickDelta));
 
-		matrices.push();
-		matrices.translate(-offset.getX(), -offset.getY(), -offset.getZ());
-		ArcanusHelper.renderBolts(livingEntity, livingEntity.getLerpedPos(tickDelta).add(0, livingEntity.getEyeHeight(livingEntity.getPose()) * 0.9, 0), matrices, vertices);
-		matrices.pop();
+		matrices.pushPose();
+		matrices.translate(-offset.x(), -offset.y(), -offset.z());
+		ArcanusHelper.renderBolts(livingEntity, livingEntity.getPosition(tickDelta).add(0, livingEntity.getEyeHeight(livingEntity.getPose()) * 0.9, 0), matrices, vertices);
+		matrices.popPose();
 	}
 
-	@Inject(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/render/entity/LivingEntityRenderer;getHandSwingProgress(Lnet/minecraft/entity/LivingEntity;F)F"
+	@Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getAttackAnim(Lnet/minecraft/world/entity/LivingEntity;F)F"
 	))
-	private void arcanuscontinuum$render(T livingEntity, float f, float g, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
-		if(livingEntity instanceof PlayerEntity player && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(livingEntity) && livingEntity.getMainHandStack().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF && ArcanusComponents.isCasting(livingEntity))
-			matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(player.getMainArm() == Arm.RIGHT ? 65 : -65));
+	private void arcanuscontinuum$render(T livingEntity, float f, float g, PoseStack matrices, MultiBufferSource vertexConsumerProvider, int i, CallbackInfo info) {
+		if(livingEntity instanceof Player player && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(livingEntity) && livingEntity.getMainHandItem().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF && ArcanusComponents.isCasting(livingEntity))
+			matrices.mulPose(Axis.YP.rotationDegrees(player.getMainArm() == HumanoidArm.RIGHT ? 65 : -65));
 	}
 }

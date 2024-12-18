@@ -21,25 +21,25 @@ import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.Items;
-import net.minecraft.registry.DefaultedRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.structure.processor.StructureProcessorList;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.DefaultedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
@@ -60,7 +60,7 @@ public class Arcanus implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##,####.##");
 
-	public static final RegistryKey<Registry<SpellComponent>> SPELL_COMPONENTS_REGISTRY_KEY = RegistryKey.ofRegistry(id("spell_components"));
+	public static final ResourceKey<Registry<SpellComponent>> SPELL_COMPONENTS_REGISTRY_KEY = ResourceKey.createRegistryKey(id("spell_components"));
 	public static final DefaultedRegistry<SpellComponent> SPELL_COMPONENTS = FabricRegistryBuilder.createDefaulted(SPELL_COMPONENTS_REGISTRY_KEY, id("empty")).buildAndRegister();
 	public static final StructureProcessorType<WizardTowerProcessor> WIZARD_TOWER_PROCESSOR = StructureProcessorType.register(Arcanus.id("wizard_tower_processor").toString(), WizardTowerProcessor.CODEC);
 	public static final StructureProcessorList WIZARD_TOWER_PROCESSOR_LIST = new StructureProcessorList(List.of(WizardTowerProcessor.INSTANCE));
@@ -87,7 +87,7 @@ public class Arcanus implements ModInitializer {
 		ArcanusSpellComponents.SPELL_COMPONENTS.accept(registryService);
 		ArcanusStatusEffects.STATUS_EFFECTS.accept(registryService);
 
-		RegistryEvents.DYNAMIC_REGISTRY_SETUP.register(context -> context.register(RegistryKeys.STRUCTURE_PROCESSOR_LIST, Arcanus.id("wizard_tower_processors"), () -> WIZARD_TOWER_PROCESSOR_LIST));
+		RegistryEvents.DYNAMIC_REGISTRY_SETUP.register(context -> context.register(Registries.PROCESSOR_LIST, Arcanus.id("wizard_tower_processors"), () -> WIZARD_TOWER_PROCESSOR_LIST));
 
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handler);
 		ServerPlayNetworking.registerGlobalReceiver(SetCastingPacket.ID, SetCastingPacket::handler);
@@ -97,15 +97,15 @@ public class Arcanus implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register(ArcanusCommands::init);
 
-		EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> entity.hasStatusEffect(ArcanusStatusEffects.MANA_WINGS.get()));
+		EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> entity.hasEffect(ArcanusStatusEffects.MANA_WINGS.get()));
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			var hostProfile = server.getHostProfile();
+			var hostProfile = server.getSingleplayerProfile();
 			if(hostProfile == null || !hostProfile.getId().equals(handler.player.getGameProfile().getId())) {
 				SyncConfigValuesPacket.send(handler.player);
 			}
 
-			SyncStatusEffectPacket.sendToAll(handler.player, ArcanusStatusEffects.ANONYMITY.get(), handler.player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get()));
+			SyncStatusEffectPacket.sendToAll(handler.player, ArcanusStatusEffects.ANONYMITY.get(), handler.player.hasEffect(ArcanusStatusEffects.ANONYMITY.get()));
 		});
 
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -114,8 +114,8 @@ public class Arcanus implements ModInitializer {
 		});
 
 		EntityTrackingEvents.AFTER_START_TRACKING.register((trackedEntity, player) -> {
-			if(trackedEntity instanceof ServerPlayerEntity playerEntity)
-				SyncStatusEffectPacket.sendTo(player, playerEntity, ArcanusStatusEffects.ANONYMITY.get(), playerEntity.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get()));
+			if(trackedEntity instanceof ServerPlayer playerEntity)
+				SyncStatusEffectPacket.sendTo(player, playerEntity, ArcanusStatusEffects.ANONYMITY.get(), playerEntity.hasEffect(ArcanusStatusEffects.ANONYMITY.get()));
 
 			// FIXME temporal dilation no worky
 //			if(trackedEntity instanceof LivingEntity livingEntity)
@@ -123,51 +123,51 @@ public class Arcanus implements ModInitializer {
 		});
 
 		EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
-			if(!entity.getWorld().isClient() && entity.getWorld().getTimeOfDay() == 24000) {
-				StatusEffectInstance copperCurse = entity.getStatusEffect(ArcanusStatusEffects.COPPER_CURSE.get());
+			if(!entity.level().isClientSide() && entity.level().getDayTime() == 24000) {
+				MobEffectInstance copperCurse = entity.getEffect(ArcanusStatusEffects.COPPER_CURSE.get());
 
 				if(copperCurse != null) {
-					entity.removeStatusEffect(ArcanusStatusEffects.COPPER_CURSE.get());
+					entity.removeEffect(ArcanusStatusEffects.COPPER_CURSE.get());
 
 					if(copperCurse.getDuration() > 24000)
-						entity.addStatusEffect(new StatusEffectInstance(ArcanusStatusEffects.COPPER_CURSE.get(), copperCurse.getDuration() - 24000, 0, true, false));
+						entity.addEffect(new MobEffectInstance(ArcanusStatusEffects.COPPER_CURSE.get(), copperCurse.getDuration() - 24000, 0, true, false));
 				}
 			}
 		});
 
 		UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-			ItemStack stack = player.getStackInHand(hand);
+			ItemStack stack = player.getItemInHand(hand);
 			BlockPos pos = hitResult.getBlockPos();
 			BlockState state = world.getBlockState(pos);
 
-			if(!world.isClient() && player.isSneaking() && stack.isOf(Items.NAME_TAG) && stack.hasCustomName()) {
+			if(!world.isClientSide() && player.isShiftKeyDown() && stack.is(Items.NAME_TAG) && stack.hasCustomHoverName()) {
 				MagicDoorBlockEntity door = MagicDoorBlock.getBlockEntity(world, state, pos);
 
 				if(door != null && door.getOwner() == player) {
-					door.setPassword(stack.getName().getString());
+					door.setPassword(stack.getHoverName().getString());
 
 					if(!player.isCreative())
-						stack.decrement(1);
+						stack.shrink(1);
 
-					return ActionResult.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}
 
 			if(ArcanusComponents.isBlockWarded(world, pos) && !ArcanusComponents.isOwnerOfBlock(player, pos)) {
-				ItemUsageContext ctx = new ItemPlacementContext(world, player, hand, stack, hitResult);
-				ActionResult result = stack.useOnBlock(ctx);
+				UseOnContext ctx = new BlockPlaceContext(world, player, hand, stack, hitResult);
+				InteractionResult result = stack.useOn(ctx);
 
-				if(!result.isAccepted()) {
-					player.sendMessage(Arcanus.translate("text", "block_is_warded").formatted(Formatting.RED), true);
-					player.swingHand(hand);
+				if(!result.consumesAction()) {
+					player.displayClientMessage(Arcanus.translate("text", "block_is_warded").withStyle(ChatFormatting.RED), true);
+					player.swing(hand);
 
-					return ActionResult.FAIL;
+					return InteractionResult.FAIL;
 				}
 
 				return result;
 			}
 
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 		});
 
 		// FIXME temporal dilation no worky
@@ -190,12 +190,12 @@ public class Arcanus implements ModInitializer {
 //		});
 	}
 
-	public static Identifier id(String name) {
-		return new Identifier(MOD_ID, name);
+	public static ResourceLocation id(String name) {
+		return new ResourceLocation(MOD_ID, name);
 	}
 
-	public static MutableText translate(@Nullable String prefix, String... value) {
-		return Text.translatable(translationKey(prefix, value));
+	public static MutableComponent translate(@Nullable String prefix, String... value) {
+		return Component.translatable(translationKey(prefix, value));
 	}
 
 	public static String translationKey(@Nullable String prefix, String... value) {
@@ -236,7 +236,7 @@ public class Arcanus implements ModInitializer {
 		};
 	}
 
-	public static MutableText getSpellPatternAsText(int index) {
+	public static MutableComponent getSpellPatternAsText(int index) {
 		String string = switch(index) {
 			case 0 -> Pattern.LEFT.getSymbol() + "-" + Pattern.LEFT.getSymbol() + "-" + Pattern.LEFT.getSymbol();
 			case 1 -> Pattern.LEFT.getSymbol() + "-" + Pattern.LEFT.getSymbol() + "-" + Pattern.RIGHT.getSymbol();
@@ -249,6 +249,6 @@ public class Arcanus implements ModInitializer {
 			default -> "ERROR";
 		};
 
-		return Text.literal(string).styled(style -> style.withFont(Arcanus.id("magic_symbols")));
+		return Component.literal(string).withStyle(style -> style.withFont(Arcanus.id("magic_symbols")));
 	}
 }

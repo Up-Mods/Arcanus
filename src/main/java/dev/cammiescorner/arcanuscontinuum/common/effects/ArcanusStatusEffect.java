@@ -2,22 +2,22 @@ package dev.cammiescorner.arcanuscontinuum.common.effects;
 
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncStatusEffectPacket;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 
-public class ArcanusStatusEffect extends StatusEffect {
-	public ArcanusStatusEffect(StatusEffectType type, int color) {
+public class ArcanusStatusEffect extends MobEffect {
+	public ArcanusStatusEffect(MobEffectCategory type, int color) {
 		super(type, color);
 	}
 
 	@Override
-	public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-		super.onApplied(entity, attributes, amplifier);
+	public void addAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
+		super.addAttributeModifiers(entity, attributes, amplifier);
 
-		if(entity.getWorld() instanceof ServerWorld) {
+		if(entity.level() instanceof ServerLevel) {
 			// FIXME temporal dilation no worky
 			if(this == ArcanusStatusEffects.ANONYMITY.get() || /*this == ArcanusStatusEffects.TEMPORAL_DILATION.get() ||*/ this == ArcanusStatusEffects.MANA_WINGS.get())
 				SyncStatusEffectPacket.sendToAll(entity, this, true);
@@ -28,10 +28,10 @@ public class ArcanusStatusEffect extends StatusEffect {
 	}
 
 	@Override
-	public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
-		super.onRemoved(entity, attributes, amplifier);
+	public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributes, int amplifier) {
+		super.removeAttributeModifiers(entity, attributes, amplifier);
 
-		if(entity.getWorld() instanceof ServerWorld) {
+		if(entity.level() instanceof ServerLevel) {
 			// FIXME temporal dilation no worky
 			if(this == ArcanusStatusEffects.ANONYMITY.get() || /*this == ArcanusStatusEffects.TEMPORAL_DILATION.get() ||*/ this == ArcanusStatusEffects.MANA_WINGS.get())
 				SyncStatusEffectPacket.sendToAll(entity, this, false);

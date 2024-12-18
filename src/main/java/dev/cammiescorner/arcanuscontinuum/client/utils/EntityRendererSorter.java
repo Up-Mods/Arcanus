@@ -4,7 +4,7 @@ import com.google.common.collect.Ordering;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShieldEntity;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.SmiteEntity;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 import java.util.List;
 

@@ -3,48 +3,48 @@ package dev.cammiescorner.arcanuscontinuum.common.blocks;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
-public class SpatialRiftExitBlock extends Block implements BlockEntityProvider {
-	public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
+public class SpatialRiftExitBlock extends Block implements EntityBlock {
+	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
 	public SpatialRiftExitBlock() {
-		super(QuiltBlockSettings.copyOf(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get()).sounds(BlockSoundGroup.STONE).luminance(value -> 7));
-		setDefaultState(getStateManager().getDefaultState().with(ACTIVE, false));
+		super(QuiltBlockSettings.copyOf(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get()).sound(SoundType.STONE).lightLevel(value -> 7));
+		registerDefaultState(getStateDefinition().any().setValue(ACTIVE, false));
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (!world.isClient() && !PocketDimensionComponent.get(world).teleportOutOfPocketDimension(player)) {
-			return ActionResult.FAIL;
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!world.isClientSide() && !PocketDimensionComponent.get(world).teleportOutOfPocketDimension(player)) {
+			return InteractionResult.FAIL;
 		}
 
-		return ActionResult.success(world.isClient());
+		return InteractionResult.sidedSuccess(world.isClientSide());
 	}
 
 	@Override
-	protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(ACTIVE);
 	}
 
 	@Nullable
 	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-		if (state.get(ACTIVE))
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		if (state.getValue(ACTIVE))
 			return new SpatialRiftExitBlockEntity(pos, state);
 
 		return null;

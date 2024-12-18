@@ -1,20 +1,20 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
-import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -28,29 +28,29 @@ public class BoltSpellShape extends SpellShape {
 	}
 
 	@Override
-	public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		potency += getPotencyModifier();
 		double range = ArcanusConfig.SpellShapes.BoltShapeProperties.range;
 		Entity sourceEntity = castSource != null ? castSource : caster;
-		Box box = new Box(castFrom.add(-range, -range, -range), castFrom.add(range, range, range));
-		List<Entity> affectedEntities = world.getOtherEntities(sourceEntity, box);
+		AABB box = new AABB(castFrom.add(-range, -range, -range), castFrom.add(range, range, range));
+		List<Entity> affectedEntities = world.getEntities(sourceEntity, box);
 
 		Predicate<Entity> predicate = entity -> {
 			if(entity.getBoundingBox().intersects(sourceEntity.getBoundingBox()))
 				return true;
-			if(sourceEntity instanceof LivingEntity livingEntity && !livingEntity.canSee(entity))
+			if(sourceEntity instanceof LivingEntity livingEntity && !livingEntity.hasLineOfSight(entity))
 				return false;
 
-			Vec3d look = sourceEntity.getRotationVector();
-			Optional<Vec3d> vecOptional = entity.getBoundingBox().expand(0.75).raycast(castFrom, castFrom.add(look.multiply(range)));
+			Vec3 look = sourceEntity.getLookAngle();
+			Optional<Vec3> vecOptional = entity.getBoundingBox().inflate(0.75).clip(castFrom, castFrom.add(look.scale(range)));
 			return vecOptional.isPresent();
 		};
 
 		Entity entityTarget = getClosestEntity(affectedEntities, range, castFrom, sourceEntity == caster ? predicate : entity -> true);
-		Vec3d castAt = castFrom;
+		Vec3 castAt = castFrom;
 
 		if(entityTarget != null) {
-			castAt = entityTarget.getPos();
+			castAt = entityTarget.position();
 
 			if(sourceEntity instanceof LivingEntity livingEntity)
 				ArcanusComponents.setBoltPos(livingEntity, entityTarget.getBoundingBox().getCenter());
@@ -65,11 +65,11 @@ public class BoltSpellShape extends SpellShape {
 				for(SpellEffect effect : new HashSet<>(effects))
 					effect.effect(caster, sourceEntity, world, target, effects, stack, potency);
 
-				castAt = target.getPos();
+				castAt = target.getLocation();
 			}
 
 			if(target.getType() != HitResult.Type.ENTITY && sourceEntity instanceof LivingEntity livingEntity)
-				ArcanusComponents.setBoltPos(livingEntity, target.getPos());
+				ArcanusComponents.setBoltPos(livingEntity, target.getLocation());
 		}
 
 		if(sourceEntity instanceof LivingEntity livingEntity) {
@@ -81,13 +81,13 @@ public class BoltSpellShape extends SpellShape {
 	}
 
 	@Nullable
-	private static Entity getClosestEntity(List<Entity> entityList, double range, Vec3d pos, Predicate<Entity> predicate) {
+	private static Entity getClosestEntity(List<Entity> entityList, double range, Vec3 pos, Predicate<Entity> predicate) {
 		double d = -1.0;
 		Entity value = null;
 
 		for(Entity entity : entityList) {
 			if(predicate.test(entity)) {
-				double e = entity.getPos().distanceTo(pos);
+				double e = entity.position().distanceTo(pos);
 
 				if(e <= range && (d == -1.0 || e < d)) {
 					d = e;

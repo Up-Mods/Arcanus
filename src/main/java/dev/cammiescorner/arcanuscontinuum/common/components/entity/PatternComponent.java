@@ -3,12 +3,12 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Pattern;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtInt;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,20 +22,20 @@ public class PatternComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		list.clear();
-		NbtList nbtList = tag.getList("Pattern", NbtElement.INT_TYPE);
+		ListTag nbtList = tag.getList("Pattern", Tag.TAG_INT);
 
 		for(int i = 0; i < nbtList.size(); i++)
 			list.add(Pattern.values()[nbtList.getInt(i)]);
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		NbtList nbtList = new NbtList();
+	public void writeToNbt(CompoundTag tag) {
+		ListTag nbtList = new ListTag();
 
 		for(Pattern pattern : list)
-			nbtList.add(NbtInt.of(pattern.ordinal()));
+			nbtList.add(IntTag.valueOf(pattern.ordinal()));
 
 		tag.put("Pattern", nbtList);
 	}
@@ -48,14 +48,14 @@ public class PatternComponent implements AutoSyncedComponent {
 		list.clear();
 		list.addAll(pattern);
 
-		if(entity instanceof PlayerEntity)
+		if(entity instanceof Player)
 			ArcanusComponents.PATTERN_COMPONENT.sync(entity);
 	}
 
 	public void clearPattern() {
 		list.clear();
 
-		if(entity instanceof PlayerEntity)
+		if(entity instanceof Player)
 			ArcanusComponents.PATTERN_COMPONENT.sync(entity);
 	}
 }

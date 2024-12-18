@@ -5,14 +5,14 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.fabricmc.api.EnvType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import org.quiltmc.loader.api.minecraft.MinecraftQuiltLoader;
 
 import java.util.Collections;
@@ -22,21 +22,21 @@ import java.util.UUID;
 
 public class WardedBlocksComponent implements AutoSyncedComponent {
 	private final Map<BlockPos, UUID> wardedBlocks = new HashMap<>();
-	private final Chunk chunk;
+	private final ChunkAccess chunk;
 
-	public WardedBlocksComponent(Chunk chunk) {
+	public WardedBlocksComponent(ChunkAccess chunk) {
 		this.chunk = chunk;
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
-		NbtList nbtList = tag.getList("WardedBlocksMap", NbtElement.COMPOUND_TYPE);
+	public void readFromNbt(CompoundTag tag) {
+		ListTag nbtList = tag.getList("WardedBlocksMap", Tag.TAG_COMPOUND);
 		wardedBlocks.clear();
 
 		for(int i = 0; i < nbtList.size(); i++) {
-			NbtCompound compound = nbtList.getCompound(i);
-			NbtList blockPosList = compound.getList("BlockPosList", NbtElement.COMPOUND_TYPE);
-			UUID ownerUuid = compound.getUuid("OwnerUuid");
+			CompoundTag compound = nbtList.getCompound(i);
+			ListTag blockPosList = compound.getList("BlockPosList", Tag.TAG_COMPOUND);
+			UUID ownerUuid = compound.getUUID("OwnerUuid");
 
 			// make sure we have the data cached when we need it
 			if(MinecraftQuiltLoader.getEnvironmentType() == EnvType.CLIENT) {
@@ -44,20 +44,20 @@ public class WardedBlocksComponent implements AutoSyncedComponent {
 			}
 
 			for(int j = 0; j < blockPosList.size(); j++)
-				wardedBlocks.put(NbtHelper.toBlockPos(blockPosList.getCompound(j)), ownerUuid);
+				wardedBlocks.put(NbtUtils.readBlockPos(blockPosList.getCompound(j)), ownerUuid);
 		}
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		NbtList nbtList = new NbtList();
-		Map<UUID, NbtList> map = new HashMap<>();
+	public void writeToNbt(CompoundTag tag) {
+		ListTag nbtList = new ListTag();
+		Map<UUID, ListTag> map = new HashMap<>();
 
-		wardedBlocks.forEach((blockPos, uuid) -> map.computeIfAbsent(uuid, uuid1 -> new NbtList()).add(NbtHelper.fromBlockPos(blockPos)));
+		wardedBlocks.forEach((blockPos, uuid) -> map.computeIfAbsent(uuid, uuid1 -> new ListTag()).add(NbtUtils.writeBlockPos(blockPos)));
 
 		map.forEach((uuid, nbt) -> {
-			NbtCompound compound = new NbtCompound();
-			compound.putUuid("OwnerUuid", uuid);
+			CompoundTag compound = new CompoundTag();
+			compound.putUUID("OwnerUuid", uuid);
 			compound.put("BlockPosList", nbt);
 
 			nbtList.add(compound);
@@ -66,26 +66,26 @@ public class WardedBlocksComponent implements AutoSyncedComponent {
 		tag.put("WardedBlocksMap", nbtList);
 	}
 
-	public void addWardedBlock(PlayerEntity player, BlockPos pos) {
+	public void addWardedBlock(Player player, BlockPos pos) {
 		if(!isBlockWarded(pos)) {
-			wardedBlocks.put(pos, player.getUuid());
+			wardedBlocks.put(pos, player.getUUID());
 			chunk.syncComponent(ArcanusComponents.WARDED_BLOCKS_COMPONENT);
-			chunk.setNeedsSaving(true);
+			chunk.setUnsaved(true);
 		}
 	}
 
-	public void removeWardedBlock(PlayerEntity player, BlockPos pos) {
+	public void removeWardedBlock(Player player, BlockPos pos) {
 		boolean canOtherPlayersRemoveBlock = ArcanusConfig.UtilityEffects.WardingEffectProperties.canBeRemovedByOthers;
 
 		if(canOtherPlayersRemoveBlock || isOwnerOfBlock(player, pos)) {
 			wardedBlocks.remove(pos);
 			chunk.syncComponent(ArcanusComponents.WARDED_BLOCKS_COMPONENT);
-			chunk.setNeedsSaving(true);
+			chunk.setUnsaved(true);
 		}
 	}
 
-	public boolean isOwnerOfBlock(PlayerEntity player, BlockPos pos) {
-		return wardedBlocks.getOrDefault(pos, Util.NIL_UUID).equals(player.getUuid());
+	public boolean isOwnerOfBlock(Player player, BlockPos pos) {
+		return wardedBlocks.getOrDefault(pos, Util.NIL_UUID).equals(player.getUUID());
 	}
 
 	public boolean isBlockWarded(BlockPos pos) {

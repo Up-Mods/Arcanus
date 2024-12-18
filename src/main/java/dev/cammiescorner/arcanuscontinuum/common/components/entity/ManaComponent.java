@@ -4,11 +4,11 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 
 public class ManaComponent implements AutoSyncedComponent, ServerTickingComponent {
 	private final LivingEntity entity;
@@ -20,20 +20,20 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 
 	@Override
 	public void serverTick() {
-		EntityAttributeInstance manaRegenAttr = entity.getAttributeInstance(ArcanusEntityAttributes.MANA_REGEN.get());
+		AttributeInstance manaRegenAttr = entity.getAttribute(ArcanusEntityAttributes.MANA_REGEN.get());
 
 		if(manaRegenAttr != null) {
-			addMana(manaRegenAttr.getValue() / (entity instanceof PlayerEntity player && player.isCreative() ? 1 : 20), false);
+			addMana(manaRegenAttr.getValue() / (entity instanceof Player player && player.isCreative() ? 1 : 20), false);
 		}
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		mana = tag.getDouble("Mana");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putDouble("Mana", mana);
 	}
 
@@ -42,7 +42,7 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 	}
 
 	public void setMana(double mana) {
-		this.mana = MathHelper.clamp(mana, 0, getTrueMaxMana());
+		this.mana = Mth.clamp(mana, 0, getTrueMaxMana());
 		ArcanusComponents.MANA_COMPONENT.sync(entity);
 	}
 
@@ -51,7 +51,7 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 	}
 
 	public double getMaxMana() {
-		EntityAttributeInstance maxManaAttr = entity.getAttributeInstance(ArcanusEntityAttributes.MAX_MANA.get());
+		AttributeInstance maxManaAttr = entity.getAttribute(ArcanusEntityAttributes.MAX_MANA.get());
 
 		if (maxManaAttr != null)
 			return maxManaAttr.getValue();
@@ -60,7 +60,7 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 	}
 
 	public double getManaLock() {
-		EntityAttributeInstance manaLockAttr = entity.getAttributeInstance(ArcanusEntityAttributes.MANA_LOCK.get());
+		AttributeInstance manaLockAttr = entity.getAttribute(ArcanusEntityAttributes.MANA_LOCK.get());
 
 		if (manaLockAttr != null)
 			return manaLockAttr.getValue();
@@ -80,7 +80,7 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 	}
 
 	public boolean drainMana(double amount, boolean simulate) {
-		EntityAttributeInstance instance = entity.getAttributeInstance(ArcanusEntityAttributes.MANA_COST.get());
+		AttributeInstance instance = entity.getAttribute(ArcanusEntityAttributes.MANA_COST.get());
 		if (instance != null) {
 			amount *= instance.getValue();
 		}
@@ -91,7 +91,7 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 					ArcanusComponents.addBurnout(entity, amount - getMana(), false);
 
 					if (ArcanusComponents.getBurnout(entity) >= ArcanusComponents.getMaxMana(entity) * 0.5F)
-						entity.damage(entity.getDamageSources().outOfWorld(), (float) Math.min(entity.getHealth() - 1, amount - getMana()));
+						entity.hurt(entity.damageSources().fellOutOfWorld(), (float) Math.min(entity.getHealth() - 1, amount - getMana()));
 				}
 
 				setMana(Math.max(0, getMana() - amount));

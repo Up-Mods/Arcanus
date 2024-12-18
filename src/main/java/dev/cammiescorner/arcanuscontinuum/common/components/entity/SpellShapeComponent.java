@@ -4,9 +4,9 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 
 public class SpellShapeComponent implements AutoSyncedComponent {
 	private final Entity entity;
@@ -17,13 +17,13 @@ public class SpellShapeComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
-		shape = (SpellShape) Arcanus.SPELL_COMPONENTS.get(new Identifier(tag.getString("SpellShape")));
+	public void readFromNbt(CompoundTag tag) {
+		shape = (SpellShape) Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(tag.getString("SpellShape")));
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		tag.putString("SpellShape", Arcanus.SPELL_COMPONENTS.getId(shape).toString());
+	public void writeToNbt(CompoundTag tag) {
+		tag.putString("SpellShape", Arcanus.SPELL_COMPONENTS.getKey(shape).toString());
 	}
 
 	public SpellShape getSpellShape() {

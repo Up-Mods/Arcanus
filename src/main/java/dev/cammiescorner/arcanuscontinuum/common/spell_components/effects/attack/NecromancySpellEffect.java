@@ -8,16 +8,16 @@ import dev.cammiescorner.arcanuscontinuum.common.entities.living.NecroSkeletonEn
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,24 +28,24 @@ public class NecromancySpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, World world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(caster != null) {
 			NecroSkeletonEntity skeleton = ArcanusEntities.NECRO_SKELETON.get().create(world);
 			int effectCount = (int) effects.stream().filter(ArcanusSpellComponents.NECROMANCY::is).count();
 
 			if(skeleton != null) {
-				EntityAttributeInstance damage = skeleton.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+				AttributeInstance damage = skeleton.getAttribute(Attributes.ATTACK_DAMAGE);
 
-				skeleton.setPosition(target.getPos());
+				skeleton.setPos(target.getLocation());
 				skeleton.setMaxHealth((ArcanusConfig.AttackEffects.NecromancyEffectProperties.baseHealth + effectCount) * potency);
 				skeleton.setOwner(caster);
-				skeleton.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_AXE));
-				skeleton.equipStack(EquipmentSlot.HEAD, new ItemStack(ArcanusItems.WIZARD_HAT.get()));
+				skeleton.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.STONE_AXE));
+				skeleton.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ArcanusItems.WIZARD_HAT.get()));
 
 				if(damage != null)
-					damage.addPersistentModifier(new EntityAttributeModifier("Attack Damage", (effectCount / 2d) * potency, EntityAttributeModifier.Operation.ADDITION));
+					damage.addPermanentModifier(new AttributeModifier("Attack Damage", (effectCount / 2d) * potency, AttributeModifier.Operation.ADDITION));
 
-				world.spawnEntity(skeleton);
+				world.addFreshEntity(skeleton);
 			}
 		}
 	}

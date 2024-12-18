@@ -1,36 +1,36 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.client;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Holder;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.profiler.Profiler;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.storage.WritableLevelData;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.Supplier;
 
-@Mixin(ClientWorld.class)
-public abstract class ClientWorldMixin extends World {
-	protected ClientWorldMixin(MutableWorldProperties worldProperties, RegistryKey<World> registryKey, DynamicRegistryManager registryManager, Holder<DimensionType> dimension, Supplier<Profiler> profiler, boolean client, boolean debug, long seed, int maxChainedNeighborUpdates) { super(worldProperties, registryKey, registryManager, dimension, profiler, client, debug, seed, maxChainedNeighborUpdates); }
+@Mixin(ClientLevel.class)
+public abstract class ClientWorldMixin extends Level {
+	protected ClientWorldMixin(WritableLevelData worldProperties, ResourceKey<Level> registryKey, RegistryAccess registryManager, Holder<DimensionType> dimension, Supplier<ProfilerFiller> profiler, boolean client, boolean debug, long seed, int maxChainedNeighborUpdates) { super(worldProperties, registryKey, registryManager, dimension, profiler, client, debug, seed, maxChainedNeighborUpdates); }
 
-	@WrapWithCondition(method = "syncWorldEvent", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/render/WorldRenderer;processWorldEvent(ILnet/minecraft/util/math/BlockPos;I)V"
+	@WrapWithCondition(method = "levelEvent", at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/LevelRenderer;levelEvent(ILnet/minecraft/core/BlockPos;I)V"
 	))
-	private boolean arcanuscontinuum$noBreakingSoundsOrParticles(WorldRenderer target, int eventId, BlockPos pos, int data) {
+	private boolean arcanuscontinuum$noBreakingSoundsOrParticles(LevelRenderer target, int eventId, BlockPos pos, int data) {
 		return eventId != 2001 || !ArcanusComponents.isBlockWarded(this, pos);
 	}
 
-	@WrapWithCondition(method = "tickEntity", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/entity/Entity;tick()V"
+	@WrapWithCondition(method = "tickNonPassenger", at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;tick()V"
 	))
 	private boolean arcanuscontinuum$blockEntityTick(Entity entity) {
 		return !ArcanusComponents.areUpdatesBlocked(entity);

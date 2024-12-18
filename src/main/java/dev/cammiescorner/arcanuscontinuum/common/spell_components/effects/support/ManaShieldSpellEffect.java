@@ -8,13 +8,13 @@ import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShieldEntity
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -25,9 +25,9 @@ public class ManaShieldSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, World world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() != HitResult.Type.MISS && caster != null) {
-			List<? extends ManaShieldEntity> list = ((ServerWorld) world).getEntitiesByType(TypeFilter.instanceOf(ManaShieldEntity.class), entity -> entity.getOwnerId().equals(caster.getUuid()));
+			List<? extends ManaShieldEntity> list = ((ServerLevel) world).getEntities(EntityTypeTest.forClass(ManaShieldEntity.class), entity -> entity.getOwnerId().equals(caster.getUUID()));
 
 			for(int i = 0; i < list.size() - 10; i++)
 				list.get(i).kill();
@@ -35,9 +35,9 @@ public class ManaShieldSpellEffect extends SpellEffect {
 			ManaShieldEntity manaShield = ArcanusEntities.MANA_SHIELD.get().create(world);
 
 			if(manaShield != null) {
-				manaShield.setProperties(caster.getUuid(), target.getPos().add(0.0D, -0.7D, 0.0D), (int) ((ArcanusConfig.SupportEffects.ManaShieldEffectProperties.baseLifeSpan + ArcanusConfig.SupportEffects.ManaShieldEffectProperties.lifeSpanModifier * (effects.stream().filter(ArcanusSpellComponents.MANA_SHIELD::is).count() - 1)) * potency));
+				manaShield.setProperties(caster.getUUID(), target.getLocation().add(0.0D, -0.7D, 0.0D), (int) ((ArcanusConfig.SupportEffects.ManaShieldEffectProperties.baseLifeSpan + ArcanusConfig.SupportEffects.ManaShieldEffectProperties.lifeSpanModifier * (effects.stream().filter(ArcanusSpellComponents.MANA_SHIELD::is).count() - 1)) * potency));
 				ArcanusHelper.copyMagicColor(manaShield, caster);
-				world.spawnEntity(manaShield);
+				world.addFreshEntity(manaShield);
 			}
 		}
 	}

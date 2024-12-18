@@ -7,12 +7,12 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.TypeFilter;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -23,11 +23,11 @@ public class AreaOfEffectSpellShape extends SpellShape {
 	}
 
 	@Override
-	public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		potency += getPotencyModifier();
 
 		if(caster != null) {
-			List<? extends AreaOfEffectEntity> list = world.getEntitiesByType(TypeFilter.instanceOf(AreaOfEffectEntity.class), entity -> caster.getUuid().equals(entity.getCasterId()));
+			List<? extends AreaOfEffectEntity> list = world.getEntities(EntityTypeTest.forClass(AreaOfEffectEntity.class), entity -> caster.getUUID().equals(entity.getCasterId()));
 
 			for(int i = 0; i < list.size() - 20; i++)
 				list.get(i).kill();
@@ -36,9 +36,9 @@ public class AreaOfEffectSpellShape extends SpellShape {
 			Entity sourceEntity = castSource != null ? castSource : caster;
 
 			if(areaOfEffect != null) {
-				areaOfEffect.setProperties(caster.getUuid(), sourceEntity, castFrom, stack, effects, potency, spellGroups, groupIndex);
+				areaOfEffect.setProperties(caster.getUUID(), sourceEntity, castFrom, stack, effects, potency, spellGroups, groupIndex);
 				ArcanusHelper.copyMagicColor(areaOfEffect, caster);
-				world.spawnEntity(areaOfEffect);
+				world.addFreshEntity(areaOfEffect);
 			}
 		}
 	}

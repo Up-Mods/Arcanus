@@ -8,6 +8,8 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusScreenHandlers;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.WorkbenchMode;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.WizardData;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,15 +17,22 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.*;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.RecipeBookMenu;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-
-import java.util.List;
-import java.util.Optional;
 
 public class ArcaneWorkbenchScreenHandler extends RecipeBookMenu<TransientCraftingContainer> {
 	private final ResultContainer result = new ResultContainer();

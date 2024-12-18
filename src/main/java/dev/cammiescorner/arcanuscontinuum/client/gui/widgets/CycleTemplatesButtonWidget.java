@@ -4,19 +4,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.util.WorkbenchMode;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.PressableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-public class CycleTemplatesButtonWidget extends PressableWidget {
+public class CycleTemplatesButtonWidget extends AbstractButton {
 	private final PressAction onPress;
-	private static final Identifier TEXTURE = WorkbenchMode.CUSTOMIZE.getTexture();
+	private static final ResourceLocation TEXTURE = WorkbenchMode.CUSTOMIZE.getTexture();
 	public final boolean isUp;
 
 	public CycleTemplatesButtonWidget(int x, int y, boolean isUp, PressAction onPress) {
-		super(x, y, 16, 16, Text.empty());
+		super(x, y, 16, 16, Component.empty());
 		this.isUp = isUp;
 		this.onPress = onPress;
 		this.setTooltip(Tooltip.create(Arcanus.translate("screen", "tooltip", isUp ? "cycle_up" : "cycle_down")));
@@ -28,22 +28,22 @@ public class CycleTemplatesButtonWidget extends PressableWidget {
 	}
 
 	@Override
-	public void drawWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+	public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 		int v = isUp ? 184 : 200;
 
 		if(!isHoveredOrFocused()) {
-			gui.drawTexture(TEXTURE, getX(), getY(), 24, v, width, height, 256, 256);
+			gui.blit(TEXTURE, getX(), getY(), 24, v, width, height, 256, 256);
 		}
 		else {
-			gui.drawTexture(TEXTURE, getX(), getY(), 40, v, width, height, 256, 256);
+			gui.blit(TEXTURE, getX(), getY(), 40, v, width, height, 256, 256);
 		}
 	}
 
 	@Override
-	protected void updateNarration(NarrationMessageBuilder builder) {
-		appendDefaultNarrations(builder);
+	protected void updateWidgetNarration(NarrationElementOutput builder) {
+		defaultButtonNarrationText(builder);
 	}
 
 	public interface PressAction {

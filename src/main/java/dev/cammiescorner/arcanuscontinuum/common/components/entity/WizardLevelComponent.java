@@ -3,10 +3,10 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import java.util.UUID;
 
@@ -20,20 +20,20 @@ public class WizardLevelComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		level = tag.getInt("WizardLevel");
-		EntityAttributeInstance manaAttr = entity.getAttributeInstance(ArcanusEntityAttributes.MAX_MANA.get());
+		AttributeInstance manaAttr = entity.getAttribute(ArcanusEntityAttributes.MAX_MANA.get());
 
 		if(manaAttr != null) {
 			if(manaAttr.getModifier(MANA_MODIFIER) != null)
 				manaAttr.removeModifier(MANA_MODIFIER);
 
-			manaAttr.addPersistentModifier(new EntityAttributeModifier(MANA_MODIFIER, "Wizard Level Modifier", Math.max(level - 1, 0) * 10, EntityAttributeModifier.Operation.ADDITION));
+			manaAttr.addPermanentModifier(new AttributeModifier(MANA_MODIFIER, "Wizard Level Modifier", Math.max(level - 1, 0) * 10, AttributeModifier.Operation.ADDITION));
 		}
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putInt("WizardLevel", level);
 	}
 
@@ -43,13 +43,13 @@ public class WizardLevelComponent implements AutoSyncedComponent {
 
 	public void setLevel(int level) {
 		this.level = level;
-		EntityAttributeInstance manaAttr = entity.getAttributeInstance(ArcanusEntityAttributes.MAX_MANA.get());
+		AttributeInstance manaAttr = entity.getAttribute(ArcanusEntityAttributes.MAX_MANA.get());
 
 		if(manaAttr != null) {
 			if(manaAttr.getModifier(MANA_MODIFIER) != null)
 				manaAttr.removeModifier(MANA_MODIFIER);
 
-			manaAttr.addPersistentModifier(new EntityAttributeModifier(MANA_MODIFIER, "Wizard Level Modifier", Math.max(level - 1, 0) * 10, EntityAttributeModifier.Operation.ADDITION));
+			manaAttr.addPermanentModifier(new AttributeModifier(MANA_MODIFIER, "Wizard Level Modifier", Math.max(level - 1, 0) * 10, AttributeModifier.Operation.ADDITION));
 		}
 
 		ArcanusComponents.WIZARD_LEVEL_COMPONENT.sync(entity);

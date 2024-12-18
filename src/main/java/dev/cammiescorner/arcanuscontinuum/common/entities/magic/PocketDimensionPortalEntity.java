@@ -4,63 +4,63 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.UUID;
 
 public class PocketDimensionPortalEntity extends Entity implements Targetable {
-	private static final TrackedData<Integer> TRUE_AGE = DataTracker.registerData(PocketDimensionPortalEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final EntityDataAccessor<Integer> TRUE_AGE = SynchedEntityData.defineId(PocketDimensionPortalEntity.class, EntityDataSerializers.INT);
 	private UUID casterId = Util.NIL_UUID;
 	private double pullStrength;
 
-	public PocketDimensionPortalEntity(EntityType<?> variant, World world) {
+	public PocketDimensionPortalEntity(EntityType<?> variant, Level world) {
 		super(variant, world);
 	}
 
 	@Override
 	public void tick() {
 		var caster = getCaster();
-		if (!getWorld().isClient() && (caster == null || !caster.isAlive()) || getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan + 20) {
+		if (!level().isClientSide() && (caster == null || !caster.isAlive()) || getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan + 20) {
 			kill();
 			return;
 		}
 
 		if (getTrueAge() <= ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan) {
-			Box box = new Box(0, 0, 0, 0, 0, 0).expand(4 + pullStrength).offset(getPos());
-			double boxRadius = box.getXLength() / 2;
+			AABB box = new AABB(0, 0, 0, 0, 0, 0).inflate(4 + pullStrength).move(position());
+			double boxRadius = box.getXsize() / 2;
 			double boxRadiusSq = boxRadius * boxRadius;
 
 			// TODO tag for entities that are immune to portals, which should include portals themselves
 			// TODO should probably also exclude fake players
-			if (caster instanceof ServerPlayerEntity serverCaster) {
+			if (caster instanceof ServerPlayer serverCaster) {
 				if (getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.portalGrowTime) {
-					getWorld().getOtherEntities(this, getBoundingBox(), entity -> entity.canUsePortals() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && (!(entity instanceof PlayerEntity player) || !ArcanusComponents.hasPortalCoolDown(player))).forEach(entity -> {
+					level().getEntities(this, getBoundingBox(), entity -> entity.canChangeDimensions() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && (!(entity instanceof Player player) || !ArcanusComponents.hasPortalCoolDown(player))).forEach(entity -> {
 						PocketDimensionComponent.get(getServer()).teleportToPocketDimension(serverCaster.getGameProfile(), entity);
 					});
 
 					if (ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.canSuckEntitiesIn) {
-						getWorld().getOtherEntities(this, box, entity -> entity.isAlive() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && !(entity instanceof PlayerEntity player && (player.isCreative() || ArcanusComponents.hasPortalCoolDown(player)))).forEach(entity -> {
-							double distanceSq = getPos().squaredDistanceTo(entity.getPos());
+						level().getEntities(this, box, entity -> entity.isAlive() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && !(entity instanceof Player player && (player.isCreative() || ArcanusComponents.hasPortalCoolDown(player)))).forEach(entity -> {
+							double distanceSq = position().distanceToSqr(entity.position());
 
 							if (distanceSq <= boxRadiusSq && distanceSq != 0) {
-								Vec3d direction = getPos().subtract(entity.getPos()).normalize();
+								Vec3 direction = position().subtract(entity.position()).normalize();
 								double inverseSq = 1 / distanceSq;
 
-								entity.addVelocity(direction.multiply(inverseSq));
-								entity.velocityModified = true;
+								entity.addDeltaMovement(direction.scale(inverseSq));
+								entity.hurtMarked = true;
 							}
 						});
 					}
@@ -68,14 +68,14 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 			}
 			else {
 				for (int i = 0; i < boxRadius * 2; ++i) {
-					double particleX = getPos().getX() + random.nextGaussian() * boxRadius;
-					double particleY = getPos().getY();
-					double particleZ = getPos().getZ() + random.nextGaussian() * boxRadius;
-					Vec3d particlePos = new Vec3d(particleX, particleY, particleZ);
-					Vec3d particleVelocity = particlePos.subtract(getPos());
+					double particleX = position().x() + random.nextGaussian() * boxRadius;
+					double particleY = position().y();
+					double particleZ = position().z() + random.nextGaussian() * boxRadius;
+					Vec3 particlePos = new Vec3(particleX, particleY, particleZ);
+					Vec3 particleVelocity = particlePos.subtract(position());
 
-					if (particlePos.squaredDistanceTo(getPos()) <= boxRadiusSq) {
-						getWorld().addParticle(ParticleTypes.PORTAL, particleX, particleY, particleZ, particleVelocity.getX(), particleVelocity.getY(), particleVelocity.getZ());
+					if (particlePos.distanceToSqr(position()) <= boxRadiusSq) {
+						level().addParticle(ParticleTypes.PORTAL, particleX, particleY, particleZ, particleVelocity.x(), particleVelocity.y(), particleVelocity.z());
 					}
 				}
 			}
@@ -84,38 +84,38 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 		}
 
 		super.tick();
-		dataTracker.set(TRUE_AGE, getTrueAge() + 1);
+		entityData.set(TRUE_AGE, getTrueAge() + 1);
 	}
 
 	@Override
-	protected void initDataTracker() {
-		dataTracker.startTracking(TRUE_AGE, 0);
+	protected void defineSynchedData() {
+		entityData.define(TRUE_AGE, 0);
 	}
 
 	@Override
-	public boolean collides() {
+	public boolean isPickable() {
 		return true;
 	}
 
 	@Override
-	protected void readCustomDataFromNbt(NbtCompound tag) {
-		casterId = tag.getUuid("CasterId");
+	protected void readAdditionalSaveData(CompoundTag tag) {
+		casterId = tag.getUUID("CasterId");
 		pullStrength = tag.getDouble("PullStrength");
-		dataTracker.set(TRUE_AGE, tag.getInt("TrueAge"));
+		entityData.set(TRUE_AGE, tag.getInt("TrueAge"));
 	}
 
 	@Override
-	protected void writeCustomDataToNbt(NbtCompound tag) {
-		tag.putUuid("CasterId", casterId);
+	protected void addAdditionalSaveData(CompoundTag tag) {
+		tag.putUUID("CasterId", casterId);
 		tag.putDouble("PullStrength", pullStrength);
-		tag.putInt("TrueAge", dataTracker.get(TRUE_AGE));
+		tag.putInt("TrueAge", entityData.get(TRUE_AGE));
 	}
 
-	private PlayerEntity getCaster() {
+	private Player getCaster() {
 		var server = getServer();
 		if (server != null) {
-			for (ServerWorld serverWorld : server.getWorlds()) {
-				if (serverWorld.getEntity(casterId) instanceof PlayerEntity caster) {
+			for (ServerLevel serverWorld : server.getAllLevels()) {
+				if (serverWorld.getEntity(casterId) instanceof Player caster) {
 					return caster;
 				}
 			}
@@ -125,11 +125,11 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	}
 
 	public int getTrueAge() {
-		return dataTracker.get(TRUE_AGE);
+		return entityData.get(TRUE_AGE);
 	}
 
-	public void setProperties(UUID casterId, Vec3d pos, double pullStrength) {
-		setPosition(pos);
+	public void setProperties(UUID casterId, Vec3 pos, double pullStrength) {
+		setPos(pos);
 		this.casterId = casterId;
 		this.pullStrength = pullStrength;
 	}

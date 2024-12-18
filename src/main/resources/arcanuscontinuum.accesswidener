@@ -1,12 +1,15 @@
-accessWidener    v1	       named
-accessible       class     net/minecraft/client/render/RenderLayer$MultiPhaseParameters
-accessible       class     net/minecraft/client/render/RenderPhase$Texture
-accessible       class     net/minecraft/client/render/RenderPhase$OffsetTexturing
-accessible       class     net/minecraft/client/world/ClientChunkManager$ClientChunkMap
-accessible       field     net/minecraft/item/SmithingTemplateItem                         AMETHYST_ICON    Lnet/minecraft/util/Identifier;
-accessible       field     net/minecraft/entity/mob/CreeperEntity                          CHARGED          Lnet/minecraft/entity/data/TrackedData;
-accessible       field     net/minecraft/client/world/ClientChunkManager                   chunks           Lnet/minecraft/client/world/ClientChunkManager$ClientChunkMap;
-accessible       field     net/minecraft/client/world/ClientChunkManager$ClientChunkMap    chunks           Ljava/util/concurrent/atomic/AtomicReferenceArray;
-accessible       field     net/minecraft/client/gui/screen/recipe/book/RecipeBookWidget TEXTURE Lnet/minecraft/util/Identifier;
-extendable       method    net/minecraft/entity/mob/AbstractSkeletonEntity                 getStepSound     ()Lnet/minecraft/sound/SoundEvent;
-accessible       method    net/minecraft/item/SmithingTemplateItem                         getArmorIcons    ()Ljava/util/List;
+accessWidener v2 named
+accessible class net/minecraft/client/renderer/RenderType$CompositeState
+accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
+accessible class net/minecraft/client/renderer/RenderStateShard$OffsetTexturingStateShard
+
+accessible field net/minecraft/world/entity/monster/Creeper DATA_IS_POWERED Lnet/minecraft/network/syncher/EntityDataAccessor;
+extendable method net/minecraft/world/entity/monster/AbstractSkeleton getStepSound ()Lnet/minecraft/sounds/SoundEvent;
+
+accessible field net/minecraft/world/item/SmithingTemplateItem EMPTY_SLOT_AMETHYST_SHARD Lnet/minecraft/resources/ResourceLocation;
+accessible field net/minecraft/client/gui/screens/recipebook/RecipeBookComponent RECIPE_BOOK_LOCATION Lnet/minecraft/resources/ResourceLocation;
+accessible method net/minecraft/world/item/SmithingTemplateItem createTrimmableArmorIconList ()Ljava/util/List;
+
+accessible class net/minecraft/client/multiplayer/ClientChunkCache$Storage
+accessible field net/minecraft/client/multiplayer/ClientChunkCache storage Lnet/minecraft/client/multiplayer/ClientChunkCache$Storage;
+accessible field net/minecraft/client/multiplayer/ClientChunkCache$Storage chunks Ljava/util/concurrent/atomic/AtomicReferenceArray;

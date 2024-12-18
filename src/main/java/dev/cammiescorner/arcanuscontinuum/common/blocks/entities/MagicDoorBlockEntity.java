@@ -1,13 +1,13 @@
 package dev.cammiescorner.arcanuscontinuum.common.blocks.entities;
 
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Locale;
 import java.util.UUID;
@@ -21,30 +21,30 @@ public class MagicDoorBlockEntity extends BlockEntity {
 	}
 
 	@Override
-	public void readNbt(NbtCompound nbt) {
-		super.readNbt(nbt);
+	public void load(CompoundTag nbt) {
+		super.load(nbt);
 
-		ownerId = nbt.getUuid("OwnerId");
+		ownerId = nbt.getUUID("OwnerId");
 		password = nbt.getString("Password");
 	}
 
 	@Override
-	protected void writeNbt(NbtCompound nbt) {
-		super.writeNbt(nbt);
+	protected void saveAdditional(CompoundTag nbt) {
+		super.saveAdditional(nbt);
 
-		nbt.putUuid("OwnerId", ownerId);
+		nbt.putUUID("OwnerId", ownerId);
 		nbt.putString("Password", password);
 	}
 
 	public LivingEntity getOwner() {
-		if(world instanceof ServerWorld server && server.getEntity(ownerId) instanceof LivingEntity livingEntity)
+		if(level instanceof ServerLevel server && server.getEntity(ownerId) instanceof LivingEntity livingEntity)
 			return livingEntity;
 
 		return null;
 	}
 
 	public void setOwner(LivingEntity owner) {
-		ownerId = owner.getUuid();
+		ownerId = owner.getUUID();
 	}
 
 	public String getPassword() {

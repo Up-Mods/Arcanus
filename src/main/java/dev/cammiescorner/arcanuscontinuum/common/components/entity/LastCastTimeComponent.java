@@ -2,8 +2,8 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 
 public class LastCastTimeComponent implements AutoSyncedComponent {
 	private final LivingEntity entity;
@@ -14,12 +14,12 @@ public class LastCastTimeComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		lastCastTime = tag.getLong("LastTimeCast");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putLong("LastTimeCast", lastCastTime);
 	}
 

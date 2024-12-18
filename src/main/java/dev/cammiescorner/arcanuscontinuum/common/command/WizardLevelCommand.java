@@ -6,48 +6,48 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 
 //TODO translatable texts
 public class WizardLevelCommand {
 
-	public static void register(LiteralArgumentBuilder<ServerCommandSource> builder) {
-		builder.then(CommandManager.literal("wizard_level")
-			.then(CommandManager.literal("set")
-				.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(CommandManager.GAME_MASTER_PERMISSION_LEVEL))
-				.then(CommandManager.argument("level", IntegerArgumentType.integer(0, 10))
-					.then(CommandManager.argument("player", EntityArgumentType.player())
-						.executes(context -> WizardLevelCommand.setLevel(context, EntityArgumentType.getPlayer(context, "player")))
+	public static void register(LiteralArgumentBuilder<CommandSourceStack> builder) {
+		builder.then(Commands.literal("wizard_level")
+			.then(Commands.literal("set")
+				.requires(serverCommandSource -> serverCommandSource.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(Commands.argument("level", IntegerArgumentType.integer(0, 10))
+					.then(Commands.argument("player", EntityArgument.player())
+						.executes(context -> WizardLevelCommand.setLevel(context, EntityArgument.getPlayer(context, "player")))
 					)
-					.executes(context -> WizardLevelCommand.setLevel(context, context.getSource().getPlayerOrThrow()))
+					.executes(context -> WizardLevelCommand.setLevel(context, context.getSource().getPlayerOrException()))
 				)
 			)
-			.then(CommandManager.literal("get")
-				.then(CommandManager.argument("player", EntityArgumentType.player())
-					.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(CommandManager.GAME_MASTER_PERMISSION_LEVEL))
-					.executes(context -> WizardLevelCommand.getLevel(context, EntityArgumentType.getPlayer(context, "player")))
+			.then(Commands.literal("get")
+				.then(Commands.argument("player", EntityArgument.player())
+					.requires(serverCommandSource -> serverCommandSource.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					.executes(context -> WizardLevelCommand.getLevel(context, EntityArgument.getPlayer(context, "player")))
 				)
-				.executes(context -> WizardLevelCommand.getLevel(context, context.getSource().getPlayerOrThrow()))
+				.executes(context -> WizardLevelCommand.getLevel(context, context.getSource().getPlayerOrException()))
 			)
 		);
 	}
 
-	public static int getLevel(CommandContext<ServerCommandSource> context, ServerPlayerEntity player) throws CommandSyntaxException {
+	public static int getLevel(CommandContext<CommandSourceStack> context, ServerPlayer player) throws CommandSyntaxException {
 		int level = ArcanusComponents.getWizardLevel(player);
-		context.getSource().sendFeedback(() -> Text.literal(String.format("%s's wizard level is %s", player.getEntityName(), level)), false);
+		context.getSource().sendSuccess(() -> Component.literal(String.format("%s's wizard level is %s", player.getScoreboardName(), level)), false);
 
 		return level;
 	}
 
-	public static int setLevel(CommandContext<ServerCommandSource> context, ServerPlayerEntity player) throws CommandSyntaxException {
+	public static int setLevel(CommandContext<CommandSourceStack> context, ServerPlayer player) throws CommandSyntaxException {
 		int level = IntegerArgumentType.getInteger(context, "level");
 		ArcanusComponents.setWizardLevel(player, level);
 
-		context.getSource().sendFeedback(() -> Text.literal(String.format("Set %s's level to %s", player.getEntityName(), level)), true);
+		context.getSource().sendSuccess(() -> Component.literal(String.format("Set %s's level to %s", player.getScoreboardName(), level)), true);
 
 		return Command.SINGLE_SUCCESS;
 	}

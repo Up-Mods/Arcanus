@@ -1,59 +1,60 @@
 package dev.cammiescorner.arcanuscontinuum.common.blocks;
 
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
-public class MagicBlock extends Block implements BlockEntityProvider {
+public class MagicBlock extends Block implements EntityBlock {
 	public MagicBlock() {
 		super(QuiltBlockSettings.copyOf(Blocks.OBSIDIAN)
-			.sounds(BlockSoundGroup.GLASS)
-			.luminance(value -> 12)
-			.nonOpaque()
-			.allowsSpawning(Blocks::never)
-			.solidBlock(Blocks::never)
-			.suffocates(Blocks::never)
-			.blockVision(Blocks::never)
+			.sound(SoundType.GLASS)
+			.lightLevel(value -> 12)
+			.noOcclusion()
+			.isValidSpawn(Blocks::never)
+			.isRedstoneConductor(Blocks::never)
+			.isSuffocating(Blocks::never)
+			.isViewBlocking(Blocks::never)
 		);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
-		world.breakBlock(pos, false);
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+		world.destroyBlock(pos, false);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.ANIMATED;
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.ENTITYBLOCK_ANIMATED;
 	}
 
 	@Override
-	public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter world, BlockPos pos) {
 		return true;
 	}
 
 	@Override
-	public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+	public float getShadeBrightness(BlockState state, BlockGetter world, BlockPos pos) {
 		return 1F;
 	}
 
 	@Override
-	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-		return VoxelShapes.empty();
+	public VoxelShape getVisualShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+		return Shapes.empty();
 	}
 
 	@Nullable
 	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new MagicBlockEntity(pos, state);
 	}
 }

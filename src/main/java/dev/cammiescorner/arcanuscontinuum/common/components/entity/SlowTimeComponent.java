@@ -2,8 +2,8 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
 
 public class SlowTimeComponent  implements AutoSyncedComponent {
 	private final Entity entity;
@@ -16,14 +16,14 @@ public class SlowTimeComponent  implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		slowTime = tag.getBoolean("SlowTime");
 		blockUpdates = tag.getBoolean("BlockUpdates");
 		blockUpdatesInterval = tag.getInt("BlockUpdatesInterval");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putBoolean("SlowTime", slowTime);
 		tag.putBoolean("BlockUpdates", blockUpdates);
 		tag.putInt("BlockUpdatesInterval", blockUpdatesInterval);

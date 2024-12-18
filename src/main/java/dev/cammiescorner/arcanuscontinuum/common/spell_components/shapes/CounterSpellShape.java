@@ -1,18 +1,16 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -23,12 +21,12 @@ public class CounterSpellShape extends SpellShape {
 	}
 
 	@Override
-	public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		potency += getPotencyModifier();
 		LivingEntity targetEntity = castSource instanceof LivingEntity livingEntity ? livingEntity : caster;
 
 		if(targetEntity != null) {
-			ArcanusComponents.setCounterProperties(targetEntity, caster, stack, effects, spellGroups, groupIndex, ArcanusHelper.getMagicColor(caster), potency, world.getTime());
+			ArcanusComponents.setCounterProperties(targetEntity, caster, stack, effects, spellGroups, groupIndex, ArcanusHelper.getMagicColor(caster), potency, world.getGameTime());
 		}
 	}
 }

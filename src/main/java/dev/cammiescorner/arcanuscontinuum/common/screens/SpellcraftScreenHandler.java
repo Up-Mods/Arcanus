@@ -1,24 +1,24 @@
 package dev.cammiescorner.arcanuscontinuum.common.screens;
 
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusScreenHandlers;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.ItemStack;
 
-public class SpellcraftScreenHandler extends ScreenHandler {
-	private final Inventory inventory;
-	private final ScreenHandlerContext context;
+public class SpellcraftScreenHandler extends AbstractContainerMenu {
+	private final Container inventory;
+	private final ContainerLevelAccess context;
 	private final ItemStack stack;
 	private final BlockPos pos;
 
-	public SpellcraftScreenHandler(int syncId, Inventory inventory, BlockPos pos, ItemStack stack) {
-		this(syncId, inventory, ScreenHandlerContext.EMPTY, pos, stack);
+	public SpellcraftScreenHandler(int syncId, Container inventory, BlockPos pos, ItemStack stack) {
+		this(syncId, inventory, ContainerLevelAccess.NULL, pos, stack);
 	}
 
-	public SpellcraftScreenHandler(int syncId, Inventory inventory, ScreenHandlerContext context, BlockPos pos, ItemStack stack) {
+	public SpellcraftScreenHandler(int syncId, Container inventory, ContainerLevelAccess context, BlockPos pos, ItemStack stack) {
 		super(ArcanusScreenHandlers.SPELLCRAFT_SCREEN_HANDLER.get(), syncId);
 		this.inventory = inventory;
 		this.stack = stack;
@@ -27,26 +27,26 @@ public class SpellcraftScreenHandler extends ScreenHandler {
 	}
 
 	@Override
-	public boolean onButtonClick(PlayerEntity player, int id) {
-		if(!player.canModifyBlocks())
+	public boolean clickMenuButton(Player player, int id) {
+		if(!player.mayBuild())
 			return false;
 
-		ItemStack itemStack = inventory.removeStack(0);
-		inventory.markDirty();
+		ItemStack itemStack = inventory.removeItemNoUpdate(0);
+		inventory.setChanged();
 
-		if(!player.getInventory().insertStack(itemStack))
-			player.dropItem(itemStack, false);
+		if(!player.getInventory().add(itemStack))
+			player.drop(itemStack, false);
 
 		return true;
 	}
 
 	@Override
-	public ItemStack quickTransfer(PlayerEntity player, int fromIndex) {
+	public ItemStack quickMoveStack(Player player, int fromIndex) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean canUse(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return true;
 	}
 
@@ -58,7 +58,7 @@ public class SpellcraftScreenHandler extends ScreenHandler {
 		return stack;
 	}
 
-	public ScreenHandlerContext getContext() {
+	public ContainerLevelAccess getContext() {
 		return context;
 	}
 }

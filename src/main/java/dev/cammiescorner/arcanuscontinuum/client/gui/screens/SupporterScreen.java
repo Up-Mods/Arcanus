@@ -7,13 +7,13 @@ import dev.cammiescorner.arcanuscontinuum.common.util.supporters.HaloData;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.WizardData;
 import dev.upcraft.datasync.api.util.Entitlements;
 import dev.upcraft.datasync.api.util.GameProfileHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,13 +35,13 @@ public class SupporterScreen extends Screen {
 	private boolean haloEnabled;
 
 	// primary group
-	private TextFieldWidget magicColorField;
+	private EditBox magicColorField;
 
 	// secondary group
-	private TextFieldWidget haloColorField;
+	private EditBox haloColorField;
 
 	public SupporterScreen(ArcanusConfigScreen parent) {
-		super(Text.empty());
+		super(Component.empty());
 		this.parent = parent;
 
 		UUID playerId = GameProfileHelper.getClientProfile().getId();
@@ -64,10 +64,10 @@ public class SupporterScreen extends Screen {
 		return haloData != null;
 	}
 
-	private Text getHaloEnabledText() {
-		var text = haloEnabled ? Text.translatable("config.arcanuscontinuum.supporter_settings.halo_enabled") : Text.translatable("config.arcanuscontinuum.supporter_settings.halo_disabled");
-		var checkMark = haloEnabled ? Text.translatable("screen.arcanuscontinuum.check.enabled").formatted(Formatting.GREEN) : Text.translatable("screen.arcanuscontinuum.check.disabled").formatted(Formatting.RED);
-		return Text.empty().append(checkMark).append(" ").append(text);
+	private Component getHaloEnabledText() {
+		var text = haloEnabled ? Component.translatable("config.arcanuscontinuum.supporter_settings.halo_enabled") : Component.translatable("config.arcanuscontinuum.supporter_settings.halo_disabled");
+		var checkMark = haloEnabled ? Component.translatable("screen.arcanuscontinuum.check.enabled").withStyle(ChatFormatting.GREEN) : Component.translatable("screen.arcanuscontinuum.check.disabled").withStyle(ChatFormatting.RED);
+		return Component.empty().append(checkMark).append(" ").append(text);
 	}
 
 	@Override
@@ -81,27 +81,27 @@ public class SupporterScreen extends Screen {
 				yOffset = -35;
 			}
 
-			haloColorField = addDrawableChild(new TextFieldWidget(textRenderer, centerX + 11, centerY + yOffset - 10, 64, 20, Text.empty()));
-			addDrawableChild(ButtonWidget.builder(getHaloEnabledText(), buttonWidget -> {
+			haloColorField = addRenderableWidget(new EditBox(font, centerX + 11, centerY + yOffset - 10, 64, 20, Component.empty()));
+			addRenderableWidget(Button.builder(getHaloEnabledText(), buttonWidget -> {
 				haloEnabled = !haloEnabled;
 				buttonWidget.setMessage(getHaloEnabledText());
-			}).positionAndSize(centerX - 11, centerY + yOffset + 30 - 10, 88, 20).build());
-			haloColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.halo_color"));
-			haloColorField.setText(String.format("#%06X", haloData.color().asInt(Color.Ordering.RGB)));
+			}).bounds(centerX - 11, centerY + yOffset + 30 - 10, 88, 20).build());
+			haloColorField.setHint(Component.translatable("config.arcanuscontinuum.supporter_settings.halo_color"));
+			haloColorField.setValue(String.format("#%06X", haloData.color().asInt(Color.Ordering.RGB)));
 			haloColorField.setMaxLength(7);
 
 			yOffset = 35;
 		}
 
 		if (hasWizardData()) {
-			magicColorField = new TextFieldWidget(textRenderer, centerX + 11, centerY + yOffset - 10, 64, 20, Text.empty());
-			addDrawableChild(magicColorField);
-			magicColorField.setHint(Text.translatable("config.arcanuscontinuum.supporter_settings.magic_color"));
-			magicColorField.setText(String.format("#%06X", wizardData.magicColor().asInt(Color.Ordering.RGB)));
+			magicColorField = new EditBox(font, centerX + 11, centerY + yOffset - 10, 64, 20, Component.empty());
+			addRenderableWidget(magicColorField);
+			magicColorField.setHint(Component.translatable("config.arcanuscontinuum.supporter_settings.magic_color"));
+			magicColorField.setValue(String.format("#%06X", wizardData.magicColor().asInt(Color.Ordering.RGB)));
 			magicColorField.setMaxLength(7);
 		}
 
-		addDrawableChild(ButtonWidget.builder(Text.translatable("config.arcanuscontinuum.supporter_settings.save_and_exit"), buttonWidget -> {
+		addRenderableWidget(Button.builder(Component.translatable("config.arcanuscontinuum.supporter_settings.save_and_exit"), buttonWidget -> {
 			List<CompletableFuture<Void>> saveFutures = new ArrayList<>();
 			if (hasHaloData()) {
 				var newHaloData = getColorFromField(haloColorField).map(haloData::withColor).orElse(haloData).withEnabled(haloEnabled);
@@ -117,26 +117,26 @@ public class SupporterScreen extends Screen {
 				}
 			}
 
-			client.setScreen(new SupporterSavingScreen(CompletableFuture.allOf(saveFutures.toArray(CompletableFuture[]::new)), () -> client.setScreen(parent)));
-		}).positionAndSize(centerX - 55, height - 27, 110, 20).build());
+			minecraft.setScreen(new SupporterSavingScreen(CompletableFuture.allOf(saveFutures.toArray(CompletableFuture[]::new)), () -> minecraft.setScreen(parent)));
+		}).bounds(centerX - 55, height - 27, 110, 20).build());
 	}
 
 	@Override
 	public void renderBackground(GuiGraphics graphics) {
-		this.renderBackgroundTexture(graphics);
-		graphics.setShaderColor(0.125f, 0.125f, 0.125f, 1f);
-		graphics.drawTexture(Screen.OPTIONS_BACKGROUND_TEXTURE, 16, 32, 0, 0, width - 32, height - 65, 32, 32);
-		graphics.setShaderColor(1f, 1f, 1f, 1f);
+		this.renderDirtBackground(graphics);
+		graphics.setColor(0.125f, 0.125f, 0.125f, 1f);
+		graphics.blit(Screen.BACKGROUND_LOCATION, 16, 32, 0, 0, width - 32, height - 65, 32, 32);
+		graphics.setColor(1f, 1f, 1f, 1f);
 
 		// top shadow
-		graphics.fillGradient(RenderLayer.getGuiOverlay(), 16, 32, width - 16, 36, 0xFF000000, 0x00000000, 0);
+		graphics.fillGradient(RenderType.guiOverlay(), 16, 32, width - 16, 36, 0xFF000000, 0x00000000, 0);
 
 		// bottom shadow
-		graphics.fillGradient(RenderLayer.getGuiOverlay(), 16, height - 37, width - 16, height - 33, 0x00000000, 0xFF000000, 0);
+		graphics.fillGradient(RenderType.guiOverlay(), 16, height - 37, width - 16, height - 33, 0x00000000, 0xFF000000, 0);
 	}
 
-	private Optional<Color> getColorFromField(TextFieldWidget field) {
-		String fieldText = field.getText().trim().replace("#", "");
+	private Optional<Color> getColorFromField(EditBox field) {
+		String fieldText = field.getValue().trim().replace("#", "");
 		if (fieldText.length() != 6) {
 			return Optional.of(StandardColors.BLACK);
 		}
@@ -169,14 +169,14 @@ public class SupporterScreen extends Screen {
 			}
 			renderColorDisplay(graphics, centerX - 2, centerY + yOffset, getColorFromField(haloColorField));
 
-			graphics.drawText(textRenderer, "Halo Color", centerX - 74, centerY + yOffset - textRenderer.fontHeight / 2, 0xffffff, false);
+			graphics.drawString(font, "Halo Color", centerX - 74, centerY + yOffset - font.lineHeight / 2, 0xffffff, false);
 
 			yOffset = 35;
 		}
 
 		if (hasWizardData()) {
 			renderColorDisplay(graphics, centerX - 2, centerY + yOffset, getColorFromField(magicColorField));
-			graphics.drawText(textRenderer, "Magic Color", centerX - 74, centerY + yOffset - textRenderer.fontHeight / 2, 0xffffff, false);
+			graphics.drawString(font, "Magic Color", centerX - 74, centerY + yOffset - font.lineHeight / 2, 0xffffff, false);
 		}
 
 
@@ -184,7 +184,7 @@ public class SupporterScreen extends Screen {
 	}
 
 	@Override
-	public void closeScreen() {
-		client.setScreen(parent);
+	public void onClose() {
+		minecraft.setScreen(parent);
 	}
 }

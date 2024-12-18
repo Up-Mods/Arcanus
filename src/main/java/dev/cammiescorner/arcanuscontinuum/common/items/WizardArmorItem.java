@@ -5,19 +5,19 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import net.minecraft.block.cauldron.CauldronBehavior;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.DyeableArmorItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.world.World;
+import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.DyeableArmorItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.Map;
@@ -25,50 +25,50 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 public class WizardArmorItem extends DyeableArmorItem {
-	private static final Map<ArmorSlot, UUID> MODIFIER_IDS = Map.of(
-		ArmorSlot.BOOTS, UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"),
-		ArmorSlot.LEGGINGS, UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
-		ArmorSlot.CHESTPLATE, UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"),
-		ArmorSlot.HELMET, UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")
+	private static final Map<Type, UUID> MODIFIER_IDS = Map.of(
+		Type.BOOTS, UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"),
+		Type.LEGGINGS, UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
+		Type.CHESTPLATE, UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"),
+		Type.HELMET, UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")
 	);
-	private final Supplier<Multimap<EntityAttribute, EntityAttributeModifier>> attributeModifiers;
+	private final Supplier<Multimap<Attribute, AttributeModifier>> attributeModifiers;
 
-	public WizardArmorItem(ArmorMaterial armorMaterial, ArmorSlot equipmentSlot, double manaRegen, double magicResist, double spellPotency, double manaCostMultiplier, double spellCoolDown) {
-		super(armorMaterial, equipmentSlot, new QuiltItemSettings().maxCount(1));
+	public WizardArmorItem(ArmorMaterial armorMaterial, Type equipmentSlot, double manaRegen, double magicResist, double spellPotency, double manaCostMultiplier, double spellCoolDown) {
+		super(armorMaterial, equipmentSlot, new QuiltItemSettings().stacksTo(1));
 
 		this.attributeModifiers = Suppliers.memoize(() -> {
 			UUID modifierID = MODIFIER_IDS.get(equipmentSlot);
-			return ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-				.put(EntityAttributes.GENERIC_ARMOR, new EntityAttributeModifier(modifierID, "Armor modifier", armorMaterial.getProtection(equipmentSlot), EntityAttributeModifier.Operation.ADDITION))
-				.put(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, new EntityAttributeModifier(modifierID, "Armor toughness", armorMaterial.getToughness(), EntityAttributeModifier.Operation.ADDITION))
-				.put(ArcanusEntityAttributes.MANA_REGEN.get(), new EntityAttributeModifier(modifierID, "Armor modifier", manaRegen, EntityAttributeModifier.Operation.ADDITION))
-				.put(ArcanusEntityAttributes.MAGIC_RESISTANCE.get(), new EntityAttributeModifier(modifierID, "Armor modifier", magicResist, EntityAttributeModifier.Operation.MULTIPLY_BASE))
-				.put(ArcanusEntityAttributes.SPELL_POTENCY.get(), new EntityAttributeModifier(modifierID, "Armor modifier", spellPotency, EntityAttributeModifier.Operation.MULTIPLY_BASE))
-				.put(ArcanusEntityAttributes.MANA_COST.get(), new EntityAttributeModifier(modifierID, "Armor modifier", manaCostMultiplier, EntityAttributeModifier.Operation.MULTIPLY_BASE))
-				.put(ArcanusEntityAttributes.SPELL_COOL_DOWN.get(), new EntityAttributeModifier(modifierID, "Armor modifier", spellCoolDown, EntityAttributeModifier.Operation.MULTIPLY_BASE))
+			return ImmutableMultimap.<Attribute, AttributeModifier>builder()
+				.put(Attributes.ARMOR, new AttributeModifier(modifierID, "Armor modifier", armorMaterial.getDefenseForType(equipmentSlot), AttributeModifier.Operation.ADDITION))
+				.put(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(modifierID, "Armor toughness", armorMaterial.getToughness(), AttributeModifier.Operation.ADDITION))
+				.put(ArcanusEntityAttributes.MANA_REGEN.get(), new AttributeModifier(modifierID, "Armor modifier", manaRegen, AttributeModifier.Operation.ADDITION))
+				.put(ArcanusEntityAttributes.MAGIC_RESISTANCE.get(), new AttributeModifier(modifierID, "Armor modifier", magicResist, AttributeModifier.Operation.MULTIPLY_BASE))
+				.put(ArcanusEntityAttributes.SPELL_POTENCY.get(), new AttributeModifier(modifierID, "Armor modifier", spellPotency, AttributeModifier.Operation.MULTIPLY_BASE))
+				.put(ArcanusEntityAttributes.MANA_COST.get(), new AttributeModifier(modifierID, "Armor modifier", manaCostMultiplier, AttributeModifier.Operation.MULTIPLY_BASE))
+				.put(ArcanusEntityAttributes.SPELL_COOL_DOWN.get(), new AttributeModifier(modifierID, "Armor modifier", spellCoolDown, AttributeModifier.Operation.MULTIPLY_BASE))
 				.build();
 		});
 
-		CauldronBehavior.WATER_CAULDRON_BEHAVIOR.put(this, CauldronBehavior.CLEAN_DYEABLE_ITEM);
+		CauldronInteraction.WATER.put(this, CauldronInteraction.DYED_ITEM);
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
 		super.inventoryTick(stack, world, entity, slot, selected);
 		double manaDrain = 1;
 
-		if(!world.isClient() && stack.isDamaged() && entity instanceof LivingEntity livingEntity && livingEntity.getEquippedStack(getPreferredSlot()) == stack && ArcanusComponents.getMana(livingEntity) >= manaDrain && ArcanusComponents.drainMana(livingEntity, manaDrain, false))
-			stack.setDamage(stack.getDamage() - 1);
+		if(!world.isClientSide() && stack.isDamaged() && entity instanceof LivingEntity livingEntity && livingEntity.getItemBySlot(getEquipmentSlot()) == stack && ArcanusComponents.getMana(livingEntity) >= manaDrain && ArcanusComponents.drainMana(livingEntity, manaDrain, false))
+			stack.setDamageValue(stack.getDamageValue() - 1);
 	}
 
 	@Override
 	public int getColor(ItemStack stack) {
-		NbtCompound tag = stack.getSubNbt(ItemStack.DISPLAY_KEY);
-		return tag != null && tag.contains(ItemStack.COLOR_KEY, NbtElement.NUMBER_TYPE) ? tag.getInt(ItemStack.COLOR_KEY) : 0x52392a;
+		CompoundTag tag = stack.getTagElement(ItemStack.TAG_DISPLAY);
+		return tag != null && tag.contains(ItemStack.TAG_COLOR, Tag.TAG_ANY_NUMERIC) ? tag.getInt(ItemStack.TAG_COLOR) : 0x52392a;
 	}
 
 	@Override
-	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
-		return slot == getPreferredSlot() ? attributeModifiers.get() : super.getAttributeModifiers(slot);
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot slot) {
+		return slot == getEquipmentSlot() ? attributeModifiers.get() : super.getDefaultAttributeModifiers(slot);
 	}
 }

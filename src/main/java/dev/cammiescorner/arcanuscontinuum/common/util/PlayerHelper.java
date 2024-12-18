@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.common.util;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 
 public class PlayerHelper {
 

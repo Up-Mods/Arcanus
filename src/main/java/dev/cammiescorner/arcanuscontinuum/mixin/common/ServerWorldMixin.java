@@ -1,16 +1,16 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.common;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ServerWorld.class)
+@Mixin(ServerLevel.class)
 public class ServerWorldMixin {
-	@WrapWithCondition(method = "tickEntity", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/entity/Entity;tick()V"
+	@WrapWithCondition(method = "tickNonPassenger", at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;tick()V"
 	))
 	private boolean arcanuscontinuum$blockEntityTick(Entity entity) {
 		return !ArcanusComponents.areUpdatesBlocked(entity);

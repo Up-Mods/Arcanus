@@ -4,12 +4,12 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.GuardianOrbEntity;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ public class GuardianOrbComponent implements ServerTickingComponent {
 		if(dirty)
 			setManaLock(orbId, strength);
 
-		if(!orbId.equals(Util.NIL_UUID) && entity.getWorld() instanceof ServerWorld world) {
+		if(!orbId.equals(Util.NIL_UUID) && entity.level() instanceof ServerLevel world) {
 			if(world.getEntity(orbId) instanceof GuardianOrbEntity orb && entity == orb.getCaster())
 				return;
 
@@ -38,15 +38,15 @@ public class GuardianOrbComponent implements ServerTickingComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
-		orbId = tag.getUuid("OrbId");
+	public void readFromNbt(CompoundTag tag) {
+		orbId = tag.getUUID("OrbId");
 		strength = tag.getInt("Strength");
 		dirty = true;
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		tag.putUuid("OrbId", orbId);
+	public void writeToNbt(CompoundTag tag) {
+		tag.putUUID("OrbId", orbId);
 		tag.putInt("Strength", strength);
 	}
 
@@ -55,13 +55,13 @@ public class GuardianOrbComponent implements ServerTickingComponent {
 	}
 
 	public void setManaLock(UUID orbId, int strength) {
-		EntityAttributeInstance maxMana = entity.getAttributeInstance(ArcanusEntityAttributes.MAX_MANA.get());
-		EntityAttributeInstance manaLock = entity.getAttributeInstance(ArcanusEntityAttributes.MANA_LOCK.get());
+		AttributeInstance maxMana = entity.getAttribute(ArcanusEntityAttributes.MAX_MANA.get());
+		AttributeInstance manaLock = entity.getAttribute(ArcanusEntityAttributes.MANA_LOCK.get());
 
 		if(manaLock != null)
 			manaLock.removeModifier(uUID);
 		if(maxMana != null && manaLock != null && !orbId.equals(Util.NIL_UUID))
-			manaLock.addPersistentModifier(new EntityAttributeModifier(uUID, "Orb Mana Lock", maxMana.getValue() * (strength * (ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.maximumManaLock / 11)), EntityAttributeModifier.Operation.ADDITION));
+			manaLock.addPermanentModifier(new AttributeModifier(uUID, "Orb Mana Lock", maxMana.getValue() * (strength * (ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.maximumManaLock / 11)), AttributeModifier.Operation.ADDITION));
 
 		this.orbId = orbId;
 		this.strength = strength;

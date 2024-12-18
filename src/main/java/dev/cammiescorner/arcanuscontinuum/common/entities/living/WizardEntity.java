@@ -7,36 +7,33 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTradeOffers;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.advancement.criterion.Criteria;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.Angerable;
-import net.minecraft.entity.passive.MerchantEntity;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.HoverEvent;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOfferList;
-import net.minecraft.village.TradeOffers;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
@@ -59,65 +56,65 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class WizardEntity extends MerchantEntity implements SmartBrainOwner<WizardEntity>, Angerable {
-	private static final TrackedData<Integer> ROBE_COLOR = DataTracker.registerData(WizardEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class WizardEntity extends AbstractVillager implements SmartBrainOwner<WizardEntity>, NeutralMob {
+	private static final EntityDataAccessor<Integer> ROBE_COLOR = SynchedEntityData.defineId(WizardEntity.class, EntityDataSerializers.INT);
 
-	public WizardEntity(EntityType<? extends MerchantEntity> entityType, World world) {
+	public WizardEntity(EntityType<? extends AbstractVillager> entityType, Level world) {
 		super(entityType, world);
 		Arrays.fill(armorDropChances, 0.1F);
 		Arrays.fill(handDropChances, 0.05F);
 	}
 
 	@Override
-	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-		initEquipment(world.getRandom(), difficulty);
-		return super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag entityNbt) {
+		populateDefaultEquipmentSlots(world.getRandom(), difficulty);
+		return super.finalizeSpawn(world, difficulty, spawnReason, entityData, entityNbt);
 	}
 
 	@Override
-	protected void initEquipment(RandomGenerator random, LocalDifficulty difficulty) {
+	protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance difficulty) {
 		var robeColor = newRandomRobeColor(random);
 		setRobeColor(robeColor);
-		equipStack(EquipmentSlot.HEAD, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_HAT.get()), robeColor));
-		equipStack(EquipmentSlot.CHEST, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_ROBES.get()), robeColor));
-		equipStack(EquipmentSlot.LEGS, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_PANTS.get()), robeColor));
-		equipStack(EquipmentSlot.FEET, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_BOOTS.get()), robeColor));
-		equipStack(EquipmentSlot.MAINHAND, getRandomStaff(random));
+		setItemSlot(EquipmentSlot.HEAD, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_HAT.get()), robeColor));
+		setItemSlot(EquipmentSlot.CHEST, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_ROBES.get()), robeColor));
+		setItemSlot(EquipmentSlot.LEGS, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_PANTS.get()), robeColor));
+		setItemSlot(EquipmentSlot.FEET, ArcanusHelper.applyColorToItem(new ItemStack(ArcanusItems.WIZARD_BOOTS.get()), robeColor));
+		setItemSlot(EquipmentSlot.MAINHAND, getRandomStaff(random));
 	}
 
 	@Override
-	protected void initDataTracker() {
-		super.initDataTracker();
-		dataTracker.startTracking(ROBE_COLOR, 0xFFFFFF);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		entityData.define(ROBE_COLOR, 0xFFFFFF);
 	}
 
 	@Override
-	public void trade(TradeOffer offer) {
-		ambientSoundChance = -getMinAmbientSoundDelay();
-		afterUsing(offer);
+	public void notifyTrade(MerchantOffer offer) {
+		ambientSoundTime = -getAmbientSoundInterval();
+		rewardTradeXp(offer);
 
-		if (getCurrentCustomer() instanceof ServerPlayerEntity player)
-			Criteria.VILLAGER_TRADE.trigger(player, this, offer.getSellItem());
+		if (getTradingPlayer() instanceof ServerPlayer player)
+			CriteriaTriggers.TRADE.trigger(player, this, offer.getResult());
 	}
 
 	@Override
-	protected void afterUsing(TradeOffer offer) {
-		if (offer.shouldRewardPlayerExperience())
-			getWorld().spawnEntity(new ExperienceOrbEntity(getWorld(), getX(), getY() + 0.5, getZ(), 3 + random.nextInt(4)));
+	protected void rewardTradeXp(MerchantOffer offer) {
+		if (offer.shouldRewardExp())
+			level().addFreshEntity(new ExperienceOrb(level(), getX(), getY() + 0.5, getZ(), 3 + random.nextInt(4)));
 	}
 
 	@Override
-	protected void fillRecipes() {
-		TradeOffers.Factory[] factories = ArcanusTradeOffers.WIZARD_TRADES.get(1);
-		TradeOffers.Factory[] factories1 = ArcanusTradeOffers.WIZARD_TRADES.get(2);
+	protected void updateTrades() {
+		VillagerTrades.ItemListing[] factories = ArcanusTradeOffers.WIZARD_TRADES.get(1);
+		VillagerTrades.ItemListing[] factories1 = ArcanusTradeOffers.WIZARD_TRADES.get(2);
 
 		if (factories != null && factories1 != null) {
-			TradeOfferList tradeOfferList = getOffers();
-			fillRecipesFromPool(tradeOfferList, factories, 6);
+			MerchantOffers tradeOfferList = getOffers();
+			addOffersFromItemListings(tradeOfferList, factories, 6);
 
 			int i = random.nextInt(factories1.length);
-			TradeOffers.Factory factory = factories1[i];
-			TradeOffer tradeOffer = factory.create(this, random);
+			VillagerTrades.ItemListing factory = factories1[i];
+			MerchantOffer tradeOffer = factory.getOffer(this, random);
 
 			if (tradeOffer != null)
 				tradeOfferList.add(tradeOffer);
@@ -125,69 +122,69 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 	}
 
 	@Override
-	public boolean isLeveledMerchant() {
+	public boolean showProgressBar() {
 		return false;
 	}
 
-	public static DefaultAttributeContainer.Builder createAttributes() {
-		return TameableEntity.createAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 20).add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 4).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.15);
+	public static AttributeSupplier.Builder createMobAttributes() {
+		return TamableAnimal.createMobAttributes().add(Attributes.MAX_HEALTH, 20).add(Attributes.ATTACK_DAMAGE, 4).add(Attributes.MOVEMENT_SPEED, 0.15);
 	}
 
 	@Override
-	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
-		if (!getWorld().isClient()) {
-			if (ArcanusComponents.getWizardLevel(player) > 0 || player.getEquippedStack(EquipmentSlot.HEAD).isIn(ArcanusTags.WIZARD_ARMOUR) || player.getEquippedStack(EquipmentSlot.CHEST).isIn(ArcanusTags.WIZARD_ARMOUR) || player.getEquippedStack(EquipmentSlot.LEGS).isIn(ArcanusTags.WIZARD_ARMOUR) || player.getEquippedStack(EquipmentSlot.FEET).isIn(ArcanusTags.WIZARD_ARMOUR)) {
+	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+		if (!level().isClientSide()) {
+			if (ArcanusComponents.getWizardLevel(player) > 0 || player.getItemBySlot(EquipmentSlot.HEAD).is(ArcanusTags.WIZARD_ARMOUR) || player.getItemBySlot(EquipmentSlot.CHEST).is(ArcanusTags.WIZARD_ARMOUR) || player.getItemBySlot(EquipmentSlot.LEGS).is(ArcanusTags.WIZARD_ARMOUR) || player.getItemBySlot(EquipmentSlot.FEET).is(ArcanusTags.WIZARD_ARMOUR)) {
 				if (!getOffers().isEmpty()) {
-					setCurrentCustomer(player);
-					sendOffers(player, getDisplayName(), 1);
+					setTradingPlayer(player);
+					openTradingScreen(player, getDisplayName(), 1);
 				}
 			} else {
-				player.sendMessage(Arcanus.translate("wizard_dialogue", "no_wizard_armour").formatted(Formatting.DARK_PURPLE, Formatting.ITALIC).styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Arcanus.translate("wizard_dialogue", "put_on_robes").formatted(Formatting.AQUA, Formatting.ITALIC)))), false);
+				player.displayClientMessage(Arcanus.translate("wizard_dialogue", "no_wizard_armour").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC).withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Arcanus.translate("wizard_dialogue", "put_on_robes").withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC)))), false);
 			}
 		}
 
-		return ActionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound nbt) {
-		super.readCustomDataFromNbt(nbt);
+	public void readAdditionalSaveData(CompoundTag nbt) {
+		super.readAdditionalSaveData(nbt);
 
-		if (nbt.contains("RobeColor", NbtElement.NUMBER_TYPE)) {
-			dataTracker.set(ROBE_COLOR, nbt.getInt("RobeColor"));
+		if (nbt.contains("RobeColor", Tag.TAG_ANY_NUMERIC)) {
+			entityData.set(ROBE_COLOR, nbt.getInt("RobeColor"));
 		}
 	}
 
 	@Override
-	public void writeCustomDataToNbt(NbtCompound nbt) {
-		super.writeCustomDataToNbt(nbt);
+	public void addAdditionalSaveData(CompoundTag nbt) {
+		super.addAdditionalSaveData(nbt);
 		nbt.putInt("RobesColor", getRobeColor());
 	}
 
 	@Override
-	public boolean cannotDespawn() {
+	public boolean requiresCustomPersistence() {
 		return true;
 	}
 
 	@Nullable
 	@Override
-	public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
+	public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
 		return null;
 	}
 
 	@Override
-	public boolean canBeLeashedBy(PlayerEntity player) {
+	public boolean canBeLeashed(Player player) {
 		return false;
 	}
 
 	@Override
-	protected void mobTick() {
-		super.mobTick();
+	protected void customServerAiStep() {
+		super.customServerAiStep();
 		tickBrain(this);
 	}
 
 	@Override
-	protected Brain.Profile<?> createBrainProfile() {
+	protected Brain.Provider<?> brainProvider() {
 		return new SmartBrainProvider<>(this);
 	}
 
@@ -204,7 +201,7 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 		return BrainActivityGroup.coreTasks(
 			new FloatToSurfaceOfFluid<>(),
 			new LookAtTarget<>(),
-			new MoveToWalkTarget<>().stopIf(pathAwareEntity -> getCurrentCustomer() != null)
+			new MoveToWalkTarget<>().stopIf(pathAwareEntity -> getTradingPlayer() != null)
 		);
 	}
 
@@ -216,13 +213,13 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 				new SetPlayerLookTarget<>(),
 				new SetRandomLookTarget<>()
 			), new OneRandomBehaviour<>(
-				new SetRandomWalkTarget<>().startCondition(pathAwareEntity -> getCurrentCustomer() != null),
+				new SetRandomWalkTarget<>().startCondition(pathAwareEntity -> getTradingPlayer() != null),
 				new Idle<>().runFor(entity -> entity.getRandom().nextInt(30) + 30)
 			)
 		);
 	}
 
-	private ItemStack getRandomStaff(RandomGenerator random) {
+	private ItemStack getRandomStaff(RandomSource random) {
 		// TODO use a tag for this
 		List<Item> staves = List.of(
 			ArcanusItems.WOODEN_STAFF.get(),
@@ -236,14 +233,14 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 	}
 
 	public void setRobeColor(int color) {
-		dataTracker.set(ROBE_COLOR, color);
+		entityData.set(ROBE_COLOR, color);
 	}
 
 	public int getRobeColor() {
-		return dataTracker.get(ROBE_COLOR);
+		return entityData.get(ROBE_COLOR);
 	}
 
-	private int newRandomRobeColor(RandomGenerator random) {
+	private int newRandomRobeColor(RandomSource random) {
 		// Rare Colors
 		if (random.nextDouble() <= 0.1) {
 			var list = List.of(
@@ -278,28 +275,28 @@ public class WizardEntity extends MerchantEntity implements SmartBrainOwner<Wiza
 	}
 
 	@Override
-	public int getAngerTime() {
+	public int getRemainingPersistentAngerTime() {
 		return 0;
 	}
 
 	@Override
-	public void setAngerTime(int ticks) {
+	public void setRemainingPersistentAngerTime(int ticks) {
 
 	}
 
 	@Nullable
 	@Override
-	public UUID getAngryAt() {
+	public UUID getPersistentAngerTarget() {
 		return null;
 	}
 
 	@Override
-	public void setAngryAt(@Nullable UUID uuid) {
+	public void setPersistentAngerTarget(@Nullable UUID uuid) {
 
 	}
 
 	@Override
-	public void chooseRandomAngerTime() {
+	public void startPersistentAngerTimer() {
 
 	}
 }

@@ -7,17 +7,17 @@ import dev.cammiescorner.arcanuscontinuum.common.entities.living.WizardEntity;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.*;
 import dev.upcraft.sparkweave.api.registry.RegistryHandler;
 import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityType;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
 import org.quiltmc.qsl.entity.api.QuiltEntityTypeBuilder;
 
 public class ArcanusEntities {
-	public static final RegistryHandler<EntityType<?>> ENTITY_TYPES = RegistryHandler.create(RegistryKeys.ENTITY_TYPE, Arcanus.MOD_ID);
+	public static final RegistryHandler<EntityType<?>> ENTITY_TYPES = RegistryHandler.create(Registries.ENTITY_TYPE, Arcanus.MOD_ID);
 
-	public static final RegistrySupplier<EntityType<WizardEntity>> WIZARD = ENTITY_TYPES.register("wizard", () -> QuiltEntityTypeBuilder.createMob().entityFactory(WizardEntity::new).defaultAttributes(WizardEntity.createAttributes()).setDimensions(EntityDimensions.changing(0.7F, 1.8F)).build());
-	public static final RegistrySupplier<EntityType<OpossumEntity>> OPOSSUM = ENTITY_TYPES.register("opossum", () -> QuiltEntityTypeBuilder.createMob().entityFactory(OpossumEntity::new).defaultAttributes(OpossumEntity.createAttributes()).setDimensions(EntityDimensions.changing(0.6F, 0.7F)).build());
-	public static final RegistrySupplier<EntityType<NecroSkeletonEntity>> NECRO_SKELETON = ENTITY_TYPES.register("necro_skeleton", () -> QuiltEntityTypeBuilder.createMob().entityFactory(NecroSkeletonEntity::new).disableSummon().defaultAttributes(NecroSkeletonEntity.createAttributes()).setDimensions(EntityDimensions.changing(0.6F, 1.8F)).build());
+	public static final RegistrySupplier<EntityType<WizardEntity>> WIZARD = ENTITY_TYPES.register("wizard", () -> QuiltEntityTypeBuilder.createMob().entityFactory(WizardEntity::new).defaultAttributes(WizardEntity.createMobAttributes()).setDimensions(EntityDimensions.scalable(0.7F, 1.8F)).build());
+	public static final RegistrySupplier<EntityType<OpossumEntity>> OPOSSUM = ENTITY_TYPES.register("opossum", () -> QuiltEntityTypeBuilder.createMob().entityFactory(OpossumEntity::new).defaultAttributes(OpossumEntity.createMobAttributes()).setDimensions(EntityDimensions.scalable(0.6F, 0.7F)).build());
+	public static final RegistrySupplier<EntityType<NecroSkeletonEntity>> NECRO_SKELETON = ENTITY_TYPES.register("necro_skeleton", () -> QuiltEntityTypeBuilder.createMob().entityFactory(NecroSkeletonEntity::new).disableSummon().defaultAttributes(NecroSkeletonEntity.createAttributes()).setDimensions(EntityDimensions.scalable(0.6F, 1.8F)).build());
 	public static final RegistrySupplier<EntityType<ManaShieldEntity>> MANA_SHIELD = ENTITY_TYPES.register("mana_shield", () -> QuiltEntityTypeBuilder.create().entityFactory(ManaShieldEntity::new).disableSummon().setDimensions(EntityDimensions.fixed(4F, 4F)).build());
 	public static final RegistrySupplier<EntityType<MagicProjectileEntity>> MAGIC_PROJECTILE = ENTITY_TYPES.register("magic_projectile", () -> QuiltEntityTypeBuilder.create().entityFactory(MagicProjectileEntity::new).disableSummon().setDimensions(EntityDimensions.fixed(0.6F, 0.6F)).build());
 	public static final RegistrySupplier<EntityType<SmiteEntity>> SMITE = ENTITY_TYPES.register("smite", () -> QuiltEntityTypeBuilder.create().entityFactory(SmiteEntity::new).disableSummon().setDimensions(EntityDimensions.fixed(4F, 4F)).build());

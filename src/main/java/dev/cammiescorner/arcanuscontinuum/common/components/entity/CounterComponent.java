@@ -10,19 +10,19 @@ import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.NBTHelper;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -47,57 +47,57 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 
 	@Override
 	public void serverTick() {
-		if(!hasCounterActive(entity.getWorld()) && endTime != 0)
+		if(!hasCounterActive(entity.level()) && endTime != 0)
 			removeCounter();
 	}
 
 	@Override
-	public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+	public void writeSyncPacket(FriendlyByteBuf buf, ServerPlayer recipient) {
 		buf.writeInt(color.asInt(Color.Ordering.ARGB));
 		buf.writeLong(endTime);
 	}
 
 	@Override
-	public void applySyncPacket(PacketByteBuf buf) {
+	public void applySyncPacket(FriendlyByteBuf buf) {
 		color = Color.fromInt(buf.readInt(), Color.Ordering.ARGB);
 		endTime = buf.readLong();
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		effects.clear();
 		groups.clear();
 
-		casterId = tag.getUuid("CasterId");
-		stack = ItemStack.fromNbt(tag.getCompound("ItemStack"));
+		casterId = tag.getUUID("CasterId");
+		stack = ItemStack.of(tag.getCompound("ItemStack"));
 		color = NBTHelper.readColor(tag, "Color");
 		groupIndex = tag.getInt("GroupIndex");
 		potency = tag.getDouble("Potency");
 		endTime = tag.getLong("EndTime");
 
-		NbtList effectList = tag.getList("Effects", NbtElement.STRING_TYPE);
-		NbtList groupsList = tag.getList("SpellGroups", NbtElement.COMPOUND_TYPE);
+		ListTag effectList = tag.getList("Effects", Tag.TAG_STRING);
+		ListTag groupsList = tag.getList("SpellGroups", Tag.TAG_COMPOUND);
 
 		for(int i = 0; i < effectList.size(); i++)
-			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new Identifier(effectList.getString(i))));
+			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(effectList.getString(i))));
 		for(int i = 0; i < groupsList.size(); i++)
 			groups.add(SpellGroup.fromNbt(groupsList.getCompound(i)));
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		NbtList effectList = new NbtList();
-		NbtList groupsList = new NbtList();
+	public void writeToNbt(CompoundTag tag) {
+		ListTag effectList = new ListTag();
+		ListTag groupsList = new ListTag();
 
-		tag.putUuid("CasterId", casterId);
-		tag.put("ItemStack", stack.writeNbt(new NbtCompound()));
+		tag.putUUID("CasterId", casterId);
+		tag.put("ItemStack", stack.save(new CompoundTag()));
 		NBTHelper.writeColor(tag, color, "Color");
 		tag.putInt("GroupIndex", groupIndex);
 		tag.putDouble("Potency", potency);
 		tag.putLong("EndTime", endTime);
 
 		for(SpellEffect effect : effects)
-			effectList.add(NbtString.of(Arcanus.SPELL_COMPONENTS.getId(effect).toString()));
+			effectList.add(StringTag.valueOf(Arcanus.SPELL_COMPONENTS.getKey(effect).toString()));
 		for(SpellGroup group : groups)
 			groupsList.add(group.toNbt());
 
@@ -125,7 +125,7 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 		this.groups.addAll(groups);
 
 		if(caster != null)
-			this.casterId = caster.getUuid();
+			this.casterId = caster.getUUID();
 
 		this.stack = stack;
 		this.color = color;
@@ -137,21 +137,21 @@ public class CounterComponent implements AutoSyncedComponent, ServerTickingCompo
 	}
 
 	public void castCounter(LivingEntity attackingEntity) {
-		if(entity.getWorld() instanceof ServerWorld world) {
+		if(entity.level() instanceof ServerLevel world) {
 			EntityHitResult target = new EntityHitResult(attackingEntity);
 			LivingEntity caster = world.getEntity(casterId) instanceof LivingEntity livingEntity ? livingEntity : null;
 
 			for(SpellEffect effect : new HashSet<>(effects))
-				effect.effect(caster, entity, entity.getWorld(), target, effects, stack, potency);
+				effect.effect(caster, entity, entity.level(), target, effects, stack, potency);
 
-			SpellShape.castNext(caster, target.getPos(), entity, world, stack, groups, groupIndex, potency);
+			SpellShape.castNext(caster, target.getLocation(), entity, world, stack, groups, groupIndex, potency);
 		}
 
 		removeCounter();
 	}
 
-	public boolean hasCounterActive(World world) {
-		return world.getTime() <= endTime;
+	public boolean hasCounterActive(Level world) {
+		return world.getGameTime() <= endTime;
 	}
 
 	public Color getColor() {

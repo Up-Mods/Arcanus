@@ -6,14 +6,14 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -25,9 +25,9 @@ public class TouchSpellShape extends SpellShape {
 	}
 
 	@Override
-	public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		potency += getPotencyModifier();
-		double range = caster != null ? ReachEntityAttributes.getAttackRange(caster, caster instanceof PlayerEntity player && player.isCreative() ? 5 : 4.5) : 4.5;
+		double range = caster != null ? ReachEntityAttributes.getAttackRange(caster, caster instanceof Player player && player.isCreative() ? 5 : 4.5) : 4.5;
 		Entity sourceEntity = castSource != null ? castSource : caster;
 		HitResult target = ArcanusHelper.raycast(sourceEntity, range, true, true);
 
@@ -36,6 +36,6 @@ public class TouchSpellShape extends SpellShape {
 				effect.effect(caster, sourceEntity, world, target, effects, stack, potency);
 
 		Entity targetEntity = target.getType() == HitResult.Type.ENTITY ? ((EntityHitResult) target).getEntity() : castSource;
-		castNext(caster, target.getPos(), targetEntity, world, stack, spellGroups, groupIndex, potency);
+		castNext(caster, target.getLocation(), targetEntity, world, stack, spellGroups, groupIndex, potency);
 	}
 }

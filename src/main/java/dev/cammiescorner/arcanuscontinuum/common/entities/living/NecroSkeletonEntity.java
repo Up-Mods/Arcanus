@@ -1,27 +1,27 @@
 package dev.cammiescorner.arcanuscontinuum.common.entities.living;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Tameable;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.task.LookAroundTask;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.AbstractSkeletonEntity;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.passive.WolfEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Util;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.behavior.LookAtTargetSink;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
@@ -45,20 +45,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class NecroSkeletonEntity extends AbstractSkeletonEntity implements SmartBrainOwner<NecroSkeletonEntity> {
+public class NecroSkeletonEntity extends AbstractSkeleton implements SmartBrainOwner<NecroSkeletonEntity> {
 	private static final UUID HEALTH_UUID = UUID.fromString("65691cf4-6e7e-445f-8e5c-bb37a2b660d4");
 	private UUID ownerId = Util.NIL_UUID;
 
-	public NecroSkeletonEntity(EntityType<? extends AbstractSkeletonEntity> entityType, World world) {
+	public NecroSkeletonEntity(EntityType<? extends AbstractSkeleton> entityType, Level world) {
 		super(entityType, world);
 		Arrays.fill(armorDropChances, 0);
 		Arrays.fill(handDropChances, 0);
-		experiencePoints = 0;
+		xpReward = 0;
 	}
 
 	@Override
 	public void tick() {
-		if(!getWorld().isClient() && (getCaster() == null || !getCaster().isAlive()))
+		if(!level().isClientSide() && (getCaster() == null || !getCaster().isAlive()))
 			kill();
 
 		super.tick();
@@ -66,60 +66,60 @@ public class NecroSkeletonEntity extends AbstractSkeletonEntity implements Smart
 
 	@Override
 	protected SoundEvent getStepSound() {
-		return SoundEvents.ENTITY_SKELETON_STEP;
+		return SoundEvents.SKELETON_STEP;
 	}
 
 	@Override
-	protected boolean isAffectedByDaylight() {
+	protected boolean isSunBurnTick() {
 		return false;
 	}
 
 	@Override
-	public boolean isTeammate(Entity other) {
-		return super.isTeammate(other) || other.getUuid().equals(ownerId);
+	public boolean isAlliedTo(Entity other) {
+		return super.isAlliedTo(other) || other.getUUID().equals(ownerId);
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound tag) {
-		super.readCustomDataFromNbt(tag);
-		ownerId = tag.getUuid("OwnerId");
+	public void readAdditionalSaveData(CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+		ownerId = tag.getUUID("OwnerId");
 	}
 
 	@Override
-	public void writeCustomDataToNbt(NbtCompound tag) {
-		super.writeCustomDataToNbt(tag);
-		tag.putUuid("OwnerId", ownerId);
+	public void addAdditionalSaveData(CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putUUID("OwnerId", ownerId);
 	}
 
-	public static DefaultAttributeContainer.Builder createAttributes() {
-		return AbstractSkeletonEntity.createAttributes()
-				.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1)
-				.add(EntityAttributes.GENERIC_MAX_HEALTH, 0);
+	public static AttributeSupplier.Builder createAttributes() {
+		return AbstractSkeleton.createAttributes()
+				.add(Attributes.ATTACK_DAMAGE, 1)
+				.add(Attributes.MAX_HEALTH, 0);
 	}
 
 	@Override
-	protected void mobTick() {
-		if(age > 1200)
+	protected void customServerAiStep() {
+		if(tickCount > 1200)
 			kill();
 
-		super.mobTick();
+		super.customServerAiStep();
 		tickBrain(this);
 	}
 
 	@Override
-	protected Brain.Profile<?> createBrainProfile() {
+	protected Brain.Provider<?> brainProvider() {
 		return new SmartBrainProvider<>(this);
 	}
 
 	@Override
 	public List<ExtendedSensor<NecroSkeletonEntity>> getSensors() {
 		return ObjectArrayList.of(
-				new NearbyPlayersSensor<NecroSkeletonEntity>().setPredicate((target, skeleton) -> !(getCaster() instanceof PlayerEntity owner) || owner.shouldDamagePlayer(target)),
+				new NearbyPlayersSensor<NecroSkeletonEntity>().setPredicate((target, skeleton) -> !(getCaster() instanceof Player owner) || owner.canHarmPlayer(target)),
 				new NearbyLivingEntitySensor<NecroSkeletonEntity>().setPredicate((target, skeleton) ->
-						!target.getUuid().equals(ownerId) &&
+						!target.getUUID().equals(ownerId) &&
 						(!(target instanceof NecroSkeletonEntity other) || !other.ownerId.equals(ownerId)) &&
-						(!(target instanceof Tameable tameable) || !ownerId.equals(tameable.getOwnerUuid())) &&
-						(target instanceof IronGolemEntity || target instanceof WolfEntity || target instanceof HostileEntity)
+						(!(target instanceof OwnableEntity tameable) || !ownerId.equals(tameable.getOwnerUUID())) &&
+						(target instanceof IronGolem || target instanceof Wolf || target instanceof Monster)
 				)
 		);
 	}
@@ -127,8 +127,8 @@ public class NecroSkeletonEntity extends AbstractSkeletonEntity implements Smart
 	@Override
 	public BrainActivityGroup<NecroSkeletonEntity> getCoreTasks() {
 		return BrainActivityGroup.coreTasks(
-				new AvoidEntity<>().avoiding(entity -> entity instanceof WolfEntity),
-				new LookAroundTask(40, 300),
+				new AvoidEntity<>().avoiding(entity -> entity instanceof Wolf),
+				new LookAtTargetSink(40, 300),
 				new MoveToWalkTarget<>()
 		);
 	}
@@ -137,11 +137,11 @@ public class NecroSkeletonEntity extends AbstractSkeletonEntity implements Smart
 	public BrainActivityGroup<NecroSkeletonEntity> getIdleTasks() {
 		return BrainActivityGroup.idleTasks(
 				new FirstApplicableBehaviour<NecroSkeletonEntity>(
-						new TargetOrRetaliate<>().isAllyIf(Entity::isTeammate),
+						new TargetOrRetaliate<>().isAllyIf(Entity::isAlliedTo),
 						new SetPlayerLookTarget<>(),
 						new SetRandomLookTarget<>(),
 						new FollowEntity<>().following(self -> {
-							if(getWorld() instanceof ServerWorld server)
+							if(level() instanceof ServerLevel server)
 								return server.getEntity(ownerId);
 
 							return null;
@@ -149,7 +149,7 @@ public class NecroSkeletonEntity extends AbstractSkeletonEntity implements Smart
 				),
 				new OneRandomBehaviour<>(
 						new SetRandomWalkTarget<>().speedModifier(1),
-						new Idle<>().runFor(entity -> entity.getRandom().rangeClosed(30, 60))
+						new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60))
 				)
 		);
 	}
@@ -159,26 +159,26 @@ public class NecroSkeletonEntity extends AbstractSkeletonEntity implements Smart
 		return BrainActivityGroup.fightTasks(
 				new InvalidateAttackTarget<>(),
 				new FirstApplicableBehaviour<>(
-						new AnimatableMeleeAttack<>(0).whenStarting(entity -> setAttacking(true)).whenStarting(entity -> setAttacking(false))
+						new AnimatableMeleeAttack<>(0).whenStarting(entity -> setAggressive(true)).whenStarting(entity -> setAggressive(false))
 				)
 		);
 	}
 
 	private LivingEntity getCaster() {
-		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(ownerId) instanceof LivingEntity caster)
+		if(level() instanceof ServerLevel serverWorld && serverWorld.getEntity(ownerId) instanceof LivingEntity caster)
 			return caster;
 
 		return null;
 	}
 
 	public void setMaxHealth(double health) {
-		EntityAttributeInstance healthAttr = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+		AttributeInstance healthAttr = getAttribute(Attributes.MAX_HEALTH);
 
 		if(healthAttr != null) {
 			if(healthAttr.getModifier(HEALTH_UUID) != null)
 				healthAttr.removeModifier(HEALTH_UUID);
 
-			healthAttr.addPersistentModifier(new EntityAttributeModifier(HEALTH_UUID, "Health modifier", health, EntityAttributeModifier.Operation.ADDITION));
+			healthAttr.addPermanentModifier(new AttributeModifier(HEALTH_UUID, "Health modifier", health, AttributeModifier.Operation.ADDITION));
 			setHealth(getMaxHealth());
 		}
 	}
@@ -188,6 +188,6 @@ public class NecroSkeletonEntity extends AbstractSkeletonEntity implements Smart
 	}
 
 	public void setOwner(LivingEntity entity) {
-		ownerId = entity.getUuid();
+		ownerId = entity.getUUID();
 	}
 }

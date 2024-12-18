@@ -1,9 +1,12 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.client;
 
-import com.mojang.blaze3d.framebuffer.Framebuffer;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import dev.cammiescorner.arcanuscontinuum.client.utils.StencilBuffer;
-import net.minecraft.client.MinecraftClient;
-import org.lwjgl.opengl.*;
+import net.minecraft.client.Minecraft;
+import org.lwjgl.opengl.ARBFramebufferObject;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30C;
+import org.lwjgl.opengl.GL31;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,11 +18,11 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Objects;
 
-@Mixin(Framebuffer.class)
+@Mixin(RenderTarget.class)
 public abstract class FramebufferMixin implements StencilBuffer {
 	@Unique private boolean isStencilBufferEnabled;
-	@Shadow public int textureWidth;
-	@Shadow public int textureHeight;
+	@Shadow public int width;
+	@Shadow public int height;
 	@Shadow public abstract void resize(int width, int height, boolean clearError);
 
 	@Inject(method = "<init>", at = @At("RETURN"))
@@ -27,7 +30,7 @@ public abstract class FramebufferMixin implements StencilBuffer {
 		isStencilBufferEnabled = false;
 	}
 
-	@ModifyArgs(method = "create", at = @At(value = "INVOKE",
+	@ModifyArgs(method = "createBuffers", at = @At(value = "INVOKE",
 			target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
 			remap = false
 	))
@@ -39,7 +42,7 @@ public abstract class FramebufferMixin implements StencilBuffer {
 		}
 	}
 
-	@ModifyArgs(method = "create", at = @At(value = "INVOKE",
+	@ModifyArgs(method = "createBuffers", at = @At(value = "INVOKE",
 			target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V",
 			remap = false
 	))
@@ -58,7 +61,7 @@ public abstract class FramebufferMixin implements StencilBuffer {
 	public void arcanuscontinuum$enableStencilBufferAndReload(boolean cond) {
 		if(isStencilBufferEnabled != cond) {
 			isStencilBufferEnabled = cond;
-			resize(textureWidth, textureHeight, MinecraftClient.IS_SYSTEM_MAC);
+			resize(width, height, Minecraft.ON_OSX);
 		}
 	}
 }

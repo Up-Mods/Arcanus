@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanuscontinuum.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Pattern;
 import dev.cammiescorner.arcanuscontinuum.client.gui.screens.ArcaneWorkbenchScreen;
@@ -34,33 +35,32 @@ import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SideShapeType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.entity.SkeletonEntityRenderer;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeableArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.SkeletonRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeableArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SupportType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.quiltmc.loader.api.ModContainer;
@@ -74,23 +74,23 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.BooleanSupplier;
 
 public class ArcanusClient implements ClientModInitializer {
-	private static final Identifier HUD_ELEMENTS = Arcanus.id("textures/gui/hud/mana_bar.png");
-	private static final Identifier STUN_OVERLAY = Arcanus.id("textures/gui/hud/stunned_vignette.png");
-	private static final Identifier MAGIC_CIRCLES = Arcanus.id("textures/entity/feature/magic_circles.png");
-	public static final Identifier WHITE = new Identifier("textures/misc/white.png");
-	public static final RenderLayer LAYER = ArcanusClient.getMagicCircles(Arcanus.id("textures/block/warded_block.png"));
+	private static final ResourceLocation HUD_ELEMENTS = Arcanus.id("textures/gui/hud/mana_bar.png");
+	private static final ResourceLocation STUN_OVERLAY = Arcanus.id("textures/gui/hud/stunned_vignette.png");
+	private static final ResourceLocation MAGIC_CIRCLES = Arcanus.id("textures/entity/feature/magic_circles.png");
+	public static final ResourceLocation WHITE = new ResourceLocation("textures/misc/white.png");
+	public static final RenderType LAYER = ArcanusClient.getMagicCircles(Arcanus.id("textures/block/warded_block.png"));
 	public static BooleanSupplier FIRST_PERSON_MODEL_ENABLED = () -> false;
 	public static BooleanSupplier FIRST_PERSON_SHOW_HANDS = () -> true;
 	public static boolean castingSpeedHasCoolDown;
-	private final MinecraftClient client = MinecraftClient.getInstance();
+	private final Minecraft client = Minecraft.getInstance();
 
 	@Override
 	public void onInitializeClient(ModContainer mod) {
 		ArcanusCompat.FIRST_PERSON.ifEnabled(() -> FirstPersonCompat::init);
 
-		HandledScreens.register(ArcanusScreenHandlers.SPELLCRAFT_SCREEN_HANDLER.get(), SpellcraftScreen::new);
-		HandledScreens.register(ArcanusScreenHandlers.SPELL_BOOK_SCREEN_HANDLER.get(), SpellBookScreen::new);
-		HandledScreens.register(ArcanusScreenHandlers.ARCANE_WORKBENCH_SCREEN_HANDLER.get(), ArcaneWorkbenchScreen::new);
+		MenuScreens.register(ArcanusScreenHandlers.SPELLCRAFT_SCREEN_HANDLER.get(), SpellcraftScreen::new);
+		MenuScreens.register(ArcanusScreenHandlers.SPELL_BOOK_SCREEN_HANDLER.get(), SpellBookScreen::new);
+		MenuScreens.register(ArcanusScreenHandlers.ARCANE_WORKBENCH_SCREEN_HANDLER.get(), ArcaneWorkbenchScreen::new);
 
 		EntityModelLayerRegistry.registerModelLayer(WizardArmourModel.MODEL_LAYER, WizardArmourModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(BattleMageArmourModel.MODEL_LAYER, BattleMageArmourModel::getTexturedModelData);
@@ -109,7 +109,7 @@ public class ArcanusClient implements ClientModInitializer {
 
 		EntityRendererRegistry.register(ArcanusEntities.WIZARD.get(), WizardEntityRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.OPOSSUM.get(), OpossumEntityRenderer::new);
-		EntityRendererRegistry.register(ArcanusEntities.NECRO_SKELETON.get(), SkeletonEntityRenderer::new);
+		EntityRendererRegistry.register(ArcanusEntities.NECRO_SKELETON.get(), SkeletonRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.MANA_SHIELD.get(), ManaShieldEntityRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.MAGIC_PROJECTILE.get(), MagicProjectileEntityRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.AOE.get(), AreaOfEffectEntityRenderer::new);
@@ -125,10 +125,10 @@ public class ArcanusClient implements ClientModInitializer {
 
 		ParticleFactoryRegistry.getInstance().register(ArcanusParticles.COLLAPSE.get(), CollapseParticle.Factory::new);
 
-		BlockRenderLayerMap.put(RenderLayer.getCutout(), ArcanusBlocks.MAGIC_DOOR.get(), ArcanusBlocks.ARCANE_WORKBENCH.get());
-		BlockRenderLayerMap.put(RenderLayer.getTranslucent(), ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
-		BlockEntityRendererFactories.register(ArcanusBlockEntities.MAGIC_BLOCK.get(), MagicBlockEntityRenderer::new);
-		BlockEntityRendererFactories.register(ArcanusBlockEntities.SPATIAL_RIFT_EXIT.get(), SpatialRiftExitBlockEntityRenderer::new);
+		BlockRenderLayerMap.put(RenderType.cutout(), ArcanusBlocks.MAGIC_DOOR.get(), ArcanusBlocks.ARCANE_WORKBENCH.get());
+		BlockRenderLayerMap.put(RenderType.translucent(), ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
+		BlockEntityRenderers.register(ArcanusBlockEntities.MAGIC_BLOCK.get(), MagicBlockEntityRenderer::new);
+		BlockEntityRenderers.register(ArcanusBlockEntities.SPATIAL_RIFT_EXIT.get(), SpatialRiftExitBlockEntityRenderer::new);
 
 		ClientPlayNetworking.registerGlobalReceiver(SyncStatusEffectPacket.ID, SyncStatusEffectPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SyncWorkbenchModePacket.ID, SyncWorkbenchModePacket::handle);
@@ -164,19 +164,19 @@ public class ArcanusClient implements ClientModInitializer {
 			ArcanusItems.BATTLE_MAGE_BOOTS.get()
 		);
 
-		ModelPredicateProviderRegistry.register(ArcanusItems.BATTLE_MAGE_HELMET.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
-		ModelPredicateProviderRegistry.register(ArcanusItems.BATTLE_MAGE_CHESTPLATE.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
-		ModelPredicateProviderRegistry.register(ArcanusItems.BATTLE_MAGE_LEGGINGS.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
-		ModelPredicateProviderRegistry.register(ArcanusItems.BATTLE_MAGE_BOOTS.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
+		ItemProperties.register(ArcanusItems.BATTLE_MAGE_HELMET.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
+		ItemProperties.register(ArcanusItems.BATTLE_MAGE_CHESTPLATE.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
+		ItemProperties.register(ArcanusItems.BATTLE_MAGE_LEGGINGS.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
+		ItemProperties.register(ArcanusItems.BATTLE_MAGE_BOOTS.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
 
 		ArcanusItems.ITEMS.stream().forEach(holder -> {
 			Item item = holder.get();
 			if (item instanceof StaffItem) {
-				Identifier id = holder.getId();
+				ResourceLocation id = holder.getId();
 				StaffItemRenderer staffItemRenderer = new StaffItemRenderer(id);
-				ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(staffItemRenderer);
+				ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(staffItemRenderer);
 				BuiltinItemRendererRegistry.INSTANCE.register(item, staffItemRenderer);
-				ModelLoadingPlugin.register(ctx -> ctx.addModels(new ModelIdentifier(id.withPath(id.getPath() + "_gui"), "inventory"), new ModelIdentifier(id.withPath(id.getPath() + "_handheld"), "inventory")));
+				ModelLoadingPlugin.register(ctx -> ctx.addModels(new ModelResourceLocation(id.withPath(id.getPath() + "_gui"), "inventory"), new ModelResourceLocation(id.withPath(id.getPath() + "_handheld"), "inventory")));
 			}
 		});
 
@@ -185,21 +185,21 @@ public class ArcanusClient implements ClientModInitializer {
 		};
 
 		WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-			if (!context.camera().isThirdPerson() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean())
+			if (!context.camera().isDetached() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean())
 				renderFirstPersonBolt(context);
 		});
 
 		WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register((context, outlineContext) -> {
-			ClientPlayerInteractionManager interactionManager = client.interactionManager;
-			ClientPlayerEntity player = client.player;
-			ClientWorld world = context.world();
-			MatrixStack matrices = context.matrixStack();
-			VertexConsumerProvider vertices = context.consumers();
-			Vec3d cameraPos = context.camera().getPos();
+			MultiPlayerGameMode interactionManager = client.gameMode;
+			LocalPlayer player = client.player;
+			ClientLevel world = context.world();
+			PoseStack matrices = context.matrixStack();
+			MultiBufferSource vertices = context.consumers();
+			Vec3 cameraPos = context.camera().getPosition();
 
 			if (player != null && vertices != null && interactionManager != null) {
-				if (client.crosshairTarget instanceof BlockHitResult hitResult && ArcanusComponents.isBlockWarded(world, hitResult.getBlockPos()) && player.handSwinging) {
-					if (client.options.attackKey.isPressed() && player.handSwingProgress == 0)
+				if (client.hitResult instanceof BlockHitResult hitResult && ArcanusComponents.isBlockWarded(world, hitResult.getBlockPos()) && player.swinging) {
+					if (client.options.keyAttack.isDown() && player.attackAnim == 0)
 						obj.hitTimer = 20;
 
 					if (!ArcanusComponents.isOwnerOfBlock(player, hitResult.getBlockPos()) || obj.hitTimer > 0) {
@@ -207,23 +207,23 @@ public class ArcanusClient implements ClientModInitializer {
 						float alpha = obj.hitTimer / 20f;
 
 						renderWardedBlock(matrices, vertices, world, cameraPos, blockPos, alpha);
-						player.sendMessage(Arcanus.translate("text", "block_is_warded").formatted(Formatting.RED), true);
+						player.displayClientMessage(Arcanus.translate("text", "block_is_warded").withStyle(ChatFormatting.RED), true);
 					}
 
 					if (obj.hitTimer > 0)
 						obj.hitTimer -= 1;
 				}
 
-				if (player.getMainHandStack().isIn(ArcanusTags.STAVES) || player.getOffHandStack().isIn(ArcanusTags.STAVES)) {
-					AtomicReferenceArray<WorldChunk> chunks = context.world().getChunkManager().chunks.chunks;
-					float alpha = (float) (Math.sin(world.getTime() * 0.06f) * 0.4f + 0.6f);
+				if (player.getMainHandItem().is(ArcanusTags.STAVES) || player.getOffhandItem().is(ArcanusTags.STAVES)) {
+					AtomicReferenceArray<LevelChunk> chunks = context.world().getChunkSource().storage.chunks;
+					float alpha = (float) (Math.sin(world.getGameTime() * 0.06f) * 0.4f + 0.6f);
 
 					for (int i = 0; i < chunks.length(); i++) {
-						Chunk chunk = chunks.get(i);
+						ChunkAccess chunk = chunks.get(i);
 
 						if (chunk != null) {
 							ArcanusComponents.getWardedBlocks(chunk).forEach((blockPos, uuid) -> {
-								if (blockPos.getSquaredDistance(context.camera().getBlockPos()) < 256)
+								if (blockPos.distSqr(context.camera().getBlockPosition()) < 256)
 									renderWardedBlock(matrices, vertices, world, cameraPos, blockPos, alpha);
 							});
 						}
@@ -235,8 +235,8 @@ public class ArcanusClient implements ClientModInitializer {
 		});
 
 		HudRenderCallback.EVENT.register((gui, tickDelta) -> {
-			MatrixStack matrices = gui.getMatrices();
-			PlayerEntity player = client.player;
+			PoseStack matrices = gui.pose();
+			Player player = client.player;
 
 			if (player != null && !player.isSpectator()) {
 				int stunTimer = ArcanusComponents.getStunTimer(player);
@@ -248,38 +248,38 @@ public class ArcanusClient implements ClientModInitializer {
 						renderOverlay(STUN_OVERLAY, Math.min(1F, stunTimer / 5F));
 				}
 
-				if (!client.gameRenderer.getCamera().isThirdPerson() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean()) {
+				if (!client.gameRenderer.getMainCamera().isDetached() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean()) {
 					List<Pattern> list = ArcanusComponents.getPattern(player);
 
 					if (!list.isEmpty()) {
-						VertexConsumerProvider.Immediate vertices = client.getBufferBuilders().getEntityVertexConsumers();
-						RenderLayer renderLayer = getMagicCircles(MAGIC_CIRCLES);
+						MultiBufferSource.BufferSource vertices = client.renderBuffers().bufferSource();
+						RenderType renderLayer = getMagicCircles(MAGIC_CIRCLES);
 						VertexConsumer vertex = vertices.getBuffer(renderLayer);
 						Color color = ArcanusHelper.getMagicColor(player);
-						float x = client.getWindow().getScaledWidth() / 2F;
-						float y = client.getWindow().getScaledHeight() / 2F;
+						float x = client.getWindow().getGuiScaledWidth() / 2F;
+						float y = client.getWindow().getGuiScaledHeight() / 2F;
 						float scale = 3F;
 
-						matrices.push();
+						matrices.pushPose();
 						matrices.translate(x, y, 0);
 
 						for (int i = 0; i < list.size(); i++) {
 							Pattern pattern = list.get(i);
-							matrices.push();
+							matrices.pushPose();
 
 							if (i == 1)
-								matrices.multiply(Axis.Z_POSITIVE.rotationDegrees((player.age + player.getId() + tickDelta) * (5 + (2.5F * i))));
+								matrices.mulPose(Axis.ZP.rotationDegrees((player.tickCount + player.getId() + tickDelta) * (5 + (2.5F * i))));
 							else
-								matrices.multiply(Axis.Z_NEGATIVE.rotationDegrees((player.age + player.getId() + tickDelta) * (5 + (2.5F * i))));
+								matrices.mulPose(Axis.ZN.rotationDegrees((player.tickCount + player.getId() + tickDelta) * (5 + (2.5F * i))));
 
 							matrices.scale(scale, scale, 0);
 							matrices.translate(-8.5, -8.5, 0);
 							drawTexture(vertex, matrices, color, 0, 0, i * 34, pattern == Pattern.LEFT ? 0 : 24, 17, 17, 128, 48);
-							matrices.pop();
+							matrices.popPose();
 						}
 
-						matrices.pop();
-						vertices.drawCurrentLayer();
+						matrices.popPose();
+						vertices.endLastBatch();
 					}
 				}
 
@@ -288,14 +288,14 @@ public class ArcanusClient implements ClientModInitializer {
 				double burnout = ArcanusComponents.getBurnout(player);
 				double manaLock = ArcanusComponents.getManaLock(player);
 
-				if (player.getMainHandStack().getItem() instanceof StaffItem)
+				if (player.getMainHandItem().getItem() instanceof StaffItem)
 					obj.hudTimer = Math.min(obj.hudTimer + 1, 40);
 				else
 					obj.hudTimer = Math.max(obj.hudTimer - 1, 0);
 
 				if (obj.hudTimer > 0) {
 					int x = 0;
-					int y = client.getWindow().getScaledHeight() - 28;
+					int y = client.getWindow().getGuiScaledHeight() - 28;
 					int width = 96;
 					float alpha = obj.hudTimer > 20 ? 1F : obj.hudTimer / 20F;
 
@@ -303,18 +303,18 @@ public class ArcanusClient implements ClientModInitializer {
 					RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
 
 					// render frame
-					gui.drawTexture(HUD_ELEMENTS, x, y, 0, 0, 101, 28, 256, 256);
+					gui.blit(HUD_ELEMENTS, x, y, 0, 0, 101, 28, 256, 256);
 
 					// render mana
-					gui.drawTexture(HUD_ELEMENTS, x, y + 5, 0, 32, (int) (width * (mana / maxMana)), 23, 256, 256);
+					gui.blit(HUD_ELEMENTS, x, y + 5, 0, 32, (int) (width * (mana / maxMana)), 23, 256, 256);
 
 					// render burnout
 					int i = (int) Math.ceil(width * ((burnout + manaLock) / maxMana));
-					gui.drawTexture(HUD_ELEMENTS, x + (width - i), y + 5, width - i, 56, i, 23, 256, 256);
+					gui.blit(HUD_ELEMENTS, x + (width - i), y + 5, width - i, 56, i, 23, 256, 256);
 
 					// render mana lock
 					i = (int) Math.ceil(width * (manaLock / maxMana));
-					gui.drawTexture(HUD_ELEMENTS, x + (width - i), y + 5, width - i, 80, i, 23, 256, 256);
+					gui.blit(HUD_ELEMENTS, x + (width - i), y + 5, width - i, 80, i, 23, 256, 256);
 
 					RenderSystem.disableBlend();
 					RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -353,19 +353,19 @@ public class ArcanusClient implements ClientModInitializer {
 //		});
 	}
 
-	private static void renderWardedBlock(MatrixStack matrices, VertexConsumerProvider vertices, World world, Vec3d cameraPos, BlockPos blockPos, float alpha) {
+	private static void renderWardedBlock(PoseStack matrices, MultiBufferSource vertices, Level world, Vec3 cameraPos, BlockPos blockPos, float alpha) {
 		VertexConsumer consumer = vertices.getBuffer(LAYER);
-		Vec3d pos = Vec3d.ofCenter(blockPos);
+		Vec3 pos = Vec3.atCenterOf(blockPos);
 
-		matrices.push();
-		matrices.translate(pos.getX() - cameraPos.getX(), pos.getY() - cameraPos.getY(), pos.getZ() - cameraPos.getZ());
+		matrices.pushPose();
+		matrices.translate(pos.x() - cameraPos.x(), pos.y() - cameraPos.y(), pos.z() - cameraPos.z());
 		matrices.scale(1.001f, 1.001f, 1.001f);
 		matrices.translate(-0.5, -0.5, -0.5);
 
-		Matrix4f matrix4f = matrices.peek().getModel();
-		Matrix3f matrix3f = matrices.peek().getNormal();
-		int light = world.getLightLevel(blockPos);
-		int overlay = OverlayTexture.DEFAULT_UV;
+		Matrix4f matrix4f = matrices.last().pose();
+		Matrix3f matrix3f = matrices.last().normal();
+		int light = world.getMaxLocalRawBrightness(blockPos);
+		int overlay = OverlayTexture.NO_OVERLAY;
 		Color color = ArcanusHelper.getMagicColor(ArcanusComponents.getWardedBlocks(world.getChunk(blockPos)).get(blockPos));
 		float r = (color.red() >> 16 & 255) * alpha;
 		float g = (color.green() >> 8 & 255) * alpha;
@@ -374,10 +374,10 @@ public class ArcanusClient implements ClientModInitializer {
 		color = Color.fromFloatsRGB(r, g, b);
 
 		for (Direction direction : Direction.values()) {
-			BlockPos posToSide = blockPos.offset(direction);
+			BlockPos posToSide = blockPos.relative(direction);
 			BlockState stateToSide = world.getBlockState(posToSide);
 
-			if (stateToSide.isSideSolid(world, posToSide, direction.getOpposite(), SideShapeType.FULL) || ArcanusComponents.isBlockWarded(world, posToSide))
+			if (stateToSide.isFaceSturdy(world, posToSide, direction.getOpposite(), SupportType.FULL) || ArcanusComponents.isBlockWarded(world, posToSide))
 				continue;
 
 			switch (direction) {
@@ -396,58 +396,58 @@ public class ArcanusClient implements ClientModInitializer {
 			}
 		}
 
-		matrices.pop();
+		matrices.popPose();
 	}
 
 	private static void renderFirstPersonBolt(WorldRenderContext context) {
-		ClientPlayerEntity player = context.gameRenderer().getClient().player;
+		LocalPlayer player = context.gameRenderer().getMinecraft().player;
 		if (player != null) {
-			MatrixStack matrices = context.matrixStack();
-			Vec3d camPos = context.camera().getPos();
+			PoseStack matrices = context.matrixStack();
+			Vec3 camPos = context.camera().getPosition();
 			float tickDelta = context.tickDelta();
-			Vec3d startPos = player.getLerpedPos(tickDelta).add(0, player.getEyeHeight(player.getPose()), 0);
+			Vec3 startPos = player.getPosition(tickDelta).add(0, player.getEyeHeight(player.getPose()), 0);
 
-			matrices.push();
-			matrices.translate(-camPos.getX(), -camPos.getY(), -camPos.getZ());
+			matrices.pushPose();
+			matrices.translate(-camPos.x(), -camPos.y(), -camPos.z());
 			ArcanusHelper.renderBolts(player, startPos.add(0, -0.1, 0), matrices, context.consumers());
-			matrices.pop();
+			matrices.popPose();
 		}
 	}
 
-	public static RenderLayer getMagicCircles(Identifier texture) {
-		return RenderLayer.of(Arcanus.id("magic_circle").toString(), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_SHADER).texture(new RenderPhase.Texture(texture, false, false)).overlay(RenderPhase.ENABLE_OVERLAY_COLOR).transparency(RenderLayer.ADDITIVE_TRANSPARENCY).writeMaskState(RenderLayer.ALL_MASK).cull(RenderPhase.DISABLE_CULLING).build(false));
+	public static RenderType getMagicCircles(ResourceLocation texture) {
+		return RenderType.create(Arcanus.id("magic_circle").toString(), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderType.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER).setTextureState(new RenderStateShard.TextureStateShard(texture, false, false)).setOverlayState(RenderStateShard.OVERLAY).setTransparencyState(RenderType.ADDITIVE_TRANSPARENCY).setWriteMaskState(RenderType.COLOR_DEPTH_WRITE).setCullState(RenderStateShard.NO_CULL).createCompositeState(false));
 	}
 
-	public static RenderLayer getMagicPortal(Identifier texture) {
-		return RenderLayer.of(Arcanus.id("magic_portal").toString(), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_SHADER).texture(new RenderPhase.Texture(texture, false, false)).writeMaskState(RenderPhase.COLOR_MASK).overlay(RenderPhase.ENABLE_OVERLAY_COLOR).transparency(RenderLayer.ADDITIVE_TRANSPARENCY).writeMaskState(RenderLayer.ALL_MASK).cull(RenderPhase.DISABLE_CULLING).depthTest(RenderLayer.ALWAYS_DEPTH_TEST).build(false));
+	public static RenderType getMagicPortal(ResourceLocation texture) {
+		return RenderType.create(Arcanus.id("magic_portal").toString(), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderType.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER).setTextureState(new RenderStateShard.TextureStateShard(texture, false, false)).setWriteMaskState(RenderStateShard.COLOR_WRITE).setOverlayState(RenderStateShard.OVERLAY).setTransparencyState(RenderType.ADDITIVE_TRANSPARENCY).setWriteMaskState(RenderType.COLOR_DEPTH_WRITE).setCullState(RenderStateShard.NO_CULL).setDepthTestState(RenderType.NO_DEPTH_TEST).createCompositeState(false));
 	}
 
-	public static RenderLayer getMagicCirclesTri(Identifier texture) {
-		return RenderLayer.of(Arcanus.id("magic_circle_tri").toString(), VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, VertexFormat.DrawMode.TRIANGLES, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderLayer.ENTITY_TRANSLUCENT_EMISSIVE_SHADER).texture(new RenderPhase.Texture(texture, false, false)).overlay(RenderPhase.ENABLE_OVERLAY_COLOR).transparency(RenderLayer.ADDITIVE_TRANSPARENCY).writeMaskState(RenderLayer.ALL_MASK).cull(RenderPhase.DISABLE_CULLING).build(false));
+	public static RenderType getMagicCirclesTri(ResourceLocation texture) {
+		return RenderType.create(Arcanus.id("magic_circle_tri").toString(), DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.TRIANGLES, 256, false, true, RenderType.CompositeState.builder().setShaderState(RenderType.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER).setTextureState(new RenderStateShard.TextureStateShard(texture, false, false)).setOverlayState(RenderStateShard.OVERLAY).setTransparencyState(RenderType.ADDITIVE_TRANSPARENCY).setWriteMaskState(RenderType.COLOR_DEPTH_WRITE).setCullState(RenderStateShard.NO_CULL).createCompositeState(false));
 	}
 
-	public static void drawTexture(VertexConsumer vertex, MatrixStack matrices, Color color, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
-		drawTexturedQuad(vertex, matrices.peek().getModel(), color, x, x + width, y, y + height, u / (float) textureWidth, (u + width) / (float) textureWidth, v / (float) textureHeight, (v + height) / (float) textureHeight);
+	public static void drawTexture(VertexConsumer vertex, PoseStack matrices, Color color, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
+		drawTexturedQuad(vertex, matrices.last().pose(), color, x, x + width, y, y + height, u / (float) textureWidth, (u + width) / (float) textureWidth, v / (float) textureHeight, (v + height) / (float) textureHeight);
 	}
 
 	private static void drawTexturedQuad(VertexConsumer vertex, Matrix4f matrix, Color color, int x0, int x1, int y0, int y1, float u0, float u1, float v0, float v1) {
-		vertex.vertex(matrix, x0, y1, 0).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u0, v1).overlay(OverlayTexture.DEFAULT_UV).light(LightmapTextureManager.MAX_LIGHT_COORDINATE).normal(0, 0, 1).next();
-		vertex.vertex(matrix, x1, y1, 0).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u1, v1).overlay(OverlayTexture.DEFAULT_UV).light(LightmapTextureManager.MAX_LIGHT_COORDINATE).normal(0, 0, 1).next();
-		vertex.vertex(matrix, x1, y0, 0).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u1, v0).overlay(OverlayTexture.DEFAULT_UV).light(LightmapTextureManager.MAX_LIGHT_COORDINATE).normal(0, 0, 1).next();
-		vertex.vertex(matrix, x0, y0, 0).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u0, v0).overlay(OverlayTexture.DEFAULT_UV).light(LightmapTextureManager.MAX_LIGHT_COORDINATE).normal(0, 0, 1).next();
+		vertex.vertex(matrix, x0, y1, 0).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u0, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0, 1).endVertex();
+		vertex.vertex(matrix, x1, y1, 0).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u1, v1).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0, 1).endVertex();
+		vertex.vertex(matrix, x1, y0, 0).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u1, v0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0, 1).endVertex();
+		vertex.vertex(matrix, x0, y0, 0).color(color.red(), color.green(), color.blue(), color.alpha()).uv(u0, v0).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(LightTexture.FULL_BRIGHT).normal(0, 0, 1).endVertex();
 	}
 
 	public static void renderSide(Matrix4f matrix4f, VertexConsumer vertices, float x1, float x2, float y1, float y2, float z1, float z2, float z3, float z4, Color color, int light, int overlay, Matrix3f normal, Direction direction) {
-		vertices.vertex(matrix4f, x1, y1, z1).color(color.red(), color.green(), color.blue(), color.alpha()).uv(0, 1).overlay(overlay).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-		vertices.vertex(matrix4f, x2, y1, z2).color(color.red(), color.green(), color.blue(), color.alpha()).uv(1, 1).overlay(overlay).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-		vertices.vertex(matrix4f, x2, y2, z3).color(color.red(), color.green(), color.blue(), color.alpha()).uv(1, 0).overlay(overlay).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
-		vertices.vertex(matrix4f, x1, y2, z4).color(color.red(), color.green(), color.blue(), color.alpha()).uv(0, 0).overlay(overlay).light(light).normal(normal, direction.getVector().getX(), direction.getVector().getY(), direction.getVector().getZ()).next();
+		vertices.vertex(matrix4f, x1, y1, z1).color(color.red(), color.green(), color.blue(), color.alpha()).uv(0, 1).overlayCoords(overlay).uv2(light).normal(normal, direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ()).endVertex();
+		vertices.vertex(matrix4f, x2, y1, z2).color(color.red(), color.green(), color.blue(), color.alpha()).uv(1, 1).overlayCoords(overlay).uv2(light).normal(normal, direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ()).endVertex();
+		vertices.vertex(matrix4f, x2, y2, z3).color(color.red(), color.green(), color.blue(), color.alpha()).uv(1, 0).overlayCoords(overlay).uv2(light).normal(normal, direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ()).endVertex();
+		vertices.vertex(matrix4f, x1, y2, z4).color(color.red(), color.green(), color.blue(), color.alpha()).uv(0, 0).overlayCoords(overlay).uv2(light).normal(normal, direction.getNormal().getX(), direction.getNormal().getY(), direction.getNormal().getZ()).endVertex();
 	}
 
-	private void renderOverlay(Identifier texture, float opacity) {
-		MinecraftClient client = MinecraftClient.getInstance();
-		double scaledHeight = client.getWindow().getScaledHeight();
-		double scaledWidth = client.getWindow().getScaledWidth();
+	private void renderOverlay(ResourceLocation texture, float opacity) {
+		Minecraft client = Minecraft.getInstance();
+		double scaledHeight = client.getWindow().getGuiScaledHeight();
+		double scaledWidth = client.getWindow().getGuiScaledWidth();
 
 		RenderSystem.disableDepthTest();
 		RenderSystem.depthMask(false);
@@ -455,14 +455,14 @@ public class ArcanusClient implements ClientModInitializer {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, opacity);
 		RenderSystem.setShaderTexture(0, texture);
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
-		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-		bufferBuilder.vertex(0.0, scaledHeight, -90.0).uv(0.0F, 1.0F).next();
-		bufferBuilder.vertex(scaledWidth, scaledHeight, -90.0).uv(1.0F, 1.0F).next();
-		bufferBuilder.vertex(scaledWidth, 0.0, -90.0).uv(1.0F, 0.0F).next();
-		bufferBuilder.vertex(0.0, 0.0, -90.0).uv(0.0F, 0.0F).next();
-		tessellator.draw();
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder bufferBuilder = tessellator.getBuilder();
+		bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		bufferBuilder.vertex(0.0, scaledHeight, -90.0).uv(0.0F, 1.0F).endVertex();
+		bufferBuilder.vertex(scaledWidth, scaledHeight, -90.0).uv(1.0F, 1.0F).endVertex();
+		bufferBuilder.vertex(scaledWidth, 0.0, -90.0).uv(1.0F, 0.0F).endVertex();
+		bufferBuilder.vertex(0.0, 0.0, -90.0).uv(0.0F, 0.0F).endVertex();
+		tessellator.end();
 		RenderSystem.depthMask(true);
 		RenderSystem.enableDepthTest();
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

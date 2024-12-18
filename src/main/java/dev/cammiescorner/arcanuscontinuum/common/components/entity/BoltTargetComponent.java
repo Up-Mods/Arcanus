@@ -3,13 +3,13 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class BoltTargetComponent implements AutoSyncedComponent, ServerTickingComponent {
 	private final LivingEntity entity;
-	private Vec3d pos = Vec3d.ZERO;
+	private Vec3 pos = Vec3.ZERO;
 	private int age;
 	private boolean shouldRender;
 
@@ -26,24 +26,24 @@ public class BoltTargetComponent implements AutoSyncedComponent, ServerTickingCo
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
-		pos = new Vec3d(tag.getDouble("PosX"), tag.getDouble("PosY"), tag.getDouble("PosZ"));
+	public void readFromNbt(CompoundTag tag) {
+		pos = new Vec3(tag.getDouble("PosX"), tag.getDouble("PosY"), tag.getDouble("PosZ"));
 		shouldRender = tag.getBoolean("ShouldRender");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		tag.putDouble("PosX", pos.getX());
-		tag.putDouble("PosY", pos.getY());
-		tag.putDouble("PosZ", pos.getZ());
+	public void writeToNbt(CompoundTag tag) {
+		tag.putDouble("PosX", pos.x());
+		tag.putDouble("PosY", pos.y());
+		tag.putDouble("PosZ", pos.z());
 		tag.putBoolean("ShouldRender", shouldRender);
 	}
 
-	public Vec3d getPos() {
+	public Vec3 getPos() {
 		return pos;
 	}
 
-	public void setPos(Vec3d pos) {
+	public void setPos(Vec3 pos) {
 		this.pos = pos;
 		ArcanusComponents.BOLT_TARGET.sync(entity);
 	}

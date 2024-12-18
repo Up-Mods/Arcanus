@@ -7,8 +7,8 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -22,14 +22,14 @@ public class GenericMagicColorComponent implements MagicColorComponent, AutoSync
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
-		sourceId = tag.getUuid(SOURCE_ID_KEY);
+	public void readFromNbt(CompoundTag tag) {
+		sourceId = tag.getUUID(SOURCE_ID_KEY);
 		updateStoredColor();
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		tag.putUuid(SOURCE_ID_KEY, sourceId);
+	public void writeToNbt(CompoundTag tag) {
+		tag.putUUID(SOURCE_ID_KEY, sourceId);
 	}
 
 	public Color getColor() {

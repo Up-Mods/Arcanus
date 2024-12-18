@@ -1,30 +1,35 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.common;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(PlayerEntity.class)
+@Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
-	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) { super(entityType, world); }
+	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) { super(entityType, world); }
 
-	@Inject(method = "getName", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$getName(CallbackInfoReturnable<Text> info) {
-		if(hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get()))
-			info.setReturnValue(Text.literal("Yog-Sothoth").formatted(Formatting.OBFUSCATED));
+	@ModifyReturnValue(method = "getName", at = @At("RETURN"))
+	private Component arcanuscontinuum$getName(Component original) {
+		if(hasEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+			return Component.literal("Yog-Sothoth").withStyle(ChatFormatting.OBFUSCATED);
+		}
+
+		return original;
 	}
 
-	@Inject(method = "getEntityName", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$getEntityName(CallbackInfoReturnable<String> info) {
-		if(hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get()))
-			info.setReturnValue("Yog-Sothoth");
+	@ModifyReturnValue(method = "getScoreboardName", at = @At("RETURN"))
+	private String arcanuscontinuum$getEntityName(String original) {
+		if(hasEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+			return "Yog-Sothoth";
+		}
+
+		return original;
 	}
 }

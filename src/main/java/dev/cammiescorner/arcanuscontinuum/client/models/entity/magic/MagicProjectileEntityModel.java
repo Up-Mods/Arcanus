@@ -1,15 +1,17 @@
 package dev.cammiescorner.arcanuscontinuum.client.models.entity.magic;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectileEntity;
-import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
 
 public class MagicProjectileEntityModel extends EntityModel<MagicProjectileEntity> {
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Arcanus.id("magic_projectile"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("magic_projectile"), "main");
 	private final ModelPart base;
 	public final ModelPart ring1;
 	public final ModelPart ring2;
@@ -22,25 +24,25 @@ public class MagicProjectileEntityModel extends EntityModel<MagicProjectileEntit
 		this.ring3 = base.getChild("ring3");
 	}
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = new ModelData();
-		ModelPartData root = modelData.getRoot();
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = new MeshDefinition();
+		PartDefinition root = modelData.getRoot();
 
-		ModelPartData base = root.addChild("base", ModelPartBuilder.create().uv(0, -16).cuboid(0.0F, -2.5F, -8.0F, 0.0F, 5.0F, 16.0F, new Dilation(0.0F)).uv(-16, 5).cuboid(-2.5F, 0.0F, -8.0F, 5.0F, 0.0F, 16.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 21.5F, 0.0F));
-		ModelPartData ring1 = base.addChild("ring1", ModelPartBuilder.create().uv(10, 5).cuboid(-3.5F, -3.5F, 0.0F, 7.0F, 7.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, -4.0F));
-		ModelPartData ring2 = base.addChild("ring2", ModelPartBuilder.create().uv(10, 12).cuboid(-3.5F, -3.5F, 0.0F, 7.0F, 7.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-		ModelPartData ring3 = base.addChild("ring3", ModelPartBuilder.create().uv(10, 19).cuboid(-3.5F, -3.5F, 0.0F, 7.0F, 7.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 4.0F));
+		PartDefinition base = root.addOrReplaceChild("base", CubeListBuilder.create().texOffs(0, -16).addBox(0.0F, -2.5F, -8.0F, 0.0F, 5.0F, 16.0F, new CubeDeformation(0.0F)).texOffs(-16, 5).addBox(-2.5F, 0.0F, -8.0F, 5.0F, 0.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 21.5F, 0.0F));
+		PartDefinition ring1 = base.addOrReplaceChild("ring1", CubeListBuilder.create().texOffs(10, 5).addBox(-3.5F, -3.5F, 0.0F, 7.0F, 7.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -4.0F));
+		PartDefinition ring2 = base.addOrReplaceChild("ring2", CubeListBuilder.create().texOffs(10, 12).addBox(-3.5F, -3.5F, 0.0F, 7.0F, 7.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition ring3 = base.addOrReplaceChild("ring3", CubeListBuilder.create().texOffs(10, 19).addBox(-3.5F, -3.5F, 0.0F, 7.0F, 7.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 4.0F));
 
-		return TexturedModelData.of(modelData, 32, 32);
+		return LayerDefinition.create(modelData, 32, 32);
 	}
 
 	@Override
-	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		base.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
 
 	@Override
-	public void setAngles(MagicProjectileEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+	public void setupAnim(MagicProjectileEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 
 	}
 }

@@ -1,18 +1,18 @@
 package dev.cammiescorner.arcanuscontinuum.common.compat;
 
-import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.Level;
 import net.superkat.explosiveenhancement.ExplosiveEnhancement;
 import net.superkat.explosiveenhancement.ExplosiveEnhancementClient;
 import net.superkat.explosiveenhancement.api.ExplosiveApi;
 
 public class ExplosiveEnhancementCompat {
-	public static void spawnEnhancedBooms(World world, double x, double y, double z, float power, boolean didDestroyBlocks) {
+	public static void spawnEnhancedBooms(Level world, double x, double y, double z, float power, boolean didDestroyBlocks) {
 		boolean isUnderWater = false;
-		BlockPos pos = BlockPos.create(x, y, z);
+		BlockPos pos = BlockPos.containing(x, y, z);
 
-		if(ExplosiveEnhancementClient.config.underwaterExplosions && world.getFluidState(pos).isIn(FluidTags.WATER)) {
+		if(ExplosiveEnhancementClient.config.underwaterExplosions && world.getFluidState(pos).is(FluidTags.WATER)) {
 			isUnderWater = true;
 
 			if(ExplosiveEnhancementClient.config.debugLogs)

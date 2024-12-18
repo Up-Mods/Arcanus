@@ -4,18 +4,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.util.WorkbenchMode;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.PressableWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
-public class ChangeModeButtonWidget extends PressableWidget {
+public class ChangeModeButtonWidget extends AbstractButton {
 	private final PressAction onPress;
-	private final Identifier texture;
+	private final ResourceLocation texture;
 
 	public ChangeModeButtonWidget(int x, int y, WorkbenchMode mode, PressAction onPress) {
-		super(x, y, 24, 16, Text.empty());
+		super(x, y, 24, 16, Component.empty());
 		this.onPress = onPress;
 		this.texture = mode.getTexture();
 		this.setTooltip(Tooltip.create(Arcanus.translate("screen", "tooltip", "change_screens")));
@@ -27,20 +27,20 @@ public class ChangeModeButtonWidget extends PressableWidget {
 	}
 
 	@Override
-	public void drawWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+	public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 		if(!isHoveredOrFocused()) {
-			gui.drawTexture(texture, getX(), getY(), 24, 168, width, height, 256, 256);
+			gui.blit(texture, getX(), getY(), 24, 168, width, height, 256, 256);
 		}
 		else {
-			gui.drawTexture(texture, getX(), getY(), 48, 168, width, height, 256, 256);
+			gui.blit(texture, getX(), getY(), 48, 168, width, height, 256, 256);
 		}
 	}
 
 	@Override
-	protected void updateNarration(NarrationMessageBuilder builder) {
-		appendDefaultNarrations(builder);
+	protected void updateWidgetNarration(NarrationElementOutput builder) {
+		defaultButtonNarrationText(builder);
 	}
 
 	public interface PressAction {

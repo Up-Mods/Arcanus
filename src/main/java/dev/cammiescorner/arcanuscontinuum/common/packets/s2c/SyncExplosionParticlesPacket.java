@@ -2,13 +2,13 @@ package dev.cammiescorner.arcanuscontinuum.common.packets.s2c;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.compat.ExplosiveEnhancementCompat;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import org.quiltmc.loader.api.QuiltLoader;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
@@ -16,10 +16,10 @@ import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class SyncExplosionParticlesPacket {
-	public static final Identifier ID = Arcanus.id("sync_explosion_particles");
+	public static final ResourceLocation ID = Arcanus.id("sync_explosion_particles");
 
-	public static void send(ServerPlayerEntity player, double x, double y, double z, float strength, boolean didDestroyBlocks) {
-		PacketByteBuf buf = PacketByteBufs.create();
+	public static void send(ServerPlayer player, double x, double y, double z, float strength, boolean didDestroyBlocks) {
+		FriendlyByteBuf buf = PacketByteBufs.create();
 
 		buf.writeDouble(x);
 		buf.writeDouble(y);
@@ -31,7 +31,7 @@ public class SyncExplosionParticlesPacket {
 	}
 
 	@ClientOnly
-	public static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+	public static void handle(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
 		double x = buf.readDouble();
 		double y = buf.readDouble();
 		double z = buf.readDouble();
@@ -39,7 +39,7 @@ public class SyncExplosionParticlesPacket {
 		boolean didDestroyBlocks = buf.readBoolean();
 
 		client.execute(() -> {
-			World world = client.world;
+			Level world = client.level;
 
 			if(QuiltLoader.isModLoaded("explosiveenhancement"))
 				ExplosiveEnhancementCompat.spawnEnhancedBooms(world, x, y, z, strength, didDestroyBlocks);

@@ -2,11 +2,11 @@ package dev.cammiescorner.arcanuscontinuum.api.spells;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -40,9 +40,9 @@ public abstract class SpellShape extends SpellComponent {
 		return (getManaMultiplier() < 0 ? "" : "+") + Arcanus.format(getManaMultiplier() * 100) + "%";
 	}
 
-	public abstract void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency);
+	public abstract void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency);
 
-	public static void castNext(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public static void castNext(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		if(spellGroups.size() <= groupIndex + 1)
 			return;
 

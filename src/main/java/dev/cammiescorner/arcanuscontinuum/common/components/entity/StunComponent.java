@@ -3,9 +3,9 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class StunComponent implements AutoSyncedComponent, ServerTickingComponent {
 	private final LivingEntity entity;
@@ -20,18 +20,18 @@ public class StunComponent implements AutoSyncedComponent, ServerTickingComponen
 		if(stunTimer > 0) {
 			setStunTimer(getStunTimer() - 1);
 
-			if(entity instanceof PlayerEntity player)
-				player.resetLastAttackedTicks();
+			if(entity instanceof Player player)
+				player.resetAttackStrengthTicker();
 		}
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		stunTimer = tag.getInt("StunTimer");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putInt("StunTimer", stunTimer);
 	}
 

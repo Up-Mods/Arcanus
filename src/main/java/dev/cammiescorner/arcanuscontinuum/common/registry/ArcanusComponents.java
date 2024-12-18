@@ -29,17 +29,17 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.EmptyChunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.EmptyLevelChunk;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -92,21 +92,21 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 
 	@Override
 	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-		registry.beginRegistration(PlayerEntity.class, WIZARD_LEVEL_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(WizardLevelComponent::new);
+		registry.beginRegistration(Player.class, WIZARD_LEVEL_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(WizardLevelComponent::new);
 		registry.beginRegistration(LivingEntity.class, MANA_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(ManaComponent::new);
 		registry.beginRegistration(LivingEntity.class, BURNOUT_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(BurnoutComponent::new);
-		registry.beginRegistration(PlayerEntity.class, CASTING_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(CastingComponent::new);
-		registry.beginRegistration(PlayerEntity.class, PATTERN_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PatternComponent::new);
-		registry.beginRegistration(PlayerEntity.class, POCKET_DIMENSION_PORTAL_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(PocketDimensionPortalComponent::new);
+		registry.beginRegistration(Player.class, CASTING_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(CastingComponent::new);
+		registry.beginRegistration(Player.class, PATTERN_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(PatternComponent::new);
+		registry.beginRegistration(Player.class, POCKET_DIMENSION_PORTAL_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(PocketDimensionPortalComponent::new);
 		registry.beginRegistration(LivingEntity.class, LAST_CAST_TIME_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(LastCastTimeComponent::new);
 		registry.beginRegistration(LivingEntity.class, STUN_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(StunComponent::new);
-		registry.beginRegistration(PlayerEntity.class, QUEST_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(QuestComponent::new);
+		registry.beginRegistration(Player.class, QUEST_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(QuestComponent::new);
 		registry.beginRegistration(LivingEntity.class, BOLT_TARGET).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(BoltTargetComponent::new);
 		registry.beginRegistration(MagicProjectileEntity.class, SPELL_SHAPE).end(SpellShapeComponent::new);
 		registry.beginRegistration(Entity.class, SLOW_TIME_COMPONENT).end(SlowTimeComponent::new);
 		registry.beginRegistration(LivingEntity.class, AGGRESSORB_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(AggressorbComponent::new);
 		registry.beginRegistration(LivingEntity.class, GUARDIAN_ORB_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(GuardianOrbComponent::new);
-		registry.beginRegistration(PlayerEntity.class, PORTAL_COOL_DOWN_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(PortalCoolDownComponent::new);
+		registry.beginRegistration(Player.class, PORTAL_COOL_DOWN_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(PortalCoolDownComponent::new);
 		registry.beginRegistration(LivingEntity.class, COUNTER_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(CounterComponent::new);
 
 		List.of(
@@ -137,36 +137,36 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 	}
 
 	@Nullable
-	private static WardedBlocksComponent getWardedBlocksComponent(World world, BlockPos pos) {
-		Chunk chunk = world.getChunk(pos);
-		return !(chunk instanceof EmptyChunk) ? chunk.getComponent(WARDED_BLOCKS_COMPONENT) : null;
+	private static WardedBlocksComponent getWardedBlocksComponent(Level world, BlockPos pos) {
+		ChunkAccess chunk = world.getChunk(pos);
+		return !(chunk instanceof EmptyLevelChunk) ? chunk.getComponent(WARDED_BLOCKS_COMPONENT) : null;
 	}
 
 	// ----- Helper Methods ----- //
-	public static void addWardedBlock(PlayerEntity player, BlockPos pos) {
-		WardedBlocksComponent component = getWardedBlocksComponent(player.getWorld(), pos);
+	public static void addWardedBlock(Player player, BlockPos pos) {
+		WardedBlocksComponent component = getWardedBlocksComponent(player.level(), pos);
 		if(component != null)
 			component.addWardedBlock(player, pos);
 	}
 
-	public static void removeWardedBlock(PlayerEntity player, BlockPos pos) {
-		WardedBlocksComponent component = getWardedBlocksComponent(player.getWorld(), pos);
+	public static void removeWardedBlock(Player player, BlockPos pos) {
+		WardedBlocksComponent component = getWardedBlocksComponent(player.level(), pos);
 		if (component != null)
 			component.removeWardedBlock(player, pos);
 	}
 
-	public static boolean isOwnerOfBlock(PlayerEntity player, BlockPos pos) {
-		WardedBlocksComponent component = getWardedBlocksComponent(player.getWorld(), pos);
+	public static boolean isOwnerOfBlock(Player player, BlockPos pos) {
+		WardedBlocksComponent component = getWardedBlocksComponent(player.level(), pos);
 		return component != null && component.isOwnerOfBlock(player, pos);
 	}
 
-	public static boolean isBlockWarded(World world, BlockPos pos) {
+	public static boolean isBlockWarded(Level world, BlockPos pos) {
 		WardedBlocksComponent component = getWardedBlocksComponent(world, pos);
 		return component != null && component.isBlockWarded(pos);
 	}
 
-	public static Map<BlockPos, java.util.UUID> getWardedBlocks(Chunk chunk) {
-		if(chunk instanceof EmptyChunk)
+	public static Map<BlockPos, java.util.UUID> getWardedBlocks(ChunkAccess chunk) {
+		if(chunk instanceof EmptyLevelChunk)
 			return Map.of();
 
 		return chunk.getComponent(WARDED_BLOCKS_COMPONENT).getWardedBlocks();
@@ -269,15 +269,15 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 		STUN_COMPONENT.get(entity).setStunTimer(timer);
 	}
 
-	public static List<Identifier> getQuestIds(PlayerEntity player) {
+	public static List<ResourceLocation> getQuestIds(Player player) {
 		return QUEST_COMPONENT.get(player).getQuestIds();
 	}
 
-	public static long getLastCompletedQuestTime(PlayerEntity player) {
+	public static long getLastCompletedQuestTime(Player player) {
 		return QUEST_COMPONENT.get(player).getLastCompletedQuestTime();
 	}
 
-	public static void setLastCompletedQuestTime(PlayerEntity player, long time) {
+	public static void setLastCompletedQuestTime(Player player, long time) {
 		QUEST_COMPONENT.get(player).setLastCompletedQuestTime(time);
 	}
 
@@ -285,11 +285,11 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 		return MAGIC_COLOR.get(entity).getColor();
 	}
 
-	public static Vec3d getBoltPos(LivingEntity entity) {
+	public static Vec3 getBoltPos(LivingEntity entity) {
 		return BOLT_TARGET.get(entity).getPos();
 	}
 
-	public static void setBoltPos(LivingEntity entity, Vec3d pos) {
+	public static void setBoltPos(LivingEntity entity, Vec3 pos) {
 		BOLT_TARGET.get(entity).setPos(pos);
 	}
 
@@ -321,11 +321,11 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 		entity.getComponent(SIZE).resetScale();
 	}
 
-	public static void createPortal(PlayerEntity player, ServerWorld world, Vec3d pos, double pullStrength) {
+	public static void createPortal(Player player, ServerLevel world, Vec3 pos, double pullStrength) {
 		POCKET_DIMENSION_PORTAL_COMPONENT.get(player).createPortal(world, pos, pullStrength);
 	}
 
-	public static Vec3d getPortalPos(PlayerEntity player) {
+	public static Vec3 getPortalPos(Player player) {
 		return POCKET_DIMENSION_PORTAL_COMPONENT.get(player).getPortalPos();
 	}
 
@@ -398,7 +398,7 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 	}
 
 	public static boolean isCounterActive(LivingEntity entity) {
-		return entity.getComponent(COUNTER_COMPONENT).hasCounterActive(entity.getWorld());
+		return entity.getComponent(COUNTER_COMPONENT).hasCounterActive(entity.level());
 	}
 
 	public static Color getCounterColor(LivingEntity entity) {

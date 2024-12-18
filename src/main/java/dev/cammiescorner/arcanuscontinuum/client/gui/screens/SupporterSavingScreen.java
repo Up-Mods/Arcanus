@@ -2,8 +2,8 @@ package dev.cammiescorner.arcanuscontinuum.client.gui.screens;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -13,7 +13,7 @@ public class SupporterSavingScreen extends Screen {
 	private final Runnable onComplete;
 
 	public SupporterSavingScreen(CompletableFuture<Void> saveFuture, Runnable onComplete) {
-		super(Text.empty());
+		super(Component.empty());
 		this.saveFuture = saveFuture;
 		this.onComplete = onComplete;
 	}
@@ -25,12 +25,12 @@ public class SupporterSavingScreen extends Screen {
 		saveFuture.exceptionally(throwable -> {
 			Arcanus.LOGGER.error("Unable to save supporter data", throwable);
 			return null;
-		}).thenRunAsync(onComplete, client);
+		}).thenRunAsync(onComplete, minecraft);
 	}
 
 	@Override
 	public void renderBackground(GuiGraphics graphics) {
-		this.renderBackgroundTexture(graphics);
+		this.renderDirtBackground(graphics);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class SupporterSavingScreen extends Screen {
 		int centerX = width / 2;
 		int centerY = height / 2;
 
-		graphics.drawCenteredShadowedText(textRenderer, Text.translatable("screen.arcanuscontinuum.supporter_settings.saving"), centerX, centerY, 0xFFFFFFFF);
+		graphics.drawCenteredString(font, Component.translatable("screen.arcanuscontinuum.supporter_settings.saving"), centerX, centerY, 0xFFFFFFFF);
 
 		super.render(graphics, mouseX, mouseY, delta);
 	}

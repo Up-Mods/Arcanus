@@ -30,6 +30,10 @@ repositories {
 		url = "https://maven.quiltmc.org/repository/snapshot"
 	}
 	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
+	maven {
 		url = "https://maven.shedaniel.me"
 	}
 	maven {
@@ -74,19 +78,22 @@ repositories {
 		url = "https://oss.sonatype.org/content/repositories/snapshots"
 	}
 	maven {
-		name = "JitPack"
-		url = "https://jitpack.io"
+		name = 'Gegy'
+		url = 'https://maven.gegy.dev'
 	}
 	maven {
-		name 'Gegy'
-		url 'https://maven.gegy.dev'
+		name = "JitPack"
+		url = "https://jitpack.io"
 	}
 }
 
 dependencies {
 	minecraft libs.minecraft
 
-	mappings variantOf(libs.quilt.mappings) { classifier "intermediary-v2" }
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment "org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip"
+	}
 
 	modImplementation libs.quilt.loader
 	modImplementation libs.quilted.fabric.api

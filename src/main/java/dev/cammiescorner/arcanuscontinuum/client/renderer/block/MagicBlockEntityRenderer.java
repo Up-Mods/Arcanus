@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.client.renderer.block;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
@@ -7,39 +8,38 @@ import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntit
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import static dev.cammiescorner.arcanuscontinuum.client.ArcanusClient.renderSide;
 
 public class MagicBlockEntityRenderer implements BlockEntityRenderer<MagicBlockEntity> {
-	private static final RenderLayer LAYER = ArcanusClient.getMagicCircles(Arcanus.id("textures/block/magic_block.png"));
+	private static final RenderType LAYER = ArcanusClient.getMagicCircles(Arcanus.id("textures/block/magic_block.png"));
 
-	public MagicBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+	public MagicBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
 
 	}
 
 	@Override
-	public void render(MagicBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light, int overlay) {
-		if(entity.getWorld() != null) {
+	public void render(MagicBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light, int overlay) {
+		if(entity.getLevel() != null) {
 			VertexConsumer consumer = vertices.getBuffer(LAYER);
-			Matrix4f matrix4f = matrices.peek().getModel();
-			Matrix3f matrix3f = matrices.peek().getNormal();
+			Matrix4f matrix4f = matrices.last().pose();
+			Matrix3f matrix3f = matrices.last().normal();
 			Color color = ArcanusHelper.getMagicColor(entity);
 
 			for(Direction direction : Direction.values()) {
-				BlockPos blockToSide = entity.getPos().offset(direction);
-				BlockState stateToSide = entity.getWorld().getBlockState(blockToSide);
+				BlockPos blockToSide = entity.getBlockPos().relative(direction);
+				BlockState stateToSide = entity.getLevel().getBlockState(blockToSide);
 
-				if(stateToSide.isOpaqueFullCube(entity.getWorld(), blockToSide) || stateToSide.isOf(ArcanusBlocks.MAGIC_BLOCK.get()) || stateToSide.isOf(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get()) || stateToSide.isOf(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get()))
+				if(stateToSide.isSolidRender(entity.getLevel(), blockToSide) || stateToSide.is(ArcanusBlocks.MAGIC_BLOCK.get()) || stateToSide.is(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get()) || stateToSide.is(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get()))
 					continue;
 
 				switch(direction) {

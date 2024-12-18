@@ -3,16 +3,16 @@ package dev.cammiescorner.arcanuscontinuum.common.components.color;
 import dev.cammiescorner.arcanuscontinuum.common.components.MagicColorComponent;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.UUID;
 
 public class PlayerMagicColorComponent implements MagicColorComponent {
 
-	private final PlayerEntity player;
+	private final Player player;
 
-	public PlayerMagicColorComponent(PlayerEntity player) {
+	public PlayerMagicColorComponent(Player player) {
 		this.player = player;
 	}
 
@@ -32,12 +32,12 @@ public class PlayerMagicColorComponent implements MagicColorComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		// NO-OP
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		// NO-OP
 	}
 }

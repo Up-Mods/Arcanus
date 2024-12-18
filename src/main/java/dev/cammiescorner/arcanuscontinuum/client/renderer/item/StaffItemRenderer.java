@@ -1,61 +1,61 @@
 package dev.cammiescorner.arcanuscontinuum.client.renderer.item;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Unit;
-import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import org.quiltmc.qsl.resource.loader.api.reloader.IdentifiableResourceReloader;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class StaffItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer, IdentifiableResourceReloader {
-	private final Identifier id;
-	private final Identifier itemId;
+	private final ResourceLocation id;
+	private final ResourceLocation itemId;
 	private ItemRenderer itemRenderer;
 	private BakedModel inventoryItemModel;
 	private BakedModel worldItemModel;
 
-	public StaffItemRenderer(Identifier itemId) {
-		this.id = new Identifier(itemId.getNamespace(), itemId.getPath() + "_renderer");
+	public StaffItemRenderer(ResourceLocation itemId) {
+		this.id = new ResourceLocation(itemId.getNamespace(), itemId.getPath() + "_renderer");
 		this.itemId = itemId;
 	}
 
 	@Override
-	public Identifier getQuiltId() {
+	public ResourceLocation getQuiltId() {
 		return this.id;
 	}
 
 	@Override
-	public CompletableFuture<Void> reload(Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
-		return synchronizer.whenPrepared(Unit.INSTANCE).thenRunAsync(() -> {
+	public CompletableFuture<Void> reload(PreparationBarrier synchronizer, ResourceManager manager, ProfilerFiller prepareProfiler, ProfilerFiller applyProfiler, Executor prepareExecutor, Executor applyExecutor) {
+		return synchronizer.wait(Unit.INSTANCE).thenRunAsync(() -> {
 			applyProfiler.startTick();
 			applyProfiler.push("listener");
-			final MinecraftClient client = MinecraftClient.getInstance();
+			final Minecraft client = Minecraft.getInstance();
 			itemRenderer = client.getItemRenderer();
-			inventoryItemModel = client.getBakedModelManager().getModel(new ModelIdentifier(itemId.withPath(itemId.getPath() + "_gui"), "inventory"));
-			worldItemModel = client.getBakedModelManager().getModel(new ModelIdentifier(itemId.withPath(itemId.getPath() + "_handheld"), "inventory"));
+			inventoryItemModel = client.getModelManager().getModel(new ModelResourceLocation(itemId.withPath(itemId.getPath() + "_gui"), "inventory"));
+			worldItemModel = client.getModelManager().getModel(new ModelResourceLocation(itemId.withPath(itemId.getPath() + "_handheld"), "inventory"));
 			applyProfiler.pop();
 			applyProfiler.endTick();
 		}, applyExecutor);
 	}
 
 	@Override
-	public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-		matrices.pop();
-		matrices.push();
+	public void render(ItemStack stack, ItemDisplayContext mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+		matrices.popPose();
+		matrices.pushPose();
 
-		if(mode != ModelTransformationMode.FIRST_PERSON_LEFT_HAND && mode != ModelTransformationMode.FIRST_PERSON_RIGHT_HAND && mode != ModelTransformationMode.THIRD_PERSON_LEFT_HAND && mode != ModelTransformationMode.THIRD_PERSON_RIGHT_HAND) {
-			itemRenderer.renderItem(stack, mode, false, matrices, vertexConsumers, light, overlay, inventoryItemModel);
+		if(mode != ItemDisplayContext.FIRST_PERSON_LEFT_HAND && mode != ItemDisplayContext.FIRST_PERSON_RIGHT_HAND && mode != ItemDisplayContext.THIRD_PERSON_LEFT_HAND && mode != ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
+			itemRenderer.render(stack, mode, false, matrices, vertexConsumers, light, overlay, inventoryItemModel);
 		}
 		else {
 			boolean leftHanded;
@@ -65,7 +65,7 @@ public class StaffItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
 				default -> leftHanded = false;
 			}
 
-			itemRenderer.renderItem(stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, worldItemModel);
+			itemRenderer.render(stack, mode, leftHanded, matrices, vertexConsumers, light, overlay, worldItemModel);
 		}
 	}
 }

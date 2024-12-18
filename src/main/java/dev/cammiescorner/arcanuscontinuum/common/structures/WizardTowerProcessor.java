@@ -2,25 +2,25 @@ package dev.cammiescorner.arcanuscontinuum.common.structures;
 
 import com.mojang.serialization.Codec;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ChiseledBookshelfBlock;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.context.LootContextParameterSet;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.structure.Structure;
-import net.minecraft.structure.StructurePlacementData;
-import net.minecraft.structure.processor.StructureProcessor;
-import net.minecraft.structure.processor.StructureProcessorType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChiseledBookShelfBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class WizardTowerProcessor extends StructureProcessor {
@@ -29,29 +29,29 @@ public class WizardTowerProcessor extends StructureProcessor {
 
 	@Nullable
 	@Override
-	public Structure.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, Structure.StructureBlockInfo localBlockInfo, Structure.StructureBlockInfo absoluteBlockInfo, StructurePlacementData placementData) {
-		if(!absoluteBlockInfo.state().isOf(Blocks.CHISELED_BOOKSHELF))
+	public StructureTemplate.StructureBlockInfo processBlock(LevelReader world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo localBlockInfo, StructureTemplate.StructureBlockInfo absoluteBlockInfo, StructurePlaceSettings placementData) {
+		if(!absoluteBlockInfo.state().is(Blocks.CHISELED_BOOKSHELF))
 			return absoluteBlockInfo;
 
-		SimpleInventory inventory = new SimpleInventory(6);
-		Identifier lootTableId = Arcanus.id("bookshelves/wizard_tower");
+		SimpleContainer inventory = new SimpleContainer(6);
+		ResourceLocation lootTableId = Arcanus.id("bookshelves/wizard_tower");
 		long lootTableSeed = placementData.getRandom(absoluteBlockInfo.pos()).nextLong();
 		BlockState blockState = absoluteBlockInfo.state();
 
-		if(world instanceof ServerWorldAccess serverWorld) {
-			LootTable lootTable = serverWorld.getServer().getLootManager().getLootTable(lootTableId);
-			LootContextParameterSet.Builder builder = new LootContextParameterSet.Builder(serverWorld.toServerWorld()).add(LootContextParameters.ORIGIN, Vec3d.ofCenter(absoluteBlockInfo.pos()));
-			lootTable.supplyInventory(inventory, builder.build(LootContextTypes.CHEST), lootTableSeed);
-			Inventories.writeNbt(absoluteBlockInfo.nbt(), inventory.stacks, true);
+		if(world instanceof ServerLevelAccessor serverWorld) {
+			LootTable lootTable = serverWorld.getServer().getLootData().getLootTable(lootTableId);
+			LootParams.Builder builder = new LootParams.Builder(serverWorld.getLevel()).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(absoluteBlockInfo.pos()));
+			lootTable.fill(inventory, builder.create(LootContextParamSets.CHEST), lootTableSeed);
+			ContainerHelper.saveAllItems(absoluteBlockInfo.nbt(), inventory.items, true);
 
-			for(int j = 0; j < ChiseledBookshelfBlock.SLOT_OCCUPATION_PROPERTIES.size(); ++j) {
-				boolean bl = !inventory.getStack(j).isEmpty();
-				BooleanProperty booleanProperty = ChiseledBookshelfBlock.SLOT_OCCUPATION_PROPERTIES.get(j);
-				blockState = blockState.with(booleanProperty, bl);
+			for(int j = 0; j < ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.size(); ++j) {
+				boolean bl = !inventory.getItem(j).isEmpty();
+				BooleanProperty booleanProperty = ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(j);
+				blockState = blockState.setValue(booleanProperty, bl);
 			}
 		}
 
-		return new Structure.StructureBlockInfo(absoluteBlockInfo.pos(), blockState, absoluteBlockInfo.nbt());
+		return new StructureTemplate.StructureBlockInfo(absoluteBlockInfo.pos(), blockState, absoluteBlockInfo.nbt());
 	}
 
 	@Override

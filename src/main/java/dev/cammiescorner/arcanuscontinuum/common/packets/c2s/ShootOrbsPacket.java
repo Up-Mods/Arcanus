@@ -5,16 +5,16 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import io.netty.buffer.Unpooled;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.quiltmc.qsl.networking.api.PacketSender;
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
 
@@ -23,30 +23,30 @@ import java.util.List;
 import java.util.UUID;
 
 public class ShootOrbsPacket {
-	public static final Identifier ID = Arcanus.id("shoot_orb");
+	public static final ResourceLocation ID = Arcanus.id("shoot_orb");
 
 	public static void send(List<UUID> orbIds, UUID ownerId) {
-		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
 
-		buf.writeUuid(ownerId);
+		buf.writeUUID(ownerId);
 		buf.writeInt(orbIds.size());
 
 		for(UUID orbId : orbIds)
-			buf.writeUuid(orbId);
+			buf.writeUUID(orbId);
 
 		ClientPlayNetworking.send(ID, buf);
 	}
 
-	public static void handler(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender) {
+	public static void handler(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
 		List<UUID> orbIds = new ArrayList<>();
-		UUID ownerId = buf.readUuid();
+		UUID ownerId = buf.readUUID();
 		int orbCount = buf.readInt();
 
 		for(int i = 0; i < orbCount; i++)
-			orbIds.add(buf.readUuid());
+			orbIds.add(buf.readUUID());
 
 		server.execute(() -> {
-			ServerWorld world = player.getServerWorld();
+			ServerLevel world = player.serverLevel();
 			Entity owner = world.getEntity(ownerId);
 
 			if(owner instanceof LivingEntity livingEntity)
@@ -54,13 +54,13 @@ public class ShootOrbsPacket {
 		});
 	}
 
-	private static void shootOrb(List<UUID> orbIds, ServerWorld world, LivingEntity owner) {
+	private static void shootOrb(List<UUID> orbIds, ServerLevel world, LivingEntity owner) {
 		for(UUID orbId : orbIds) {
 			if(world.getEntity(orbId) instanceof AggressorbEntity orb && owner != null && orb.isBoundToTarget()) {
 				orb.setBoundToTarget(false);
-				orb.setPosition(orb.getTarget().getEyePos());
-				orb.setProperties(orb.getTarget(), orb.getTarget().getPitch(), orb.getTarget().getYaw(), 0F, ArcanusConfig.SpellShapes.AggressorbShapeProperties.projectileSpeed, 1F);
-				world.playSound(null, orb.getX(), orb.getY(), orb.getZ(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1f, 1f, 1L);
+				orb.setPos(orb.getTarget().getEyePosition());
+				orb.shootFromRotation(orb.getTarget(), orb.getTarget().getXRot(), orb.getTarget().getYRot(), 0F, ArcanusConfig.SpellShapes.AggressorbShapeProperties.projectileSpeed, 1F);
+				world.playSeededSound(null, orb.getX(), orb.getY(), orb.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.NEUTRAL, 1f, 1f, 1L);
 				ArcanusComponents.removeAggressorbFromEntity(orb.getTarget(), orbId);
 
 				break;

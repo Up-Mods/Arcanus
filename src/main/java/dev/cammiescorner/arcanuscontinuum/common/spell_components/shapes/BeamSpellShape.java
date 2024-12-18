@@ -8,14 +8,14 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.BeamEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class BeamSpellShape extends SpellShape {
 	}
 
 	@Override
-	public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		double range = ArcanusConfig.SpellShapes.BeamShapeProperties.range;
 		potency += getPotencyModifier();
 		Entity sourceEntity = castSource != null ? castSource : caster;
@@ -38,14 +38,14 @@ public class BeamSpellShape extends SpellShape {
 			if(beam != null) {
 				beam.setProperties(caster, stack, effects, spellGroups, groupIndex, ArcanusConfig.SpellShapes.BeamShapeProperties.delay, potency, target.getType() == HitResult.Type.ENTITY);
 
-				beam.setPosition(target.getPos());
+				beam.setPos(target.getLocation());
 
 				if(target.getType() == HitResult.Type.ENTITY)
 					beam.startRiding(((EntityHitResult) target).getEntity(), true);
 				else
-					beam.setPosition(Vec3d.ofCenter(((BlockHitResult) target).getBlockPos()));
+					beam.setPos(Vec3.atCenterOf(((BlockHitResult) target).getBlockPos()));
 
-				world.spawnEntity(beam);
+				world.addFreshEntity(beam);
 			}
 		}
 	}

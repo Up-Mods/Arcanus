@@ -5,12 +5,12 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleModifier;
 import virtuoel.pehkui.api.ScaleType;
@@ -38,12 +38,12 @@ public class SizeComponent implements CommonTickingComponent {
 			return;
 		}
 
-		if (entity instanceof PlayerEntity || (entity instanceof TameableEntity tameable && tameable.getOwnerUuid() != null)) {
+		if (entity instanceof Player || (entity instanceof TamableAnimal tameable && tameable.getOwnerUUID() != null)) {
 			if (ScaleTypes.HEIGHT.getScaleData(entity).getBaseValueModifiers().contains(ArcanusScaleModifier.INSTANCE)) {
 				if (timer <= 0) {
 					float normalHeight = unmodifiedHeight / ScaleTypes.HEIGHT.getScaleData(entity).getScale();
 
-					if (entity.getHeight() > normalHeight || entity.getWorld().isSpaceEmpty(entity, new Box(entity.getBoundingBox().minX, entity.getBoundingBox().minY, entity.getBoundingBox().minZ, entity.getBoundingBox().maxX, entity.getBoundingBox().maxY * normalHeight, entity.getBoundingBox().maxZ))) {
+					if (entity.getBbHeight() > normalHeight || entity.level().noCollision(entity, new AABB(entity.getBoundingBox().minX, entity.getBoundingBox().minY, entity.getBoundingBox().minZ, entity.getBoundingBox().maxX, entity.getBoundingBox().maxY * normalHeight, entity.getBoundingBox().maxZ))) {
 						if (scaleTicks <= 0)
 							resetScale();
 						else {
@@ -68,19 +68,19 @@ public class SizeComponent implements CommonTickingComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		timer = tag.getInt("Timer");
 		scaleTicks = tag.getInt("ScaleTicks");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putInt("Timer", timer);
 		tag.putInt("ScaleTicks", scaleTicks);
 	}
 
 	public void setScale(SpellEffect effect, double strength) {
-		previousScaleMultiplier = MathHelper.lerp((float) scaleTicks / 10, 1.0F, scaleMultiplier);
+		previousScaleMultiplier = Mth.lerp((float) scaleTicks / 10, 1.0F, scaleMultiplier);
 		scaleMultiplier = ArcanusSpellComponents.SHRINK.is(effect) ? ArcanusConfig.UtilityEffects.ShrinkEffectProperties.baseShrinkAmount : ArcanusConfig.UtilityEffects.EnlargeEffectProperties.baseEnlargeAmount;
 		SUPPORTED_SCALE_TYPES.forEach(scaleType -> {
 			ScaleData data = scaleType.getScaleData(entity);
@@ -129,7 +129,7 @@ public class SizeComponent implements CommonTickingComponent {
 			Entity entity = data.getEntity();
 			SizeComponent component = entity.getComponent(ArcanusComponents.SIZE);
 
-			return MathHelper.lerp((float) component.scaleTicks / 10, modifiedScale * component.previousScaleMultiplier, modifiedScale * component.scaleMultiplier);
+			return Mth.lerp((float) component.scaleTicks / 10, modifiedScale * component.previousScaleMultiplier, modifiedScale * component.scaleMultiplier);
 		}
 	}
 }

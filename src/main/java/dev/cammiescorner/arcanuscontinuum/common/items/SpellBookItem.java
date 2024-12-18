@@ -4,26 +4,26 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Spell;
 import dev.cammiescorner.arcanuscontinuum.common.screens.SpellBookScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LecternBlock;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LecternBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
@@ -32,75 +32,75 @@ import java.util.Locale;
 
 public class SpellBookItem extends Item {
 	public SpellBookItem() {
-		super(new QuiltItemSettings().maxCount(1));
+		super(new QuiltItemSettings().stacksTo(1));
 	}
 
 	@Override
-	public Text getName(ItemStack stack) {
+	public Component getName(ItemStack stack) {
 		Spell spell = getSpell(stack);
 
-		return ((MutableText) super.getName(stack)).append(" (" + spell.getName() + ")");
+		return ((MutableComponent) super.getName(stack)).append(" (" + spell.getName() + ")");
 	}
 
 	@Override
-	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
 		Spell spell = getSpell(stack);
 
 		String manaCost = Arcanus.format(spell.getManaCost());
 		String coolDown = Arcanus.format(spell.getCoolDown() / 20D);
 
-		tooltip.add(Text.literal(spell.getName()).formatted(Formatting.GOLD));
-		tooltip.add(Arcanus.translate("spell_book", "weight").append(": ").formatted(Formatting.GREEN)
-				.append(Arcanus.translate("spell_book", "weight", spell.getWeight().toString().toLowerCase(Locale.ROOT)).formatted(Formatting.GRAY)));
-		tooltip.add(Arcanus.translate("spell_book", "mana_cost").append(": ").formatted(Formatting.BLUE)
-				.append(Text.literal(manaCost).formatted(Formatting.GRAY)));
-		tooltip.add(Arcanus.translate("spell_book", "cool_down").append(": ").formatted(Formatting.RED)
-				.append(Text.literal(coolDown).append(Arcanus.translate("spell_book", "seconds")).formatted(Formatting.GRAY)));
+		tooltip.add(Component.literal(spell.getName()).withStyle(ChatFormatting.GOLD));
+		tooltip.add(Arcanus.translate("spell_book", "weight").append(": ").withStyle(ChatFormatting.GREEN)
+				.append(Arcanus.translate("spell_book", "weight", spell.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
+		tooltip.add(Arcanus.translate("spell_book", "mana_cost").append(": ").withStyle(ChatFormatting.BLUE)
+				.append(Component.literal(manaCost).withStyle(ChatFormatting.GRAY)));
+		tooltip.add(Arcanus.translate("spell_book", "cool_down").append(": ").withStyle(ChatFormatting.RED)
+				.append(Component.literal(coolDown).append(Arcanus.translate("spell_book", "seconds")).withStyle(ChatFormatting.GRAY)));
 
-		super.appendTooltip(stack, world, tooltip, context);
+		super.appendHoverText(stack, world, tooltip, context);
 	}
 
 	@Override
-	public ActionResult useOnBlock(ItemUsageContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getBlockPos();
+	public InteractionResult useOn(UseOnContext context) {
+		Level world = context.getLevel();
+		BlockPos pos = context.getClickedPos();
 		BlockState state = world.getBlockState(pos);
 
-		if(state.isOf(Blocks.LECTERN))
-			return LecternBlock.putBookIfAbsent(context.getPlayer(), world, pos, state, context.getStack()) ? ActionResult.success(world.isClient) : ActionResult.PASS;
+		if(state.is(Blocks.LECTERN))
+			return LecternBlock.tryPlaceBook(context.getPlayer(), world, pos, state, context.getItemInHand()) ? InteractionResult.sidedSuccess(world.isClientSide) : InteractionResult.PASS;
 
-		return ActionResult.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getStackInHand(hand);
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
 		Spell spell = getSpell(stack);
 
 		if(spell.isEmpty())
 			return super.use(world, player, hand);
 
-		player.openHandledScreen(new ExtendedScreenHandlerFactory() {
+		player.openMenu(new ExtendedScreenHandlerFactory() {
 			@Override
-			public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-				buf.writeItemStack(stack);
+			public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+				buf.writeItem(stack);
 			}
 
 			@Override
-			public Text getDisplayName() {
-				return Text.literal(spell.getName());
+			public Component getDisplayName() {
+				return Component.literal(spell.getName());
 			}
 
 			@Override
-			public ScreenHandler createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+			public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
 				return new SpellBookScreenHandler(i, playerInventory, stack);
 			}
 		});
 
-		return TypedActionResult.success(stack, world.isClient());
+		return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());
 	}
 
 	public static Spell getSpell(ItemStack stack) {
-		return stack.hasNbt() ? Spell.fromNbt(stack.getNbt().getCompound("Spell")) : new Spell();
+		return stack.hasTag() ? Spell.fromNbt(stack.getTag().getCompound("Spell")) : new Spell();
 	}
 }

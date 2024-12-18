@@ -7,37 +7,37 @@ import dev.cammiescorner.arcanuscontinuum.common.items.SpellBookItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusRecipes;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
-import net.minecraft.inventory.RecipeInputInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.recipe.CraftingCategory;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.SpecialCraftingRecipe;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 
 import java.util.Arrays;
 import java.util.List;
 
 //TODO use tag for spell books
-public class SpellBindingRecipe extends SpecialCraftingRecipe {
-	public SpellBindingRecipe(Identifier identifier, CraftingCategory category) {
+public class SpellBindingRecipe extends CustomRecipe {
+	public SpellBindingRecipe(ResourceLocation identifier, CraftingBookCategory category) {
 		super(identifier, category);
 	}
 
 	private static final int[] INDICES = new int[]{7, 0, 1, 6, 0, 2, 5, 4, 3};
 
 	@Override
-	public DefaultedList<ItemStack> getRemainder(RecipeInputInventory inventory) {
-		DefaultedList<ItemStack> list = DefaultedList.ofSize(inventory.size(), ItemStack.EMPTY);
+	public NonNullList<ItemStack> getRemainingItems(CraftingContainer inventory) {
+		NonNullList<ItemStack> list = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
 
 		for (int i = 0; i < list.size(); ++i) {
-			if (inventory.getStack(i).getItem() instanceof SpellBookItem) {
-				list.set(i, inventory.getStack(i).copy());
+			if (inventory.getItem(i).getItem() instanceof SpellBookItem) {
+				list.set(i, inventory.getItem(i).copy());
 			}
 		}
 
@@ -45,22 +45,22 @@ public class SpellBindingRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public boolean matches(RecipeInputInventory inv, World world) {
+	public boolean matches(CraftingContainer inv, Level world) {
 		List<ItemStack> list = Lists.newArrayList();
 		ItemStack result = ItemStack.EMPTY;
 
-		for (int i = 0; i < inv.size(); ++i) {
-			ItemStack stack = inv.getStack(i);
+		for (int i = 0; i < inv.getContainerSize(); ++i) {
+			ItemStack stack = inv.getItem(i);
 
 			if (!stack.isEmpty()) {
-				if(stack.isIn(ArcanusTags.STAVES)) {
+				if(stack.is(ArcanusTags.STAVES)) {
 					if (i != 4) {
 						return false;
 					}
 
 					result = stack.copy();
 				}
-				else if(stack.isOf(ArcanusItems.SPELL_BOOK.get())) {
+				else if(stack.is(ArcanusItems.SPELL_BOOK.get())) {
 					list.add(stack);
 				}
 				else {
@@ -74,15 +74,15 @@ public class SpellBindingRecipe extends SpecialCraftingRecipe {
 
 
 	@Override
-	public ItemStack craft(RecipeInputInventory inv, DynamicRegistryManager manager) {
-		ItemStack result = inv.getStack(4).copy();
+	public ItemStack assemble(CraftingContainer inv, RegistryAccess manager) {
+		ItemStack result = inv.getItem(4).copy();
 
-		if (!result.isIn(ArcanusTags.STAVES)) {
+		if (!result.is(ArcanusTags.STAVES)) {
 			return ItemStack.EMPTY;
 		}
 
-		NbtCompound tag = result.getOrCreateSubNbt(Arcanus.MOD_ID);
-		NbtList list = tag.getList("Spells", NbtElement.COMPOUND_TYPE);
+		CompoundTag tag = result.getOrCreateTagElement(Arcanus.MOD_ID);
+		ListTag list = tag.getList("Spells", Tag.TAG_COMPOUND);
 
 		var spells = new Spell[8];
 		Arrays.fill(spells, new Spell());
@@ -97,13 +97,13 @@ public class SpellBindingRecipe extends SpecialCraftingRecipe {
 
 		int count = 0;
 
-		for (int i = 0; i < inv.size(); i++) {
+		for (int i = 0; i < inv.getContainerSize(); i++) {
 			if (i == 4) {
 				continue;
 			}
 
-			ItemStack stack = inv.getStack(i);
-			if (stack.isOf(ArcanusItems.SPELL_BOOK.get())) {
+			ItemStack stack = inv.getItem(i);
+			if (stack.is(ArcanusItems.SPELL_BOOK.get())) {
 				spells[INDICES[i]] = SpellBookItem.getSpell(stack);
 				count++;
 			}
@@ -123,7 +123,7 @@ public class SpellBindingRecipe extends SpecialCraftingRecipe {
 	}
 
 	@Override
-	public boolean fits(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		// need the exact size because of the shape
 		return width == 3 && height == 3;
 	}

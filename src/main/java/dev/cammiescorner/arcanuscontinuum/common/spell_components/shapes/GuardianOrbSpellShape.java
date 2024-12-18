@@ -6,11 +6,11 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.GuardianOrbEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -21,17 +21,17 @@ public class GuardianOrbSpellShape extends SpellShape {
 	}
 
 	@Override
-	public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		LivingEntity targetEntity = castSource instanceof LivingEntity livingEntity ? livingEntity : caster;
 
 		if(targetEntity != null) {
 			GuardianOrbEntity orb = ArcanusEntities.GUARDIAN_ORB.get().create(world);
 			orb.setProperties(caster, targetEntity, stack, effects, spellGroups, groupIndex, potency + getPotencyModifier());
-			orb.setPosition(castFrom);
-			world.spawnEntity(orb);
+			orb.setPos(castFrom);
+			world.addFreshEntity(orb);
 
 			if(caster != null) {
-				List<? extends GuardianOrbEntity> oldOrbs = world.getEntitiesByType(ArcanusEntities.GUARDIAN_ORB.get(), existingOrb -> existingOrb != orb && existingOrb.getCaster().getUuid().equals(caster.getUuid()));
+				List<? extends GuardianOrbEntity> oldOrbs = world.getEntities(ArcanusEntities.GUARDIAN_ORB.get(), existingOrb -> existingOrb != orb && existingOrb.getCaster().getUUID().equals(caster.getUUID()));
 				oldOrbs.forEach(Entity::discard);
 			}
 		}

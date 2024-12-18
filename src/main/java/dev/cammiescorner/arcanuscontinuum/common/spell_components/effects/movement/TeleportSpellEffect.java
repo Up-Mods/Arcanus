@@ -5,15 +5,15 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityStatuses;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -24,23 +24,23 @@ public class TeleportSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, World world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
-		if(caster != null && caster.getPos().distanceTo(target.getPos()) <= ArcanusConfig.MovementEffects.TeleportEffectProperties.baseTeleportDistance * effects.stream().filter(ArcanusSpellComponents.TELEPORT::is).count() * potency) {
-			Vec3d pos = target.getPos();
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+		if(caster != null && caster.position().distanceTo(target.getLocation()) <= ArcanusConfig.MovementEffects.TeleportEffectProperties.baseTeleportDistance * effects.stream().filter(ArcanusSpellComponents.TELEPORT::is).count() * potency) {
+			Vec3 pos = target.getLocation();
 
 			if(target.getType() == HitResult.Type.BLOCK) {
 				BlockHitResult blockHit = (BlockHitResult) target;
-				pos = pos.add(blockHit.getSide().getOffsetX() * 0.5, blockHit.getSide() == Direction.DOWN ? -2 : 0, blockHit.getSide().getOffsetZ() * 0.5);
+				pos = pos.add(blockHit.getDirection().getStepX() * 0.5, blockHit.getDirection() == Direction.DOWN ? -2 : 0, blockHit.getDirection().getStepZ() * 0.5);
 			}
 
-			world.sendEntityStatus(caster, EntityStatuses.ADD_PORTAL_PARTICLES);
+			world.broadcastEntityEvent(caster, EntityEvent.TELEPORT);
 
-			if(caster.hasVehicle())
-				caster.requestTeleportAndDismount(pos.getX(), pos.getY(), pos.getZ());
+			if(caster.isPassenger())
+				caster.dismountTo(pos.x(), pos.y(), pos.z());
 			else
-				caster.tryTeleportAndDismount(pos.getX(), pos.getY(), pos.getZ());
+				caster.teleportTo(pos.x(), pos.y(), pos.z());
 
-			world.sendEntityStatus(caster, EntityStatuses.ADD_PORTAL_PARTICLES);
+			world.broadcastEntityEvent(caster, EntityEvent.TELEPORT);
 		}
 	}
 }

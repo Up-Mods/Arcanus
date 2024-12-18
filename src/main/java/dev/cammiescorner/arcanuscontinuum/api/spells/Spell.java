@@ -2,13 +2,13 @@ package dev.cammiescorner.arcanuscontinuum.api.spells;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +28,9 @@ public class Spell {
 		this(List.of(new SpellGroup(SpellShape.empty(), List.of(), List.of())), "Blank");
 	}
 
-	public static Spell fromNbt(NbtCompound nbt) {
+	public static Spell fromNbt(CompoundTag nbt) {
 		List<SpellGroup> groups = new ArrayList<>();
-		NbtList nbtList = nbt.getList("ComponentGroups", NbtElement.COMPOUND_TYPE);
+		ListTag nbtList = nbt.getList("ComponentGroups", Tag.TAG_COMPOUND);
 
 		for(int i = 0; i < nbtList.size(); i++) {
 			SpellGroup group = SpellGroup.fromNbt(nbtList.getCompound(i));
@@ -44,9 +44,9 @@ public class Spell {
 		return new Spell(groups, nbt.getString("Name"));
 	}
 
-	public NbtCompound toNbt() {
-		NbtCompound nbt = new NbtCompound();
-		NbtList nbtList = new NbtList();
+	public CompoundTag toNbt() {
+		CompoundTag nbt = new CompoundTag();
+		ListTag nbtList = new ListTag();
 
 		for(SpellGroup group : groups)
 			nbtList.add(group.toNbt());
@@ -121,19 +121,19 @@ public class Spell {
 		return groups.stream().flatMap(SpellGroup::getAllComponents);
 	}
 
-	public void cast(LivingEntity caster, ServerWorld world, ItemStack stack) {
+	public void cast(LivingEntity caster, ServerLevel world, ItemStack stack) {
 		List<SpellGroup> groups = getComponentGroups();
 
 		if(groups.isEmpty())
 			return;
 
 		if(groups.stream().flatMap(SpellGroup::getAllComponents).anyMatch(Predicate.not(SpellComponent::isEnabled))) {
-			caster.sendSystemMessage(Arcanus.translate("text", "disabled_component").formatted(Formatting.RED));
+			caster.sendSystemMessage(Arcanus.translate("text", "disabled_component").withStyle(ChatFormatting.RED));
 			return;
 		}
 
 		// start casting the spell
 		SpellGroup firstGroup = groups.get(0);
-		firstGroup.shape().cast(caster, caster.getPos(), null, world, stack, firstGroup.effects(), groups, 0, caster.getAttributeValue(ArcanusEntityAttributes.SPELL_POTENCY.get()));
+		firstGroup.shape().cast(caster, caster.position(), null, world, stack, firstGroup.effects(), groups, 0, caster.getAttributeValue(ArcanusEntityAttributes.SPELL_POTENCY.get()));
 	}
 }

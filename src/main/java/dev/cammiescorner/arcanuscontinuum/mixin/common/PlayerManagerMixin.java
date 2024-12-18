@@ -4,21 +4,19 @@ import com.llamalad7.mixinextras.injector.ModifyReceiver;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.MagicDoorBlock;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicDoorBlockEntity;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusPointsOfInterest;
-import net.minecraft.block.BlockState;
-import net.minecraft.network.message.MessageType;
-import net.minecraft.network.message.SignedChatMessage;
-import net.minecraft.registry.LayeredRegistryManager;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.ServerRegistryLayer;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.poi.PointOfInterest;
-import net.minecraft.world.poi.PointOfInterestStorage;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.LayeredRegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.PlayerChatMessage;
+import net.minecraft.server.RegistryLayer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.entity.ai.village.poi.PoiRecord;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,31 +24,28 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-@Mixin(PlayerManager.class)
+@Mixin(PlayerList.class)
 public class PlayerManagerMixin {
 	@Shadow
 	@Final
-	private LayeredRegistryManager<ServerRegistryLayer> registryManager;
+	private LayeredRegistryAccess<RegistryLayer> registries;
 
-	@ModifyReceiver(method = "sendChatMessage(Lnet/minecraft/network/message/SignedChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/network/message/MessageType$Parameters;)V", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
-	private List<ServerPlayerEntity> arcanuscontinuum$restrictMagicDoorChatMessage(List<ServerPlayerEntity> original, SignedChatMessage chatMessage, Predicate<ServerPlayerEntity> predicate, @Nullable ServerPlayerEntity player, MessageType.Parameters parameters) {
-		if (player != null && this.registryManager.getCompositeManager().get(RegistryKeys.MESSAGE_TYPE).getKey(parameters.messageType()).map(key -> key.equals(MessageType.CHAT)).orElse(false)) {
-			ServerWorld world = player.getServerWorld();
-			PointOfInterestStorage poiStorage = world.getChunkManager().getPointOfInterestStorage();
+	@ModifyReceiver(method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
+	private List<ServerPlayer> arcanuscontinuum$restrictMagicDoorChatMessage(List<ServerPlayer> original, PlayerChatMessage chatMessage, Predicate<ServerPlayer> predicate, @Nullable ServerPlayer player, ChatType.Bound parameters) {
+		if (player != null && this.registries.compositeAccess().registryOrThrow(Registries.CHAT_TYPE).getResourceKey(parameters.chatType()).map(key -> key.equals(ChatType.CHAT)).orElse(false)) {
+			ServerLevel world = player.serverLevel();
+			PoiManager poiStorage = world.getChunkSource().getPoiManager();
 
 			var beep = new boolean[1];
 
-			poiStorage.getInCircle(poiTypeHolder -> poiTypeHolder.isRegistryKey(ArcanusPointsOfInterest.MAGIC_DOOR), player.getBlockPos(), 8, PointOfInterestStorage.OccupationStatus.ANY).map(PointOfInterest::getPos).forEach(pos -> {
+			poiStorage.getInRange(poiTypeHolder -> poiTypeHolder.is(ArcanusPointsOfInterest.MAGIC_DOOR), player.blockPosition(), 8, PoiManager.Occupancy.ANY).map(PoiRecord::getPos).forEach(pos -> {
 				BlockState state = world.getBlockState(pos);
 				if (state.getBlock() instanceof MagicDoorBlock doorBlock && world.getBlockEntity(pos) instanceof MagicDoorBlockEntity door) {
-					if (chatMessage.getContent().equalsIgnoreCase(door.getPassword())) {
+					if (chatMessage.signedContent().equalsIgnoreCase(door.getPassword())) {
 						doorBlock.setOpen(null, world, state, pos, true);
-						player.sendMessage(Arcanus.translate("door", "access_granted").formatted(Formatting.GRAY, Formatting.ITALIC), true);
+						player.displayClientMessage(Arcanus.translate("door", "access_granted").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
 						beep[0] = true;
 					}
 				}

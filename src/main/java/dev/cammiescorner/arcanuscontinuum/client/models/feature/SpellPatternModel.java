@@ -1,24 +1,26 @@
 package dev.cammiescorner.arcanuscontinuum.client.models.feature;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Pattern;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.StaffType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-public class SpellPatternModel<T extends PlayerEntity> extends BipedEntityModel<T> {
-	public static final EntityModelLayer MODEL_LAYER = new EntityModelLayer(Arcanus.id("spell_pattern"), "main");
-	private final MinecraftClient client = MinecraftClient.getInstance();
+public class SpellPatternModel<T extends Player> extends HumanoidModel<T> {
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("spell_pattern"), "main");
+	private final Minecraft client = Minecraft.getInstance();
 	private final ModelPart base;
 	public final ModelPart first;
 	private final ModelPart left1;
@@ -44,51 +46,51 @@ public class SpellPatternModel<T extends PlayerEntity> extends BipedEntityModel<
 		this.right3 = third.getChild("right3");
 	}
 
-	public static TexturedModelData getTexturedModelData() {
-		ModelData modelData = PlayerEntityModel.getModelData(Dilation.NONE, 0);
-		ModelPartData root = modelData.getRoot().getChild("body");
+	public static LayerDefinition getTexturedModelData() {
+		MeshDefinition modelData = PlayerModel.createMesh(CubeDeformation.NONE, 0);
+		PartDefinition root = modelData.getRoot().getChild("body");
 
 
-		ModelPartData base = root.addChild("base", ModelPartBuilder.create(), ModelTransform.pivot(0F, 0F, 0F));
+		PartDefinition base = root.addOrReplaceChild("base", CubeListBuilder.create(), PartPose.offset(0F, 0F, 0F));
 
-		ModelPartData first = base.addChild("first", ModelPartBuilder.create(), ModelTransform.pivot(0F, -6F, -8F));
-		ModelPartData left1 = first.addChild("left1", ModelPartBuilder.create().uv(0, 0).cuboid(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new Dilation(0F)), ModelTransform.pivot(0F, 0F, 0F));
-		ModelPartData right1 = first.addChild("right1", ModelPartBuilder.create().uv(0, 24).cuboid(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new Dilation(0F)), ModelTransform.pivot(0F, 0F, 0F));
+		PartDefinition first = base.addOrReplaceChild("first", CubeListBuilder.create(), PartPose.offset(0F, -6F, -8F));
+		PartDefinition left1 = first.addOrReplaceChild("left1", CubeListBuilder.create().texOffs(0, 0).addBox(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new CubeDeformation(0F)), PartPose.offset(0F, 0F, 0F));
+		PartDefinition right1 = first.addOrReplaceChild("right1", CubeListBuilder.create().texOffs(0, 24).addBox(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new CubeDeformation(0F)), PartPose.offset(0F, 0F, 0F));
 
-		ModelPartData second = base.addChild("second", ModelPartBuilder.create(), ModelTransform.pivot(0F, -6F, -11F));
-		ModelPartData left2 = second.addChild("left2", ModelPartBuilder.create().uv(34, 0).cuboid(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new Dilation(0F)), ModelTransform.pivot(0F, 0F, 0F));
-		ModelPartData right2 = second.addChild("right2", ModelPartBuilder.create().uv(34, 24).cuboid(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new Dilation(0F)), ModelTransform.pivot(0F, 0F, 0F));
+		PartDefinition second = base.addOrReplaceChild("second", CubeListBuilder.create(), PartPose.offset(0F, -6F, -11F));
+		PartDefinition left2 = second.addOrReplaceChild("left2", CubeListBuilder.create().texOffs(34, 0).addBox(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new CubeDeformation(0F)), PartPose.offset(0F, 0F, 0F));
+		PartDefinition right2 = second.addOrReplaceChild("right2", CubeListBuilder.create().texOffs(34, 24).addBox(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new CubeDeformation(0F)), PartPose.offset(0F, 0F, 0F));
 
-		ModelPartData third = base.addChild("third", ModelPartBuilder.create(), ModelTransform.pivot(0F, -6F, -14F));
-		ModelPartData left3 = third.addChild("left3", ModelPartBuilder.create().uv(68, 0).cuboid(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new Dilation(0F)), ModelTransform.pivot(0F, 0F, 0F));
-		ModelPartData right3 = third.addChild("right3", ModelPartBuilder.create().uv(68, 24).cuboid(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new Dilation(0F)), ModelTransform.pivot(0F, 0F, 0F));
+		PartDefinition third = base.addOrReplaceChild("third", CubeListBuilder.create(), PartPose.offset(0F, -6F, -14F));
+		PartDefinition left3 = third.addOrReplaceChild("left3", CubeListBuilder.create().texOffs(68, 0).addBox(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new CubeDeformation(0F)), PartPose.offset(0F, 0F, 0F));
+		PartDefinition right3 = third.addOrReplaceChild("right3", CubeListBuilder.create().texOffs(68, 24).addBox(-8.5F, -8.5F, 0F, 17F, 17F, 0F, new CubeDeformation(0F)), PartPose.offset(0F, 0F, 0F));
 
-		return TexturedModelData.of(modelData, 128, 48);
+		return LayerDefinition.create(modelData, 128, 48);
 	}
 
 	@Override
-	public void setAngles(T player, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-		super.setAngles(player, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
-		base.pivotY = 0;
-		base.pivotX = 0;
-		base.pivotZ = 0;
-		first.roll = (float) Math.toRadians((player.age + player.getId() + client.getTickDelta()) * 5);
-		second.roll = (float) Math.toRadians((player.age + player.getId() + client.getTickDelta()) * -8);
-		third.roll = (float) Math.toRadians((player.age + player.getId() + client.getTickDelta()) * 11);
+	public void setupAnim(T player, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+		super.setupAnim(player, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
+		base.y = 0;
+		base.x = 0;
+		base.z = 0;
+		first.zRot = (float) Math.toRadians((player.tickCount + player.getId() + client.getFrameTime()) * 5);
+		second.zRot = (float) Math.toRadians((player.tickCount + player.getId() + client.getFrameTime()) * -8);
+		third.zRot = (float) Math.toRadians((player.tickCount + player.getId() + client.getFrameTime()) * 11);
 
-		if(player.isInSneakingPose()) {
-			base.pivotY = 4.2F;
+		if(player.isCrouching()) {
+			base.y = 4.2F;
 
-			if(ArcanusComponents.isCasting(player) && player.getMainHandStack().getItem() instanceof StaffItem staff && staff.staffType == StaffType.STAFF) {
-				base.pivotY = 8;
-				base.pivotX = 4;
-				base.pivotZ = 3;
+			if(ArcanusComponents.isCasting(player) && player.getMainHandItem().getItem() instanceof StaffItem staff && staff.staffType == StaffType.STAFF) {
+				base.y = 8;
+				base.x = 4;
+				base.z = 3;
 			}
 		}
 	}
 
 	@Override
-	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+	public void renderToBuffer(PoseStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
 		base.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
 	}
 

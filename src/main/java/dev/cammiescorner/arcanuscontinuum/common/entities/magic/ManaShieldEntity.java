@@ -1,46 +1,46 @@
 package dev.cammiescorner.arcanuscontinuum.common.entities.magic;
 
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
 public class ManaShieldEntity extends Entity implements Targetable {
-	private static final TrackedData<Integer> MAX_AGE = DataTracker.registerData(ManaShieldEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final TrackedData<Integer> TRUE_AGE = DataTracker.registerData(ManaShieldEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final EntityDataAccessor<Integer> MAX_AGE = SynchedEntityData.defineId(ManaShieldEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TRUE_AGE = SynchedEntityData.defineId(ManaShieldEntity.class, EntityDataSerializers.INT);
 	public static final ThreadLocal<Entity> COLLIDING_ENTITY = new ThreadLocal<>();
 	public UUID ownerId = Util.NIL_UUID;
 
-	public ManaShieldEntity(EntityType<? extends Entity> entityType, World world) {
+	public ManaShieldEntity(EntityType<? extends Entity> entityType, Level world) {
 		super(entityType, world);
 	}
 
 	@Override
 	public void tick() {
-		if(!getWorld().isClient() && (getCaster() == null || !getCaster().isAlive())) {
+		if(!level().isClientSide() && (getCaster() == null || !getCaster().isAlive())) {
 			kill();
 			return;
 		}
 
-		List<ManaShieldEntity> list = getWorld().getEntitiesByClass(ManaShieldEntity.class, getBoundingBox(), EntityPredicates.VALID_ENTITY);
+		List<ManaShieldEntity> list = level().getEntitiesOfClass(ManaShieldEntity.class, getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE);
 
 		if(!list.isEmpty()) {
 			list.sort(Comparator.comparingInt(ManaShieldEntity::getTrueAge).reversed());
-			int i = getWorld().getGameRules().getInt(GameRules.MAX_ENTITY_CRAMMING);
+			int i = level().getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
 
 			if(i > 0 && list.size() > i - 1) {
 				int j = 0;
@@ -55,8 +55,8 @@ public class ManaShieldEntity extends Entity implements Targetable {
 			}
 		}
 
-		if(getWorld().getOtherEntities(this, getBoundingBox(), entity -> entity instanceof LivingEntity && entity.isAlive()).isEmpty() && getTrueAge() + 20 < getMaxAge())
-			dataTracker.set(MAX_AGE, getTrueAge() + 20);
+		if(level().getEntities(this, getBoundingBox(), entity -> entity instanceof LivingEntity && entity.isAlive()).isEmpty() && getTrueAge() + 20 < getMaxAge())
+			entityData.set(MAX_AGE, getTrueAge() + 20);
 
 		if(getTrueAge() >= getMaxAge()) {
 			kill();
@@ -64,41 +64,41 @@ public class ManaShieldEntity extends Entity implements Targetable {
 		}
 
 		super.tick();
-		dataTracker.set(TRUE_AGE, getTrueAge() + 1);
+		entityData.set(TRUE_AGE, getTrueAge() + 1);
 	}
 
 	@Override
-	protected void initDataTracker() {
-		dataTracker.startTracking(MAX_AGE, 0);
-		dataTracker.startTracking(TRUE_AGE, 0);
+	protected void defineSynchedData() {
+		entityData.define(MAX_AGE, 0);
+		entityData.define(TRUE_AGE, 0);
 	}
 
 	@Override
-	public boolean doesRenderOnFire() {
+	public boolean displayFireAnimation() {
 		return false;
 	}
 
 	@Override
-	public boolean isFireImmune() {
+	public boolean fireImmune() {
 		return true;
 	}
 
 	@Override
-	protected void readCustomDataFromNbt(NbtCompound tag) {
-		dataTracker.set(MAX_AGE, tag.getInt("MaxAge"));
-		dataTracker.set(TRUE_AGE, tag.getInt("TrueAge"));
-		ownerId = tag.getUuid("OwnerId");
+	protected void readAdditionalSaveData(CompoundTag tag) {
+		entityData.set(MAX_AGE, tag.getInt("MaxAge"));
+		entityData.set(TRUE_AGE, tag.getInt("TrueAge"));
+		ownerId = tag.getUUID("OwnerId");
 	}
 
 	@Override
-	protected void writeCustomDataToNbt(NbtCompound tag) {
+	protected void addAdditionalSaveData(CompoundTag tag) {
 		tag.putInt("MaxAge", getMaxAge());
 		tag.putInt("TrueAge", getTrueAge());
-		tag.putUuid("OwnerId", ownerId);
+		tag.putUUID("OwnerId", ownerId);
 	}
 
 	@Override
-	public boolean isCollidable() {
+	public boolean canBeCollidedWith() {
 		if(COLLIDING_ENTITY.get() == null)
 			return true;
 
@@ -106,34 +106,34 @@ public class ManaShieldEntity extends Entity implements Targetable {
 	}
 
 	@Override
-	public boolean collides() {
+	public boolean isPickable() {
 		return !isRemoved();
 	}
 
 	private LivingEntity getCaster() {
-		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(ownerId) instanceof LivingEntity caster)
+		if(level() instanceof ServerLevel serverWorld && serverWorld.getEntity(ownerId) instanceof LivingEntity caster)
 			return caster;
 		return null;
 	}
 
 	public int getMaxAge() {
-		return dataTracker.get(MAX_AGE);
+		return entityData.get(MAX_AGE);
 	}
 
 	public void setMaxAge(int maxAge) {
-		dataTracker.set(MAX_AGE, maxAge);
+		entityData.set(MAX_AGE, maxAge);
 	}
 
 	public int getTrueAge() {
-		return dataTracker.get(TRUE_AGE);
+		return entityData.get(TRUE_AGE);
 	}
 
 	public UUID getOwnerId() {
 		return ownerId;
 	}
 
-	public void setProperties(UUID ownerId, Vec3d pos, int maxAge) {
-		this.setPosition(pos);
+	public void setProperties(UUID ownerId, Vec3 pos, int maxAge) {
+		this.setPos(pos);
 		this.setMaxAge(maxAge);
 		this.ownerId = ownerId;
 	}

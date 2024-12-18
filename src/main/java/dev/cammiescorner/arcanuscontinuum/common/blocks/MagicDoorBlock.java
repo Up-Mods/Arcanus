@@ -4,33 +4,37 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicDoorBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlockEntities;
 import dev.upcraft.sparkweave.api.registry.block.BlockItemProvider;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
-public class MagicDoorBlock extends DoorBlock implements BlockEntityProvider, BlockItemProvider {
+public class MagicDoorBlock extends DoorBlock implements EntityBlock, BlockItemProvider {
 	public MagicDoorBlock() {
-		super(QuiltBlockSettings.create().strength(2F, 3F).sounds(BlockSoundGroup.WOOD), BlockSetType.OAK);
+		super(QuiltBlockSettings.of().strength(2F, 3F).sound(SoundType.WOOD), BlockSetType.OAK);
 	}
 
 	@Override
@@ -39,71 +43,71 @@ public class MagicDoorBlock extends DoorBlock implements BlockEntityProvider, Bl
 	}
 
 	@Override
-	public void setOpen(@Nullable Entity entity, World world, BlockState state, BlockPos pos, boolean open) {
+	public void setOpen(@Nullable Entity entity, Level world, BlockState state, BlockPos pos, boolean open) {
 		super.setOpen(entity, world, state, pos, open);
 
 		if(open)
-			world.scheduleBlockTick(pos, this, 100);
+			world.scheduleTick(pos, this, 100);
 	}
 
 	@Override
-	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, RandomGenerator random) {
-		if(state.get(OPEN))
+	public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+		if(state.getValue(OPEN))
 			setOpen(null, world, state, pos, false);
 	}
 
 	@Override
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-		if (world.isClient) return ActionResult.SUCCESS;
+	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (world.isClientSide) return InteractionResult.SUCCESS;
 
-		ItemStack stack = player.getStackInHand(hand);
+		ItemStack stack = player.getItemInHand(hand);
 		MagicDoorBlockEntity door = getBlockEntity(world, state, pos);
 		LivingEntity owner = door.getOwner();
 
-		if(owner != null && stack.isOf(Items.NAME_TAG) && stack.hasCustomName())
-			if(owner.getUuid().equals(player.getUuid())) {
-				String password = stack.getName().getString();
+		if(owner != null && stack.is(Items.NAME_TAG) && stack.hasCustomHoverName())
+			if(owner.getUUID().equals(player.getUUID())) {
+				String password = stack.getHoverName().getString();
 
 				door.setPassword(password);
-				player.sendMessage(Text.translatable("door.arcanuscontinuum.password_set", password)
-					.formatted(Formatting.GOLD, Formatting.ITALIC), true);
+				player.displayClientMessage(Component.translatable("door.arcanuscontinuum.password_set", password)
+					.withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC), true);
 			} else
-				player.sendMessage(Arcanus.translate("door", "not_owner").formatted(Formatting.GRAY, Formatting.ITALIC), true);
+				player.displayClientMessage(Arcanus.translate("door", "not_owner").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
 		else
-			player.sendMessage(Arcanus.translate("door", "say_magic_word").formatted(Formatting.GRAY, Formatting.ITALIC), true);
-		return ActionResult.SUCCESS;
+			player.displayClientMessage(Arcanus.translate("door", "say_magic_word").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		super.onPlaced(world, pos, state, placer, stack);
+	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(world, pos, state, placer, stack);
 		MagicDoorBlockEntity door = getBlockEntity(world, state, pos);
 
 		if(door != null) {
 			door.setOwner(placer);
 
-			if(stack.hasCustomName())
-				door.setPassword(stack.getName().getString());
+			if(stack.hasCustomHoverName())
+				door.setPassword(stack.getHoverName().getString());
 		}
 	}
 
 	@Override
-	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
 
 	}
 
 	@Nullable
 	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-		if(state.get(HALF) == DoubleBlockHalf.LOWER)
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		if(state.getValue(HALF) == DoubleBlockHalf.LOWER)
 			return new MagicDoorBlockEntity(pos, state);
 
 		return null;
 	}
 
-	public static MagicDoorBlockEntity getBlockEntity(World world, BlockState state, BlockPos pos) {
-		if(state.get(HALF) == DoubleBlockHalf.UPPER)
-			pos = pos.down();
+	public static MagicDoorBlockEntity getBlockEntity(Level world, BlockState state, BlockPos pos) {
+		if(state.getValue(HALF) == DoubleBlockHalf.UPPER)
+			pos = pos.below();
 
 		return world.getBlockEntity(pos, ArcanusBlockEntities.MAGIC_DOOR.get()).orElse(null);
 	}

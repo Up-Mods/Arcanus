@@ -1,51 +1,51 @@
 package dev.cammiescorner.arcanuscontinuum.common.registry;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.ArmorMaterials;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Lazy;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.EnumMap;
 import java.util.function.Supplier;
 
-public enum ArcanusArmourMaterials implements StringIdentifiable, ArmorMaterial {
-	WIZARD("wizard", 5, Util.make(new EnumMap<>(ArmorItem.ArmorSlot.class), (map) -> {
-		map.put(ArmorItem.ArmorSlot.BOOTS, 1);
-		map.put(ArmorItem.ArmorSlot.LEGGINGS, 2);
-		map.put(ArmorItem.ArmorSlot.CHESTPLATE, 3);
-		map.put(ArmorItem.ArmorSlot.HELMET, 1);
-	}), 25, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0f, 0f, () -> Ingredient.ofItems(Items.LEATHER)),
-	BATTLE_MAGE("battle_mage", 35, Util.make(new EnumMap<>(ArmorItem.ArmorSlot.class), (map) -> {
-		map.put(ArmorItem.ArmorSlot.BOOTS, 2);
-		map.put(ArmorItem.ArmorSlot.LEGGINGS, 7);
-		map.put(ArmorItem.ArmorSlot.CHESTPLATE, 8);
-		map.put(ArmorItem.ArmorSlot.HELMET, 3);
-	}), 25, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0f, 0f, () -> Ingredient.ofItems(Items.AMETHYST_SHARD));
+public enum ArcanusArmourMaterials implements StringRepresentable, ArmorMaterial {
+	WIZARD("wizard", 5, Util.make(new EnumMap<>(ArmorItem.Type.class), (map) -> {
+		map.put(ArmorItem.Type.BOOTS, 1);
+		map.put(ArmorItem.Type.LEGGINGS, 2);
+		map.put(ArmorItem.Type.CHESTPLATE, 3);
+		map.put(ArmorItem.Type.HELMET, 1);
+	}), 25, SoundEvents.ARMOR_EQUIP_LEATHER, 0f, 0f, () -> Ingredient.of(Items.LEATHER)),
+	BATTLE_MAGE("battle_mage", 35, Util.make(new EnumMap<>(ArmorItem.Type.class), (map) -> {
+		map.put(ArmorItem.Type.BOOTS, 2);
+		map.put(ArmorItem.Type.LEGGINGS, 7);
+		map.put(ArmorItem.Type.CHESTPLATE, 8);
+		map.put(ArmorItem.Type.HELMET, 3);
+	}), 25, SoundEvents.ARMOR_EQUIP_IRON, 0f, 0f, () -> Ingredient.of(Items.AMETHYST_SHARD));
 
-	public static final Codec<ArmorMaterials> CODEC = StringIdentifiable.createCodec(ArmorMaterials::values);
-	private static final EnumMap<ArmorItem.ArmorSlot, Integer> BASE_DURABILITY_VALUES = Util.make(new EnumMap<>(ArmorItem.ArmorSlot.class), (map) -> {
-		map.put(ArmorItem.ArmorSlot.BOOTS, 13);
-		map.put(ArmorItem.ArmorSlot.LEGGINGS, 15);
-		map.put(ArmorItem.ArmorSlot.CHESTPLATE, 16);
-		map.put(ArmorItem.ArmorSlot.HELMET, 11);
+	public static final Codec<ArmorMaterials> CODEC = StringRepresentable.fromEnum(ArmorMaterials::values);
+	private static final EnumMap<ArmorItem.Type, Integer> BASE_DURABILITY_VALUES = Util.make(new EnumMap<>(ArmorItem.Type.class), (map) -> {
+		map.put(ArmorItem.Type.BOOTS, 13);
+		map.put(ArmorItem.Type.LEGGINGS, 15);
+		map.put(ArmorItem.Type.CHESTPLATE, 16);
+		map.put(ArmorItem.Type.HELMET, 11);
 	});
 	private final String name;
 	private final int durabilityMultiplier;
-	private final EnumMap<ArmorItem.ArmorSlot, Integer> slotProtections;
+	private final EnumMap<ArmorItem.Type, Integer> slotProtections;
 	private final int enchantability;
 	private final SoundEvent equipSound;
 	private final float toughness;
 	private final float knockbackResistance;
-	private final Lazy<Ingredient> repairIngredientSupplier;
+	private final LazyLoadedValue<Ingredient> repairIngredientSupplier;
 
-	ArcanusArmourMaterials(String name, int durability, EnumMap<ArmorItem.ArmorSlot, Integer> slotProtections, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> supplier) {
+	ArcanusArmourMaterials(String name, int durability, EnumMap<ArmorItem.Type, Integer> slotProtections, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> supplier) {
 		this.name = name;
 		this.durabilityMultiplier = durability;
 		this.slotProtections = slotProtections;
@@ -53,21 +53,21 @@ public enum ArcanusArmourMaterials implements StringIdentifiable, ArmorMaterial 
 		this.equipSound = equipSound;
 		this.toughness = toughness;
 		this.knockbackResistance = knockbackResistance;
-		this.repairIngredientSupplier = new Lazy<>(supplier);
+		this.repairIngredientSupplier = new LazyLoadedValue<>(supplier);
 	}
 
 	@Override
-	public int getDurability(ArmorItem.ArmorSlot slot) {
+	public int getDurabilityForType(ArmorItem.Type slot) {
 		return BASE_DURABILITY_VALUES.get(slot) * durabilityMultiplier;
 	}
 
 	@Override
-	public int getProtection(ArmorItem.ArmorSlot slot) {
+	public int getDefenseForType(ArmorItem.Type slot) {
 		return slotProtections.get(slot);
 	}
 
 	@Override
-	public int getEnchantability() {
+	public int getEnchantmentValue() {
 		return this.enchantability;
 	}
 
@@ -97,7 +97,7 @@ public enum ArcanusArmourMaterials implements StringIdentifiable, ArmorMaterial 
 	}
 
 	@Override
-	public String asString() {
+	public String getSerializedName() {
 		return name;
 	}
 }

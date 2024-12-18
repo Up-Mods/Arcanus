@@ -8,26 +8,26 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class GuardianOrbEntity extends Entity implements Targetable {
-	private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(GuardianOrbEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final TrackedData<Integer> TARGET_ID = DataTracker.registerData(GuardianOrbEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(GuardianOrbEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TARGET_ID = SynchedEntityData.defineId(GuardianOrbEntity.class, EntityDataSerializers.INT);
 	private final List<SpellEffect> effects = new ArrayList<>();
 	private final List<SpellGroup> groups = new ArrayList<>();
 	private UUID casterId = Util.NIL_UUID;
@@ -46,15 +46,15 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 	private int groupIndex = 0;
 	private double potency = 1F;
 
-	public GuardianOrbEntity(EntityType<?> variant, World world) {
+	public GuardianOrbEntity(EntityType<?> variant, Level world) {
 		super(variant, world);
-		this.noClip = true;
+		this.noPhysics = true;
 	}
 
 	@Override
-	protected void initDataTracker() {
-		dataTracker.startTracking(OWNER_ID, -1);
-		dataTracker.startTracking(TARGET_ID, -1);
+	protected void defineSynchedData() {
+		entityData.define(OWNER_ID, -1);
+		entityData.define(TARGET_ID, -1);
 	}
 
 	@Override
@@ -62,98 +62,98 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		LivingEntity caster = getCaster();
 		LivingEntity target = getTarget();
 
-		if (caster == null || (!getWorld().isClient && !ArcanusComponents.getGuardianOrbId(caster).equals(getUuid())) || target == null || caster.squaredDistanceTo(target) > 32 * 32) {
+		if (caster == null || (!level().isClientSide && !ArcanusComponents.getGuardianOrbId(caster).equals(getUUID())) || target == null || caster.distanceToSqr(target) > 32 * 32) {
 			kill();
 			return;
 		}
 
-		if (!getWorld().isClient() && dataTracker.get(TARGET_ID) == -1)
-			dataTracker.set(TARGET_ID, target.getId());
+		if (!level().isClientSide() && entityData.get(TARGET_ID) == -1)
+			entityData.set(TARGET_ID, target.getId());
 
-		setYaw(target.getYaw());
-		setBodyYaw(target.bodyYaw);
-		setHeadYaw(target.headYaw);
-		setPitch(target.getPitch());
+		setYRot(target.getYRot());
+		setYBodyRot(target.yBodyRot);
+		setYHeadRot(target.yHeadRot);
+		setXRot(target.getXRot());
 
-		double cosYaw = Math.cos(Math.toRadians(-target.bodyYaw));
-		double sinYaw = Math.sin(Math.toRadians(-target.bodyYaw));
-		Vec3d rotation = new Vec3d(sinYaw, 0, cosYaw).multiply(target.getWidth() / 2 + 0.2).rotateY((float) Math.toRadians(105));
-		Vec3d targetPos = target.getPos().add(rotation.getX(), target.getEyeHeight(target.getPose()) - 0.2, rotation.getZ());
-		Vec3d direction = targetPos.subtract(getPos());
-		move(MovementType.SELF, direction.multiply(0.25f));
+		double cosYaw = Math.cos(Math.toRadians(-target.yBodyRot));
+		double sinYaw = Math.sin(Math.toRadians(-target.yBodyRot));
+		Vec3 rotation = new Vec3(sinYaw, 0, cosYaw).scale(target.getBbWidth() / 2 + 0.2).yRot((float) Math.toRadians(105));
+		Vec3 targetPos = target.position().add(rotation.x(), target.getEyeHeight(target.getPose()) - 0.2, rotation.z());
+		Vec3 direction = targetPos.subtract(position());
+		move(MoverType.SELF, direction.scale(0.25f));
 
-		if (age % 8 == 0) {
-			Vec3d vel = (direction.lengthSquared() <= 1 ? direction : direction.normalize()).multiply(0.125f);
-			getWorld().addParticle(ParticleTypes.END_ROD, getX(), getY() + getHeight() / 2, getZ(), vel.getX(), vel.getY(), vel.getZ());
+		if (tickCount % 8 == 0) {
+			Vec3 vel = (direction.lengthSqr() <= 1 ? direction : direction.normalize()).scale(0.125f);
+			level().addParticle(ParticleTypes.END_ROD, getX(), getY() + getBbHeight() / 2, getZ(), vel.x(), vel.y(), vel.z());
 		}
 
-		if (age % 100 == 0 && ArcanusComponents.drainMana(caster, ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.baseManaDrain * effects.size(), false)) {
+		if (tickCount % 100 == 0 && ArcanusComponents.drainMana(caster, ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.baseManaDrain * effects.size(), false)) {
 			EntityHitResult hitResult = new EntityHitResult(target);
 
 			for (SpellEffect effect : new HashSet<>(effects))
-				effect.effect(caster, this, getWorld(), hitResult, effects, stack, potency);
+				effect.effect(caster, this, level(), hitResult, effects, stack, potency);
 		}
 
 		super.tick();
 	}
 
 	@Override
-	public boolean collides() {
+	public boolean isPickable() {
 		return true;
 	}
 
 	@Override
-	public boolean damage(DamageSource source, float amount) {
+	public boolean hurt(DamageSource source, float amount) {
 		kill();
 		return true;
 	}
 
 	@Override
 	public void remove(RemovalReason reason) {
-		if(reason == RemovalReason.KILLED && !getWorld().isClient() && getCaster() != null && getTarget() != null)
-			SpellShape.castNext(getCaster(), getTarget().getPos(), getTarget(), (ServerWorld) getWorld(), stack, groups, groupIndex, potency);
+		if(reason == RemovalReason.KILLED && !level().isClientSide() && getCaster() != null && getTarget() != null)
+			SpellShape.castNext(getCaster(), getTarget().position(), getTarget(), (ServerLevel) level(), stack, groups, groupIndex, potency);
 
 		super.remove(reason);
 	}
 
 	@Override
-	public boolean doesRenderOnFire() {
+	public boolean displayFireAnimation() {
 		return false;
 	}
 
 	@Override
-	protected void readCustomDataFromNbt(NbtCompound tag) {
+	protected void readAdditionalSaveData(CompoundTag tag) {
 		effects.clear();
 		groups.clear();
 
-		casterId = tag.getUuid("CasterId");
-		targetId = tag.getUuid("TargetId");
-		stack = ItemStack.fromNbt(tag.getCompound("ItemStack"));
+		casterId = tag.getUUID("CasterId");
+		targetId = tag.getUUID("TargetId");
+		stack = ItemStack.of(tag.getCompound("ItemStack"));
 		groupIndex = tag.getInt("GroupIndex");
 		potency = tag.getDouble("Potency");
 
-		NbtList effectList = tag.getList("Effects", NbtElement.STRING_TYPE);
-		NbtList groupsList = tag.getList("SpellGroups", NbtElement.COMPOUND_TYPE);
+		ListTag effectList = tag.getList("Effects", Tag.TAG_STRING);
+		ListTag groupsList = tag.getList("SpellGroups", Tag.TAG_COMPOUND);
 
 		for (int i = 0; i < effectList.size(); i++)
-			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new Identifier(effectList.getString(i))));
+			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(effectList.getString(i))));
 		for (int i = 0; i < groupsList.size(); i++)
 			groups.add(SpellGroup.fromNbt(groupsList.getCompound(i)));
 	}
 
 	@Override
-	protected void writeCustomDataToNbt(NbtCompound tag) {
-		NbtList effectList = new NbtList();
-		NbtList groupsList = new NbtList();
+	protected void addAdditionalSaveData(CompoundTag tag) {
+		ListTag effectList = new ListTag();
+		ListTag groupsList = new ListTag();
 
-		tag.putUuid("CasterId", casterId);
-		tag.putUuid("TargetId", targetId);
-		tag.put("ItemStack", stack.writeNbt(new NbtCompound()));
+		tag.putUUID("CasterId", casterId);
+		tag.putUUID("TargetId", targetId);
+		tag.put("ItemStack", stack.save(new CompoundTag()));
 		tag.putInt("GroupIndex", groupIndex);
 		tag.putDouble("Potency", potency);
 
 		for (SpellEffect effect : effects)
-			effectList.add(NbtString.of(Arcanus.SPELL_COMPONENTS.getId(effect).toString()));
+			effectList.add(StringTag.valueOf(Arcanus.SPELL_COMPONENTS.getKey(effect).toString()));
 		for (SpellGroup group : groups)
 			groupsList.add(group.toNbt());
 
@@ -162,7 +162,7 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 	}
 
 	@Override
-	public boolean shouldRender(double sqDistance) {
+	public boolean shouldRenderAtSqrDistance(double sqDistance) {
 		return sqDistance <= 64 * 64;
 	}
 
@@ -171,18 +171,18 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 	}
 
 	public LivingEntity getCaster() {
-		if (getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(getCasterId()) instanceof LivingEntity caster)
+		if (level() instanceof ServerLevel serverWorld && serverWorld.getEntity(getCasterId()) instanceof LivingEntity caster)
 			return caster;
-		else if (getWorld().isClient() && getWorld().getEntityById(dataTracker.get(OWNER_ID)) instanceof LivingEntity caster)
+		else if (level().isClientSide() && level().getEntity(entityData.get(OWNER_ID)) instanceof LivingEntity caster)
 			return caster;
 
 		return null;
 	}
 
 	public LivingEntity getTarget() {
-		if (getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(targetId) instanceof LivingEntity target)
+		if (level() instanceof ServerLevel serverWorld && serverWorld.getEntity(targetId) instanceof LivingEntity target)
 			return target;
-		else if (getWorld().isClient() && getWorld().getEntityById(dataTracker.get(TARGET_ID)) instanceof LivingEntity target)
+		else if (level().isClientSide() && level().getEntity(entityData.get(TARGET_ID)) instanceof LivingEntity target)
 			return target;
 
 		return null;
@@ -195,15 +195,15 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		this.groups.addAll(groups);
 
 		if (caster != null) {
-			this.casterId = caster.getUuid();
-			this.dataTracker.set(OWNER_ID, caster.getId());
+			this.casterId = caster.getUUID();
+			this.entityData.set(OWNER_ID, caster.getId());
 
-			ArcanusComponents.setGuardianOrbManaLock(caster, getUuid(), effects.size());
+			ArcanusComponents.setGuardianOrbManaLock(caster, getUUID(), effects.size());
 			ArcanusHelper.copyMagicColor(this, caster);
 		}
 
-		this.targetId = target.getUuid();
-		this.dataTracker.set(TARGET_ID, target.getId());
+		this.targetId = target.getUUID();
+		this.entityData.set(TARGET_ID, target.getId());
 		this.stack = stack;
 		this.groupIndex = groupIndex;
 		this.potency = potency;

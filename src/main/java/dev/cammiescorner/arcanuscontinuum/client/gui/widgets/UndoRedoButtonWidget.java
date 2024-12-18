@@ -5,18 +5,18 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.gui.screens.SpellcraftScreen;
 import dev.cammiescorner.arcanuscontinuum.client.gui.util.UndoRedoStack;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.PressableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
 
-public class UndoRedoButtonWidget extends PressableWidget {
+public class UndoRedoButtonWidget extends AbstractButton {
 	private final PressAction onPress;
 	private final UndoRedoStack undoRedoStack;
 	private final boolean isUndo;
 
 	public UndoRedoButtonWidget(int x, int y, boolean isUndo, UndoRedoStack stack, PressAction onPress) {
-		super(x, y, 24, 16, Text.empty());
+		super(x, y, 24, 16, Component.empty());
 		this.isUndo = isUndo;
 		this.onPress = onPress;
 		this.undoRedoStack = stack;
@@ -29,23 +29,23 @@ public class UndoRedoButtonWidget extends PressableWidget {
 	}
 
 	@Override
-	public void drawWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
+	public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float delta) {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 		int v = isUndo ? 192 : 208;
 		active = isUndo ? undoRedoStack.canUndo() : undoRedoStack.canRedo();
 
 		if(!active)
-			gui.drawTexture(SpellcraftScreen.BOOK_TEXTURE, getX(), getY(), 48, v, width, height, 256, 256);
+			gui.blit(SpellcraftScreen.BOOK_TEXTURE, getX(), getY(), 48, v, width, height, 256, 256);
 		else if(!isHoveredOrFocused())
-			gui.drawTexture(SpellcraftScreen.BOOK_TEXTURE, getX(), getY(), 0, v, width, height, 256, 256);
+			gui.blit(SpellcraftScreen.BOOK_TEXTURE, getX(), getY(), 0, v, width, height, 256, 256);
 		else
-			gui.drawTexture(SpellcraftScreen.BOOK_TEXTURE, getX(), getY(), 24, v, width, height, 256, 256);
+			gui.blit(SpellcraftScreen.BOOK_TEXTURE, getX(), getY(), 24, v, width, height, 256, 256);
 	}
 
 	@Override
-	protected void updateNarration(NarrationMessageBuilder builder) {
-		appendDefaultNarrations(builder);
+	protected void updateWidgetNarration(NarrationElementOutput builder) {
+		defaultButtonNarrationText(builder);
 	}
 
 	public interface PressAction {

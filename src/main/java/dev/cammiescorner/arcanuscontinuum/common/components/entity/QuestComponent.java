@@ -3,32 +3,32 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
 public class QuestComponent implements AutoSyncedComponent {
-	private final PlayerEntity player;
-	private final List<Identifier> questIds = List.of(Arcanus.id("start"));
+	private final Player player;
+	private final List<ResourceLocation> questIds = List.of(Arcanus.id("start"));
 	private long lastCompletedQuestTime;
 
-	public QuestComponent(PlayerEntity player) {
+	public QuestComponent(Player player) {
 		this.player = player;
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		lastCompletedQuestTime = tag.getLong("LastCompletedQuestTime");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putLong("LastCompletedQuestTime", lastCompletedQuestTime);
 	}
 
-	public List<Identifier> getQuestIds() {
+	public List<ResourceLocation> getQuestIds() {
 		return questIds;
 	}
 

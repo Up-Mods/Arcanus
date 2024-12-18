@@ -4,12 +4,12 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.UUID;
 
@@ -25,39 +25,39 @@ public class BurnoutComponent implements AutoSyncedComponent, ServerTickingCompo
 
 	@Override
 	public void serverTick() {
-		EntityAttributeInstance burnoutRegenAttr = entity.getAttributeInstance(ArcanusEntityAttributes.BURNOUT_REGEN.get());
-		EntityAttributeInstance attackSpeedAttr = entity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED);
-		EntityAttributeInstance moveSpeedAttr = entity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+		AttributeInstance burnoutRegenAttr = entity.getAttribute(ArcanusEntityAttributes.BURNOUT_REGEN.get());
+		AttributeInstance attackSpeedAttr = entity.getAttribute(Attributes.ATTACK_SPEED);
+		AttributeInstance moveSpeedAttr = entity.getAttribute(Attributes.MOVEMENT_SPEED);
 
 		if(burnoutRegenAttr != null && drainBurnout(burnoutRegenAttr.getValue(), true)) {
-			drainBurnout(burnoutRegenAttr.getValue() / (entity instanceof PlayerEntity player && player.isCreative() ? 1 : 30), false);
+			drainBurnout(burnoutRegenAttr.getValue() / (entity instanceof Player player && player.isCreative() ? 1 : 30), false);
 
-			if(entity instanceof PlayerEntity player)
-				player.addExhaustion(0.01F);
+			if(entity instanceof Player player)
+				player.causeFoodExhaustion(0.01F);
 		}
 
 		if(attackSpeedAttr != null) {
 			if(burnout > 0 && attackSpeedAttr.getModifier(ATTACK_SPEED_MODIFIER) == null)
-				attackSpeedAttr.addPersistentModifier(new EntityAttributeModifier(ATTACK_SPEED_MODIFIER, "Burnout modifier", -0.5, EntityAttributeModifier.Operation.MULTIPLY_BASE));
+				attackSpeedAttr.addPermanentModifier(new AttributeModifier(ATTACK_SPEED_MODIFIER, "Burnout modifier", -0.5, AttributeModifier.Operation.MULTIPLY_BASE));
 			if(burnout <= 0 && attackSpeedAttr.getModifier(ATTACK_SPEED_MODIFIER) != null)
 				attackSpeedAttr.removeModifier(ATTACK_SPEED_MODIFIER);
 		}
 
 		if(moveSpeedAttr != null) {
 			if(burnout > 0 && moveSpeedAttr.getModifier(MOVE_SPEED_MODIFIER) == null)
-				moveSpeedAttr.addPersistentModifier(new EntityAttributeModifier(MOVE_SPEED_MODIFIER, "Burnout modifier", -0.1, EntityAttributeModifier.Operation.MULTIPLY_BASE));
+				moveSpeedAttr.addPermanentModifier(new AttributeModifier(MOVE_SPEED_MODIFIER, "Burnout modifier", -0.1, AttributeModifier.Operation.MULTIPLY_BASE));
 			if(burnout <= 0 && moveSpeedAttr.getModifier(MOVE_SPEED_MODIFIER) != null)
 				moveSpeedAttr.removeModifier(MOVE_SPEED_MODIFIER);
 		}
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		burnout = tag.getDouble("Burnout");
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
+	public void writeToNbt(CompoundTag tag) {
 		tag.putDouble("Burnout", burnout);
 	}
 
@@ -68,7 +68,7 @@ public class BurnoutComponent implements AutoSyncedComponent, ServerTickingCompo
 	public void setBurnout(double burnout) {
 		this.burnout = burnout;
 
-		if(entity instanceof PlayerEntity)
+		if(entity instanceof Player)
 			ArcanusComponents.BURNOUT_COMPONENT.sync(entity);
 	}
 

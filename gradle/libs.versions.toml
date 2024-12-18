@@ -3,8 +3,11 @@ quilt_loom = "1.8.5"
 
 # The latest versions are available at https://lambdaurora.dev/tools/import_quilt.html
 minecraft = "1.20.1"
-quilt_mappings = "1.20.1+build.23"
 quilt_loader = "0.28.0-beta.3"
+
+# https://parchmentmc.org/docs/getting-started
+parchment_minecraft = "1.20.1"
+parchment_mappings = "2023.09.03"
 
 quilted_fabric_api = "7.7.0+0.92.2-1.20.1"
 cca = "5.2.2"
@@ -29,7 +32,6 @@ datasync = "0.8.0"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
-quilt_mappings = { module = "org.quiltmc:quilt-mappings", version.ref = "quilt_mappings" }
 quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loader" }
 
 quilted_fabric_api = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api", version.ref = "quilted_fabric_api" }

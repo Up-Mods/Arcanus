@@ -1,52 +1,52 @@
 package dev.cammiescorner.arcanuscontinuum.client.renderer.feature;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.cammiescorner.arcanuscontinuum.common.entities.living.WizardEntity;
-import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.feature.HeadFeatureRenderer;
-import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.ModelWithArms;
-import net.minecraft.client.render.entity.model.ModelWithHead;
-import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Arm;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.ArmedModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HeadedModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
-public class WizardHeldItemFeatureRenderer<T extends WizardEntity, M extends EntityModel<T> & ModelWithArms & ModelWithHead> extends HeldItemFeatureRenderer<T, M> {
-	private final HeldItemRenderer itemRenderer;
+public class WizardHeldItemFeatureRenderer<T extends WizardEntity, M extends EntityModel<T> & ArmedModel & HeadedModel> extends ItemInHandLayer<T, M> {
+	private final ItemInHandRenderer itemRenderer;
 	private static final float HEAD_YAW = (float) (-Math.PI / 6);
 	private static final float HEAD_ROLL = (float) (Math.PI / 2);
 
-	public WizardHeldItemFeatureRenderer(FeatureRendererContext<T, M> featureRendererContext, HeldItemRenderer heldItemRenderer) {
+	public WizardHeldItemFeatureRenderer(RenderLayerParent<T, M> featureRendererContext, ItemInHandRenderer heldItemRenderer) {
 		super(featureRendererContext, heldItemRenderer);
 		this.itemRenderer = heldItemRenderer;
 	}
 
 	@Override
-	protected void renderItem(LivingEntity entity, ItemStack stack, ModelTransformationMode transformationMode, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-		if(stack.isOf(Items.SPYGLASS) && entity.getActiveItem() == stack && entity.handSwingTicks == 0)
+	protected void renderArmWithItem(LivingEntity entity, ItemStack stack, ItemDisplayContext transformationMode, HumanoidArm arm, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+		if(stack.is(Items.SPYGLASS) && entity.getUseItem() == stack && entity.swingTime == 0)
 			renderSpyglass(entity, stack, arm, matrices, vertexConsumers, light);
 		else
-			super.renderItem(entity, stack, transformationMode, arm, matrices, vertexConsumers, light);
+			super.renderArmWithItem(entity, stack, transformationMode, arm, matrices, vertexConsumers, light);
 	}
 
-	private void renderSpyglass(LivingEntity entity, ItemStack stack, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
-		matrices.push();
-		ModelPart modelPart = getContextModel().getHead();
-		float pitch = modelPart.pitch;
-		modelPart.pitch = MathHelper.clamp(modelPart.pitch, HEAD_YAW, HEAD_ROLL);
-		modelPart.rotate(matrices);
-		modelPart.pitch = pitch;
-		HeadFeatureRenderer.translate(matrices, false);
-		boolean bl = arm == Arm.LEFT;
+	private void renderSpyglass(LivingEntity entity, ItemStack stack, HumanoidArm arm, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+		matrices.pushPose();
+		ModelPart modelPart = getParentModel().getHead();
+		float pitch = modelPart.xRot;
+		modelPart.xRot = Mth.clamp(modelPart.xRot, HEAD_YAW, HEAD_ROLL);
+		modelPart.translateAndRotate(matrices);
+		modelPart.xRot = pitch;
+		CustomHeadLayer.translateToHead(matrices, false);
+		boolean bl = arm == HumanoidArm.LEFT;
 		matrices.translate((bl ? -2.5F : 2.5F) / 16F, -0.0625, 0);
-		itemRenderer.renderItem(entity, stack, ModelTransformationMode.HEAD, false, matrices, vertexConsumers, light);
-		matrices.pop();
+		itemRenderer.renderItem(entity, stack, ItemDisplayContext.HEAD, false, matrices, vertexConsumers, light);
+		matrices.popPose();
 	}
 }

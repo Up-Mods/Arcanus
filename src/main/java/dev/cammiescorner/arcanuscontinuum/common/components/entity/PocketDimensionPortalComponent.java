@@ -5,51 +5,51 @@ import dev.cammiescorner.arcanuscontinuum.common.entities.magic.PocketDimensionP
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.onyxstudios.cca.api.v3.component.Component;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.Util;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.UUID;
 
 public class PocketDimensionPortalComponent implements Component {
-	private final PlayerEntity player;
-	private RegistryKey<World> worldKey = World.OVERWORLD;
+	private final Player player;
+	private ResourceKey<Level> worldKey = Level.OVERWORLD;
 	private UUID portalId = Util.NIL_UUID;
-	private Vec3d portalPos = Vec3d.ZERO;
+	private Vec3 portalPos = Vec3.ZERO;
 
-	public PocketDimensionPortalComponent(PlayerEntity player) {
+	public PocketDimensionPortalComponent(Player player) {
 		this.player = player;
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
-		portalId = tag.getUuid("PortalId");
-		worldKey = RegistryKey.of(RegistryKeys.WORLD, new Identifier(tag.getString("WorldKey")));
-		portalPos = new Vec3d(tag.getInt("PortalPosX"), tag.getInt("PortalPosY"), tag.getInt("PortalPosZ"));
+	public void readFromNbt(CompoundTag tag) {
+		portalId = tag.getUUID("PortalId");
+		worldKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(tag.getString("WorldKey")));
+		portalPos = new Vec3(tag.getInt("PortalPosX"), tag.getInt("PortalPosY"), tag.getInt("PortalPosZ"));
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		tag.putUuid("PortalId", portalId);
-		tag.putString("WorldKey", worldKey.getValue().toString());
-		tag.putDouble("PortalPosX", portalPos.getX());
-		tag.putDouble("PortalPosY", portalPos.getY());
-		tag.putDouble("PortalPosZ", portalPos.getZ());
+	public void writeToNbt(CompoundTag tag) {
+		tag.putUUID("PortalId", portalId);
+		tag.putString("WorldKey", worldKey.location().toString());
+		tag.putDouble("PortalPosX", portalPos.x());
+		tag.putDouble("PortalPosY", portalPos.y());
+		tag.putDouble("PortalPosZ", portalPos.z());
 	}
 
-	public void createPortal(ServerWorld world, Vec3d pos, double pullStrength) {
+	public void createPortal(ServerLevel world, Vec3 pos, double pullStrength) {
 		MinecraftServer server = world.getServer();
 
 		if(portalId != Util.NIL_UUID) {
-			ServerWorld otherWorld = server.getWorld(worldKey);
+			ServerLevel otherWorld = server.getLevel(worldKey);
 
 			if(otherWorld != null) {
 				Entity oldPortal = otherWorld.getEntity(portalId);
@@ -63,18 +63,18 @@ public class PocketDimensionPortalComponent implements Component {
 		PocketDimensionPortalEntity portal = ArcanusEntities.PORTAL.get().create(world);
 
 		if(portal != null) {
-			portalId = portal.getUuid();
-			worldKey = world.getRegistryKey();
+			portalId = portal.getUUID();
+			worldKey = world.dimension();
 			portalPos = pos;
 
 			PocketDimensionComponent.get(world).setExit(player.getGameProfile().getId(), world, pos);
-			portal.setProperties(player.getUuid(), pos, pullStrength);
+			portal.setProperties(player.getUUID(), pos, pullStrength);
 			ArcanusHelper.copyMagicColor(portal, player);
-			world.spawnEntity(portal);
+			world.addFreshEntity(portal);
 		}
 	}
 
-	public Vec3d getPortalPos() {
+	public Vec3 getPortalPos() {
 		return portalPos;
 	}
 }

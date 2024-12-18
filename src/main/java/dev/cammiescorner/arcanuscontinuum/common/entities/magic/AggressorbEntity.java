@@ -7,26 +7,26 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.projectile.ThrowableProjectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -34,9 +34,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class AggressorbEntity extends ThrownEntity implements Targetable {
-	private static final TrackedData<Integer> OWNER_ID = DataTracker.registerData(AggressorbEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final TrackedData<Integer> TARGET_ID = DataTracker.registerData(AggressorbEntity.class, TrackedDataHandlerRegistry.INTEGER);
+public class AggressorbEntity extends ThrowableProjectile implements Targetable {
+	private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(AggressorbEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TARGET_ID = SynchedEntityData.defineId(AggressorbEntity.class, EntityDataSerializers.INT);
 	private final List<SpellEffect> effects = new ArrayList<>();
 	private final List<SpellGroup> groups = new ArrayList<>();
 	private UUID casterId = Util.NIL_UUID;
@@ -46,74 +46,74 @@ public class AggressorbEntity extends ThrownEntity implements Targetable {
 	private double potency = 1F;
 	private boolean boundToTarget = true;
 
-	public AggressorbEntity(EntityType<? extends ThrownEntity> variant, World world) {
+	public AggressorbEntity(EntityType<? extends ThrowableProjectile> variant, Level world) {
 		super(variant, world);
-		noClip = true;
+		noPhysics = true;
 		setNoGravity(true);
 	}
 
 	@Override
-	protected void initDataTracker() {
-		dataTracker.startTracking(OWNER_ID, -1);
-		dataTracker.startTracking(TARGET_ID, -1);
+	protected void defineSynchedData() {
+		entityData.define(OWNER_ID, -1);
+		entityData.define(TARGET_ID, -1);
 	}
 
 	@Override
 	public void tick() {
-		if(getCaster() == null || getTarget() == null || squaredDistanceTo(getTarget()) > (64 * 64)) {
+		if(getCaster() == null || getTarget() == null || distanceToSqr(getTarget()) > (64 * 64)) {
 			kill();
 			return;
 		}
 
-		if(!getWorld().isClient()) {
-			if(dataTracker.get(TARGET_ID) == -1 && getTarget() != null)
-				dataTracker.set(TARGET_ID, getTarget().getId());
+		if(!level().isClientSide()) {
+			if(entityData.get(TARGET_ID) == -1 && getTarget() != null)
+				entityData.set(TARGET_ID, getTarget().getId());
 		}
 
 		if(isBoundToTarget()) {
 			int orbCount = ArcanusComponents.aggressorbCount(getTarget());
 			int orbIndex = ArcanusComponents.aggressorbIndex(getTarget(), this) + 1;
 			double angle = Math.toRadians(360d / orbCount * orbIndex);
-			double cosYaw = Math.cos(Math.toRadians(-getTarget().bodyYaw));
-			double sinYaw = Math.sin(Math.toRadians(-getTarget().bodyYaw));
-			double radius = getTarget().getHeight() / 1.5;
-			double rotXZ = Math.sin(getTarget().age * 0.1 + angle) * radius;
-			double rotY = Math.cos(getTarget().age * 0.1 + angle) * radius;
-			Vec3d bodyYaw = new Vec3d(sinYaw, 1, cosYaw);
-			Vec3d offset = new Vec3d(sinYaw, 0, cosYaw).multiply(-0.75);
-			Vec3d imInSpainWithoutTheA = bodyYaw.multiply(rotXZ, rotY, rotXZ).rotateY((float) Math.toRadians(90));
-			Vec3d targetPos = getTarget().getPos().add(0, radius, 0).add(imInSpainWithoutTheA).add(offset);
-			Vec3d direction = targetPos.subtract(getPos());
-			move(MovementType.SELF, direction);
+			double cosYaw = Math.cos(Math.toRadians(-getTarget().yBodyRot));
+			double sinYaw = Math.sin(Math.toRadians(-getTarget().yBodyRot));
+			double radius = getTarget().getBbHeight() / 1.5;
+			double rotXZ = Math.sin(getTarget().tickCount * 0.1 + angle) * radius;
+			double rotY = Math.cos(getTarget().tickCount * 0.1 + angle) * radius;
+			Vec3 bodyYaw = new Vec3(sinYaw, 1, cosYaw);
+			Vec3 offset = new Vec3(sinYaw, 0, cosYaw).scale(-0.75);
+			Vec3 imInSpainWithoutTheA = bodyYaw.multiply(rotXZ, rotY, rotXZ).yRot((float) Math.toRadians(90));
+			Vec3 targetPos = getTarget().position().add(0, radius, 0).add(imInSpainWithoutTheA).add(offset);
+			Vec3 direction = targetPos.subtract(position());
+			move(MoverType.SELF, direction);
 		}
 		else {
-			noClip = false;
+			noPhysics = false;
 		}
 
 		super.tick();
 	}
 
 	@Override
-	protected void onEntityHit(EntityHitResult entityHitResult) {
-		if(!isBoundToTarget() && !getWorld().isClient()) {
+	protected void onHitEntity(EntityHitResult entityHitResult) {
+		if(!isBoundToTarget() && !level().isClientSide()) {
 			for(SpellEffect effect : new HashSet<>(effects))
-				effect.effect(getCaster(), this, getWorld(), entityHitResult, effects, stack, potency);
+				effect.effect(getCaster(), this, level(), entityHitResult, effects, stack, potency);
 
-			SpellShape.castNext(getCaster(), getPos(), entityHitResult.getEntity(), (ServerWorld) getWorld(), stack, groups, groupIndex, potency);
+			SpellShape.castNext(getCaster(), position(), entityHitResult.getEntity(), (ServerLevel) level(), stack, groups, groupIndex, potency);
 
 			kill();
 		}
 	}
 
 	@Override
-	protected void onBlockHit(BlockHitResult blockHitResult) {
-		if(!isBoundToTarget() && !getWorld().isClient()) {
+	protected void onHitBlock(BlockHitResult blockHitResult) {
+		if(!isBoundToTarget() && !level().isClientSide()) {
 			for(SpellEffect effect : new HashSet<>(effects))
-				effect.effect(getCaster(), this, getWorld(), blockHitResult, effects, stack, potency);
+				effect.effect(getCaster(), this, level(), blockHitResult, effects, stack, potency);
 
-			SpellShape.castNext(getCaster(), getPos(), this, (ServerWorld) getWorld(), stack, groups, groupIndex, potency);
+			SpellShape.castNext(getCaster(), position(), this, (ServerLevel) level(), stack, groups, groupIndex, potency);
 
-			super.onBlockHit(blockHitResult);
+			super.onHitBlock(blockHitResult);
 			kill();
 		}
 	}
@@ -124,76 +124,76 @@ public class AggressorbEntity extends ThrownEntity implements Targetable {
 	}
 
 	@Override
-	public float getTargetingMargin() {
+	public float getPickRadius() {
 		return isBoundToTarget() ? 0f : 0.75f;
 	}
 
 	@Override
-	public boolean collides() {
+	public boolean isPickable() {
 		return true;
 	}
 
 	@Override
-	public boolean damage(DamageSource source, float amount) {
-		Vec3d dir = getTarget().getEyePos().subtract(getPos()).normalize();
-		float pitch = (float) Math.toDegrees(Math.asin(-dir.getY()));
-		float yaw = (float) Math.toDegrees(-Math.atan2(dir.getX(), dir.getZ()));
+	public boolean hurt(DamageSource source, float amount) {
+		Vec3 dir = getTarget().getEyePosition().subtract(position()).normalize();
+		float pitch = (float) Math.toDegrees(Math.asin(-dir.y()));
+		float yaw = (float) Math.toDegrees(-Math.atan2(dir.x(), dir.z()));
 
 		setBoundToTarget(false);
-		setProperties(getTarget(), pitch, yaw, 0F, 3f, 1F);
-		ArcanusComponents.removeAggressorbFromEntity(getTarget(), getUuid());
+		shootFromRotation(getTarget(), pitch, yaw, 0F, 3f, 1F);
+		ArcanusComponents.removeAggressorbFromEntity(getTarget(), getUUID());
 
 		return true;
 	}
 
 	@Override
 	public void kill() {
-		if(!getWorld().isClient() && getTarget() != null)
-			ArcanusComponents.removeAggressorbFromEntity(getTarget(), getUuid());
+		if(!level().isClientSide() && getTarget() != null)
+			ArcanusComponents.removeAggressorbFromEntity(getTarget(), getUUID());
 
 		super.kill();
 	}
 
 	@Override
-	public boolean doesRenderOnFire() {
+	public boolean displayFireAnimation() {
 		return false;
 	}
 
 	@Override
-	public void readCustomDataFromNbt(NbtCompound tag) {
+	public void readAdditionalSaveData(CompoundTag tag) {
 		effects.clear();
 		groups.clear();
 
-		casterId = tag.getUuid("CasterId");
-		targetId = tag.getUuid("TargetId");
-		stack = ItemStack.fromNbt(tag.getCompound("ItemStack"));
+		casterId = tag.getUUID("CasterId");
+		targetId = tag.getUUID("TargetId");
+		stack = ItemStack.of(tag.getCompound("ItemStack"));
 		groupIndex = tag.getInt("GroupIndex");
 		potency = tag.getDouble("Potency");
 		boundToTarget = tag.getBoolean("BoundToTarget");
 
-		NbtList effectList = tag.getList("Effects", NbtElement.STRING_TYPE);
-		NbtList groupsList = tag.getList("SpellGroups", NbtElement.COMPOUND_TYPE);
+		ListTag effectList = tag.getList("Effects", Tag.TAG_STRING);
+		ListTag groupsList = tag.getList("SpellGroups", Tag.TAG_COMPOUND);
 
 		for(int i = 0; i < effectList.size(); i++)
-			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new Identifier(effectList.getString(i))));
+			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(effectList.getString(i))));
 		for(int i = 0; i < groupsList.size(); i++)
 			groups.add(SpellGroup.fromNbt(groupsList.getCompound(i)));
 	}
 
 	@Override
-	public void writeCustomDataToNbt(NbtCompound tag) {
-		NbtList effectList = new NbtList();
-		NbtList groupsList = new NbtList();
+	public void addAdditionalSaveData(CompoundTag tag) {
+		ListTag effectList = new ListTag();
+		ListTag groupsList = new ListTag();
 
-		tag.putUuid("CasterId", casterId);
-		tag.putUuid("TargetId", targetId);
-		tag.put("ItemStack", stack.writeNbt(new NbtCompound()));
+		tag.putUUID("CasterId", casterId);
+		tag.putUUID("TargetId", targetId);
+		tag.put("ItemStack", stack.save(new CompoundTag()));
 		tag.putInt("GroupIndex", groupIndex);
 		tag.putDouble("Potency", potency);
 		tag.putBoolean("BoundToTarget", boundToTarget);
 
 		for(SpellEffect effect : effects)
-			effectList.add(NbtString.of(Arcanus.SPELL_COMPONENTS.getId(effect).toString()));
+			effectList.add(StringTag.valueOf(Arcanus.SPELL_COMPONENTS.getKey(effect).toString()));
 		for(SpellGroup group : groups)
 			groupsList.add(group.toNbt());
 
@@ -202,23 +202,23 @@ public class AggressorbEntity extends ThrownEntity implements Targetable {
 	}
 
 	@Override
-	public boolean shouldRender(double sqDistance) {
+	public boolean shouldRenderAtSqrDistance(double sqDistance) {
 		return sqDistance <= 64 * 64;
 	}
 
 	public LivingEntity getCaster() {
-		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(casterId) instanceof LivingEntity caster)
+		if(level() instanceof ServerLevel serverWorld && serverWorld.getEntity(casterId) instanceof LivingEntity caster)
 			return caster;
-		else if(getWorld().isClient() && getWorld().getEntityById(dataTracker.get(OWNER_ID)) instanceof LivingEntity caster)
+		else if(level().isClientSide() && level().getEntity(entityData.get(OWNER_ID)) instanceof LivingEntity caster)
 			return caster;
 
 		return null;
 	}
 
 	public LivingEntity getTarget() {
-		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(targetId) instanceof LivingEntity target)
+		if(level() instanceof ServerLevel serverWorld && serverWorld.getEntity(targetId) instanceof LivingEntity target)
 			return target;
-		else if(getWorld().isClient() && getWorld().getEntityById(dataTracker.get(TARGET_ID)) instanceof LivingEntity target)
+		else if(level().isClientSide() && level().getEntity(entityData.get(TARGET_ID)) instanceof LivingEntity target)
 			return target;
 
 		return null;
@@ -239,16 +239,16 @@ public class AggressorbEntity extends ThrownEntity implements Targetable {
 		this.groups.addAll(groups);
 
 		if(caster != null) {
-			this.casterId = caster.getUuid();
-			this.dataTracker.set(OWNER_ID, caster.getId());
+			this.casterId = caster.getUUID();
+			this.entityData.set(OWNER_ID, caster.getId());
 			ArcanusHelper.copyMagicColor(this, caster);
 		}
 
-		ArcanusComponents.addAggressorbToEntity(target, getUuid());
+		ArcanusComponents.addAggressorbToEntity(target, getUUID());
 		setBoundToTarget(true);
 
-		this.targetId = target.getUuid();
-		this.dataTracker.set(TARGET_ID, target.getId());
+		this.targetId = target.getUUID();
+		this.entityData.set(TARGET_ID, target.getId());
 		this.stack = stack;
 		this.groupIndex = groupIndex;
 		this.potency = potency;

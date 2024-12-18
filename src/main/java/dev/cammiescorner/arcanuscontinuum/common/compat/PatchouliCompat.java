@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.common.compat;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import vazkii.patchouli.api.PatchouliAPI;
 
 public class PatchouliCompat {

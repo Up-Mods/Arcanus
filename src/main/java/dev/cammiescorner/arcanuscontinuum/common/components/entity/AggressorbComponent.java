@@ -3,12 +3,12 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtHelper;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,21 +25,21 @@ public class AggressorbComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(NbtCompound tag) {
+	public void readFromNbt(CompoundTag tag) {
 		orbs.clear();
 
-		NbtList nbtList = tag.getList("Orbs", NbtElement.INT_ARRAY_TYPE);
+		ListTag nbtList = tag.getList("Orbs", Tag.TAG_INT_ARRAY);
 
-		for(NbtElement nbtElement : nbtList)
-			orbs.add(NbtHelper.toUuid(nbtElement));
+		for(Tag nbtElement : nbtList)
+			orbs.add(NbtUtils.loadUUID(nbtElement));
 	}
 
 	@Override
-	public void writeToNbt(NbtCompound tag) {
-		NbtList nbtList = new NbtList();
+	public void writeToNbt(CompoundTag tag) {
+		ListTag nbtList = new ListTag();
 
 		for(UUID uuid : orbs)
-			nbtList.add(NbtHelper.fromUuid(uuid));
+			nbtList.add(NbtUtils.createUUID(uuid));
 
 		tag.put("Orbs", nbtList);
 	}
@@ -53,11 +53,11 @@ public class AggressorbComponent implements AutoSyncedComponent {
 	}
 
 	public int orbIndex(AggressorbEntity orb) {
-		return orbs.indexOf(orb.getUuid());
+		return orbs.indexOf(orb.getUUID());
 	}
 
 	public void addOrbToEntity(UUID orbId) {
-		if(entity.getWorld() instanceof ServerWorld world)
+		if(entity.level() instanceof ServerLevel world)
 			orbs.removeIf(uuid -> world.getEntity(uuid) == null);
 
 		orbs.add(orbId);

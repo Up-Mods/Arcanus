@@ -62,7 +62,7 @@ public class OpossumEntityRenderer extends MobRenderer<OpossumEntity, OpossumEnt
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(OpossumEntity entity) {
+	public ResourceLocation getTexture(OpossumEntity entity) {
 		return TEXTURE;
 	}
 }

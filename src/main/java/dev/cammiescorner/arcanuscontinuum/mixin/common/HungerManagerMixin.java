@@ -1,20 +1,24 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.common;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import net.minecraft.entity.player.HungerManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.GameRules;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.world.level.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(HungerManager.class)
+@Mixin(FoodData.class)
 public class HungerManagerMixin {
-	@ModifyVariable(method = "update", at = @At(value = "INVOKE_ASSIGN",
-			target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z",
+	@WrapOperation(method = "tick", at = @At(value = "INVOKE_ASSIGN",
+			target = "Lnet/minecraft/world/level/GameRules;getBoolean(Lnet/minecraft/world/level/GameRules$Key;)Z",
 			ordinal = 0
 	))
-	public boolean arcanuscontinuum$hasBurnout(boolean bl, PlayerEntity player) {
-		return ArcanusComponents.getBurnout(player) <= 0 && player.getWorld().getGameRules().getBoolean(GameRules.NATURAL_REGENERATION);
+	public boolean arcanuscontinuum$hasBurnout(GameRules instance, GameRules.Key<GameRules.BooleanValue> gameRuleKey, Operation<Boolean> original, Player player) {
+		if(ArcanusComponents.getBurnout(player) > 0.0D) {
+			return false;
+		}
+		return original.call(instance, gameRuleKey);
 	}
 }

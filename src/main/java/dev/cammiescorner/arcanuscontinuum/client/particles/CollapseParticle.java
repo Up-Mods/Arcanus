@@ -1,45 +1,45 @@
 package dev.cammiescorner.arcanuscontinuum.client.particles;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 
-public class CollapseParticle extends SpriteBillboardParticle {
-	private final SpriteProvider spriteProvider;
+public class CollapseParticle extends TextureSheetParticle {
+	private final SpriteSet spriteProvider;
 
-	public CollapseParticle(ClientWorld world, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ, SpriteProvider spriteProvider) {
+	public CollapseParticle(ClientLevel world, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ, SpriteSet spriteProvider) {
 		super(world, posX, posY, posZ, 0, 0, 0);
-		this.maxAge = 60;
+		this.lifetime = 60;
 		this.spriteProvider = spriteProvider;
-		this.velocityX = velocityX;
-		this.velocityY = velocityY;
-		this.velocityZ = velocityZ;
+		this.xd = velocityX;
+		this.yd = velocityY;
+		this.zd = velocityZ;
 	}
 
 	@Override
 	public void tick() {
-		setSpriteForAge(spriteProvider);
+		setSpriteFromAge(spriteProvider);
 		super.tick();
 	}
 
 	@Override
-	public ParticleTextureSheet getType() {
-		return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
+	public ParticleRenderType getRenderType() {
+		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
 	}
 
 	@ClientOnly
-	public static class Factory implements ParticleFactory<DefaultParticleType> {
-		private final SpriteProvider spriteProvider;
+	public static class Factory implements ParticleProvider<SimpleParticleType> {
+		private final SpriteSet spriteProvider;
 
-		public Factory(SpriteProvider spriteProvider) {
+		public Factory(SpriteSet spriteProvider) {
 			this.spriteProvider = spriteProvider;
 		}
 
 		@Override
-		public Particle createParticle(DefaultParticleType defaultParticleType, ClientWorld clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {
+		public Particle createParticle(SimpleParticleType defaultParticleType, ClientLevel clientWorld, double posX, double posY, double posZ, double velocityX, double velocityY, double velocityZ) {
 			CollapseParticle particle = new CollapseParticle(clientWorld, posX, posY, posZ, velocityX, velocityY, velocityZ, spriteProvider);
-			particle.setSpriteForAge(spriteProvider);
+			particle.setSpriteFromAge(spriteProvider);
 			return particle;
 		}
 	}

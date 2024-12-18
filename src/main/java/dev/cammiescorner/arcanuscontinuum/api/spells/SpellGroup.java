@@ -2,11 +2,11 @@ package dev.cammiescorner.arcanuscontinuum.api.spells;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.util.Identifier;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector2i;
 
 import java.util.ArrayList;
@@ -14,19 +14,19 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public record SpellGroup(SpellShape shape, List<SpellEffect> effects, List<Vector2i> positions) {
-	public static SpellGroup fromNbt(NbtCompound tag) {
-		SpellShape shape = (SpellShape) Arcanus.SPELL_COMPONENTS.get(new Identifier(tag.getString("Shape")));
+	public static SpellGroup fromNbt(CompoundTag tag) {
+		SpellShape shape = (SpellShape) Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(tag.getString("Shape")));
 		List<SpellEffect> effects = new ArrayList<>();
 		List<Vector2i> positions = new ArrayList<>();
-		NbtList nbtEffects = tag.getList("Effects", NbtElement.STRING_TYPE);
-		NbtList nbtPoses = tag.getList("Positions", NbtElement.COMPOUND_TYPE);
+		ListTag nbtEffects = tag.getList("Effects", Tag.TAG_STRING);
+		ListTag nbtPoses = tag.getList("Positions", Tag.TAG_COMPOUND);
 
 		for(int i = 0; i < nbtEffects.size(); i++)
-			if(Arcanus.SPELL_COMPONENTS.get(new Identifier(nbtEffects.getString(i))) instanceof SpellEffect effect)
+			if(Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(nbtEffects.getString(i))) instanceof SpellEffect effect)
 				effects.add(effect);
 
 		for(int i = 0; i < nbtPoses.size(); i++) {
-			NbtCompound nbt = nbtPoses.getCompound(i);
+			CompoundTag nbt = nbtPoses.getCompound(i);
 			positions.add(new Vector2i(nbt.getInt("X"), nbt.getInt("Y")));
 		}
 
@@ -36,22 +36,22 @@ public record SpellGroup(SpellShape shape, List<SpellEffect> effects, List<Vecto
 		return new SpellGroup(shape, effects, positions);
 	}
 
-	public NbtCompound toNbt() {
-		NbtCompound tag = new NbtCompound();
-		NbtList effectsList = new NbtList();
-		NbtList posesList = new NbtList();
+	public CompoundTag toNbt() {
+		CompoundTag tag = new CompoundTag();
+		ListTag effectsList = new ListTag();
+		ListTag posesList = new ListTag();
 
 		for(SpellEffect effect : effects)
-			effectsList.add(NbtString.of(Arcanus.SPELL_COMPONENTS.getId(effect).toString()));
+			effectsList.add(StringTag.valueOf(Arcanus.SPELL_COMPONENTS.getKey(effect).toString()));
 
 		for(Vector2i position : positions) {
-			NbtCompound nbt = new NbtCompound();
+			CompoundTag nbt = new CompoundTag();
 			nbt.putInt("X", position.x());
 			nbt.putInt("Y", position.y());
 			posesList.add(nbt);
 		}
 
-		tag.putString("Shape", Arcanus.SPELL_COMPONENTS.getId(shape).toString());
+		tag.putString("Shape", Arcanus.SPELL_COMPONENTS.getKey(shape).toString());
 		tag.put("Effects", effectsList);
 		tag.put("Positions", posesList);
 

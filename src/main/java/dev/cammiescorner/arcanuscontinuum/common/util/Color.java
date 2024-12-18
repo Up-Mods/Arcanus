@@ -4,9 +4,9 @@ import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
 import org.joml.Vector4f;
@@ -189,7 +189,7 @@ public class Color {
 	 * @param value      brightness in [0, 1]
 	 */
 	public static Color fromHSV(float hue, float saturation, float value) {
-		int argb = MathHelper.hsvToRgb(hue, saturation, value);
+		int argb = Mth.hsvToRgb(hue, saturation, value);
 		return Color.fromInt(argb, Ordering.ARGB);
 	}
 
@@ -197,7 +197,7 @@ public class Color {
 
 	public static final Codec<Color> CODEC = Codec.either(CODEC_ARGB, Ordering.CODEC.dispatch("ordering", c -> DEFAULT_ORDERING, Ordering::dispatchedCodec)).xmap(CodecHelper::unwrapEither, Either::left);
 
-	public enum Ordering implements StringIdentifiable {
+	public enum Ordering implements StringRepresentable {
 		RGBA("rgba", 0, 1, 2, 3),
 		ARGB("argb", 1, 2, 3, 0),
 		RGB("rgb", 0, 1, 2, -1),
@@ -211,9 +211,9 @@ public class Color {
 
 		private final int expectedLength;
 
-		public static final Codec<Ordering> CODEC = StringIdentifiable.createCodec(Ordering::values);
+		public static final Codec<Ordering> CODEC = StringRepresentable.fromEnum(Ordering::values);
 
-		private final Codec<Color> dispatchedCodec = Codecs.createLazy(() -> RecordCodecBuilder.create(instance -> instance.group(Codec.INT.fieldOf("value").forGetter(color -> color.asInt(this))).apply(instance, intValue -> Color.fromInt(intValue, this))));
+		private final Codec<Color> dispatchedCodec = ExtraCodecs.lazyInitializedCodec(() -> RecordCodecBuilder.create(instance -> instance.group(Codec.INT.fieldOf("value").forGetter(color -> color.asInt(this))).apply(instance, intValue -> Color.fromInt(intValue, this))));
 
 		Ordering(String name, int redIndex, int greenIndex, int blueIndex, int alphaIndex) {
 			this.name = name;
@@ -271,7 +271,7 @@ public class Color {
 		}
 
 		@Override
-		public String asString() {
+		public String getSerializedName() {
 			return name;
 		}
 

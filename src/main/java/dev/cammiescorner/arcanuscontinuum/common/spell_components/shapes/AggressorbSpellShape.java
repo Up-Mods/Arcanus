@@ -9,13 +9,13 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.ChatFormatting;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class AggressorbSpellShape extends SpellShape {
 	}
 
 	@Override
-	public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		potency += getPotencyModifier();
 		Entity sourceEntity = castSource != null ? castSource : caster;
 
@@ -36,12 +36,12 @@ public class AggressorbSpellShape extends SpellShape {
 
 				if(aggressorb != null) {
 					aggressorb.setProperties(caster, target, stack, effects, spellGroups, groupIndex, potency);
-					aggressorb.setPosition(castFrom);
-					world.spawnEntity(aggressorb);
+					aggressorb.setPos(castFrom);
+					world.addFreshEntity(aggressorb);
 				}
 			}
-			else if(caster instanceof PlayerEntity player)
-				player.sendSystemMessage(Arcanus.translate("text", "too_many_orbs").formatted(Formatting.RED));
+			else if(caster instanceof Player player)
+				player.sendSystemMessage(Arcanus.translate("text", "too_many_orbs").withStyle(ChatFormatting.RED));
 		}
 	}
 }

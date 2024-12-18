@@ -7,13 +7,13 @@ import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncScalePacket;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.networking.api.PlayerLookup;
 
@@ -25,7 +25,7 @@ public class SizeChangeSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, World world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.ENTITY) {
 			EntityHitResult entityHit = (EntityHitResult) target;
 			Entity entity = entityHit.getEntity();
@@ -35,11 +35,11 @@ public class SizeChangeSpellEffect extends SpellEffect {
 			else if(ArcanusSpellComponents.ENLARGE.is(this))
 				ArcanusComponents.setScale(entity, this, effects.stream().filter(ArcanusSpellComponents.ENLARGE::is).count() * potency);
 
-			if (!entity.getWorld().isClient()) {
+			if (!entity.level().isClientSide()) {
 				RegistrySupplier<SpellEffect> supplier = ArcanusSpellComponents.SHRINK.is(this) ? ArcanusSpellComponents.SHRINK : ArcanusSpellComponents.ENLARGE;
-				for (ServerPlayerEntity lookup : PlayerLookup.tracking(entity))
+				for (ServerPlayer lookup : PlayerLookup.tracking(entity))
 					SyncScalePacket.send(lookup, entity, this, effects.stream().filter(supplier::is).count() * potency);
-				if (entity instanceof ServerPlayerEntity serverPlayer)
+				if (entity instanceof ServerPlayer serverPlayer)
 					SyncScalePacket.send(serverPlayer, entity, this, effects.stream().filter(supplier::is).count() * potency);
 			}
 		}

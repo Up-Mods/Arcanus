@@ -6,23 +6,23 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,21 +39,21 @@ public class AreaOfEffectEntity extends Entity implements Targetable {
 	private int trueAge;
 	private boolean isFocused = true;
 
-	public AreaOfEffectEntity(EntityType<?> variant, World world) {
+	public AreaOfEffectEntity(EntityType<?> variant, Level world) {
 		super(variant, world);
 	}
 
 	@Override
 	public void tick() {
-		if(!getWorld().isClient() && (getCaster() == null || !getCaster().isAlive())) {
+		if(!level().isClientSide() && (getCaster() == null || !getCaster().isAlive())) {
 			kill();
 			return;
 		}
 
-		List<AreaOfEffectEntity> list = getWorld().getEntitiesByClass(AreaOfEffectEntity.class, getBoundingBox(), EntityPredicates.VALID_ENTITY);
+		List<AreaOfEffectEntity> list = level().getEntitiesOfClass(AreaOfEffectEntity.class, getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE);
 
 		if(!list.isEmpty()) {
-			int i = getWorld().getGameRules().getInt(GameRules.MAX_ENTITY_CRAMMING);
+			int i = level().getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
 
 			if(i > 0 && list.size() > i - 1) {
 				int j = 0;
@@ -68,30 +68,30 @@ public class AreaOfEffectEntity extends Entity implements Targetable {
 			}
 		}
 
-		if(!getWorld().isClient()) {
+		if(!level().isClientSide()) {
 			if(trueAge <= 90 && trueAge > 0) {
 				if(trueAge % 30 == 0) {
-					Box box = new Box(-2, 0, -2, 2, 2.5, 2).offset(getPos());
+					AABB box = new AABB(-2, 0, -2, 2, 2.5, 2).move(position());
 
 					for(SpellEffect effect : new HashSet<>(effects)) {
 						if(effect.shouldTriggerOnceOnExplosion())
 							continue;
 
-						getWorld().getEntitiesByClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted()).forEach(entity -> {
-							effect.effect(getCaster(), this, getWorld(), new EntityHitResult(entity), effects, stack, potency);
+						level().getEntitiesOfClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted()).forEach(entity -> {
+							effect.effect(getCaster(), this, level(), new EntityHitResult(entity), effects, stack, potency);
 						});
 					}
 
-					SpellShape.castNext(getCaster(), getPos(), this, (ServerWorld) getWorld(), stack, spellGroups, groupIndex, potency);
+					SpellShape.castNext(getCaster(), position(), this, (ServerLevel) level(), stack, spellGroups, groupIndex, potency);
 
 					if(!isFocused)
-						setYaw(getYaw() + 110 + random.nextInt(21));
+						setYRot(getYRot() + 110 + random.nextInt(21));
 				}
 
 				if(trueAge % 50 == 0) {
 					for(SpellEffect effect : new HashSet<>(effects))
 						if(effect.shouldTriggerOnceOnExplosion())
-							effect.effect(getCaster(), this, getWorld(), new EntityHitResult(this), effects, stack, potency);
+							effect.effect(getCaster(), this, level(), new EntityHitResult(this), effects, stack, potency);
 				}
 			}
 
@@ -104,48 +104,48 @@ public class AreaOfEffectEntity extends Entity implements Targetable {
 	}
 
 	@Override
-	protected void initDataTracker() {
+	protected void defineSynchedData() {
 
 	}
 
 	@Override
-	public boolean doesRenderOnFire() {
+	public boolean displayFireAnimation() {
 		return false;
 	}
 
 	@Override
-	protected void readCustomDataFromNbt(NbtCompound tag) {
+	protected void readAdditionalSaveData(CompoundTag tag) {
 		effects.clear();
 		spellGroups.clear();
 
-		casterId = tag.getUuid("CasterId");
-		stack = ItemStack.fromNbt(tag.getCompound("ItemStack"));
+		casterId = tag.getUUID("CasterId");
+		stack = ItemStack.of(tag.getCompound("ItemStack"));
 		groupIndex = tag.getInt("GroupIndex");
 		potency = tag.getDouble("Potency");
 		trueAge = tag.getInt("TrueAge");
 
-		NbtList effectList = tag.getList("Effects", NbtElement.STRING_TYPE);
-		NbtList groupsList = tag.getList("SpellGroups", NbtElement.COMPOUND_TYPE);
+		ListTag effectList = tag.getList("Effects", Tag.TAG_STRING);
+		ListTag groupsList = tag.getList("SpellGroups", Tag.TAG_COMPOUND);
 
 		for(int i = 0; i < effectList.size(); i++)
-			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new Identifier(effectList.getString(i))));
+			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(effectList.getString(i))));
 		for(int i = 0; i < groupsList.size(); i++)
 			spellGroups.add(SpellGroup.fromNbt(groupsList.getCompound(i)));
 	}
 
 	@Override
-	protected void writeCustomDataToNbt(NbtCompound tag) {
-		NbtList effectList = new NbtList();
-		NbtList groupsList = new NbtList();
+	protected void addAdditionalSaveData(CompoundTag tag) {
+		ListTag effectList = new ListTag();
+		ListTag groupsList = new ListTag();
 
-		tag.putUuid("CasterId", casterId);
-		tag.put("ItemStack", stack.writeNbt(new NbtCompound()));
+		tag.putUUID("CasterId", casterId);
+		tag.put("ItemStack", stack.save(new CompoundTag()));
 		tag.putInt("GroupIndex", groupIndex);
 		tag.putDouble("Potency", potency);
 		tag.putInt("TrueAge", trueAge);
 
 		for(SpellEffect effect : effects)
-			effectList.add(NbtString.of(Arcanus.SPELL_COMPONENTS.getId(effect).toString()));
+			effectList.add(StringTag.valueOf(Arcanus.SPELL_COMPONENTS.getKey(effect).toString()));
 		for(SpellGroup group : spellGroups)
 			groupsList.add(group.toNbt());
 
@@ -158,7 +158,7 @@ public class AreaOfEffectEntity extends Entity implements Targetable {
 	}
 
 	private LivingEntity getCaster() {
-		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getEntity(casterId) instanceof LivingEntity caster)
+		if(level() instanceof ServerLevel serverWorld && serverWorld.getEntity(casterId) instanceof LivingEntity caster)
 			return caster;
 
 		return null;
@@ -168,12 +168,12 @@ public class AreaOfEffectEntity extends Entity implements Targetable {
 		return trueAge;
 	}
 
-	public void setProperties(UUID casterId, Entity sourceEntity, Vec3d pos, ItemStack stack, List<SpellEffect> effects, double potency, List<SpellGroup> groups, int groupIndex) {
-		setPos(pos.getX(), pos.getY(), pos.getZ());
-		setYaw(sourceEntity.getYaw());
-		setPitch(sourceEntity.getPitch());
+	public void setProperties(UUID casterId, Entity sourceEntity, Vec3 pos, ItemStack stack, List<SpellEffect> effects, double potency, List<SpellGroup> groups, int groupIndex) {
+		setPosRaw(pos.x(), pos.y(), pos.z());
+		setYRot(sourceEntity.getYRot());
+		setXRot(sourceEntity.getXRot());
 		this.casterId = casterId;
-		this.isFocused = sourceEntity instanceof AreaOfEffectEntity aoe ? aoe.isFocused : sourceEntity.getUuid().equals(casterId) && sourceEntity.isSneaking();
+		this.isFocused = sourceEntity instanceof AreaOfEffectEntity aoe ? aoe.isFocused : sourceEntity.getUUID().equals(casterId) && sourceEntity.isShiftKeyDown();
 		this.stack = stack;
 		this.effects = effects;
 		this.spellGroups = groups;

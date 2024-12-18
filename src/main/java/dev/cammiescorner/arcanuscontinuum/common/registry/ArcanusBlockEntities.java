@@ -7,12 +7,12 @@ import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicDoorBlockE
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
 import dev.upcraft.sparkweave.api.registry.RegistryHandler;
 import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.registry.RegistryKeys;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.quiltmc.qsl.block.entity.api.QuiltBlockEntityTypeBuilder;
 
 public class ArcanusBlockEntities {
-	public static final RegistryHandler<BlockEntityType<?>> BLOCK_ENTITY_TYPES = RegistryHandler.create(RegistryKeys.BLOCK_ENTITY_TYPE, Arcanus.MOD_ID);
+	public static final RegistryHandler<BlockEntityType<?>> BLOCK_ENTITY_TYPES = RegistryHandler.create(Registries.BLOCK_ENTITY_TYPE, Arcanus.MOD_ID);
 
 	public static final RegistrySupplier<BlockEntityType<MagicDoorBlockEntity>> MAGIC_DOOR = BLOCK_ENTITY_TYPES.register("magic_door", () -> QuiltBlockEntityTypeBuilder.create(MagicDoorBlockEntity::new, ArcanusBlocks.MAGIC_DOOR.get()).build());
 	public static final RegistrySupplier<BlockEntityType<ArcaneWorkbenchBlockEntity>> ARCANE_WORKBENCH = BLOCK_ENTITY_TYPES.register("arcane_workbench", () -> QuiltBlockEntityTypeBuilder.create(ArcaneWorkbenchBlockEntity::new, ArcanusBlocks.ARCANE_WORKBENCH.get()).build());

@@ -12,31 +12,31 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Spell;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.*;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.passive.FoxEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.*;
+import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -55,124 +55,124 @@ import java.util.UUID;
 public abstract class LivingEntityMixin extends Entity implements Targetable {
 	@Unique private static final UUID uUID = UUID.fromString("e348efa3-7987-4912-b82a-03c5c75eccb1");
 	@Unique private final LivingEntity self = (LivingEntity) (Entity) this;
-	@Unique private Vec3d prevVelocity;
+	@Unique private Vec3 prevVelocity;
 
 	@Shadow protected boolean jumping;
 
-	@Shadow public abstract @Nullable EntityAttributeInstance getAttributeInstance(EntityAttribute attribute);
-	@Shadow public abstract ItemStack getMainHandStack();
-	@Shadow public abstract boolean hasStatusEffect(StatusEffect effect);
-	@Shadow public abstract StatusEffectInstance getStatusEffect(StatusEffect effect);
-	@Shadow public abstract boolean removeStatusEffect(StatusEffect type);
-	@Shadow public abstract boolean blockedByShield(DamageSource source);
-	@Shadow public abstract boolean clearStatusEffects();
-	@Shadow public abstract boolean addStatusEffect(StatusEffectInstance effect);
-	@Shadow public abstract float getMovementSpeed();
+	@Shadow public abstract @Nullable AttributeInstance getAttribute(Attribute attribute);
+	@Shadow public abstract ItemStack getMainHandItem();
+	@Shadow public abstract boolean hasEffect(MobEffect effect);
+	@Shadow public abstract MobEffectInstance getEffect(MobEffect effect);
+	@Shadow public abstract boolean removeEffect(MobEffect type);
+	@Shadow public abstract boolean isDamageSourceBlocked(DamageSource source);
+	@Shadow public abstract boolean removeAllEffects();
+	@Shadow public abstract boolean addEffect(MobEffectInstance effect);
+	@Shadow public abstract float getSpeed();
 
-	@Shadow public abstract boolean teleport(double x, double y, double z, boolean particleEffects);
+	@Shadow public abstract boolean randomTeleport(double x, double y, double z, boolean particleEffects);
 
-	public LivingEntityMixin(EntityType<?> type, World world) {
+	public LivingEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
 	}
 
-	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
-		if(amount > 0 && !blockedByShield(source)) {
-			if(ArcanusComponents.isCounterActive(self) && source.getSource() instanceof LivingEntity attacker)
+		if(amount > 0 && !isDamageSourceBlocked(source)) {
+			if(ArcanusComponents.isCounterActive(self) && source.getDirectEntity() instanceof LivingEntity attacker)
 				ArcanusComponents.castCounter(self, attacker);
 
-			if(hasStatusEffect(ArcanusStatusEffects.MANA_WINGS.get()) && ArcanusConfig.MovementEffects.ManaWingsEffectProperties.removedUponTakingDamage)
-				removeStatusEffect(ArcanusStatusEffects.MANA_WINGS.get());
-			if(hasStatusEffect(ArcanusStatusEffects.FLOAT.get()) && ArcanusConfig.MovementEffects.FloatEffectProperties.removedUponTakingDamage)
-				removeStatusEffect(ArcanusStatusEffects.FLOAT.get());
+			if(hasEffect(ArcanusStatusEffects.MANA_WINGS.get()) && ArcanusConfig.MovementEffects.ManaWingsEffectProperties.removedUponTakingDamage)
+				removeEffect(ArcanusStatusEffects.MANA_WINGS.get());
+			if(hasEffect(ArcanusStatusEffects.FLOAT.get()) && ArcanusConfig.MovementEffects.FloatEffectProperties.removedUponTakingDamage)
+				removeEffect(ArcanusStatusEffects.FLOAT.get());
 
-			if(hasStatusEffect(ArcanusStatusEffects.STOCKPILE.get()) && amount >= ArcanusConfig.AttackEffects.StockpileEffectProperties.damageNeededToIncrease) {
-				StatusEffectInstance stockpile = getStatusEffect(ArcanusStatusEffects.STOCKPILE.get());
+			if(hasEffect(ArcanusStatusEffects.STOCKPILE.get()) && amount >= ArcanusConfig.AttackEffects.StockpileEffectProperties.damageNeededToIncrease) {
+				MobEffectInstance stockpile = getEffect(ArcanusStatusEffects.STOCKPILE.get());
 
 				if(stockpile.getAmplifier() < 9) {
-					clearStatusEffects();
+					removeAllEffects();
 
-					addStatusEffect(new StatusEffectInstance(stockpile.getEffectType(), stockpile.getDuration(), stockpile.getAmplifier() + MathHelper.floor(Math.round(amount) / 10f)));
+					addEffect(new MobEffectInstance(stockpile.getEffect(), stockpile.getDuration(), stockpile.getAmplifier() + Mth.floor(Math.round(amount) / 10f)));
 				}
 			}
 
-			if(hasStatusEffect(ArcanusStatusEffects.DANGER_SENSE.get()) && (source.isTypeIn(DamageTypeTags.IS_PROJECTILE) || source.isTypeIn(DamageTypeTags.IS_EXPLOSION))) {
-				StatusEffectInstance dangerSense = getStatusEffect(ArcanusStatusEffects.DANGER_SENSE.get());
+			if(hasEffect(ArcanusStatusEffects.DANGER_SENSE.get()) && (source.is(DamageTypeTags.IS_PROJECTILE) || source.is(DamageTypeTags.IS_EXPLOSION))) {
+				MobEffectInstance dangerSense = getEffect(ArcanusStatusEffects.DANGER_SENSE.get());
 
 				if(random.nextFloat() < ArcanusConfig.SupportEffects.DangerSenseEffectProperties.baseChanceToActivate * (dangerSense.getAmplifier() + 1)) {
-					if(getWorld() instanceof ServerWorld world) {
+					if(level() instanceof ServerLevel world) {
 						double d = getX();
 						double e = getY();
 						double f = getZ();
 
 						for(int i = 0; i < 16; ++i) {
 							double g = getX() + (random.nextDouble() - 0.5) * 16.0;
-							double h = MathHelper.clamp(
+							double h = Mth.clamp(
 									getY() + random.nextInt(16) - 8,
-									world.getBottomY(),
-									world.getBottomY() + world.getLogicalHeight() - 1
+									world.getMinBuildHeight(),
+									world.getMinBuildHeight() + world.getLogicalHeight() - 1
 							);
 							double j = getZ() + (random.nextDouble() - 0.5) * 16.0;
 
-							if(hasVehicle())
+							if(isPassenger())
 								stopRiding();
 
-							Vec3d vec3d = getPos();
+							Vec3 vec3d = position();
 
-							if(teleport(g, h, j, true)) {
-								world.emitGameEvent(GameEvent.TELEPORT, vec3d, GameEvent.Context.create(self));
-								SoundEvent soundEvent = self instanceof FoxEntity ? SoundEvents.ENTITY_FOX_TELEPORT : SoundEvents.ITEM_CHORUS_FRUIT_TELEPORT;
-								world.playSound(null, d, e, f, soundEvent, SoundCategory.PLAYERS, 1f, 1f);
+							if(randomTeleport(g, h, j, true)) {
+								world.gameEvent(GameEvent.TELEPORT, vec3d, GameEvent.Context.of(self));
+								SoundEvent soundEvent = self instanceof Fox ? SoundEvents.FOX_TELEPORT : SoundEvents.CHORUS_FRUIT_TELEPORT;
+								world.playSound(null, d, e, f, soundEvent, SoundSource.PLAYERS, 1f, 1f);
 								playSound(soundEvent, 1f, 1f);
 								break;
 							}
 						}
 					}
 
-					removeStatusEffect(ArcanusStatusEffects.DANGER_SENSE.get());
+					removeEffect(ArcanusStatusEffects.DANGER_SENSE.get());
 					info.setReturnValue(false);
 				}
 			}
 		}
 	}
 
-	@ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
+	@ModifyVariable(method = "hurt", at = @At("HEAD"), argsOnly = true)
 	private float arcanuscontinuum$modifyDamage(float amount, DamageSource source) {
-		EntityAttributeInstance attributeInstance = getAttributeInstance(ArcanusEntityAttributes.MAGIC_RESISTANCE.get());
+		AttributeInstance attributeInstance = getAttribute(ArcanusEntityAttributes.MAGIC_RESISTANCE.get());
 
-		if(attributeInstance != null && source.isTypeIn(DamageTypeTags.WITCH_RESISTANT_TO))
+		if(attributeInstance != null && source.is(DamageTypeTags.WITCH_RESISTANT_TO))
 			amount /= Math.max((float) attributeInstance.getValue(), 0.000001F);
-		if(hasStatusEffect(ArcanusStatusEffects.FORTIFY.get()))
-			amount /= 1 + (getStatusEffect(ArcanusStatusEffects.FORTIFY.get()).getAmplifier() + 1) * 0.25F;
-		if(hasStatusEffect(ArcanusStatusEffects.VULNERABILITY.get()))
-			amount *= 1 + 0.8F * ((getStatusEffect(ArcanusStatusEffects.VULNERABILITY.get()).getAmplifier() + 1) / 10F);
-		if(source.getAttacker() instanceof LivingEntity attacker && attacker.hasStatusEffect(ArcanusStatusEffects.STOCKPILE.get())) {
-			amount *= attacker.getStatusEffect(ArcanusStatusEffects.STOCKPILE.get()).getAmplifier() + 1;
-			attacker.removeStatusEffect(ArcanusStatusEffects.STOCKPILE.get());
+		if(hasEffect(ArcanusStatusEffects.FORTIFY.get()))
+			amount /= 1 + (getEffect(ArcanusStatusEffects.FORTIFY.get()).getAmplifier() + 1) * 0.25F;
+		if(hasEffect(ArcanusStatusEffects.VULNERABILITY.get()))
+			amount *= 1 + 0.8F * ((getEffect(ArcanusStatusEffects.VULNERABILITY.get()).getAmplifier() + 1) / 10F);
+		if(source.getEntity() instanceof LivingEntity attacker && attacker.hasEffect(ArcanusStatusEffects.STOCKPILE.get())) {
+			amount *= attacker.getEffect(ArcanusStatusEffects.STOCKPILE.get()).getAmplifier() + 1;
+			attacker.removeEffect(ArcanusStatusEffects.STOCKPILE.get());
 		}
 
 		return amount;
 	}
 
-	@ModifyArg(method = "fall", at = @At(value = "INVOKE", target = "Lnet/minecraft/particle/BlockStateParticleEffect;<init>(Lnet/minecraft/particle/ParticleType;Lnet/minecraft/block/BlockState;)V"))
+	@ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/particles/BlockParticleOption;<init>(Lnet/minecraft/core/particles/ParticleType;Lnet/minecraft/world/level/block/state/BlockState;)V"))
 	private BlockState arcanuscontinuum$bouncy(BlockState value) {
-		if(hasStatusEffect(ArcanusStatusEffects.BOUNCY.get()))
-			return Blocks.SLIME_BLOCK.getDefaultState();
-		if(hasStatusEffect(ArcanusStatusEffects.FLOAT.get()))
+		if(hasEffect(ArcanusStatusEffects.BOUNCY.get()))
+			return Blocks.SLIME_BLOCK.defaultBlockState();
+		if(hasEffect(ArcanusStatusEffects.FLOAT.get()))
 			fallDistance = 0;
 
 		return value;
 	}
 
-	@Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$negateFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
-		if(prevVelocity != null && !getDamageSources().create(DamageTypes.STALAGMITE).equals(damageSource) && fallDistance > getSafeFallDistance() && hasStatusEffect(ArcanusStatusEffects.BOUNCY.get())) {
-			if(!getWorld().isClient) {
-				getWorld().playSoundFromEntity(null, this, SoundEvents.BLOCK_SLIME_BLOCK_FALL, getSoundCategory(), 1, 1);
+		if(prevVelocity != null && !damageSources().source(DamageTypes.STALAGMITE).equals(damageSource) && fallDistance > getMaxFallDistance() && hasEffect(ArcanusStatusEffects.BOUNCY.get())) {
+			if(!level().isClientSide) {
+				level().playSound(null, this, SoundEvents.SLIME_BLOCK_FALL, getSoundSource(), 1, 1);
 
-				if(!bypassesLandingEffects()) {
-					setVelocity(getVelocity().getX(), -prevVelocity.getY() * 0.99, getVelocity().getZ());
-					velocityModified = true;
+				if(!isSuppressingBounce()) {
+					setDeltaMovement(getDeltaMovement().x(), -prevVelocity.y() * 0.99, getDeltaMovement().z());
+					hurtMarked = true;
 				}
 			}
 
@@ -182,25 +182,25 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void arcanuscontinuum$tick(CallbackInfo info) {
-		if (!getWorld().isClient() && ArcanusComponents.PATTERN_COMPONENT.isProvidedBy(this) && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(this)) {
-			prevVelocity = getVelocity();
+		if (!level().isClientSide() && ArcanusComponents.PATTERN_COMPONENT.isProvidedBy(this) && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(this)) {
+			prevVelocity = getDeltaMovement();
 
-			EntityAttributeInstance speedAttr = getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+			AttributeInstance speedAttr = getAttribute(Attributes.MOVEMENT_SPEED);
 			List<Pattern> pattern = ArcanusComponents.getPattern((LivingEntity) (Object) this);
-			ItemStack stack = getMainHandStack();
+			ItemStack stack = getMainHandItem();
 
 			if (speedAttr != null) {
 				if (stack.getItem() instanceof StaffItem && ArcanusComponents.isCasting((LivingEntity) (Object) this) && pattern.size() == 3) {
 					int index = Arcanus.getSpellIndex(pattern);
-					NbtCompound tag = stack.getOrCreateSubNbt(Arcanus.MOD_ID);
-					NbtList list = tag.getList("Spells", NbtElement.COMPOUND_TYPE);
+					CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
+					ListTag list = tag.getList("Spells", Tag.TAG_COMPOUND);
 
 					if (!list.isEmpty() && index < list.size()) {
 						Spell spell = Spell.fromNbt(list.getCompound(index));
-						EntityAttributeModifier speedMod = new EntityAttributeModifier(uUID, "Spell Speed Modifier", spell.getWeight().getSlowdown(), EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+						AttributeModifier speedMod = new AttributeModifier(uUID, "Spell Speed Modifier", spell.getWeight().getSlowdown(), AttributeModifier.Operation.MULTIPLY_TOTAL);
 
 						if (!speedAttr.hasModifier(speedMod))
-							speedAttr.addTemporaryModifier(speedMod);
+							speedAttr.addTransientModifier(speedMod);
 					}
 				} else if (speedAttr.getModifier(uUID) != null)
 					speedAttr.removeModifier(uUID);
@@ -208,8 +208,8 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 		}
 	}
 
-	@ModifyReturnValue(method = "createAttributes", at = @At("RETURN"))
-	private static DefaultAttributeContainer.Builder arcanuscontinuum$createPlayerAttributes(DefaultAttributeContainer.Builder builder) {
+	@ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
+	private static AttributeSupplier.Builder arcanuscontinuum$createPlayerAttributes(AttributeSupplier.Builder builder) {
 		ArcanusEntityAttributes.registerAll();
 
 		return builder
@@ -223,28 +223,29 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 			.add(ArcanusEntityAttributes.SPELL_COOL_DOWN.get());
 	}
 
-	@WrapOperation(method = "handleFrictionAndCalculateMovement", at = @At(value = "INVOKE",
-		target = "Lnet/minecraft/entity/LivingEntity;getVelocity()Lnet/minecraft/util/math/Vec3d;",
+	@WrapOperation(method = "handleRelativeFrictionAndCalculateMovement", at = @At(value = "INVOKE",
+		target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
 		ordinal = 1
 	))
-	private Vec3d arcanuscontinuum$floatAround(LivingEntity livingEntity, Operation<Vec3d> original, Vec3d movementInput, float slipperiness) {
+	private Vec3 arcanuscontinuum$floatAround(LivingEntity livingEntity, Operation<Vec3> original, Vec3 movementInput, float slipperiness) {
 		// FIXME smooth out vertical movement, currently a bit jolting
-		if(hasStatusEffect(ArcanusStatusEffects.FLOAT.get())) {
-			return getVelocity().add(0, jumping ? getMovementSpeed() : isSneaking() ? -getMovementSpeed() : 0, 0);
+		if(hasEffect(ArcanusStatusEffects.FLOAT.get())) {
+			return getDeltaMovement().add(0, jumping ? getSpeed() : isShiftKeyDown() ? -getSpeed() : 0, 0);
 		}
 
 		return original.call(livingEntity);
 	}
 
-	@Inject(method = "onStatusEffectRemoved", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$cantRemoveCurse(StatusEffectInstance effect, CallbackInfo info) {
-		if(effect.getEffectType() == ArcanusStatusEffects.COPPER_CURSE.get())
+	@Inject(method = "onEffectRemoved", at = @At("HEAD"), cancellable = true)
+	private void arcanuscontinuum$cantRemoveCurse(MobEffectInstance effect, CallbackInfo info) {
+		if(effect.getEffect() == ArcanusStatusEffects.COPPER_CURSE.get()) {
 			info.cancel();
+		}
 	}
 
 	@ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
-	public Vec3d arcanuscontinuum$invertInput(Vec3d movementInput) {
-		if(!(self instanceof PlayerEntity) && hasStatusEffect(ArcanusStatusEffects.DISCOMBOBULATE.get())) {
+	public Vec3 arcanuscontinuum$invertInput(Vec3 movementInput) {
+		if(!(self instanceof Player) && hasEffect(ArcanusStatusEffects.DISCOMBOBULATE.get())) {
 			movementInput = movementInput.multiply(-1, 1, -1);
 		}
 

@@ -1,23 +1,23 @@
 package dev.cammiescorner.arcanuscontinuum.client.renderer.entity.magic;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicRuneEntityModel;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicRuneEntity;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 
 public class MagicRuneEntityRenderer extends EntityRenderer<MagicRuneEntity> {
-	private static final Identifier TEXTURE = Arcanus.id("textures/entity/magic/rune.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/magic/rune.png");
 	private final MagicRuneEntityModel model;
 	private final int[] keyFrames = {
 			16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
@@ -34,30 +34,30 @@ public class MagicRuneEntityRenderer extends EntityRenderer<MagicRuneEntity> {
 			4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16
 	};
 
-	public MagicRuneEntityRenderer(EntityRendererFactory.Context ctx) {
+	public MagicRuneEntityRenderer(EntityRendererProvider.Context ctx) {
 		super(ctx);
-		model = new MagicRuneEntityModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(MagicRuneEntityModel.MODEL_LAYER));
+		model = new MagicRuneEntityModel(Minecraft.getInstance().getEntityModels().bakeLayer(MagicRuneEntityModel.MODEL_LAYER));
 	}
 
 	@Override
-	public void render(MagicRuneEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertices, int light) {
+	public void render(MagicRuneEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertices, light);
 		Color color = ArcanusHelper.getMagicColor(entity);
-		float alpha = keyFrames[entity.age % keyFrames.length] / 16F;
+		float alpha = keyFrames[entity.tickCount % keyFrames.length] / 16F;
 		float r = color.redF() * alpha;
 		float g = color.greenF() * alpha;
 		float b = color.blueF() * alpha;
 		color = Color.fromFloatsRGB(r, g, b);
 
-		matrices.push();
-		matrices.translate(0, Math.sin((entity.age + tickDelta) * 0.125) * 0.05, 0);
-		matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(entity.age + tickDelta));
-		model.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), color.alphaF());
-		matrices.pop();
+		matrices.pushPose();
+		matrices.translate(0, Math.sin((entity.tickCount + tickDelta) * 0.125) * 0.05, 0);
+		matrices.mulPose(Axis.YP.rotationDegrees(entity.tickCount + tickDelta));
+		model.renderToBuffer(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color.redF(), color.greenF(), color.blueF(), color.alphaF());
+		matrices.popPose();
 	}
 
 	@Override
-	public Identifier getTexture(MagicRuneEntity entity) {
+	public ResourceLocation getTextureLocation(MagicRuneEntity entity) {
 		return TEXTURE;
 	}
 }

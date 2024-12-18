@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.common.registry;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig.*;
 import dev.cammiescorner.arcanuscontinuum.api.spells.*;
 import dev.cammiescorner.arcanuscontinuum.common.compat.ArcanusCompat;
 import dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.attack.*;
@@ -10,16 +11,14 @@ import dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.utilit
 import dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes.*;
 import dev.upcraft.sparkweave.api.registry.RegistryHandler;
 import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-
-import static dev.cammiescorner.arcanuscontinuum.ArcanusConfig.*;
 
 public class ArcanusSpellComponents {
 	public static final RegistryHandler<SpellComponent> SPELL_COMPONENTS = RegistryHandler.create(Arcanus.SPELL_COMPONENTS_REGISTRY_KEY, Arcanus.MOD_ID);
@@ -28,7 +27,7 @@ public class ArcanusSpellComponents {
 	/** DO NOT DELETE OR DISABLE. WILL BREAK THE ENTIRE MOD. **/
 	public static final RegistrySupplier<SpellComponent> EMPTY = SPELL_COMPONENTS.register("empty", () -> new SpellShape(true, Weight.NONE, 0, 1, 0, 0, 0) {
 		@Override
-		public void cast(@Nullable LivingEntity caster, Vec3d castFrom, @Nullable Entity castSource, ServerWorld world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
+		public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 			castNext(caster, castFrom, castSource, world, stack, spellGroups, groupIndex, potency);
 		}
 	});

@@ -1,21 +1,21 @@
 package dev.cammiescorner.arcanuscontinuum.api.spells;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 public class SpellComponent {
-	private static final MutableText DISABLED_TRANSLATED_NAME = Arcanus.translate("spell_component", "disabled").formatted(Formatting.OBFUSCATED);
+	private static final MutableComponent DISABLED_TRANSLATED_NAME = Arcanus.translate("spell_component", "disabled").withStyle(ChatFormatting.OBFUSCATED);
 	private final boolean isEnabled;
 	private final Weight weight;
 	private final double manaCost;
 	private final int coolDown;
 	private final int minLevel;
 	private String translationKey;
-	private Identifier texture;
+	private ResourceLocation texture;
 
 	public SpellComponent(boolean isEnabled, Weight weight, double manaCost, int coolDown, int minLevel) {
 		this.isEnabled = isEnabled;
@@ -53,9 +53,9 @@ public class SpellComponent {
 		return Arcanus.format(getCoolDown() / 20D);
 	}
 
-	public Identifier getTexture() {
+	public ResourceLocation getTexture() {
 		if(texture == null) {
-			Identifier id = Arcanus.SPELL_COMPONENTS.getId(this);
+			ResourceLocation id = Arcanus.SPELL_COMPONENTS.getKey(this);
 			String extra = "";
 
 			if(this instanceof SpellShape)
@@ -63,7 +63,7 @@ public class SpellComponent {
 			if(this instanceof SpellEffect)
 				extra = "effects/";
 
-			texture = new Identifier(id.getNamespace(), "textures/spell_components/" + extra + id.getPath() + ".png");
+			texture = new ResourceLocation(id.getNamespace(), "textures/spell_components/" + extra + id.getPath() + ".png");
 		}
 
 		return texture;
@@ -71,15 +71,15 @@ public class SpellComponent {
 
 	public String getTranslationKey() {
 		if(translationKey == null)
-			translationKey = Util.createTranslationKey("spell_component", Arcanus.SPELL_COMPONENTS.getId(this));
+			translationKey = Util.makeDescriptionId("spell_component", Arcanus.SPELL_COMPONENTS.getKey(this));
 
 		return translationKey;
 	}
 
-	public MutableText getTranslatedName() {
+	public MutableComponent getTranslatedName() {
 		if(!isEnabled())
 			return DISABLED_TRANSLATED_NAME;
 
-		return Text.translatable(getTranslationKey());
+		return Component.translatable(getTranslationKey());
 	}
 }

@@ -1,5 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.client.renderer.feature;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.feature.HaloModel;
@@ -9,48 +11,46 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.StaffType;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.HaloData;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Arm;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Axis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.Player;
 
-public class HaloFeatureRenderer<T extends PlayerEntity, M extends EntityModel<T>> extends FeatureRenderer<T, M> {
+public class HaloFeatureRenderer<T extends Player, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
-	private static final Identifier TEXTURE = Arcanus.id("textures/entity/feature/halo.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/feature/halo.png");
 	private final HaloModel<T> model;
 
-	public HaloFeatureRenderer(FeatureRendererContext<T, M> context) {
+	public HaloFeatureRenderer(RenderLayerParent<T, M> context) {
 		super(context);
-		model = new HaloModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(HaloModel.MODEL_LAYER));
+		model = new HaloModel<>(Minecraft.getInstance().getEntityModels().bakeLayer(HaloModel.MODEL_LAYER));
 	}
 
 	@Override
-	public void render(MatrixStack matrices, VertexConsumerProvider vertices, int light, T player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		if(!player.hasStatusEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+	public void render(PoseStack matrices, MultiBufferSource vertices, int light, T player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+		if(!player.hasEffect(ArcanusStatusEffects.ANONYMITY.get())) {
 			HaloData data = player.datasync$getOrDefault(Arcanus.HALO_DATA, HaloData.empty());
 
 			if(data.shouldShow()) {
 				Color color = data.color();
 
-				model.setAngles(player, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
-				model.spinny.yaw = (float) Math.toRadians((player.age + player.getId() + tickDelta) * 2);
-				model.spinny.pivotZ = -3;
+				model.setupAnim(player, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
+				model.spinny.yRot = (float) Math.toRadians((player.tickCount + player.getId() + tickDelta) * 2);
+				model.spinny.z = -3;
 
-				matrices.push();
+				matrices.pushPose();
 
-				if (ArcanusComponents.isCasting(player) && player.getMainHandStack().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF)
-					matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(player.getMainArm() == Arm.RIGHT ? 65 : -65));
+				if (ArcanusComponents.isCasting(player) && player.getMainHandItem().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF)
+					matrices.mulPose(Axis.YP.rotationDegrees(player.getMainArm() == HumanoidArm.RIGHT ? 65 : -65));
 
-				model.render(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, color.redF(), color.greenF(), color.blueF(), 1.0F);
-				matrices.pop();
+				model.renderToBuffer(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color.redF(), color.greenF(), color.blueF(), 1.0F);
+				matrices.popPose();
 			}
 		}
 	}
