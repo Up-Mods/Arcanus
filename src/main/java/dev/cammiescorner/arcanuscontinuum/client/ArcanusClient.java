@@ -51,6 +51,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.Item;
@@ -83,6 +84,8 @@ public class ArcanusClient implements ClientModInitializer {
 	public static BooleanSupplier FIRST_PERSON_SHOW_HANDS = () -> true;
 	public static boolean castingSpeedHasCoolDown;
 	private final Minecraft client = Minecraft.getInstance();
+	private static int hudTimer;
+	private static int hitTimer;
 
 	@Override
 	public void onInitializeClient(ModContainer mod) {
@@ -180,10 +183,6 @@ public class ArcanusClient implements ClientModInitializer {
 			}
 		});
 
-		var obj = new Object() {
-			int hudTimer, hitTimer;
-		};
-
 		WorldRenderEvents.AFTER_ENTITIES.register(context -> {
 			if (!context.camera().isDetached() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean())
 				renderFirstPersonBolt(context);
@@ -199,24 +198,26 @@ public class ArcanusClient implements ClientModInitializer {
 
 			if (player != null && vertices != null && interactionManager != null) {
 				if (client.hitResult instanceof BlockHitResult hitResult && ArcanusComponents.isBlockWarded(world, hitResult.getBlockPos()) && player.swinging) {
-					if (client.options.keyAttack.isDown() && player.attackAnim == 0)
-						obj.hitTimer = 20;
+					if (client.options.keyAttack.isDown() && player.attackAnim == 0) {
+						hitTimer = 20;
+					}
 
-					if (!ArcanusComponents.isOwnerOfBlock(player, hitResult.getBlockPos()) || obj.hitTimer > 0) {
+					if (!ArcanusComponents.isOwnerOfBlock(player, hitResult.getBlockPos()) || hitTimer > 0) {
 						BlockPos blockPos = hitResult.getBlockPos();
-						float alpha = obj.hitTimer / 20f;
+						float alpha = Mth.clamp(hitTimer / 20f, 0.0F, 1.0F);
 
 						renderWardedBlock(matrices, vertices, world, cameraPos, blockPos, alpha);
 						player.displayClientMessage(Arcanus.translate("text", "block_is_warded").withStyle(ChatFormatting.RED), true);
 					}
 
-					if (obj.hitTimer > 0)
-						obj.hitTimer -= 1;
+					if (hitTimer > 0) {
+						hitTimer -= 1;
+					}
 				}
 
 				if (player.getMainHandItem().is(ArcanusTags.STAVES) || player.getOffhandItem().is(ArcanusTags.STAVES)) {
 					AtomicReferenceArray<LevelChunk> chunks = context.world().getChunkSource().storage.chunks;
-					float alpha = (float) (Math.sin(world.getGameTime() * 0.06f) * 0.4f + 0.6f);
+					float alpha = Mth.sin(world.getGameTime() * 0.06f) * 0.4f + 0.6f;
 
 					for (int i = 0; i < chunks.length(); i++) {
 						ChunkAccess chunk = chunks.get(i);
@@ -289,15 +290,15 @@ public class ArcanusClient implements ClientModInitializer {
 				double manaLock = ArcanusComponents.getManaLock(player);
 
 				if (player.getMainHandItem().getItem() instanceof StaffItem)
-					obj.hudTimer = Math.min(obj.hudTimer + 1, 40);
+					hudTimer = Math.min(hudTimer + 1, 40);
 				else
-					obj.hudTimer = Math.max(obj.hudTimer - 1, 0);
+					hudTimer = Math.max(hudTimer - 1, 0);
 
-				if (obj.hudTimer > 0) {
+				if (hudTimer > 0) {
 					int x = 0;
 					int y = client.getWindow().getGuiScaledHeight() - 28;
 					int width = 96;
-					float alpha = obj.hudTimer > 20 ? 1F : obj.hudTimer / 20F;
+					float alpha = hudTimer > 20 ? 1F : hudTimer / 20F;
 
 					RenderSystem.enableBlend();
 					RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
@@ -367,9 +368,9 @@ public class ArcanusClient implements ClientModInitializer {
 		int light = world.getMaxLocalRawBrightness(blockPos);
 		int overlay = OverlayTexture.NO_OVERLAY;
 		Color color = ArcanusHelper.getMagicColor(ArcanusComponents.getWardedBlocks(world.getChunk(blockPos)).get(blockPos));
-		float r = (color.red() >> 16 & 255) * alpha;
-		float g = (color.green() >> 8 & 255) * alpha;
-		float b = (color.blue() & 255) * alpha;
+		float r = Mth.clamp(color.redF() * alpha, 0.0F, 1.0F);
+		float g = Mth.clamp(color.greenF() * alpha, 0.0F, 1.0F);
+		float b = Mth.clamp(color.blueF() * alpha, 0.0F, 1.0F);
 
 		color = Color.fromFloatsRGB(r, g, b);
 
