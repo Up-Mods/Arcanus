@@ -11,14 +11,11 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FoodData.class)
 public class HungerManagerMixin {
-	@WrapOperation(method = "tick", at = @At(value = "INVOKE_ASSIGN",
+	@WrapOperation(method = "tick", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/world/level/GameRules;getBoolean(Lnet/minecraft/world/level/GameRules$Key;)Z",
 			ordinal = 0
 	))
 	public boolean arcanuscontinuum$hasBurnout(GameRules instance, GameRules.Key<GameRules.BooleanValue> gameRuleKey, Operation<Boolean> original, Player player) {
-		if(ArcanusComponents.getBurnout(player) > 0.0D) {
-			return false;
-		}
-		return original.call(instance, gameRuleKey);
+		return original.call(instance, gameRuleKey) && ArcanusComponents.getBurnout(player) <= 0.0D;
 	}
 }
