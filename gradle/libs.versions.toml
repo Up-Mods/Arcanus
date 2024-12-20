@@ -11,7 +11,6 @@ parchment_mappings = "2023.09.03"
 
 quilted_fabric_api = "7.7.0+0.92.2-1.20.1"
 cca = "5.2.2"
-trinkets = "3.7.2"
 sparkweave = "0.4.1"
 patchouli = "1.20.1-84-FABRIC"
 reach_attr = "2.4.0"
@@ -41,7 +40,6 @@ cca_block = { module = "dev.onyxstudios.cardinal-components-api:cardinal-compone
 cca_chunk = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-chunk", version.ref = "cca" }
 cca_entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
 cca_scoreboard = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-scoreboard", version.ref = "cca" }
-trinkets = { module = "dev.emi:trinkets", version.ref = "trinkets" }
 sparkweave = { module = "dev.upcraft.sparkweave:Sparkweave-Quilt", version.ref = "sparkweave" }
 patchouli = { module = "vazkii.patchouli:Patchouli", version.ref = "patchouli" }
 reach_attr = { module = "com.jamieswhiteshirt:reach-entity-attributes", version.ref = "reach_attr" }

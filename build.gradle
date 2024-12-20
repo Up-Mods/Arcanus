@@ -97,17 +97,15 @@ dependencies {
 
 	modImplementation libs.quilt.loader
 	modImplementation libs.quilted.fabric.api
-	modLocalRuntime (libs.quilted.fabric.api.deprecated) {
+	modLocalRuntime(libs.quilted.fabric.api.deprecated) {
 		exclude(group: "org.quiltmc", module: "quilt-loader")
 	}
 
-	modImplementation (libs.sparkweave) {
+	modImplementation(libs.sparkweave) {
 		exclude(group: "io.github.llamalad7")
 	}
 
 	modImplementation libs.bundles.cca
-
-	modImplementation libs.trinkets
 
 	modCompileOnly libs.patchouli
 	modRuntimeOnly libs.patchouli
@@ -151,7 +149,6 @@ dependencies {
 	// emi
 	modCompileOnly variantOf(libs.emi) { classifier 'api' }
 	modLocalRuntime libs.emi
-
 
 	// LazyDFU
 	modLocalRuntime libs.lazydfu
