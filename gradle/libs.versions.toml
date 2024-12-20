@@ -27,7 +27,7 @@ spruceui = "5.0.2+1.20"
 sodium = "mc1.20.1-0.5.3"
 iris = "1.6.11+1.20.1"
 explosive_enhancement = "1.2.2-1.20.x"
-datasync = "0.8.0"
+datasync = "0.9.0"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
