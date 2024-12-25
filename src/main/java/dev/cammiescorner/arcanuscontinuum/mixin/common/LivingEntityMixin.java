@@ -49,11 +49,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Targetable {
-	@Unique private static final UUID uUID = UUID.fromString("e348efa3-7987-4912-b82a-03c5c75eccb1");
 	@Unique private final LivingEntity self = (LivingEntity) (Entity) this;
 	@Unique private Vec3 prevVelocity;
 
@@ -197,13 +195,13 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 
 					if (!list.isEmpty() && index < list.size()) {
 						Spell spell = Spell.fromNbt(list.getCompound(index));
-						AttributeModifier speedMod = new AttributeModifier(uUID, "Spell Speed Modifier", spell.getWeight().getSlowdown(), AttributeModifier.Operation.MULTIPLY_TOTAL);
+						AttributeModifier speedMod = new AttributeModifier(Arcanus.SPELL_SPEED_MODIFIER_ID, "Spell Speed Modifier", spell.getWeight().getSlowdown(), AttributeModifier.Operation.MULTIPLY_TOTAL);
 
 						if (!speedAttr.hasModifier(speedMod))
 							speedAttr.addTransientModifier(speedMod);
 					}
-				} else if (speedAttr.getModifier(uUID) != null)
-					speedAttr.removeModifier(uUID);
+				} else if (speedAttr.getModifier(Arcanus.SPELL_SPEED_MODIFIER_ID) != null)
+					speedAttr.removeModifier(Arcanus.SPELL_SPEED_MODIFIER_ID);
 			}
 		}
 	}

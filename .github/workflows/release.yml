@@ -23,7 +23,7 @@ jobs:
         uses: srfrnk/current-time@5a4163ad035ccd9a407ec9e519c3b6ba1b633d1e
         id: current_time
         with:
-          format: YYYYMMDDHHmmss
+          format: YY.MMDD.HHmm
       - name: Setup ENV
         run: echo "TAG=${{github.ref_name}}" >> $GITHUB_ENV
       - name: Copy Maven Upload URL
@@ -50,13 +50,13 @@ jobs:
           files: |
             build/libs/!(*-@(dev|sources|javadoc|slim)).jar
             build/libs/*-@(sources|javadoc).jar
-      - name: Publish (Quilt)
-        id: publish_quilt
+      - name: Publish (Fabric)
+        id: publish_fabric
         uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          version: ${{ github.ref_name }}+Quilt
+          version: ${{ github.ref_name }}+Fabric
           version-type: beta
           files: |
             build/libs/!(*-@(dev|sources|javadoc|slim)).jar
@@ -66,6 +66,6 @@ jobs:
         with:
           version: ${{ github.ref_name }}
           webhook-url: ${{ secrets.ANNOUNCEMENT_WEBHOOK_URL }}
-          curseforge-project-id: ${{ steps.publish_quilt.outputs.curseforge-id }}
-          modrinth-project-id: ${{ steps.publish_quilt.outputs.modrinth-id }}
+          curseforge-project-id: ${{ steps.publish_fabric.outputs.curseforge-id }}
+          modrinth-project-id: ${{ steps.publish_fabric.outputs.modrinth-id }}
           thumbnail-url: https://mod-assets.upcraft.dev/promo/arcanus-continuum/icon_128x.png

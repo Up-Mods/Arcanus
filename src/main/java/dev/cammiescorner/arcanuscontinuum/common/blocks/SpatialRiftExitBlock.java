@@ -12,18 +12,18 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 public class SpatialRiftExitBlock extends Block implements EntityBlock {
 	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
 	public SpatialRiftExitBlock() {
-		super(QuiltBlockSettings.copyOf(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get()).sound(SoundType.STONE).lightLevel(value -> 7));
+		super(BlockBehaviour.Properties.copy(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get()).sound(SoundType.STONE).lightLevel(value -> 7));
 		registerDefaultState(getStateDefinition().any().setValue(ACTIVE, false));
 	}
 

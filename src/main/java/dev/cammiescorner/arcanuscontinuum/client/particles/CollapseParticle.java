@@ -1,9 +1,10 @@
 package dev.cammiescorner.arcanuscontinuum.client.particles;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
-import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 public class CollapseParticle extends TextureSheetParticle {
 	private final SpriteSet spriteProvider;
@@ -28,7 +29,7 @@ public class CollapseParticle extends TextureSheetParticle {
 		return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public static class Factory implements ParticleProvider<SimpleParticleType> {
 		private final SpriteSet spriteProvider;
 

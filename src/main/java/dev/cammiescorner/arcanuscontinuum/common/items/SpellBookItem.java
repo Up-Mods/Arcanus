@@ -25,14 +25,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.List;
 import java.util.Locale;
 
 public class SpellBookItem extends Item {
 	public SpellBookItem() {
-		super(new QuiltItemSettings().stacksTo(1));
+		super(new Item.Properties().stacksTo(1));
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.PlayerHelper;
 import dev.onyxstudios.cca.api.v3.component.Component;
+import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -37,7 +38,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.worldgen.dimension.api.QuiltDimensions;
 
 import java.util.*;
 
@@ -135,7 +135,7 @@ public class PocketDimensionComponent implements Component {
 				}
 
 				var bottomCenterPos = Vec3.atBottomCenterOf(plot.getBounds().getCenter().atY(plot.min().getY() + 1));
-				QuiltDimensions.teleport(entity, pocketDim, new PortalInfo(bottomCenterPos, Vec3.ZERO, entity.getYRot(), entity.getXRot()));
+				FabricDimensions.teleport(entity, pocketDim, new PortalInfo(bottomCenterPos, Vec3.ZERO, entity.getYRot(), entity.getXRot()));
 			}
 		}
 	}
@@ -160,7 +160,7 @@ public class PocketDimensionComponent implements Component {
 					targetPos = Vec3.atBottomCenterOf(targetWorld.getSharedSpawnPos());
 				}
 
-				QuiltDimensions.teleport(entity, targetWorld, new PortalInfo(targetPos, Vec3.ZERO, entity.getYRot(), entity.getXRot()));
+				FabricDimensions.teleport(entity, targetWorld, new PortalInfo(targetPos, Vec3.ZERO, entity.getYRot(), entity.getXRot()));
 				return true;
 			}
 		}
@@ -177,7 +177,7 @@ public class PocketDimensionComponent implements Component {
 				spawnPos = world.getSharedSpawnPos();
 				angle = entity.getYRot();
 			}
-			QuiltDimensions.teleport(entity, world, new PortalInfo(Vec3.atBottomCenterOf(spawnPos), Vec3.ZERO, angle, entity.getXRot()));
+			FabricDimensions.teleport(entity, world, new PortalInfo(Vec3.atBottomCenterOf(spawnPos), Vec3.ZERO, angle, entity.getXRot()));
 		}
 
 		Arcanus.LOGGER.warn("Unable to teleport entity out of pocket dimension: {} ({})", entity.getScoreboardName(), entity.getUUID());
@@ -275,7 +275,7 @@ public class PocketDimensionComponent implements Component {
 				}
 
 				var overworld = server.overworld();
-				QuiltDimensions.teleport(player, overworld, new PortalInfo(Vec3.atBottomCenterOf(overworld.getSharedSpawnPos()), Vec3.ZERO, overworld.getSharedSpawnAngle(), 0.0F));
+				FabricDimensions.teleport(player, overworld, new PortalInfo(Vec3.atBottomCenterOf(overworld.getSharedSpawnPos()), Vec3.ZERO, overworld.getSharedSpawnAngle(), 0.0F));
 
 				// TODO make translatable
 				player.sendSystemMessage(net.minecraft.network.chat.Component.literal("The pocket dimension plot you were in has been cleared by an admin."));

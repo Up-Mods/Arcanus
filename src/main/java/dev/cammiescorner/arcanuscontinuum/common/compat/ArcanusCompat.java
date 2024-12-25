@@ -1,43 +1,12 @@
 package dev.cammiescorner.arcanuscontinuum.common.compat;
 
-import org.quiltmc.loader.api.QuiltLoader;
+import dev.upcraft.sparkweave.api.util.modcompat.CompatHelper;
 
-import java.util.function.Supplier;
+public class ArcanusCompat {
 
-public enum ArcanusCompat {
-	FIRST_PERSON("firstperson"),
-	PATCHOULI("patchouli"),
-	PEHKUI("pehkui");
+	public static final CompatHelper EXPLOSIVE_ENHANCEMENT = new CompatHelper("explosiveenhancement");
+	public static final CompatHelper FIRST_PERSON = new CompatHelper("firstperson");
+	public static final CompatHelper PATCHOULI = new CompatHelper("patchouli");
+	public static final CompatHelper PEHKUI = new CompatHelper("pehkui");
 
-	private final String modid;
-	private final boolean enabled;
-
-	ArcanusCompat(String modid) {
-		this.modid = modid;
-		this.enabled = QuiltLoader.isModLoaded(modid);
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void ifEnabled(Supplier<Runnable> runnable) {
-		if(isEnabled()) {
-			runnable.get().run();
-		}
-	}
-
-	public <T> T orElse(Supplier<Supplier<T>> supplier, T defaultValue) {
-		return isEnabled() ? supplier.get().get() : defaultValue;
-	}
-
-	public <T> T orElseGet(Supplier<Supplier<T>> supplier, Supplier<T> defaultValue) {
-		return isEnabled() ? supplier.get().get() : defaultValue.get();
-	}
-
-	public void orThrow() {
-		if(!isEnabled()) {
-			throw new IllegalStateException("[ArcanusCompat] Error: mod " + modid + " is not loaded!");
-		}
-	}
 }

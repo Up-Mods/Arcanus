@@ -26,11 +26,11 @@ jobs:
         env:
           GRADLE_BUILD_CACHE_USER: ${{ secrets.GRADLE_BUILD_CACHE_USER }}
           GRADLE_BUILD_CACHE_TOKEN: ${{ secrets.GRADLE_BUILD_CACHE_TOKEN }}
-      - name: Upload build artifacts (Quilt)
+      - name: Upload build artifacts (Fabric)
         continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}-Quilt-${{ github.sha }}
+          name: ${{ github.event.repository.name }}-Fabric-${{ github.sha }}
           path: |
             build/libs/*.jar
             !build/libs/*-dev.jar

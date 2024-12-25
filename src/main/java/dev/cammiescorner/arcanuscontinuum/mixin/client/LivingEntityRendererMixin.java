@@ -2,11 +2,11 @@ package dev.cammiescorner.arcanuscontinuum.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.renderer.feature.CounterFeatureRenderer;
 import dev.cammiescorner.arcanuscontinuum.client.renderer.feature.ManaWingsFeatureRenderer;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.StaffType;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -46,7 +46,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
 		matrices.pushPose();
 		matrices.translate(-offset.x(), -offset.y(), -offset.z());
-		ArcanusHelper.renderBolts(livingEntity, livingEntity.getPosition(tickDelta).add(0, livingEntity.getEyeHeight(livingEntity.getPose()) * 0.9, 0), matrices, vertices);
+		ArcanusClient.renderBolts(livingEntity, livingEntity.getPosition(tickDelta).add(0, livingEntity.getEyeHeight(livingEntity.getPose()) * 0.9, 0), matrices, vertices);
 		matrices.popPose();
 	}
 

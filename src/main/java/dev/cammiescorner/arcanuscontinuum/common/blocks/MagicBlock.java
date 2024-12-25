@@ -7,16 +7,16 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 public class MagicBlock extends Block implements EntityBlock {
 	public MagicBlock() {
-		super(QuiltBlockSettings.copyOf(Blocks.OBSIDIAN)
+		super(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN)
 			.sound(SoundType.GLASS)
 			.lightLevel(value -> 12)
 			.noOcclusion()

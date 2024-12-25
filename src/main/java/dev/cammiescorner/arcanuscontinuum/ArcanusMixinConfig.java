@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanuscontinuum;
 
+import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.tree.ClassNode;
-import org.quiltmc.loader.api.QuiltLoader;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
@@ -29,7 +29,7 @@ public class ArcanusMixinConfig implements IMixinConfigPlugin {
 		if(mixinClassName.startsWith(COMPAT_MIXIN_PACKAGE)) {
 			var sub = mixinClassName.substring(COMPAT_MIXIN_PACKAGE.length() + 1);
 			var modid = sub.substring(0, sub.indexOf("."));
-			if(!QuiltLoader.isModLoaded(modid)) {
+			if(!FabricLoader.getInstance().isModLoaded(modid)) {
 				LOGGER.debug("Skipping integration {} because mod {} is not loaded", mixinClassName, modid);
 				return false;
 			}

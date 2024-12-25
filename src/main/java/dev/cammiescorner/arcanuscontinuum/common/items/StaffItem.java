@@ -27,7 +27,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.List;
 import java.util.Locale;
@@ -47,7 +46,7 @@ public class StaffItem extends Item {
 	}
 
 	public StaffItem(StaffType staffType, Color defaultPrimaryColor, Color defaultSecondaryColor, boolean isDonorOnly) {
-		super(new QuiltItemSettings().stacksTo(1));
+		super(new Item.Properties().stacksTo(1));
 		this.attributeModifiers = Suppliers.memoize(() -> ImmutableMultimap.<Attribute, AttributeModifier>builder()
 			.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -1, AttributeModifier.Operation.ADDITION))
 			.put(ReachEntityAttributes.ATTACK_RANGE, new AttributeModifier(ATTACK_RANGE_MODIFIER_ID, "Weapon modifier", 0.5, AttributeModifier.Operation.ADDITION))

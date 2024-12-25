@@ -16,9 +16,9 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.DyeableArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.Map;
 import java.util.UUID;
@@ -34,7 +34,7 @@ public class WizardArmorItem extends DyeableArmorItem {
 	private final Supplier<Multimap<Attribute, AttributeModifier>> attributeModifiers;
 
 	public WizardArmorItem(ArmorMaterial armorMaterial, Type equipmentSlot, double manaRegen, double magicResist, double spellPotency, double manaCostMultiplier, double spellCoolDown) {
-		super(armorMaterial, equipmentSlot, new QuiltItemSettings().stacksTo(1));
+		super(armorMaterial, equipmentSlot, new Item.Properties().stacksTo(1));
 
 		this.attributeModifiers = Suppliers.memoize(() -> {
 			UUID modifierID = MODIFIER_IDS.get(equipmentSlot);

@@ -1,10 +1,10 @@
 package dev.cammiescorner.arcanuscontinuum.common.registry;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
+import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
-import org.quiltmc.qsl.poi.api.PointOfInterestHelper;
 
 public class ArcanusPointsOfInterest {
 	public static final ResourceKey<PoiType> MAGIC_DOOR = create("magic_door");

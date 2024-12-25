@@ -6,8 +6,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -37,9 +35,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRetaliateTarg
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.entity.effect.api.StatusEffectRemovalReason;
 
 import java.util.Arrays;
 import java.util.List;
@@ -136,21 +132,6 @@ OpossumEntity extends TamableAnimal implements SmartBrainOwner<OpossumEntity> {
 		}
 
 		return opossumEntity;
-	}
-
-	@Override
-	public boolean removeStatusEffect(@NotNull MobEffect type, @NotNull StatusEffectRemovalReason reason) {
-		return false;
-	}
-
-	@Override
-	public int clearStatusEffects(@NotNull StatusEffectRemovalReason reason) {
-		return 0;
-	}
-
-	@Override
-	public void onStatusEffectRemoved(@NotNull MobEffectInstance effect, @NotNull StatusEffectRemovalReason reason) {
-
 	}
 
 	@Override

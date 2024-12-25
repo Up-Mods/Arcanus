@@ -7,6 +7,7 @@ import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncScalePacket;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.networking.api.PlayerLookup;
 
 import java.util.List;
 
@@ -37,10 +37,14 @@ public class SizeChangeSpellEffect extends SpellEffect {
 
 			if (!entity.level().isClientSide()) {
 				RegistrySupplier<SpellEffect> supplier = ArcanusSpellComponents.SHRINK.is(this) ? ArcanusSpellComponents.SHRINK : ArcanusSpellComponents.ENLARGE;
-				for (ServerPlayer lookup : PlayerLookup.tracking(entity))
-					SyncScalePacket.send(lookup, entity, this, effects.stream().filter(supplier::is).count() * potency);
-				if (entity instanceof ServerPlayer serverPlayer)
-					SyncScalePacket.send(serverPlayer, entity, this, effects.stream().filter(supplier::is).count() * potency);
+
+				var strength = effects.stream().filter(supplier::is).count() * potency;
+				for (ServerPlayer lookup : PlayerLookup.tracking(entity)) {
+					SyncScalePacket.send(lookup, entity, this, strength);
+				}
+				if (entity instanceof ServerPlayer serverPlayer) {
+					SyncScalePacket.send(serverPlayer, entity, this, strength);
+				}
 			}
 		}
 	}

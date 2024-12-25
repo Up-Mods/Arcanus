@@ -4,14 +4,15 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.gui.screens.ArcaneWorkbenchScreen;
 import dev.cammiescorner.arcanuscontinuum.common.util.WorkbenchMode;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import org.quiltmc.loader.api.minecraft.ClientOnly;
-import org.quiltmc.qsl.networking.api.PacketSender;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class SyncWorkbenchModePacket {
 	public static final ResourceLocation ID = Arcanus.id("sync_workbench_mode");
@@ -22,7 +23,7 @@ public class SyncWorkbenchModePacket {
 		ServerPlayNetworking.send(receiver, ID, buf);
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public static void handle(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
 		int ordinal = buf.readVarInt();
 

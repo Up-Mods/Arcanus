@@ -1,17 +1,16 @@
 [versions]
-quilt_loom = "1.8.5"
+fabric_loom = "1.9.2"
 
-# The latest versions are available at https://lambdaurora.dev/tools/import_quilt.html
 minecraft = "1.20.1"
-quilt_loader = "0.28.0-beta.3"
+fabric_loader = "0.16.9"
 
 # https://parchmentmc.org/docs/getting-started
 parchment_minecraft = "1.20.1"
 parchment_mappings = "2023.09.03"
 
-quilted_fabric_api = "7.7.0+0.92.2-1.20.1"
+fabric_api = "0.92.2+1.20.1"
 cca = "5.2.2"
-sparkweave = "0.4.1"
+sparkweave = "0.5.0"
 patchouli = "1.20.1-84-FABRIC"
 reach_attr = "2.4.0"
 modmenu = "7.2.2"
@@ -31,16 +30,15 @@ datasync = "0.9.0"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
-quilt_loader = { module = "org.quiltmc:quilt-loader", version.ref = "quilt_loader" }
+fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
 
-quilted_fabric_api = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api", version.ref = "quilted_fabric_api" }
-quilted_fabric_api_deprecated = { module = "org.quiltmc.quilted-fabric-api:quilted-fabric-api-deprecated", version.ref = "quilted_fabric_api" }
+fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
 cca_base = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-base", version.ref = "cca" }
 cca_block = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-block", version.ref = "cca" }
 cca_chunk = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-chunk", version.ref = "cca" }
 cca_entity = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-entity", version.ref = "cca" }
 cca_scoreboard = { module = "dev.onyxstudios.cardinal-components-api:cardinal-components-scoreboard", version.ref = "cca" }
-sparkweave = { module = "dev.upcraft.sparkweave:Sparkweave-Quilt", version.ref = "sparkweave" }
+sparkweave = { module = "dev.upcraft.sparkweave:Sparkweave-Fabric", version.ref = "sparkweave" }
 patchouli = { module = "vazkii.patchouli:Patchouli", version.ref = "patchouli" }
 reach_attr = { module = "com.jamieswhiteshirt:reach-entity-attributes", version.ref = "reach_attr" }
 datasync_fabric = { module = "dev.upcraft.datasync:datasync-minecraft-1.20.1-fabric", version.ref = "datasync" }
@@ -60,10 +58,9 @@ explosive_enhancement = { module = "maven.modrinth:explosive-enhancement", versi
 
 # If you have multiple similar dependencies, you can declare a dependency bundle and reference it on the build script with "libs.bundles.example".
 [bundles]
-quilted_fabric_api = ["quilted_fabric_api", "quilted_fabric_api_deprecated"]
 cca = ["cca_base", "cca_block", "cca_chunk", "cca_entity", "cca_scoreboard"]
 lambdynamiclights_runtime = ["lambdynamiclights", "spruceui"]
 pehkui_runtime = ["pehkui", "kanos"]
 
 [plugins]
-quilt_loom = { id = "org.quiltmc.loom", version.ref = "quilt_loom" }
+fabric_loom = { id = "fabric-loom", version.ref = "fabric_loom" }

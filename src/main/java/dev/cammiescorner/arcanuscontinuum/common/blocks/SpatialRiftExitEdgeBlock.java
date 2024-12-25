@@ -7,17 +7,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 public class SpatialRiftExitEdgeBlock extends HorizontalDirectionalBlock implements EntityBlock {
 	public static final BooleanProperty CORNER = BooleanProperty.create("corner");
 
 	public SpatialRiftExitEdgeBlock() {
-		super(QuiltBlockSettings.copyOf(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+		super(BlockBehaviour.Properties.copy(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
 			.sound(SoundType.STONE)
 			.lightLevel(value -> 9)
 		);

@@ -32,9 +32,15 @@ import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.*;
 import dev.cammiescorner.arcanuscontinuum.common.registry.*;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -52,6 +58,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.Item;
@@ -64,16 +72,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
-import org.quiltmc.qsl.block.extensions.api.client.BlockRenderLayerMap;
-import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
-import org.quiltmc.qsl.resource.loader.api.ResourceLoader;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.BooleanSupplier;
 
+@Environment(EnvType.CLIENT)
 public class ArcanusClient implements ClientModInitializer {
 	private static final ResourceLocation HUD_ELEMENTS = Arcanus.id("textures/gui/hud/mana_bar.png");
 	private static final ResourceLocation STUN_OVERLAY = Arcanus.id("textures/gui/hud/stunned_vignette.png");
@@ -88,7 +92,7 @@ public class ArcanusClient implements ClientModInitializer {
 	private static int hitTimer;
 
 	@Override
-	public void onInitializeClient(ModContainer mod) {
+	public void onInitializeClient() {
 		ArcanusCompat.FIRST_PERSON.ifEnabled(() -> FirstPersonCompat::init);
 
 		MenuScreens.register(ArcanusScreenHandlers.SPELLCRAFT_SCREEN_HANDLER.get(), SpellcraftScreen::new);
@@ -128,8 +132,8 @@ public class ArcanusClient implements ClientModInitializer {
 
 		ParticleFactoryRegistry.getInstance().register(ArcanusParticles.COLLAPSE.get(), CollapseParticle.Factory::new);
 
-		BlockRenderLayerMap.put(RenderType.cutout(), ArcanusBlocks.MAGIC_DOOR.get(), ArcanusBlocks.ARCANE_WORKBENCH.get());
-		BlockRenderLayerMap.put(RenderType.translucent(), ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), ArcanusBlocks.MAGIC_DOOR.get(), ArcanusBlocks.ARCANE_WORKBENCH.get());
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
 		BlockEntityRenderers.register(ArcanusBlockEntities.MAGIC_BLOCK.get(), MagicBlockEntityRenderer::new);
 		BlockEntityRenderers.register(ArcanusBlockEntities.SPATIAL_RIFT_EXIT.get(), SpatialRiftExitBlockEntityRenderer::new);
 
@@ -177,7 +181,7 @@ public class ArcanusClient implements ClientModInitializer {
 			if (item instanceof StaffItem) {
 				ResourceLocation id = holder.getId();
 				StaffItemRenderer staffItemRenderer = new StaffItemRenderer(id);
-				ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(staffItemRenderer);
+				ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(staffItemRenderer);
 				BuiltinItemRendererRegistry.INSTANCE.register(item, staffItemRenderer);
 				ModelLoadingPlugin.register(ctx -> ctx.addModels(new ModelResourceLocation(id.withPath(id.getPath() + "_gui"), "inventory"), new ModelResourceLocation(id.withPath(id.getPath() + "_handheld"), "inventory")));
 			}
@@ -354,6 +358,76 @@ public class ArcanusClient implements ClientModInitializer {
 //		});
 	}
 
+	public static void renderBolts(LivingEntity entity, Vec3 startPos, PoseStack matrices, MultiBufferSource vertices) {
+		if (ArcanusComponents.shouldRenderBolt(entity)) {
+			VertexConsumer vertex = vertices.getBuffer(getMagicCircles(WHITE));
+			RandomSource random = RandomSource.create((entity.tickCount + entity.getId()) / 2);
+			Vec3 endPos = ArcanusComponents.getBoltPos(entity);
+
+			var color = ArcanusHelper.getMagicColor(entity);
+
+			int steps = (int) (startPos.distanceTo(endPos) * 5);
+
+			renderBolt(matrices, vertex, random, startPos, endPos, steps, 0, true, color.redF(), color.greenF(), color.blueF(), OverlayTexture.NO_OVERLAY, LightTexture.FULL_BRIGHT);
+		}
+	}
+
+	private static void renderBolt(PoseStack matrices, VertexConsumer vertex, RandomSource random, Vec3 startPos, Vec3 endPos, int steps, int currentStep, boolean recurse, float r, float g, float b, int overlay, int light) {
+		Vec3 direction = endPos.subtract(startPos);
+		Vec3 lastPos = startPos;
+		Matrix4f modelMatrix = matrices.last().pose();
+		Matrix3f normalMatrix = matrices.last().normal();
+
+		for (int i = currentStep; i < steps; i++) {
+			Vec3 randomOffset = new Vec3(random.nextGaussian(), random.nextIntBetweenInclusive(-1 / (steps * 2), 1 / (steps * 2)), random.nextGaussian());
+			Vec3 nextPos = startPos.add(direction.scale((i + 1) / (float) steps)).add(randomOffset.scale(1 / 12F));
+
+			for (int j = 0; j < 4; j++) {
+				Vec3 vert1 = switch (j) {
+					case 0 -> lastPos.add(0.025, 0.025, 0);
+					case 1 -> lastPos.add(-0.025, 0.025, 0);
+					case 2 -> lastPos.add(-0.025, -0.025, 0);
+					case 3 -> lastPos.add(0.025, -0.025, 0);
+					default -> lastPos;
+				};
+				Vec3 vert2 = switch (j) {
+					case 0 -> lastPos.add(-0.025, 0.025, 0);
+					case 1 -> lastPos.add(-0.025, -0.025, 0);
+					case 2 -> lastPos.add(0.025, -0.025, 0);
+					case 3 -> lastPos.add(0.025, 0.025, 0);
+					default -> lastPos;
+				};
+				Vec3 vert3 = switch (j) {
+					case 0 -> nextPos.add(0.025, 0.025, 0);
+					case 1 -> nextPos.add(-0.025, 0.025, 0);
+					case 2 -> nextPos.add(-0.025, -0.025, 0);
+					case 3 -> nextPos.add(0.025, -0.025, 0);
+					default -> nextPos;
+				};
+				Vec3 vert4 = switch (j) {
+					case 0 -> nextPos.add(-0.025, 0.025, 0);
+					case 1 -> nextPos.add(-0.025, -0.025, 0);
+					case 2 -> nextPos.add(0.025, -0.025, 0);
+					case 3 -> nextPos.add(0.025, 0.025, 0);
+					default -> nextPos;
+				};
+				Vec3 normal = vert2.subtract(vert1).cross(vert3.subtract(vert1));
+
+				vertex.vertex(modelMatrix, (float) vert2.x(), (float) vert2.y(), (float) vert2.z()).color(r, g, b, 0.6F).uv(0, 0).overlayCoords(overlay).uv2(light).normal(normalMatrix, (float) normal.x(), (float) normal.y(), (float) normal.z()).endVertex();
+				vertex.vertex(modelMatrix, (float) vert4.x(), (float) vert4.y(), (float) vert4.z()).color(r, g, b, 0.6F).uv(0, 0).overlayCoords(overlay).uv2(light).normal(normalMatrix, (float) normal.x(), (float) normal.y(), (float) normal.z()).endVertex();
+				vertex.vertex(modelMatrix, (float) vert3.x(), (float) vert3.y(), (float) vert3.z()).color(r, g, b, 0.6F).uv(0, 0).overlayCoords(overlay).uv2(light).normal(normalMatrix, (float) normal.x(), (float) normal.y(), (float) normal.z()).endVertex();
+				vertex.vertex(modelMatrix, (float) vert1.x(), (float) vert1.y(), (float) vert1.z()).color(r, g, b, 0.6F).uv(0, 0).overlayCoords(overlay).uv2(light).normal(normalMatrix, (float) normal.x(), (float) normal.y(), (float) normal.z()).endVertex();
+			}
+
+			while (recurse && random.nextFloat() < 0.2F) {
+				Vec3 randomOffset1 = new Vec3(random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
+				renderBolt(matrices, vertex, random, lastPos, endPos.add(randomOffset1.scale(Math.min(random.nextFloat(), 0.6F))), steps, i + 1, false, r, g, b, overlay, light);
+			}
+
+			lastPos = nextPos;
+		}
+	}
+
 	private static void renderWardedBlock(PoseStack matrices, MultiBufferSource vertices, Level world, Vec3 cameraPos, BlockPos blockPos, float alpha) {
 		VertexConsumer consumer = vertices.getBuffer(LAYER);
 		Vec3 pos = Vec3.atCenterOf(blockPos);
@@ -410,7 +484,7 @@ public class ArcanusClient implements ClientModInitializer {
 
 			matrices.pushPose();
 			matrices.translate(-camPos.x(), -camPos.y(), -camPos.z());
-			ArcanusHelper.renderBolts(player, startPos.add(0, -0.1, 0), matrices, context.consumers());
+			renderBolts(player, startPos.add(0, -0.1, 0), matrices, context.consumers());
 			matrices.popPose();
 		}
 	}

@@ -5,13 +5,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.block.extensions.api.QuiltBlockSettings;
 
 public class UnbreakableMagicBlock extends Block implements EntityBlock {
 	public UnbreakableMagicBlock() {
-		super(QuiltBlockSettings.copyOf(Blocks.BEDROCK)
+		super(BlockBehaviour.Properties.copy(Blocks.BEDROCK)
 			.sound(SoundType.GLASS)
 			.lightLevel(value -> 12)
 			.noOcclusion()

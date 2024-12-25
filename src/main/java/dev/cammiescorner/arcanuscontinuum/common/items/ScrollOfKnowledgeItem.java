@@ -10,11 +10,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 public class ScrollOfKnowledgeItem extends Item {
 	public ScrollOfKnowledgeItem() {
-		super(new QuiltItemSettings().stacksTo(16));
+		super(new Item.Properties().stacksTo(16));
 	}
 
 	@Override

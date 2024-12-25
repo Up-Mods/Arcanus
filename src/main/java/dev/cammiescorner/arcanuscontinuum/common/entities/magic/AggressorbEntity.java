@@ -53,6 +53,11 @@ public class AggressorbEntity extends ThrowableProjectile implements Targetable 
 	}
 
 	@Override
+	public boolean canFreeze() {
+		return super.canFreeze();
+	}
+
+	@Override
 	protected void defineSynchedData() {
 		entityData.define(OWNER_ID, -1);
 		entityData.define(TARGET_ID, -1);

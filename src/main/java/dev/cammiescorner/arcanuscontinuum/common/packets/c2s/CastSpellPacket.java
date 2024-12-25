@@ -9,8 +9,11 @@ import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -22,9 +25,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.quiltmc.qsl.networking.api.PacketSender;
-import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
-import org.quiltmc.qsl.tag.api.TagRegistry;
 
 public class CastSpellPacket {
 	public static final ResourceLocation ID = Arcanus.id("cast_spell");
@@ -70,7 +70,7 @@ public class CastSpellPacket {
 					spell.cast(player, player.serverLevel(), stack);
 					player.displayClientMessage(Component.translatable(spell.getName()).withStyle(ChatFormatting.GREEN), true);
 
-					for(Holder<Item> holder : TagRegistry.getTag(ArcanusTags.STAVES))
+					for(Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(ArcanusTags.STAVES))
 						player.getCooldowns().addCooldown(holder.value(), (int) (spell.getCoolDown() * player.getAttributeValue(ArcanusEntityAttributes.SPELL_COOL_DOWN.get())));
 				}
 			}

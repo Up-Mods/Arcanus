@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_display_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "Cammie",
+    "Up"
+  ],
+  "contributors": [
+    "Arathain (Artist)",
+    "Evelyn (evieowlette) (Contributor)",
+    "SleepySheepy (Kelly) (Mod Namer)"
+  ],
+  "contact": {
+    "homepage": "${homepage_url}",
+    "issues": "${issues_url}",
+    "sources": "${sources_url}",
+    "discord": "${discord_url}"
+  },
+  "license": "${license_url}",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "*",
+  "custom": {
+    "mc-publish": {
+      "curseforge": "905345",
+      "modrinth": "UnnRjucf",
+      "dependencies": [
+        "fabric-api(required)#{curseforge:306612}{modrinth:P7dR8mSH}",
+        "patchouli(required)#{modrinth:nU0bVIaL}{curseforge:393236}",
+        "resourcefulconfig(required)#{modrinth:M1953qlQ}{curseforge:714059}",
+        "smartbrainlib(required)#{modrinth:PuyPazRT}{curseforge:661293}",
+        "sparkweave(required)#{modrinth:nf68xfAw}{curseforge:911456}",
+
+        "firstperson(optional)#{modrinth:H5XMjpHi}{curseforge:333287}",
+        "lambdynamiclights(optional)#{modrinth:yBW8D80W}{curseforge:393442}",
+        "pehkui(optional)#{modrinth:t5W7Jfwy}{curseforge:319596}"
+      ],
+      "loaders": [
+        "fabric",
+        "quilt"
+      ]
+    },
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "${discord_url}"
+      }
+    },
+    "cardinal-components": [
+      "${mod_id}:pocket_dimension",
+      "${mod_id}:warded_blocks",
+      "${mod_id}:wizard_level",
+      "${mod_id}:mana",
+      "${mod_id}:burnout",
+      "${mod_id}:casting",
+      "${mod_id}:casting_pattern",
+      "${mod_id}:last_cast_time",
+      "${mod_id}:stun",
+      "${mod_id}:quests",
+      "${mod_id}:magic_color",
+      "${mod_id}:bolt_target",
+      "${mod_id}:spell_shape",
+      "${mod_id}:size",
+      "${mod_id}:pocket_dimension_portal",
+      "${mod_id}:slow_time",
+      "${mod_id}:aggressorb",
+      "${mod_id}:guardian_orb",
+      "${mod_id}:portal_cool_down",
+      "${mod_id}:counter"
+    ],
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1508": [
+        "dev/cammiescorner/arcanuscontinuum/api/entities/Targetable"
+      ],
+      "net/minecraft/class_1309": [
+        "dev/cammiescorner/arcanuscontinuum/api/entities/Targetable"
+      ]
+    }
+  },
+  "entrypoints": {
+    "main": [
+      "dev.cammiescorner.arcanuscontinuum.Arcanus"
+    ],
+    "client": [
+      "dev.cammiescorner.arcanuscontinuum.client.ArcanusClient"
+    ],
+    "cardinal-components": [
+      "dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents"
+    ],
+    "dynamiclights": [
+      "dev.cammiescorner.arcanuscontinuum.common.compat.DynamicLightsCompat"
+    ],
+    "modmenu": [
+      "dev.cammiescorner.arcanuscontinuum.common.compat.ModMenuCompat"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
+  "accessWidener": "${mod_id}.accesswidener",
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": "=${minecraft_version}",
+    "java": ">=${java_version}",
+    "fabric-api": "*",
+    "sparkweave": ">=0.5.0 <0.100.0",
+    "resourcefulconfig": "*",
+    "smartbrainlib": "*",
+    "cardinal-components-base": "*",
+    "cardinal-components-block": "*",
+    "cardinal-components-chunk": "*",
+    "cardinal-components-entity": "*",
+    "cardinal-components-scoreboard": "*"
+  }
+}

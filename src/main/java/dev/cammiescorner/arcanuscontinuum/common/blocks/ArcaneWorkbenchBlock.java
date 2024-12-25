@@ -11,9 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -29,7 +27,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.item.setting.api.QuiltItemSettings;
 
 import java.util.List;
 
@@ -45,11 +42,6 @@ public class ArcaneWorkbenchBlock extends HorizontalDirectionalBlock implements 
 	public ArcaneWorkbenchBlock() {
 		super(Properties.of().mapColor(DyeColor.RED).strength(2F, 3F).lightLevel(value -> 12).noOcclusion().randomTicks());
 		registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
-	}
-
-	@Override
-	public Item createItem() {
-		return new BlockItem(this, new QuiltItemSettings());
 	}
 
 	@Override

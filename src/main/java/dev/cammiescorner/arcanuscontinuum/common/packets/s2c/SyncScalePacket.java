@@ -5,15 +5,16 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import org.quiltmc.loader.api.minecraft.ClientOnly;
-import org.quiltmc.qsl.networking.api.PacketSender;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class SyncScalePacket {
 	public static final ResourceLocation ID = Arcanus.id("sync_scale");
@@ -26,7 +27,7 @@ public class SyncScalePacket {
 		ServerPlayNetworking.send(receiver, ID, buf);
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public static void handle(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
 		int entityId = buf.readInt();
 		SpellEffect effect = buf.readBoolean() ?  ArcanusSpellComponents.SHRINK.get() : ArcanusSpellComponents.ENLARGE.get();

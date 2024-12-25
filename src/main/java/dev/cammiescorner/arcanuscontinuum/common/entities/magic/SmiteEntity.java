@@ -4,6 +4,8 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSoundEvents;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.*;
@@ -19,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.quiltmc.loader.api.minecraft.ClientOnly;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,23 +40,23 @@ public class SmiteEntity extends Entity implements Targetable {
 
 	@Override
 	public void tick() {
-		if(!level().isClientSide() && (getCaster() == null || !getCaster().isAlive())) {
+		if (!level().isClientSide() && (getCaster() == null || !getCaster().isAlive())) {
 			kill();
 			return;
 		}
 
-		if(!level().isClientSide()) {
-			if(tickCount <= 9) {
+		if (!level().isClientSide()) {
+			if (tickCount <= 9) {
 				AABB box = new AABB(getX() - 4, getY() - 1, getZ() - 4, getX() + 4, (level().getHeight() + 2048) - getY(), getZ() + 4);
 
-				for(SpellEffect effect : new HashSet<>(effects)) {
-					if(effect.shouldTriggerOnceOnExplosion()) {
+				for (SpellEffect effect : new HashSet<>(effects)) {
+					if (effect.shouldTriggerOnceOnExplosion()) {
 						effect.effect(getCaster(), this, level(), new EntityHitResult(this), effects, stack, potency);
 						continue;
 					}
 
 					level().getEntitiesOfClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted()).forEach(entity -> {
-						if(!hasHit.contains(entity.getUUID())) {
+						if (!hasHit.contains(entity.getUUID())) {
 							effect.effect(getCaster(), this, level(), new EntityHitResult(entity), effects, stack, potency);
 
 							hasHit.add(entity.getUUID());
@@ -64,20 +65,21 @@ public class SmiteEntity extends Entity implements Targetable {
 				}
 			}
 
-			if(tickCount > 23)
+			if (tickCount > 23) {
 				kill();
-		}
-		else {
+			}
+		} else {
 			clientTick();
 		}
 
 		super.tick();
 	}
 
-	@ClientOnly
+	@Environment(EnvType.CLIENT)
 	public void clientTick() {
-		if(tickCount == 1)
+		if (tickCount == 1) {
 			level().playLocalSound(getX(), getY(), getZ(), ArcanusSoundEvents.SMITE, SoundSource.NEUTRAL, Mth.clamp(1 - (distanceTo(Minecraft.getInstance().player) / 100F), 0, 1), (1F + (random.nextFloat() - random.nextFloat()) * 0.2F) * 0.7F, false);
+		}
 	}
 
 	@Override
@@ -102,10 +104,12 @@ public class SmiteEntity extends Entity implements Targetable {
 		ListTag effectList = tag.getList("Effects", Tag.TAG_STRING);
 		ListTag entityList = tag.getList("HasHit", Tag.TAG_INT_ARRAY);
 
-		for(int i = 0; i < effectList.size(); i++)
+		for (int i = 0; i < effectList.size(); i++) {
 			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(effectList.getString(i))));
-		for(Tag nbtElement : entityList)
+		}
+		for (Tag nbtElement : entityList) {
 			hasHit.add(NbtUtils.loadUUID(nbtElement));
+		}
 	}
 
 	@Override
@@ -117,10 +121,12 @@ public class SmiteEntity extends Entity implements Targetable {
 		tag.put("ItemStack", stack.save(new CompoundTag()));
 		tag.putDouble("Potency", potency);
 
-		for(SpellEffect effect : effects)
+		for (SpellEffect effect : effects) {
 			effectList.add(StringTag.valueOf(Arcanus.SPELL_COMPONENTS.getKey(effect).toString()));
-		for(UUID uuid1 : hasHit)
+		}
+		for (UUID uuid1 : hasHit) {
 			entityList.add(NbtUtils.createUUID(uuid1));
+		}
 
 		tag.put("Effects", effectList);
 		tag.put("HasHit", entityList);
@@ -131,8 +137,9 @@ public class SmiteEntity extends Entity implements Targetable {
 	}
 
 	private LivingEntity getCaster() {
-		if(level() instanceof ServerLevel serverWorld && serverWorld.getEntity(casterId) instanceof LivingEntity caster)
+		if (level() instanceof ServerLevel serverWorld && serverWorld.getEntity(casterId) instanceof LivingEntity caster) {
 			return caster;
+		}
 
 		return null;
 	}

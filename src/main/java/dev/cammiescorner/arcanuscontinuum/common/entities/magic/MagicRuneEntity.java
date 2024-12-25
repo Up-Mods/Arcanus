@@ -48,7 +48,7 @@ public class MagicRuneEntity extends Entity implements Targetable {
 		}
 
 		if(level() instanceof ServerLevel serverWorld && tickCount > ArcanusConfig.SpellShapes.RuneShapeProperties.delay) {
-			LivingEntity entity = level().getNearestEntity(LivingEntity.class, TargetingConditions.forNonCombat().selector(livingEntity -> livingEntity.isAlive() && !livingEntity.isSpectator() && livingEntity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted()), null, getX(), getY(), getZ(), new AABB(-0.5, 0, -0.5, 0.5, 0.2, 0.5).move(position()));
+			LivingEntity entity = level().getNearestEntity(LivingEntity.class, TargetingConditions.forNonCombat().selector(livingEntity -> livingEntity.isAlive() && !livingEntity.isSpectator() && livingEntity.arcanuscontinuum$canBeTargeted()), null, getX(), getY(), getZ(), new AABB(-0.5, 0, -0.5, 0.5, 0.2, 0.5).move(position()));
 
 			if(entity != null) {
 				for(SpellEffect effect : new HashSet<>(effects))
