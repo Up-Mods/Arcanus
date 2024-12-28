@@ -22,7 +22,7 @@ public class ArcanusBlockTagsProvider extends FabricTagProvider.BlockTagProvider
 		getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
 			.add(Blocks.CHISELED_BOOKSHELF)
 			.add(ArcanusBlocks.ARCANE_WORKBENCH.get())
-			.add(ArcanusBlocks.MAGIC_BLOCK.get());
+			.add(ArcanusBlocks.MAGIC_DOOR.get());
 
 		getOrCreateTagBuilder(BlockTags.WITHER_IMMUNE)
 			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
