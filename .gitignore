@@ -4,7 +4,7 @@ build/
 out/
 classes/
 
-# Quilt Loom
+# Loom
 run/
 
 # Eclipse
@@ -28,3 +28,6 @@ workspace/
 
 # macOS
 *.DS_Store
+
+# data generation cache
+src/main/generated/.cache/

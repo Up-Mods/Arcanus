@@ -1,0 +1,7 @@
+{
+  "processors": [
+    {
+      "processor_type": "arcanuscontinuum:wizard_tower_processor"
+    }
+  ]
+}

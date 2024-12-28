@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "base": {
+    "item": "minecraft:diamond_chestplate"
+  },
+  "result": {
+    "item": "arcanuscontinuum:battle_mage_chestplate"
+  },
+  "template": {
+    "item": "arcanuscontinuum:battle_mage_upgrade_smithing_template"
+  }
+}

@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.SpatialRiftExitBlock;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.SpatialRiftExitEdgeBlock;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusDimensions;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.PlayerHelper;
@@ -42,7 +43,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class PocketDimensionComponent implements Component {
-	public static final ResourceKey<Level> POCKET_DIM = ResourceKey.create(Registries.DIMENSION, Arcanus.id("pocket_dimension"));
 
 	private static final int REPLACE_FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS;
 	private static final int DIMENSION_PADDING_Y = 8;
@@ -123,7 +123,7 @@ public class PocketDimensionComponent implements Component {
 
 	public void teleportToPocketDimension(GameProfile pocketOwner, Entity entity) {
 		if (!entity.level().isClientSide()) {
-			ServerLevel pocketDim = server.getLevel(POCKET_DIM);
+			ServerLevel pocketDim = server.getLevel(ArcanusDimensions.POCKET_DIMENSION);
 			if (pocketDim != null) {
 				var plot = getAssignedPlotSpace(pocketOwner.getId());
 				if (plot == null) {
@@ -141,7 +141,7 @@ public class PocketDimensionComponent implements Component {
 	}
 
 	public boolean teleportOutOfPocketDimension(Entity entity) {
-		if (PlayerHelper.isFakePlayer(entity) || entity.level().isClientSide() || entity.level().dimension() != POCKET_DIM) {
+		if (PlayerHelper.isFakePlayer(entity) || entity.level().isClientSide() || entity.level().dimension() != ArcanusDimensions.POCKET_DIMENSION) {
 			return false;
 		}
 

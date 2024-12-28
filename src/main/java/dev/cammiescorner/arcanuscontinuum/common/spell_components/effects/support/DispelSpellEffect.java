@@ -5,7 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusEntityTags;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -41,7 +41,7 @@ public class DispelSpellEffect extends SpellEffect {
 
 			ArcanusComponents.resetScale(entityHit.getEntity());
 
-			if(entityHit.getEntity().getType().is(ArcanusTags.DISPELLABLE))
+			if(entityHit.getEntity().getType().is(ArcanusEntityTags.DISPELLABLE))
 				entityHit.getEntity().kill();
 		}
 	}

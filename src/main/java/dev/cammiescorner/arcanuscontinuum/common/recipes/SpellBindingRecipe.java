@@ -3,10 +3,10 @@ package dev.cammiescorner.arcanuscontinuum.common.recipes;
 import com.google.common.collect.Lists;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Spell;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusItemTags;
 import dev.cammiescorner.arcanuscontinuum.common.items.SpellBookItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusRecipes;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -53,7 +53,7 @@ public class SpellBindingRecipe extends CustomRecipe {
 			ItemStack stack = inv.getItem(i);
 
 			if (!stack.isEmpty()) {
-				if(stack.is(ArcanusTags.STAVES)) {
+				if(stack.is(ArcanusItemTags.STAVES)) {
 					if (i != 4) {
 						return false;
 					}
@@ -77,7 +77,7 @@ public class SpellBindingRecipe extends CustomRecipe {
 	public ItemStack assemble(CraftingContainer inv, RegistryAccess manager) {
 		ItemStack result = inv.getItem(4).copy();
 
-		if (!result.is(ArcanusTags.STAVES)) {
+		if (!result.is(ArcanusItemTags.STAVES)) {
 			return ItemStack.EMPTY;
 		}
 

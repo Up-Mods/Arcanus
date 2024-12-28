@@ -4,11 +4,11 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public class SpellComponent {
-	private static final MutableComponent DISABLED_TRANSLATED_NAME = Arcanus.translate("spell_component", "disabled").withStyle(ChatFormatting.OBFUSCATED);
+	public static final String DISABLED_TRANSLATION_KEY = Util.makeDescriptionId("arcanuscontinuum.spell_component", Arcanus.id("disabled"));
+	private static final Component DISABLED_TRANSLATED_NAME = Component.translatable(DISABLED_TRANSLATION_KEY).withStyle(ChatFormatting.OBFUSCATED);
 	private final boolean isEnabled;
 	private final Weight weight;
 	private final double manaCost;
@@ -71,12 +71,12 @@ public class SpellComponent {
 
 	public String getTranslationKey() {
 		if(translationKey == null)
-			translationKey = Util.makeDescriptionId("spell_component", Arcanus.SPELL_COMPONENTS.getKey(this));
+			translationKey = Util.makeDescriptionId("arcanuscontinuum.spell_component", Arcanus.SPELL_COMPONENTS.getKey(this));
 
 		return translationKey;
 	}
 
-	public MutableComponent getTranslatedName() {
+	public Component getName() {
 		if(!isEnabled())
 			return DISABLED_TRANSLATED_NAME;
 

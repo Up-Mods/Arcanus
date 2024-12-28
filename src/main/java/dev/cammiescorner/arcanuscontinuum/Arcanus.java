@@ -10,7 +10,6 @@ import dev.cammiescorner.arcanuscontinuum.common.packets.c2s.*;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncConfigValuesPacket;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncStatusEffectPacket;
 import dev.cammiescorner.arcanuscontinuum.common.registry.*;
-import dev.cammiescorner.arcanuscontinuum.common.structures.WizardTowerProcessor;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.HaloData;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.WizardData;
@@ -42,7 +41,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +57,6 @@ public class Arcanus implements ModInitializer {
 
 	public static final ResourceKey<Registry<SpellComponent>> SPELL_COMPONENTS_REGISTRY_KEY = ResourceKey.createRegistryKey(id("spell_components"));
 	public static final DefaultedRegistry<SpellComponent> SPELL_COMPONENTS = FabricRegistryBuilder.createDefaulted(SPELL_COMPONENTS_REGISTRY_KEY, id("empty")).buildAndRegister();
-	public static final StructureProcessorType<WizardTowerProcessor> WIZARD_TOWER_PROCESSOR = StructureProcessorType.register(Arcanus.id("wizard_tower_processor").toString(), WizardTowerProcessor.CODEC);
 	public static final Color DEFAULT_MAGIC_COLOUR = Color.fromInt(0x68e1ff, Color.Ordering.RGB);
 
 	public static final SyncToken<WizardData> WIZARD_DATA = DataSyncAPI.register(WizardData.class, WizardData.ID, WizardData.CODEC);
@@ -83,6 +80,9 @@ public class Arcanus implements ModInitializer {
 		ArcanusScreenHandlers.SCREEN_HANDLERS.accept(registryService);
 		ArcanusSpellComponents.SPELL_COMPONENTS.accept(registryService);
 		ArcanusStatusEffects.STATUS_EFFECTS.accept(registryService);
+		ArcanusStructureProcessorTypes.STRUCTURE_PROCESSORS.accept(registryService);
+
+		ArcanusCriteriaTriggers.register();
 
 		ServerPlayNetworking.registerGlobalReceiver(CastSpellPacket.ID, CastSpellPacket::handler);
 		ServerPlayNetworking.registerGlobalReceiver(SetCastingPacket.ID, SetCastingPacket::handler);
@@ -153,7 +153,7 @@ public class Arcanus implements ModInitializer {
 				InteractionResult result = stack.useOn(ctx);
 
 				if(!result.consumesAction()) {
-					player.displayClientMessage(Arcanus.translate("text", "block_is_warded").withStyle(ChatFormatting.RED), true);
+					player.displayClientMessage(Component.translatable("text.arcanuscontinuum.block_is_warded").withStyle(ChatFormatting.RED), true);
 					player.swing(hand);
 
 					return InteractionResult.FAIL;

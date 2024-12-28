@@ -1,7 +1,0 @@
-{
-  "parent": "arcanuscontinuum:block/door_top_right_open",
-  "textures": {
-    "bottom": "arcanuscontinuum:block/magic_door_bottom",
-    "top": "arcanuscontinuum:block/magic_door_top"
-  }
-}

@@ -75,6 +75,12 @@
       ],
       "net/minecraft/class_1309": [
         "dev/cammiescorner/arcanuscontinuum/api/entities/Targetable"
+      ],
+      "net/minecraft/class_161\u0024class_162": [
+        "dev/cammiescorner/arcanuscontinuum/common/util/ext/AdvancementBuilderExt"
+      ],
+      "net/minecraft/class_7877": [
+        "dev/cammiescorner/arcanuscontinuum/common/util/ext/RegistrySetBuilderExt"
       ]
     }
   },
@@ -84,6 +90,9 @@
     ],
     "client": [
       "dev.cammiescorner.arcanuscontinuum.client.ArcanusClient"
+    ],
+    "fabric-datagen": [
+      "dev.cammiescorner.arcanuscontinuum.datagen.ArcanusDataGenerator"
     ],
     "cardinal-components": [
       "dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents"

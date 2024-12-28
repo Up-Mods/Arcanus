@@ -173,6 +173,10 @@ loom {
 	}
 }
 
+fabricApi {
+	configureDataGeneration()
+}
+
 processResources {
 	filteringCharset "UTF-8"
 

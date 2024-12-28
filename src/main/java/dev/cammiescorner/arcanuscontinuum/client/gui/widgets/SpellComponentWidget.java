@@ -29,7 +29,7 @@ public class SpellComponentWidget extends AbstractButton {
 		this.onPress = onPress;
 
 		List<Component> textList = new ArrayList<>();
-		textList.add(component.getTranslatedName());
+		textList.add(component.getName());
 		textList.add(Arcanus.translate("spell_book", "weight").append(": ").withStyle(ChatFormatting.GREEN).append(Arcanus.translate("spell_book", "weight", component.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
 		textList.add(Arcanus.translate("spell_book", "mana_cost").append(": ").withStyle(ChatFormatting.BLUE).append(Component.literal(component.getManaCostAsString()).withStyle(ChatFormatting.GRAY)));
 

@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanuscontinuum.common.items;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.components.entity.WizardLevelComponent;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -18,20 +18,21 @@ public class ScrollOfKnowledgeItem extends Item {
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
-		WizardLevelComponent wizardLevel = ArcanusComponents.WIZARD_LEVEL_COMPONENT.get(user);
+		WizardLevelComponent component = ArcanusComponents.WIZARD_LEVEL_COMPONENT.get(user);
 		ItemStack stack = user.getItemInHand(hand);
 
-		if(wizardLevel.getLevel() < 10) {
-			wizardLevel.setLevel(wizardLevel.getLevel() + 1);
+		if(!world.isClientSide()) {
+			if(component.getLevel() < component.getMaxLevel()) {
+				component.setLevel(component.getLevel() + 1);
 
-			if(!user.isCreative())
-				stack.shrink(1);
+				if(!user.isCreative()) {
+					stack.shrink(1);
+				}
 
-			user.displayClientMessage(Arcanus.translate("scroll_of_knowledge", "level_up").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC), true);
-
-			return InteractionResultHolder.success(stack);
+				user.displayClientMessage(Component.translatable("text.arcanuscontinuum.use_item.scroll_of_knowledge").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC), true);
+			}
 		}
 
-		return super.use(world, user, hand);
+		return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());
 	}
 }

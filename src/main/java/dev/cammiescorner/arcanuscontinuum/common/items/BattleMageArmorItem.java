@@ -8,10 +8,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WeatheringCopper;
 
 import java.util.Locale;
+import java.util.function.Supplier;
 
 public class BattleMageArmorItem extends WizardArmorItem {
 	public BattleMageArmorItem(ArmorMaterial armorMaterial, Type equipmentSlot, double manaRegen, double magicResist, double spellPotency, double manaCostMultiplier, double spellCoolDown) {
@@ -22,12 +24,12 @@ public class BattleMageArmorItem extends WizardArmorItem {
 	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
 		super.inventoryTick(stack, world, entity, slot, selected);
 
-		if(world instanceof ServerLevel serverWorld && entity instanceof LivingEntity living && living.getItemBySlot(getEquipmentSlot()).equals(stack) && !isWaxed(stack)) {
+		if (world instanceof ServerLevel serverWorld && entity instanceof LivingEntity living && living.getItemBySlot(getEquipmentSlot()).equals(stack) && !isWaxed(stack)) {
 			int randomTickSpeed = serverWorld.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
 			int oxidation = getOxidation(stack).ordinal();
 			CompoundTag nbt = stack.getOrCreateTagElement(ItemStack.TAG_DISPLAY);
 
-			if(serverWorld.random.nextFloat() < 0.00001 * randomTickSpeed && oxidation < WeatheringCopper.WeatherState.values().length - 1)
+			if (serverWorld.random.nextFloat() < 0.00001 * randomTickSpeed && oxidation < WeatheringCopper.WeatherState.values().length - 1)
 				nbt.putInt("oxidation", oxidation + 1);
 		}
 	}
@@ -36,7 +38,7 @@ public class BattleMageArmorItem extends WizardArmorItem {
 	public String getDescriptionId(ItemStack stack) {
 		String s = "_";
 
-		if(isWaxed(stack))
+		if (isWaxed(stack))
 			s = "_waxed_";
 
 		return super.getDescriptionId(stack) + s + getOxidation(stack).name().toLowerCase(Locale.ROOT);
@@ -50,14 +52,11 @@ public class BattleMageArmorItem extends WizardArmorItem {
 
 	public static boolean isWaxed(ItemStack stack) {
 		CompoundTag tag = stack.getTagElement(ItemStack.TAG_DISPLAY);
-		return tag != null && tag.contains("waxed") && tag.getBoolean("waxed");
+		return tag != null && tag.getBoolean("waxed");
 	}
 
 	public static void setWaxed(ItemStack stack, boolean waxed) {
-		CompoundTag tag = stack.getOrCreateTagElement(ItemStack.TAG_DISPLAY);
-
-		if(tag != null)
-			tag.putBoolean("waxed", waxed);
+		stack.getOrCreateTagElement(ItemStack.TAG_DISPLAY).putBoolean("waxed", waxed);
 	}
 
 	public static WeatheringCopper.WeatherState getOxidation(ItemStack stack) {
@@ -66,8 +65,17 @@ public class BattleMageArmorItem extends WizardArmorItem {
 	}
 
 	public static void setOxidation(ItemStack stack, WeatheringCopper.WeatherState oxidizationLevel) {
-		CompoundTag tag = stack.getTagElement(ItemStack.TAG_DISPLAY);
-		if(tag != null)
-			tag.putInt("oxidation", oxidizationLevel.ordinal());
+		stack.getOrCreateTagElement(ItemStack.TAG_DISPLAY).putInt("oxidation", oxidizationLevel.ordinal());
+	}
+
+	public static ItemStack getStack(Supplier<? extends ItemLike> itemProvider, WeatheringCopper.WeatherState oxidizationLevel, boolean waxed) {
+		var stack = new ItemStack(itemProvider.get());
+		if (waxed) {
+			setWaxed(stack, true);
+		}
+		if (oxidizationLevel != WeatheringCopper.WeatherState.UNAFFECTED) {
+			setOxidation(stack, oxidizationLevel);
+		}
+		return stack;
 	}
 }

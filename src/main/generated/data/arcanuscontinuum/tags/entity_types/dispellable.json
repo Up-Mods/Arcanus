@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "arcanuscontinuum:aggressorb",
+    "arcanuscontinuum:area_of_effect",
+    "arcanuscontinuum:guardian_orb",
+    "arcanuscontinuum:magic_rune",
+    "arcanuscontinuum:mana_shield",
+    "arcanuscontinuum:necro_skeleton",
+    "arcanuscontinuum:pocket_dimension_portal"
+  ]
+}

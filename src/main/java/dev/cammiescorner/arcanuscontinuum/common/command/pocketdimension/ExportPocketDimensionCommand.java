@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.command.PocketDimensionCommand;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusDimensions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.selector.EntitySelector;
@@ -29,9 +30,9 @@ public class ExportPocketDimensionCommand {
 	private static int export(CommandContext<CommandSourceStack> context, GameProfile targetProfile) {
 		String date = LocalDateTime.now().format(FORMAT);
 		var server = context.getSource().getServer();
-		var pocketDim = server.getLevel(PocketDimensionComponent.POCKET_DIM);
+		var pocketDim = server.getLevel(ArcanusDimensions.POCKET_DIMENSION);
 		if(pocketDim == null) {
-			context.getSource().sendFailure(Component.literal("Unable to find %s".formatted(PocketDimensionComponent.POCKET_DIM)));
+			context.getSource().sendFailure(Component.literal("Unable to find %s".formatted(ArcanusDimensions.POCKET_DIMENSION)));
 			return 0;
 		}
 

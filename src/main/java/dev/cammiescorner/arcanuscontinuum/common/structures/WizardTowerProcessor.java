@@ -2,6 +2,7 @@ package dev.cammiescorner.arcanuscontinuum.common.structures;
 
 import com.mojang.serialization.Codec;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStructureProcessorTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerHelper;
@@ -56,6 +57,6 @@ public class WizardTowerProcessor extends StructureProcessor {
 
 	@Override
 	protected StructureProcessorType<?> getType() {
-		return Arcanus.WIZARD_TOWER_PROCESSOR;
+		return ArcanusStructureProcessorTypes.WIZARD_TOWER.get();
 	}
 }

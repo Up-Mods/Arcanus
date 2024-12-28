@@ -1,11 +1,11 @@
 package dev.cammiescorner.arcanuscontinuum.api.spells;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -128,7 +128,7 @@ public class Spell {
 			return;
 
 		if(groups.stream().flatMap(SpellGroup::getAllComponents).anyMatch(Predicate.not(SpellComponent::isEnabled))) {
-			caster.sendSystemMessage(Arcanus.translate("text", "disabled_component").withStyle(ChatFormatting.RED));
+			caster.sendSystemMessage(Component.translatable("text.arcanuscontinuum.disabled_component").withStyle(ChatFormatting.RED));
 			return;
 		}
 

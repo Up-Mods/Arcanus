@@ -1,9 +1,8 @@
 package dev.cammiescorner.arcanuscontinuum.common.entities.living;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusItemTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTradeOffers;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -11,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -133,13 +133,13 @@ public class WizardEntity extends AbstractVillager implements SmartBrainOwner<Wi
 	@Override
 	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
 		if (!level().isClientSide()) {
-			if (ArcanusComponents.getWizardLevel(player) > 0 || player.getItemBySlot(EquipmentSlot.HEAD).is(ArcanusTags.WIZARD_ARMOUR) || player.getItemBySlot(EquipmentSlot.CHEST).is(ArcanusTags.WIZARD_ARMOUR) || player.getItemBySlot(EquipmentSlot.LEGS).is(ArcanusTags.WIZARD_ARMOUR) || player.getItemBySlot(EquipmentSlot.FEET).is(ArcanusTags.WIZARD_ARMOUR)) {
+			if (ArcanusComponents.getWizardLevel(player) > 0 || player.getItemBySlot(EquipmentSlot.HEAD).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.CHEST).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.LEGS).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.FEET).is(ArcanusItemTags.WIZARD_ARMOR)) {
 				if (!getOffers().isEmpty()) {
 					setTradingPlayer(player);
 					openTradingScreen(player, getDisplayName(), 1);
 				}
 			} else {
-				player.displayClientMessage(Arcanus.translate("wizard_dialogue", "no_wizard_armour").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC).withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Arcanus.translate("wizard_dialogue", "put_on_robes").withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC)))), false);
+				player.displayClientMessage(Component.translatable("text.arcanuscontinuum.wizard_dialogue.no_wizard_armor").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC).withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("tooltip.arcanuscontinuum.wizard_dialogue.no_wizard_armor").withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC)))), false);
 			}
 		}
 

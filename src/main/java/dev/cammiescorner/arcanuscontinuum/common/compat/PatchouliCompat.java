@@ -9,4 +9,5 @@ public class PatchouliCompat {
 	public static ItemStack getCompendiumArcanus() {
 		return PatchouliAPI.get().getBookStack(Arcanus.id("compendium_arcanus"));
 	}
+
 }

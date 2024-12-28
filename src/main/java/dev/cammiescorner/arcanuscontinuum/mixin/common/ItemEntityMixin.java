@@ -3,8 +3,8 @@ package dev.cammiescorner.arcanuscontinuum.mixin.common;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusItemTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TraceableEntity;
@@ -25,7 +25,7 @@ public abstract class ItemEntityMixin extends Entity implements TraceableEntity 
 			target = "Lnet/minecraft/world/entity/player/Inventory;add(Lnet/minecraft/world/item/ItemStack;)Z"
 	))
 	private boolean arcanuscontinuum$copperCurse(Inventory instance, ItemStack stack, Operation<Boolean> original, Player player) {
-		if(player.hasEffect(ArcanusStatusEffects.COPPER_CURSE.get()) && !stack.is(ArcanusTags.COPPER_CURSE_IMMUNE) && stack.getItem() != Items.RAW_COPPER && (instance.getSlotWithRemainingSpace(stack) >= 0 || instance.getFreeSlot() >= 0)) {
+		if(player.hasEffect(ArcanusStatusEffects.COPPER_CURSE.get()) && !stack.is(ArcanusItemTags.COPPER_CURSE_IMMUNE) && stack.getItem() != Items.RAW_COPPER && (instance.getSlotWithRemainingSpace(stack) >= 0 || instance.getFreeSlot() >= 0)) {
 			int originalStackCount = stack.getCount();
 
 			for(int i = 0; i < originalStackCount; i++)

@@ -5,9 +5,9 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Spell;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellComponent;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusItemTags;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTags;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -70,7 +70,7 @@ public class CastSpellPacket {
 					spell.cast(player, player.serverLevel(), stack);
 					player.displayClientMessage(Component.translatable(spell.getName()).withStyle(ChatFormatting.GREEN), true);
 
-					for(Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(ArcanusTags.STAVES))
+					for(Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(ArcanusItemTags.STAVES))
 						player.getCooldowns().addCooldown(holder.value(), (int) (spell.getCoolDown() * player.getAttributeValue(ArcanusEntityAttributes.SPELL_COOL_DOWN.get())));
 				}
 			}

@@ -39,7 +39,7 @@ public class DamageSpellEffect extends SpellEffect {
 					damage *= ArcanusConfig.AttackEffects.ElectricEffectProperties.wetEntityDamageMultiplier;
 
 				entity.invulnerableTime = 0;
-				entity.hurt(sourceEntity instanceof Projectile projectile ? ArcanusDamageTypes.getMagicDamage(projectile, caster) : ArcanusDamageTypes.getMagicDamage(caster), (float) (damage * effects.stream().filter(ArcanusSpellComponents.DAMAGE::is).count() * potency));
+				entity.hurt(sourceEntity instanceof Projectile projectile ? ArcanusDamageTypes.getMagicProjectileDamage(projectile, caster) : ArcanusDamageTypes.getMagicDamage(caster), (float) (damage * effects.stream().filter(ArcanusSpellComponents.DAMAGE::is).count() * potency));
 			}
 		}
 	}

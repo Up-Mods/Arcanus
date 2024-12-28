@@ -26,6 +26,7 @@ import dev.cammiescorner.arcanuscontinuum.client.renderer.entity.magic.*;
 import dev.cammiescorner.arcanuscontinuum.client.renderer.item.StaffItemRenderer;
 import dev.cammiescorner.arcanuscontinuum.common.compat.ArcanusCompat;
 import dev.cammiescorner.arcanuscontinuum.common.compat.FirstPersonCompat;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusItemTags;
 import dev.cammiescorner.arcanuscontinuum.common.items.BattleMageArmorItem;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.*;
@@ -55,6 +56,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.Mth;
@@ -211,7 +213,7 @@ public class ArcanusClient implements ClientModInitializer {
 						float alpha = Mth.clamp(hitTimer / 20f, 0.0F, 1.0F);
 
 						renderWardedBlock(matrices, vertices, world, cameraPos, blockPos, alpha);
-						player.displayClientMessage(Arcanus.translate("text", "block_is_warded").withStyle(ChatFormatting.RED), true);
+						player.displayClientMessage(Component.translatable("text.arcanuscontinuum.block_is_warded").withStyle(ChatFormatting.RED), true);
 					}
 
 					if (hitTimer > 0) {
@@ -219,7 +221,7 @@ public class ArcanusClient implements ClientModInitializer {
 					}
 				}
 
-				if (player.getMainHandItem().is(ArcanusTags.STAVES) || player.getOffhandItem().is(ArcanusTags.STAVES)) {
+				if (player.getMainHandItem().is(ArcanusItemTags.STAVES) || player.getOffhandItem().is(ArcanusItemTags.STAVES)) {
 					AtomicReferenceArray<LevelChunk> chunks = context.world().getChunkSource().storage.chunks;
 					float alpha = Mth.sin(world.getGameTime() * 0.06f) * 0.4f + 0.6f;
 
