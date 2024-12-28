@@ -24,6 +24,27 @@ public class ArcanusBlockTagsProvider extends FabricTagProvider.BlockTagProvider
 			.add(ArcanusBlocks.ARCANE_WORKBENCH.get())
 			.add(ArcanusBlocks.MAGIC_BLOCK.get());
 
+		getOrCreateTagBuilder(BlockTags.WITHER_IMMUNE)
+			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
+
+		getOrCreateTagBuilder(BlockTags.DRAGON_IMMUNE)
+			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
+
+		// Ender Dragon cannot destroy blocks with this tag, but can fly straight through.
+		getOrCreateTagBuilder(BlockTags.DRAGON_TRANSPARENT)
+			.add(ArcanusBlocks.MAGIC_BLOCK.get());
+
+		// Blocks in this tag do not let fluids or honey drip through.
+		getOrCreateTagBuilder(BlockTags.IMPERMEABLE)
+			.add(ArcanusBlocks.MAGIC_BLOCK.get())
+			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
+
 		getOrCreateTagBuilder(ConventionalBlockTags.MOVEMENT_RESTRICTED)
 			.add(ArcanusBlocks.MAGIC_BLOCK.get())
 			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
