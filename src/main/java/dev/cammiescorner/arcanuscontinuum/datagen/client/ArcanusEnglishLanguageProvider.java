@@ -270,6 +270,14 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("config.arcanuscontinuum.supporter_settings.save_and_exit", "Save and Exit");
 		builder.add("screen.arcanuscontinuum.supporter_settings.saving", "Saving...");
 
+		builder.add("screen.arcanuscontinuum.support_us.title", "Support %s");
+		builder.add("screen.arcanuscontinuum.support_us.title2", "Arcanus: Continuum");
+		builder.add("screen.arcanuscontinuum.support_us.welcome_header", "Hey there, %s!");
+		builder.add("screen.arcanuscontinuum.support_us.welcome_message", "");
+		builder.add("screen.arcanuscontinuum.support_us.perks_message", "");
+		builder.add("screen.arcanuscontinuum.support_us.button_support_cammie", "Support Cammie!");
+		builder.add("screen.arcanuscontinuum.support_us.button_support_up", "Support Up!");
+
 
 		builder.add("item.arcanuscontinuum.compendium_arcanus", "Compendium Arcanus");
 		builder.add("item.arcanuscontinuum.compendium_arcanus.landing_text", "Arcanus: Continuum introduces a new magic system to the world of Minecraft. Players can create their own custom spells to suit however they like to play the game!");

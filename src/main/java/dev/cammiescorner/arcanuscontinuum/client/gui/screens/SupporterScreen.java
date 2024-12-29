@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.client.gui.screens;
 
+import com.mojang.authlib.GameProfile;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.StandardColors;
@@ -8,6 +9,7 @@ import dev.cammiescorner.arcanuscontinuum.common.util.supporters.WizardData;
 import dev.upcraft.datasync.api.util.Entitlements;
 import dev.upcraft.datasync.api.util.GameProfileHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -19,11 +21,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class SupporterScreen extends Screen {
-	private final ArcanusConfigScreen parent;
+	private final Screen parent;
 
 	private Entitlements userEntitlements;
 
@@ -40,20 +41,26 @@ public class SupporterScreen extends Screen {
 	// secondary group
 	private EditBox haloColorField;
 
-	public SupporterScreen(ArcanusConfigScreen parent) {
+	public SupporterScreen(Screen parent, GameProfile clientProfile, Entitlements userEntitlements) {
 		super(Component.empty());
 		this.parent = parent;
 
-		UUID playerId = GameProfileHelper.getClientProfile().getId();
-		this.userEntitlements = Entitlements.getOrEmpty(playerId);
+		this.userEntitlements = userEntitlements;
 
 		if (userEntitlements.keys().contains(WizardData.ID)) {
-			this.wizardData = Arcanus.WIZARD_DATA.getOrDefault(playerId, WizardData.empty());
+			this.wizardData = Arcanus.WIZARD_DATA.getOrDefault(clientProfile.getId(), WizardData.empty());
 		}
 		if (userEntitlements.keys().contains(HaloData.ID)) {
-			this.haloData = Arcanus.HALO_DATA.getOrDefault(playerId, HaloData.empty());
+			this.haloData = Arcanus.HALO_DATA.getOrDefault(clientProfile.getId(), HaloData.empty());
 			this.haloEnabled = this.haloData.shouldShow();
 		}
+	}
+
+	public static void open(@Nullable Screen parent) {
+		var clientProfile = GameProfileHelper.getClientProfile();
+		var entitlements = Entitlements.getOrEmpty(clientProfile.getId());
+		var isSupporter = entitlements.keys().contains(WizardData.ID) || entitlements.keys().contains(HaloData.ID);
+		Minecraft.getInstance().setScreen(isSupporter ? new SupporterScreen(parent, clientProfile, entitlements) : new NotSupporterScreen(parent, clientProfile));
 	}
 
 	private boolean hasWizardData() {
