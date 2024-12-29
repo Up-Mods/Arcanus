@@ -405,8 +405,8 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 	}
 
 	private void advancement(TranslationBuilder builder, ResourceLocation advancementId, String title, String description) {
-		builder.add(Util.makeDescriptionId("advancement", advancementId.withSuffix(".title")), title);
-		builder.add(Util.makeDescriptionId("advancement", advancementId.withSuffix(".description")), description);
+		builder.add(Util.makeDescriptionId("advancements", advancementId.withSuffix(".title")), title);
+		builder.add(Util.makeDescriptionId("advancements", advancementId.withSuffix(".description")), description);
 	}
 
 	private void spell(TranslationBuilder builder, RegistrySupplier<? extends SpellComponent> component, String translation) {
