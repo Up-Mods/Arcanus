@@ -32,13 +32,13 @@ public class ExportPocketDimensionCommand {
 		var server = context.getSource().getServer();
 		var pocketDim = server.getLevel(ArcanusDimensions.POCKET_DIMENSION);
 		if(pocketDim == null) {
-			context.getSource().sendFailure(Component.literal("Unable to find %s".formatted(ArcanusDimensions.POCKET_DIMENSION)));
+			context.getSource().sendFailure(Component.translatable("command.arcanuscontinuum.pocket_dimension.export.error.dimension_not_found", ArcanusDimensions.POCKET_DIMENSION));
 			return 0;
 		}
 
 		var plot = PocketDimensionComponent.get(server).getAssignedPlotSpace(targetProfile.getId());
 		if(plot == null) {
-			context.getSource().sendFailure(Component.literal("Pocket dimension for player %s has not been created yet!".formatted(targetProfile.getName())));
+			context.getSource().sendFailure(Component.translatable("command.arcanuscontinuum.pocket_dimension.export.error.pocket_not_found", targetProfile.getName()));
 			return 0;
 		}
 
@@ -51,7 +51,7 @@ public class ExportPocketDimensionCommand {
 		structure.fillFromWorld(pocketDim, plot.min(), plot.max().offset(1, 1, 1).subtract(plot.min()), true, null);
 		templateManager.save(structureId);
 
-		context.getSource().sendSuccess(() -> Component.literal("Successfully exported %s's pocket dimension".formatted(targetProfile.getName())), true);
+		context.getSource().sendSuccess(() -> Component.translatable("command.arcanuscontinuum.pocket_dimension.export.success", targetProfile.getName()), true);
 
 
 		return Command.SINGLE_SUCCESS;

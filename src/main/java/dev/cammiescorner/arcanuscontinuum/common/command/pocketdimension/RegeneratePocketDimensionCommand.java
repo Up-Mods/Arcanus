@@ -13,7 +13,6 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.selector.EntitySelector;
 import net.minecraft.network.chat.Component;
 
-//TODO translatable texts
 public class RegeneratePocketDimensionCommand {
 
 	public static void register(RequiredArgumentBuilder<CommandSourceStack, EntitySelector> builder) {
@@ -37,12 +36,11 @@ public class RegeneratePocketDimensionCommand {
 			return 0;
 		}
 
-		var message = switch (regenerateType) {
-			case WALLS_ONLY -> "Repaired the walls of %s's pocket dimension".formatted(target.getName());
-			case FULL -> "Regenerated %s's pocket dimension".formatted(target.getName());
+		context.getSource().sendSuccess(() -> switch (regenerateType) {
+			case WALLS_ONLY -> Component.translatable("command.arcanuscontinuum.pocket_dimension.regenerate.success.walls_only", target.getName());
+			case FULL -> Component.translatable("command.arcanuscontinuum.pocket_dimension.regenerate.success.full", target.getName());
 			default -> throw new UnsupportedOperationException();
-		};
-		context.getSource().sendSuccess(() -> Component.literal(message), false);
+		}, true);
 		return Command.SINGLE_SUCCESS;
 	}
 }
