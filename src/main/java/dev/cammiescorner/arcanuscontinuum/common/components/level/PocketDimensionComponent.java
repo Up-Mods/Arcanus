@@ -277,8 +277,7 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 				var overworld = server.overworld();
 				FabricDimensions.teleport(player, overworld, new PortalInfo(Vec3.atBottomCenterOf(overworld.getSharedSpawnPos()), Vec3.ZERO, overworld.getSharedSpawnAngle(), 0.0F));
 
-				// TODO make translatable
-				player.sendSystemMessage(Component.literal("The pocket dimension plot you were in has been cleared by an admin."));
+				player.sendSystemMessage(Component.translatable("command.arcanuscontinuum.pocket_dimension.regenerate.warn.teleport"));
 			});
 		}
 

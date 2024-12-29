@@ -145,6 +145,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 
 		builder.add("command.arcanuscontinuum.pocket_dimension.regenerate.success.walls_only", "Repaired the walls of %s's pocket dimension");
 		builder.add("command.arcanuscontinuum.pocket_dimension.regenerate.success.full", "Regenerated %s's pocket dimension");
+		builder.add("command.arcanuscontinuum.pocket_dimension.regenerate.warn.teleport", "The pocket dimension plot you were in has been cleared by an admin.");
 
 		builder.add("command.arcanuscontinuum.pocket_dimension.export.success", "Successfully exported %s's pocket dimension");
 		builder.add("command.arcanuscontinuum.pocket_dimension.export.error.dimension_not_found", "unable to find %s!");
