@@ -2,7 +2,7 @@ package dev.cammiescorner.arcanuscontinuum.datagen.client;
 
 import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellComponent;
-import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusAdvancements;
+import dev.cammiescorner.arcanuscontinuum.common.data.*;
 import dev.cammiescorner.arcanuscontinuum.common.items.BattleMageArmorItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.*;
 import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
@@ -13,6 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DeathMessageType;
 import net.minecraft.world.item.ItemStack;
@@ -126,6 +127,21 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add(ArcanusStatusEffects.MANA_WINGS.get(), "Mana Wings");
 		builder.add(ArcanusStatusEffects.STOCKPILE.get(), "Stockpile");
 		builder.add(ArcanusStatusEffects.VULNERABILITY.get(), "Vulnerability");
+
+		tag(builder, ArcanusBiomeTags.C_HAS_VILLAGE, "Has Village");
+		tag(builder, ArcanusBiomeTags.HAS_WIZARD_TOWER, "Has Wizard Tower");
+
+		tag(builder, ArcanusBlockTags.WARDING_NOT_ALLOWED, "Warding Not Allowed");
+
+		tag(builder, ArcanusDimensionTags.WARDING_NOT_ALLOWED, "Warding Not Allowed");
+
+		tag(builder, ArcanusEntityTags.DISPELLABLE, "Dispellable");
+
+		tag(builder, ArcanusItemTags.C_FEATHERS, "Feathers");
+		tag(builder, ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS, "Spellbooks");
+		tag(builder, ArcanusItemTags.COPPER_CURSE_IMMUNE, "Ignored by Copper Curse");
+		tag(builder, ArcanusItemTags.STAVES, "Staves");
+		tag(builder, ArcanusItemTags.WIZARD_ARMOR, "Wizard Armor");
 
 		builder.add("text.arcanuscontinuum.block_is_warded", "This block is warded.");
 		builder.add("text.arcanuscontinuum.disabled_component", "This spell contains one or more disabled spell components. Aborting spell.");
@@ -411,5 +427,11 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 
 	private void spell(TranslationBuilder builder, RegistrySupplier<? extends SpellComponent> component, String translation) {
 		builder.add(component.get().getTranslationKey(), translation);
+	}
+
+	private void tag(TranslationBuilder builder, TagKey<?> tag, String translation) {
+		var registryName = tag.registry().location().toShortLanguageKey().replace('/', '.');
+		var tagName = Util.makeDescriptionId("tag." + registryName, tag.location());
+		builder.add(tagName, translation);
 	}
 }

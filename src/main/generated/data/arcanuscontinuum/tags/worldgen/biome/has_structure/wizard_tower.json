@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "#c:has_village",
+    "#c:has_structure/village",
     "#minecraft:has_structure/pillager_outpost",
     "#minecraft:has_structure/swamp_hut",
     "#minecraft:has_structure/woodland_mansion",
