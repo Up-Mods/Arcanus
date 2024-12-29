@@ -40,12 +40,41 @@ public class ArcanusHelper {
 		return Arcanus.DEFAULT_MAGIC_COLOUR;
 	}
 
+	public static Color getPocketDimensionColor(@Nullable Object provider) {
+		if(provider == null) {
+			return Arcanus.DEFAULT_MAGIC_COLOUR;
+		}
+
+		var component = ArcanusComponents.MAGIC_COLOR.getNullable(provider);
+		if (component != null) {
+			return component.getPocketDimensionColor();
+		}
+
+		// if Entity
+		if (provider instanceof TraceableEntity ownable) {
+			var owner = ownable.getOwner();
+			if (owner != null) {
+				return getPocketDimensionColor(owner);
+			}
+		}
+
+		return Arcanus.DEFAULT_MAGIC_COLOUR;
+	}
+
 	public static Color getMagicColor(@Nullable UUID playerId) {
 		if (playerId == null || Util.NIL_UUID.equals(playerId)) {
 			return Arcanus.DEFAULT_MAGIC_COLOUR;
 		}
 
 		return WizardData.getOrEmpty(playerId).magicColor();
+	}
+
+	public static Color getPocketDimensionColor(@Nullable UUID playerId) {
+		if (playerId == null || Util.NIL_UUID.equals(playerId)) {
+			return Arcanus.DEFAULT_MAGIC_COLOUR;
+		}
+
+		return WizardData.getOrEmpty(playerId).pocketDimensionColor();
 	}
 
 	public static HitResult raycast(Entity origin, double maxDistance, boolean includeEntities, boolean includeFluids) {

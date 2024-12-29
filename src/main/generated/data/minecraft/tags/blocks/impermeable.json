@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     "arcanuscontinuum:magic_block",
-    "arcanuscontinuum:unbreakable_magic_block",
+    "arcanuscontinuum:spatial_rift_wall",
     "arcanuscontinuum:spatial_rift_exit",
     "arcanuscontinuum:spatial_rift_exit_edge"
   ]

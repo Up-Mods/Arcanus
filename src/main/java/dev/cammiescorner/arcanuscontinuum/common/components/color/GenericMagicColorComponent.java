@@ -36,6 +36,10 @@ public class GenericMagicColorComponent implements MagicColorComponent, AutoSync
 		return ArcanusHelper.getMagicColor(sourceId);
 	}
 
+	public Color getPocketDimensionColor() {
+		return ArcanusHelper.getPocketDimensionColor(sourceId);
+	}
+
 	@Override
 	public UUID getSourceId() {
 		return sourceId;

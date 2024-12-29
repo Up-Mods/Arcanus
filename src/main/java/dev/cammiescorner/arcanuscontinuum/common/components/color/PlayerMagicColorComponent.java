@@ -22,6 +22,11 @@ public class PlayerMagicColorComponent implements MagicColorComponent {
 	}
 
 	@Override
+	public Color getPocketDimensionColor() {
+		return ArcanusHelper.getPocketDimensionColor(player.getGameProfile().getId());
+	}
+
+	@Override
 	public UUID getSourceId() {
 		return player.getGameProfile().getId();
 	}

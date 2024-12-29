@@ -98,7 +98,9 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add(ArcanusBlocks.ARCANE_WORKBENCH.get(), "Arcane Workbench");
 		builder.add(ArcanusBlocks.MAGIC_DOOR.get(), "Magic Door");
 		builder.add(ArcanusBlocks.MAGIC_BLOCK.get(), "Magic Block");
-		builder.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get(), "Magic Block");
+		builder.add(ArcanusBlocks.SPATIAL_RIFT_EXIT.get(), "Spatial Rift Exit");
+		builder.add(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get(), "Spatial Rift Wall");
+		builder.add(ArcanusBlocks.SPATIAL_RIFT_WALL.get(), "Spatial Rift Wall");
 
 		builder.add(ArcanusEntities.AGGRESSORB.get(), "Aggressorb");
 		builder.add(ArcanusEntities.AOE.get(), "Area Of Effect");
@@ -264,6 +266,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 
 		builder.add("config.arcanuscontinuum.supporter_settings", "Supporter Perks");
 		builder.add("config.arcanuscontinuum.supporter_settings.magic_color", "Magic Color");
+		builder.add("config.arcanuscontinuum.supporter_settings.pocket_dimension_color", "Pocket Dimension Color");
 		builder.add("config.arcanuscontinuum.supporter_settings.halo_color", "Halo Color");
 		builder.add("config.arcanuscontinuum.supporter_settings.halo_enabled", "Halo Enabled");
 		builder.add("config.arcanuscontinuum.supporter_settings.halo_disabled", "Halo Disabled");

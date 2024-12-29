@@ -37,6 +37,7 @@ public class SupporterScreen extends Screen {
 
 	// primary group
 	private EditBox magicColorField;
+	private EditBox pocketDimensionColorField;
 
 	// secondary group
 	private EditBox haloColorField;
@@ -101,11 +102,15 @@ public class SupporterScreen extends Screen {
 		}
 
 		if (hasWizardData()) {
-			magicColorField = new EditBox(font, centerX + 11, centerY + yOffset - 10, 64, 20, Component.empty());
-			addRenderableWidget(magicColorField);
+			magicColorField = addRenderableWidget(new EditBox(font, centerX + 11, centerY + yOffset - 10, 64, 20, Component.empty()));
 			magicColorField.setHint(Component.translatable("config.arcanuscontinuum.supporter_settings.magic_color"));
 			magicColorField.setValue(String.format("#%06X", wizardData.magicColor().asInt(Color.Ordering.RGB)));
 			magicColorField.setMaxLength(7);
+
+			pocketDimensionColorField = addRenderableWidget(new EditBox(font, centerX + 11, centerY + yOffset - 10 + 30, 64, 20, Component.empty()));
+			pocketDimensionColorField.setHint(Component.translatable("config.arcanuscontinuum.supporter_settings.pocket_dimension_color"));
+			pocketDimensionColorField.setValue(String.format("#%06X", wizardData.pocketDimensionColor().asInt(Color.Ordering.RGB)));
+			pocketDimensionColorField.setMaxLength(7);
 		}
 
 		addRenderableWidget(Button.builder(Component.translatable("config.arcanuscontinuum.supporter_settings.save_and_exit"), buttonWidget -> {
@@ -118,7 +123,8 @@ public class SupporterScreen extends Screen {
 			}
 
 			if (hasWizardData()) {
-				var newWizardData = getColorFromField(magicColorField).map(WizardData::new).orElse(wizardData);
+				var newWizardData = getColorFromField(magicColorField).map(wizardData::withColor).orElse(wizardData);
+				newWizardData = getColorFromField(pocketDimensionColorField).map(newWizardData::withPocketDimensionColor).orElse(newWizardData);
 				if (!newWizardData.equals(wizardData)) {
 					saveFutures.add(Arcanus.WIZARD_DATA.setData(newWizardData));
 				}
@@ -170,20 +176,24 @@ public class SupporterScreen extends Screen {
 		int centerY = height / 2;
 
 		int yOffset = 0;
+		int xOffset = -130;
 		if (hasHaloData()) {
 			if (hasWizardData()) {
 				yOffset = -35;
 			}
 			renderColorDisplay(graphics, centerX - 2, centerY + yOffset, getColorFromField(haloColorField));
 
-			graphics.drawString(font, "Halo Color", centerX - 74, centerY + yOffset - font.lineHeight / 2, 0xffffff, false);
+			graphics.drawString(font, Component.translatable("config.arcanuscontinuum.supporter_settings.halo_color"), centerX + xOffset, centerY + yOffset - font.lineHeight / 2, 0xffffff, false);
 
 			yOffset = 35;
 		}
 
 		if (hasWizardData()) {
 			renderColorDisplay(graphics, centerX - 2, centerY + yOffset, getColorFromField(magicColorField));
-			graphics.drawString(font, "Magic Color", centerX - 74, centerY + yOffset - font.lineHeight / 2, 0xffffff, false);
+			graphics.drawString(font, Component.translatable("config.arcanuscontinuum.supporter_settings.magic_color"), centerX + xOffset, centerY + yOffset - font.lineHeight / 2, 0xffffff, false);
+
+			renderColorDisplay(graphics, centerX - 2, centerY + yOffset + 30, getColorFromField(pocketDimensionColorField));
+			graphics.drawString(font, Component.translatable("config.arcanuscontinuum.supporter_settings.pocket_dimension_color"), centerX + xOffset, centerY + yOffset + 30 - font.lineHeight / 2, 0xffffff, false);
 		}
 
 

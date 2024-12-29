@@ -5,8 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Pattern;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
-import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.AbstractMagicBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.compat.ArcanusCompat;
 import dev.cammiescorner.arcanuscontinuum.common.compat.PehkuiCompat;
 import dev.cammiescorner.arcanuscontinuum.common.components.MagicColorComponent;
@@ -77,10 +76,7 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 
 	@Override
 	public void registerBlockComponentFactories(BlockComponentFactoryRegistry registry) {
-		registry.beginRegistration(MagicBlockEntity.class, MAGIC_COLOR)
-			.impl(GenericMagicColorComponent.class)
-			.end(GenericMagicColorComponent::new);
-		registry.beginRegistration(SpatialRiftExitBlockEntity.class, MAGIC_COLOR)
+		registry.beginRegistration(AbstractMagicBlockEntity.class, MAGIC_COLOR)
 			.impl(GenericMagicColorComponent.class)
 			.end(GenericMagicColorComponent::new);
 	}

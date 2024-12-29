@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.common.blocks;
 
-import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftWallBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +17,7 @@ public class SpatialRiftExitEdgeBlock extends HorizontalDirectionalBlock impleme
 	public static final BooleanProperty CORNER = BooleanProperty.create("corner");
 
 	public SpatialRiftExitEdgeBlock() {
-		super(BlockBehaviour.Properties.copy(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+		super(BlockBehaviour.Properties.copy(ArcanusBlocks.SPATIAL_RIFT_WALL.get())
 			.sound(SoundType.STONE)
 			.lightLevel(value -> 9)
 		);
@@ -42,6 +42,6 @@ public class SpatialRiftExitEdgeBlock extends HorizontalDirectionalBlock impleme
 	@Nullable
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new MagicBlockEntity(pos, state);
+		return new SpatialRiftWallBlockEntity(pos, state);
 	}
 }

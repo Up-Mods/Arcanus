@@ -23,7 +23,7 @@ public class SpatialRiftExitBlock extends Block implements EntityBlock {
 	public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
 	public SpatialRiftExitBlock() {
-		super(BlockBehaviour.Properties.copy(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get()).sound(SoundType.STONE).lightLevel(value -> 7));
+		super(BlockBehaviour.Properties.copy(ArcanusBlocks.SPATIAL_RIFT_WALL.get()).sound(SoundType.STONE).lightLevel(value -> 7));
 		registerDefaultState(getStateDefinition().any().setValue(ACTIVE, false));
 	}
 

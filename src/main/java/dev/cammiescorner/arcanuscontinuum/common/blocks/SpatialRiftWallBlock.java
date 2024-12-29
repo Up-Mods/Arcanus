@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.common.blocks;
 
-import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftWallBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
@@ -9,8 +9,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class UnbreakableMagicBlock extends Block implements EntityBlock {
-	public UnbreakableMagicBlock() {
+public class SpatialRiftWallBlock extends Block implements EntityBlock {
+	public SpatialRiftWallBlock() {
 		super(BlockBehaviour.Properties.copy(Blocks.BEDROCK)
 			.sound(SoundType.GLASS)
 			.lightLevel(value -> 12)
@@ -40,6 +40,6 @@ public class UnbreakableMagicBlock extends Block implements EntityBlock {
 	@Nullable
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new MagicBlockEntity(pos, state);
+		return new SpatialRiftWallBlockEntity(pos, state);
 	}
 }

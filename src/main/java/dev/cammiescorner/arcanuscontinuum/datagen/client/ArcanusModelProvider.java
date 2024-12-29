@@ -34,7 +34,7 @@ public class ArcanusModelProvider extends FabricModelProvider {
 		gen.createDoor(ArcanusBlocks.MAGIC_DOOR.get());
 
 		gen.createTrivialCube(ArcanusBlocks.MAGIC_BLOCK.get());
-		copyModelNoItem(gen, ArcanusBlocks.MAGIC_BLOCK.get(), ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get());
+		copyModelNoItem(gen, ArcanusBlocks.MAGIC_BLOCK.get(), ArcanusBlocks.SPATIAL_RIFT_WALL.get());
 		copyModelNoItem(gen, Blocks.DEEPSLATE_TILES, ArcanusBlocks.SPATIAL_RIFT_EXIT.get());
 	}
 

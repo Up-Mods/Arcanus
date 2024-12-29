@@ -25,12 +25,12 @@ public class ArcanusBlockTagsProvider extends FabricTagProvider.BlockTagProvider
 			.add(ArcanusBlocks.MAGIC_DOOR.get());
 
 		getOrCreateTagBuilder(BlockTags.WITHER_IMMUNE)
-			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_WALL.get())
 			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT.get())
 			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
 
 		getOrCreateTagBuilder(BlockTags.DRAGON_IMMUNE)
-			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_WALL.get())
 			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT.get())
 			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
 
@@ -41,13 +41,13 @@ public class ArcanusBlockTagsProvider extends FabricTagProvider.BlockTagProvider
 		// Blocks in this tag do not let fluids or honey drip through.
 		getOrCreateTagBuilder(BlockTags.IMPERMEABLE)
 			.add(ArcanusBlocks.MAGIC_BLOCK.get())
-			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_WALL.get())
 			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT.get())
 			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
 
 		getOrCreateTagBuilder(ConventionalBlockTags.MOVEMENT_RESTRICTED)
 			.add(ArcanusBlocks.MAGIC_BLOCK.get())
-			.add(ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get())
+			.add(ArcanusBlocks.SPATIAL_RIFT_WALL.get())
 			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT.get())
 			.add(ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get());
 

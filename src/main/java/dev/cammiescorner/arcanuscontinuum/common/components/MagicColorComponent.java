@@ -11,6 +11,8 @@ public interface MagicColorComponent extends Component {
 
 	Color getColor();
 
+	Color getPocketDimensionColor();
+
 	UUID getSourceId();
 
 	void setSourceId(UUID ownerId);

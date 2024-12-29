@@ -294,7 +294,7 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 				return;
 			}
 
-			pocketDim.setBlock(pos, ArcanusBlocks.UNBREAKABLE_MAGIC_BLOCK.get().defaultBlockState(), REPLACE_FLAGS);
+			pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_WALL.get().defaultBlockState(), REPLACE_FLAGS);
 
 			Optional.ofNullable(pocketDim.getBlockEntity(pos))
 				.flatMap(ArcanusComponents.MAGIC_COLOR::maybeGet)
