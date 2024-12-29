@@ -5,7 +5,6 @@ import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Spell;
 import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusItemTags;
 import dev.cammiescorner.arcanuscontinuum.common.items.SpellBookItem;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusRecipes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
@@ -23,7 +22,6 @@ import net.minecraft.world.level.Level;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO use tag for spell books
 public class SpellBindingRecipe extends CustomRecipe {
 	public SpellBindingRecipe(ResourceLocation identifier, CraftingBookCategory category) {
 		super(identifier, category);
@@ -36,8 +34,9 @@ public class SpellBindingRecipe extends CustomRecipe {
 		NonNullList<ItemStack> list = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
 
 		for (int i = 0; i < list.size(); ++i) {
-			if (inventory.getItem(i).getItem() instanceof SpellBookItem) {
-				list.set(i, inventory.getItem(i).copy());
+			ItemStack stack = inventory.getItem(i);
+			if (stack.is(ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS)) {
+				list.set(i, stack.copy());
 			}
 		}
 
@@ -46,7 +45,7 @@ public class SpellBindingRecipe extends CustomRecipe {
 
 	@Override
 	public boolean matches(CraftingContainer inv, Level world) {
-		List<ItemStack> list = Lists.newArrayList();
+		List<ItemStack> spellBooks = Lists.newArrayList();
 		ItemStack result = ItemStack.EMPTY;
 
 		for (int i = 0; i < inv.getContainerSize(); ++i) {
@@ -60,8 +59,8 @@ public class SpellBindingRecipe extends CustomRecipe {
 
 					result = stack.copy();
 				}
-				else if(stack.is(ArcanusItems.SPELL_BOOK.get())) {
-					list.add(stack);
+				else if(stack.is(ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS)) {
+					spellBooks.add(stack);
 				}
 				else {
 					return false;
@@ -69,7 +68,7 @@ public class SpellBindingRecipe extends CustomRecipe {
 			}
 		}
 
-		return !result.isEmpty() && !list.isEmpty();
+		return !result.isEmpty() && !spellBooks.isEmpty();
 	}
 
 
@@ -103,7 +102,7 @@ public class SpellBindingRecipe extends CustomRecipe {
 			}
 
 			ItemStack stack = inv.getItem(i);
-			if (stack.is(ArcanusItems.SPELL_BOOK.get())) {
+			if (stack.is(ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS)) {
 				spells[INDICES[i]] = SpellBookItem.getSpell(stack);
 				count++;
 			}
