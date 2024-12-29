@@ -23,7 +23,7 @@ public class ArcanusDimensionProvider extends DynamicRegistryEntryProvider {
 	@Override
 	protected void generate(RegistrySetBuilder builder) {
 		builder.add(Registries.DIMENSION_TYPE, context -> {
-			context.register(ArcanusDimensionTypes.POCKET_DIMENSION, new DimensionType(OptionalLong.of(12000), false, false, false, false, 1.0D, false, false, -256, 512, 512, BlockTags.INFINIBURN_OVERWORLD, BuiltinDimensionTypes.OVERWORLD_EFFECTS, 15.0F, new DimensionType.MonsterSettings(true, false, ConstantInt.of(0), 0)));
+			context.register(ArcanusDimensionTypes.POCKET_DIMENSION, new DimensionType(OptionalLong.of(12000), false, false, false, false, 1.0D, false, false, -256, 512, 512, BlockTags.INFINIBURN_OVERWORLD, BuiltinDimensionTypes.END_EFFECTS, 15.0F, new DimensionType.MonsterSettings(true, false, ConstantInt.of(0), 0)));
 		});
 		builder.add(Registries.LEVEL_STEM, context -> {
 			var dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
