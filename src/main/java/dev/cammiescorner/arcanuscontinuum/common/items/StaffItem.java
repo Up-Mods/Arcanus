@@ -98,8 +98,8 @@ public class StaffItem extends Item {
 		int primaryColour = getPrimaryColorRGB(stack);
 		int secondaryColour = getSecondaryColorRGB(stack);
 
-		tooltip.add(Arcanus.translate("staff", "primary_color").withStyle(style -> style.withColor(primaryColour)).append(Component.literal(": " + String.format(Locale.ROOT, "#%06X", primaryColour)).withStyle(ChatFormatting.GRAY)));
-		tooltip.add(Arcanus.translate("staff", "secondary_color").withStyle(style -> style.withColor(secondaryColour)).append(Component.literal(": " + String.format(Locale.ROOT, "#%06X", secondaryColour)).withStyle(ChatFormatting.GRAY)));
+		tooltip.add(Component.translatable("staff.arcanuscontinuum.primary_color").withStyle(style -> style.withColor(primaryColour)).append(Component.literal(": " + String.format(Locale.ROOT, "#%06X", primaryColour)).withStyle(ChatFormatting.GRAY)));
+		tooltip.add(Component.translatable("staff.arcanuscontinuum.secondary_color").withStyle(style -> style.withColor(secondaryColour)).append(Component.literal(": " + String.format(Locale.ROOT, "#%06X", secondaryColour)).withStyle(ChatFormatting.GRAY)));
 		tooltip.add(Component.empty());
 
 		if (tag != null && !tag.isEmpty()) {
@@ -109,7 +109,7 @@ public class StaffItem extends Item {
 				Spell spell = Spell.fromNbt(list.getCompound(i));
 
 				if (spell.getComponentGroups().isEmpty()) {
-					tooltip.add(Arcanus.translate("staff", "invalid_data").withStyle(ChatFormatting.DARK_RED));
+					tooltip.add(Component.translatable("staff.arcanuscontinuum.invalid_data").withStyle(ChatFormatting.DARK_RED));
 					return;
 				}
 

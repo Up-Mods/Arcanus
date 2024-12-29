@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.common;
 
 import com.llamalad7.mixinextras.injector.ModifyReceiver;
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.MagicDoorBlock;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicDoorBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusPointsOfInterest;
@@ -9,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.PlayerChatMessage;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.level.ServerLevel;
@@ -45,7 +45,7 @@ public class PlayerManagerMixin {
 				if (state.getBlock() instanceof MagicDoorBlock doorBlock && world.getBlockEntity(pos) instanceof MagicDoorBlockEntity door) {
 					if (chatMessage.signedContent().equalsIgnoreCase(door.getPassword())) {
 						doorBlock.setOpen(null, world, state, pos, true);
-						player.displayClientMessage(Arcanus.translate("door", "access_granted").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
+						player.displayClientMessage(Component.translatable("door.arcanuscontinuum.access_granted").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
 						beep[0] = true;
 					}
 				}

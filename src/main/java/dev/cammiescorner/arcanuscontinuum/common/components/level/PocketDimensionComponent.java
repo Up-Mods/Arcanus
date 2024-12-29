@@ -10,7 +10,6 @@ import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusDimensions;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.PlayerHelper;
-import dev.onyxstudios.cca.api.v3.component.Component;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +17,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class PocketDimensionComponent implements Component {
+public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.component.Component {
 
 	private static final int REPLACE_FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS;
 	private static final int DIMENSION_PADDING_Y = 8;
@@ -278,7 +278,7 @@ public class PocketDimensionComponent implements Component {
 				FabricDimensions.teleport(player, overworld, new PortalInfo(Vec3.atBottomCenterOf(overworld.getSharedSpawnPos()), Vec3.ZERO, overworld.getSharedSpawnAngle(), 0.0F));
 
 				// TODO make translatable
-				player.sendSystemMessage(net.minecraft.network.chat.Component.literal("The pocket dimension plot you were in has been cleared by an admin."));
+				player.sendSystemMessage(Component.literal("The pocket dimension plot you were in has been cleared by an admin."));
 			});
 		}
 

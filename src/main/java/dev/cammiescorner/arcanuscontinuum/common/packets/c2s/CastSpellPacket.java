@@ -50,17 +50,17 @@ public class CastSpellPacket {
 
 					if(!player.isCreative()) {
 						if(spell.getComponentGroups().stream().flatMap(SpellGroup::getAllComponents).mapToInt(SpellComponent::getMinLevel).max().orElse(1) > ArcanusComponents.WIZARD_LEVEL_COMPONENT.get(player).getLevel()) {
-							player.displayClientMessage(Arcanus.translate("spell", "too_low_level").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC), true);
+							player.displayClientMessage(Component.translatable("spell.arcanuscontinuum.too_low_level").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC), true);
 							return;
 						}
 
 						if(spell.getComponentGroups().stream().flatMap(SpellGroup::getAllComponents).count() > ArcanusComponents.maxSpellSize(player)) {
-							player.displayClientMessage(Arcanus.translate("spell", "too_many_components").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC), true);
+							player.displayClientMessage(Component.translatable("spell.arcanuscontinuum.too_many_components").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC), true);
 							return;
 						}
 
 						if(!ArcanusComponents.drainMana(player, spell.getManaCost(), false)) {
-							player.displayClientMessage(Arcanus.translate("spell", "not_enough_mana").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC), true);
+							player.displayClientMessage(Component.translatable("spell.arcanuscontinuum.not_enough_mana").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC), true);
 							return;
 						}
 					}

@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.client.gui.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.util.WorkbenchMode;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -18,7 +17,7 @@ public class ChangeModeButtonWidget extends AbstractButton {
 		super(x, y, 24, 16, Component.empty());
 		this.onPress = onPress;
 		this.texture = mode.getTexture();
-		this.setTooltip(Tooltip.create(Arcanus.translate("screen", "tooltip", "change_screens")));
+		this.setTooltip(Tooltip.create(Component.translatable("screen.arcanuscontinuum.tooltip.change_screens")));
 	}
 
 	@Override

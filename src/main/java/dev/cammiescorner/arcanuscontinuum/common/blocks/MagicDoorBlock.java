@@ -1,6 +1,5 @@
 package dev.cammiescorner.arcanuscontinuum.common.blocks;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicDoorBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlockEntities;
 import dev.upcraft.sparkweave.api.registry.block.BlockItemProvider;
@@ -64,9 +63,9 @@ public class MagicDoorBlock extends DoorBlock implements EntityBlock, BlockItemP
 				player.displayClientMessage(Component.translatable("door.arcanuscontinuum.password_set", password)
 					.withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC), true);
 			} else
-				player.displayClientMessage(Arcanus.translate("door", "not_owner").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
+				player.displayClientMessage(Component.translatable("door.arcanuscontinuum.not_owner").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
 		else
-			player.displayClientMessage(Arcanus.translate("door", "say_magic_word").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
+			player.displayClientMessage(Component.translatable("door.arcanuscontinuum.say_magic_word").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
 		return InteractionResult.SUCCESS;
 	}
 

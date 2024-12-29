@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.client.gui.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellComponent;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
 import net.minecraft.ChatFormatting;
@@ -28,19 +27,20 @@ public class SpellComponentWidget extends AbstractButton {
 		this.component = component;
 		this.onPress = onPress;
 
+		// TODO make ALL of it translatable
 		List<Component> textList = new ArrayList<>();
 		textList.add(component.getName());
-		textList.add(Arcanus.translate("spell_book", "weight").append(": ").withStyle(ChatFormatting.GREEN).append(Arcanus.translate("spell_book", "weight", component.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
-		textList.add(Arcanus.translate("spell_book", "mana_cost").append(": ").withStyle(ChatFormatting.BLUE).append(Component.literal(component.getManaCostAsString()).withStyle(ChatFormatting.GRAY)));
+		textList.add(Component.translatable("spell_book.arcanuscontinuum.weight").append(": ").withStyle(ChatFormatting.GREEN).append(Component.translatable("spell_book.arcanuscontinuum.weight", component.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
+		textList.add(Component.translatable("spell_book.arcanuscontinuum.mana_cost").append(": ").withStyle(ChatFormatting.BLUE).append(Component.literal(component.getManaCostAsString()).withStyle(ChatFormatting.GRAY)));
 
 		if(component instanceof SpellShape shape) {
 			if(shape.getManaMultiplier() != 0)
-				textList.add(Arcanus.translate("spell_book", "mana_multiplier").append(": ").withStyle(ChatFormatting.LIGHT_PURPLE).append(Component.literal(shape.getManaMultiplierAsString()).withStyle(ChatFormatting.GRAY)));
+				textList.add(Component.translatable("spell_boo.arcanuscontinuum.mana_multiplier").append(": ").withStyle(ChatFormatting.LIGHT_PURPLE).append(Component.literal(shape.getManaMultiplierAsString()).withStyle(ChatFormatting.GRAY)));
 			if(shape.getPotencyModifier() != 0)
-				textList.add(Arcanus.translate("spell_book", "potency_modifier").append(": ").withStyle(ChatFormatting.YELLOW).append(Component.literal(shape.getPotencyModifierAsString()).withStyle(ChatFormatting.GRAY)));
+				textList.add(Component.translatable("spell_book.arcanuscontinuum.potency_modifier").append(": ").withStyle(ChatFormatting.YELLOW).append(Component.literal(shape.getPotencyModifierAsString()).withStyle(ChatFormatting.GRAY)));
 		}
 
-		textList.add(Arcanus.translate("spell_book", "cool_down").append(": ").withStyle(ChatFormatting.RED).append(Component.literal(component.getCoolDownAsString()).append(Arcanus.translate("spell_book", "seconds")).withStyle(ChatFormatting.GRAY)));
+		textList.add(Component.translatable("spell_book.arcanuscontinuum.cool_down").append(": ").withStyle(ChatFormatting.RED).append(Component.literal(component.getCoolDownAsString()).append(Component.translatable("spell_book.arcanuscontinuum.seconds")).withStyle(ChatFormatting.GRAY)));
 
 
 		this.tooltipSupplier = new TooltipSupplier() {

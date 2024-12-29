@@ -66,17 +66,17 @@ public class SyncPatternPacket {
 						Spell spell = Spell.fromNbt(list.getCompound(index));
 
 						if(spell.getComponentGroups().stream().flatMap(SpellGroup::getAllComponents).mapToInt(SpellComponent::getMinLevel).max().orElse(1) > ArcanusComponents.WIZARD_LEVEL_COMPONENT.get(player).getLevel()) {
-							player.displayClientMessage(Arcanus.translate("spell", "too_low_level"), true);
+							player.displayClientMessage(Component.translatable("spell.arcanuscontinuum.too_low_level"), true);
 							return;
 						}
 
 						if(spell.getComponentGroups().stream().flatMap(SpellGroup::getAllComponents).count() > ArcanusComponents.maxSpellSize(player)) {
-							player.displayClientMessage(Arcanus.translate("spell", "too_many_components"), true);
+							player.displayClientMessage(Component.translatable("spell.arcanuscontinuum.too_many_components"), true);
 							return;
 						}
 
 						if(!ArcanusComponents.drainMana(player, spell.getManaCost(), player.isCreative())) {
-							player.displayClientMessage(Arcanus.translate("spell", "not_enough_mana"), true);
+							player.displayClientMessage(Component.translatable("spell.arcanuscontinuum.not_enough_mana"), true);
 							return;
 						}
 

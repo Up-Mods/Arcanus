@@ -1,6 +1,5 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
@@ -10,6 +9,7 @@ import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,7 +41,7 @@ public class AggressorbSpellShape extends SpellShape {
 				}
 			}
 			else if(caster instanceof Player player)
-				player.sendSystemMessage(Arcanus.translate("text", "too_many_orbs").withStyle(ChatFormatting.RED));
+				player.sendSystemMessage(Component.translatable("text.arcanuscontinuum.too_many_orbs").withStyle(ChatFormatting.RED));
 		}
 	}
 }

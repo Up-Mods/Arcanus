@@ -12,6 +12,7 @@ import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class ArcanusItems {
 	public static final RegistrySupplier<Item> WIZARD_SPAWN_EGG = ITEMS.register("wizard_spawn_egg", () -> new SpawnEggItem(ArcanusEntities.WIZARD.get(), 0x52392a, 0xffd87c, new Item.Properties()));
 	public static final RegistrySupplier<Item> OPOSSUM_SPAWN_EGG = ITEMS.register("opossum_spawn_egg", () -> new SpawnEggItem(ArcanusEntities.OPOSSUM.get(), 0x131317, 0xbdbdbd, new Item.Properties()));
 
-	public static final RegistrySupplier<CreativeModeTab> ITEM_GROUP = ITEM_GROUPS.register("general", () -> FabricItemGroup.builder().title(Arcanus.translate("itemGroup", "general")).icon(() -> new ItemStack(ArcanusItems.CRYSTAL_STAFF.get())).displayItems((params, entries) -> {
+	public static final RegistrySupplier<CreativeModeTab> ITEM_GROUP = ITEM_GROUPS.register("general", () -> FabricItemGroup.builder().title(Component.translatable("itemGroup.arcanuscontinuum.general")).icon(() -> new ItemStack(ArcanusItems.CRYSTAL_STAFF.get())).displayItems((params, entries) -> {
 		entries.accept(SPELL_BOOK.get());
 		entries.accept(SCROLL_OF_KNOWLEDGE.get());
 
@@ -93,11 +94,11 @@ public class ArcanusItems {
 	}).build());
 
 	private static SmithingTemplateItem getBattleMageUpgrade() {
-		var appliesToText = Arcanus.translate("item", "smithing_template", "battle_mage_upgrade", "applies_to").withStyle(ChatFormatting.BLUE);
-		var ingredientsText = Arcanus.translate("item", "smithing_template", "battle_mage_upgrade", "ingredients").withStyle(ChatFormatting.BLUE);
-		var upgradeText = Arcanus.translate("upgrade", "battle_mage_upgrade").withStyle(ChatFormatting.GRAY);
-		var baseSlotText = Arcanus.translate("item", "smithing_template", "battle_mage_upgrade", "base_slot_description");
-		var additionsSlotText = Arcanus.translate("item", "smithing_template", "battle_mage_upgrade", "additions_slot_description");
+		var appliesToText = Component.translatable("item.arcanuscontinuum.smithing_template.battle_mage_upgrade.applies_to").withStyle(ChatFormatting.BLUE);
+		var ingredientsText = Component.translatable("item.arcanuscontinuum.smithing_template.battle_mage_upgrade.ingredients").withStyle(ChatFormatting.BLUE);
+		var upgradeText = Component.translatable("upgrade.arcanuscontinuum.battle_mage_upgrade").withStyle(ChatFormatting.GRAY);
+		var baseSlotText = Component.translatable("item.arcanuscontinuum.smithing_template.battle_mage_upgrade.base_slot_description");
+		var additionsSlotText = Component.translatable("item.arcanuscontinuum.smithing_template.battle_mage_upgrade.additions_slot_description");
 		var baseIcons = SmithingTemplateItem.createTrimmableArmorIconList();
 		var additionsIcons = List.of(SmithingTemplateItem.EMPTY_SLOT_AMETHYST_SHARD);
 		return new SmithingTemplateItem(appliesToText, ingredientsText, upgradeText, baseSlotText, additionsSlotText, baseIcons, additionsIcons);

@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.client.gui.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.gui.screens.SpellcraftScreen;
 import dev.cammiescorner.arcanuscontinuum.client.gui.util.UndoRedoStack;
 import net.minecraft.client.gui.GuiGraphics;
@@ -20,7 +19,7 @@ public class UndoRedoButtonWidget extends AbstractButton {
 		this.isUndo = isUndo;
 		this.onPress = onPress;
 		this.undoRedoStack = stack;
-		this.setTooltip(Tooltip.create(Arcanus.translate("screen", "tooltip", isUndo ? "undo" : "redo")));
+		this.setTooltip(Tooltip.create(isUndo ? Component.translatable("screen.arcanuscontinuum.tooltip.undo") : Component.translatable("screen.arcanuscontinuum.tooltip.redo")));
 	}
 
 	@Override

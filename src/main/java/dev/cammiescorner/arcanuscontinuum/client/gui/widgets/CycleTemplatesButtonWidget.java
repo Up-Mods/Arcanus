@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.client.gui.widgets;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.util.WorkbenchMode;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -19,7 +18,7 @@ public class CycleTemplatesButtonWidget extends AbstractButton {
 		super(x, y, 16, 16, Component.empty());
 		this.isUp = isUp;
 		this.onPress = onPress;
-		this.setTooltip(Tooltip.create(Arcanus.translate("screen", "tooltip", isUp ? "cycle_up" : "cycle_down")));
+		this.setTooltip(Tooltip.create(isUp ? Component.translatable("screen.arcanuscontinuum.tooltip.cycle_up") : Component.translatable("screen.arcanuscontinuum.tooltip.cycle_down")));
 	}
 
 	@Override

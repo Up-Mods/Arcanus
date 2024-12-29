@@ -113,9 +113,9 @@ public class SpellBookScreen extends AbstractContainerScreen<SpellBookScreenHand
 
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
-		MutableComponent weight = Arcanus.translate("spell_book", "weight", getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.DARK_GREEN);
+		MutableComponent weight = Component.translatable("spell_book.arcanuscontinuum.weight", getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.DARK_GREEN);
 		MutableComponent mana = Component.literal(Arcanus.format(getManaCost())).withStyle(ChatFormatting.BLUE);
-		MutableComponent coolDown = Component.literal(Arcanus.format(getCoolDown() / 20D)).append(Arcanus.translate("spell_book", "seconds")).withStyle(ChatFormatting.RED);
+		MutableComponent coolDown = Component.literal(Arcanus.format(getCoolDown() / 20D)).append(Component.translatable("spell_book.arcanuscontinuum.seconds")).withStyle(ChatFormatting.RED);
 
 		gui.drawString(font, weight, 240 - font.width(weight), 7, 0xffffff, false);
 		gui.drawString(font, mana, 240 - font.width(mana), 17, 0xffffff, false);
@@ -130,17 +130,17 @@ public class SpellBookScreen extends AbstractContainerScreen<SpellBookScreenHand
 					SpellComponent component = group.getAllComponents().toList().get(i);
 
 					textList.add(component.getName());
-					textList.add(Arcanus.translate("spell_book", "weight").append(": ").withStyle(ChatFormatting.GREEN).append(Arcanus.translate("spell_book", "weight", component.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
-					textList.add(Arcanus.translate("spell_book", "mana_cost").append(": ").withStyle(ChatFormatting.BLUE).append(Component.literal(component.getManaCostAsString()).withStyle(ChatFormatting.GRAY)));
+					textList.add(Component.translatable("spell_book.arcanuscontinuum.weight").append(": ").withStyle(ChatFormatting.GREEN).append(Component.translatable("spell_book.arcanuscontinuum.weight", component.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
+					textList.add(Component.translatable("spell_book.arcanuscontinuum.mana_cost").append(": ").withStyle(ChatFormatting.BLUE).append(Component.literal(component.getManaCostAsString()).withStyle(ChatFormatting.GRAY)));
 
 					if(component instanceof SpellShape shape) {
 						if(shape.getManaMultiplier() != 0)
-							textList.add(Arcanus.translate("spell_book", "mana_multiplier").append(": ").withStyle(ChatFormatting.LIGHT_PURPLE).append(Component.literal(shape.getManaMultiplierAsString()).withStyle(ChatFormatting.GRAY)));
+							textList.add(Component.translatable("spell_book.arcanuscontinuum.mana_multiplier").append(": ").withStyle(ChatFormatting.LIGHT_PURPLE).append(Component.literal(shape.getManaMultiplierAsString()).withStyle(ChatFormatting.GRAY)));
 						if(shape.getPotencyModifier() != 0)
-							textList.add(Arcanus.translate("spell_book", "potency_modifier").append(": ").withStyle(ChatFormatting.YELLOW).append(Component.literal(shape.getPotencyModifierAsString()).withStyle(ChatFormatting.GRAY)));
+							textList.add(Component.translatable("spell_book.arcanuscontinuum.potency_modifier").append(": ").withStyle(ChatFormatting.YELLOW).append(Component.literal(shape.getPotencyModifierAsString()).withStyle(ChatFormatting.GRAY)));
 					}
 
-					textList.add(Arcanus.translate("spell_book", "cool_down").append(": ").withStyle(ChatFormatting.RED).append(Component.literal(component.getCoolDownAsString()).append(Arcanus.translate("spell_book", "seconds")).withStyle(ChatFormatting.GRAY)));
+					textList.add(Component.translatable("spell_book.arcanuscontinuum.cool_down").append(": ").withStyle(ChatFormatting.RED).append(Component.literal(component.getCoolDownAsString()).append(Component.translatable("spell_book.arcanuscontinuum.seconds")).withStyle(ChatFormatting.GRAY)));
 
 					gui.renderComponentTooltip(font, textList, mouseX - leftPos, mouseY - topPos);
 				}

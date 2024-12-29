@@ -41,7 +41,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,15 +186,6 @@ public class Arcanus implements ModInitializer {
 
 	public static ResourceLocation id(String name) {
 		return new ResourceLocation(MOD_ID, name);
-	}
-
-	public static MutableComponent translate(@Nullable String prefix, String... value) {
-		return Component.translatable(translationKey(prefix, value));
-	}
-
-	public static String translationKey(@Nullable String prefix, String... value) {
-		String translationKey = Arcanus.MOD_ID + "." + String.join(".", value);
-		return prefix != null ? (prefix + "." + translationKey) : translationKey;
 	}
 
 	public static String format(double d) {
