@@ -150,6 +150,9 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("command.arcanuscontinuum.pocket_dimension.export.error.dimension_not_found", "unable to find %s!");
 		builder.add("command.arcanuscontinuum.pocket_dimension.export.error.pocket_not_found", "Pocket dimension for player %s has not been created yet!");
 
+		builder.add("command.arcanuscontinuum.wizard_level.get.success", "%s's wizard level is %s");
+		builder.add("command.arcanuscontinuum.wizard_level.set.success", "Set %s's wizard level to %s");
+
 		advancement(builder, ArcanusAdvancements.ARCANE_ROOT, "Arcanus: Continuum", "[insert witty sales pitch for something you're already playing]");
 		advancement(builder, ArcanusAdvancements.A_MAGICAL_CRYSTAL, "A Magical Crystal", "Find an Amethyst Shard");
 		advancement(builder, ArcanusAdvancements.ARCANE_ARTIFICE, "Arcane Artifice", "Craft an Arcane Workbench");

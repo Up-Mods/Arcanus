@@ -12,7 +12,6 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
-//TODO translatable texts
 public class WizardLevelCommand {
 
 	public static void register(LiteralArgumentBuilder<CommandSourceStack> builder) {
@@ -38,7 +37,7 @@ public class WizardLevelCommand {
 
 	public static int getLevel(CommandContext<CommandSourceStack> context, ServerPlayer player) throws CommandSyntaxException {
 		int level = ArcanusComponents.getWizardLevel(player);
-		context.getSource().sendSuccess(() -> Component.literal(String.format("%s's wizard level is %s", player.getScoreboardName(), level)), false);
+		context.getSource().sendSuccess(() -> Component.translatable("command.arcanuscontinuum.wizard_level.get.success", player.getScoreboardName(), level), false);
 
 		return level;
 	}
@@ -47,7 +46,7 @@ public class WizardLevelCommand {
 		int level = IntegerArgumentType.getInteger(context, "level");
 		ArcanusComponents.setWizardLevel(player, level);
 
-		context.getSource().sendSuccess(() -> Component.literal(String.format("Set %s's level to %s", player.getScoreboardName(), level)), true);
+		context.getSource().sendSuccess(() -> Component.translatable("command.arcanuscontinuum.wizard_level.set.success", player.getScoreboardName(), level), true);
 
 		return Command.SINGLE_SUCCESS;
 	}

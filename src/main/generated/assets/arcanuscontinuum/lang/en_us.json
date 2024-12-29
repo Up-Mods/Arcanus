@@ -96,6 +96,8 @@
   "command.arcanuscontinuum.pocket_dimension.export.success": "Successfully exported %s's pocket dimension",
   "command.arcanuscontinuum.pocket_dimension.regenerate.success.full": "Regenerated %s's pocket dimension",
   "command.arcanuscontinuum.pocket_dimension.regenerate.success.walls_only": "Repaired the walls of %s's pocket dimension",
+  "command.arcanuscontinuum.wizard_level.get.success": "%s's wizard level is %s",
+  "command.arcanuscontinuum.wizard_level.set.success": "Set %s's wizard level to %s",
   "config.arcanuscontinuum.aggressorbShapeProperties": "Aggressorb Shape",
   "config.arcanuscontinuum.anonymityEffectProperties": "Anonymity Effect",
   "config.arcanuscontinuum.aoeShapeProperties": "Area Of Effect Shape",
