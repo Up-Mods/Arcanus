@@ -95,11 +95,6 @@ public class BeamEntity extends Entity implements Targetable {
 	}
 
 	@Override
-	public boolean fireImmune() {
-		return true;
-	}
-
-	@Override
 	protected void readAdditionalSaveData(CompoundTag tag) {
 		effects.clear();
 		groups.clear();

@@ -79,11 +79,6 @@ public class ManaShieldEntity extends Entity implements Targetable {
 	}
 
 	@Override
-	public boolean fireImmune() {
-		return true;
-	}
-
-	@Override
 	protected void readAdditionalSaveData(CompoundTag tag) {
 		entityData.set(MAX_AGE, tag.getInt("MaxAge"));
 		entityData.set(TRUE_AGE, tag.getInt("TrueAge"));

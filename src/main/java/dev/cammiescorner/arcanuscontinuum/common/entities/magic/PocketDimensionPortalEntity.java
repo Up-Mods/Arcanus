@@ -98,6 +98,11 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	}
 
 	@Override
+	public boolean displayFireAnimation() {
+		return false;
+	}
+
+	@Override
 	protected void readAdditionalSaveData(CompoundTag tag) {
 		casterId = tag.getUUID("CasterId");
 		pullStrength = tag.getDouble("PullStrength");
