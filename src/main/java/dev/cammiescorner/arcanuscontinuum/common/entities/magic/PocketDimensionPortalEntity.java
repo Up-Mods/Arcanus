@@ -5,7 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusEntityTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import net.fabricmc.fabric.api.entity.FakePlayer;
+import dev.cammiescorner.arcanuscontinuum.common.util.PlayerHelper;
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -147,7 +147,7 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	}
 
 	private static boolean canTeleportSafely(Entity entity) {
-		if(entity.isSpectator() || !entity.isAlive() || !entity.canChangeDimensions() || entity instanceof FakePlayer) {
+		if(entity.isSpectator() || !entity.isAlive() || !entity.canChangeDimensions() || PlayerHelper.isFakePlayer(entity)) {
 			return false;
 		}
 

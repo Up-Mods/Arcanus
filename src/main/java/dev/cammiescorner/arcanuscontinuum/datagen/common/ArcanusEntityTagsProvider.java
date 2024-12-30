@@ -53,5 +53,8 @@ public class ArcanusEntityTagsProvider extends FabricTagProvider.EntityTypeTagPr
 			.add(EntityType.PAINTING)
 			.add(EntityType.TEXT_DISPLAY)
 			.add(ArcanusEntities.PORTAL.get());
+
+		getOrCreateTagBuilder(ArcanusEntityTags.RUNE_TRIGGER_IGNORED)
+			.addOptionalTag(ArcanusEntityTags.C_IMMOVABLE);
 	}
 }

@@ -333,6 +333,7 @@
   "tag.block.arcanuscontinuum.warding_not_allowed": "Warding Not Allowed",
   "tag.dimension_type.arcanuscontinuum.warding_not_allowed": "Warding Not Allowed",
   "tag.entity_type.arcanuscontinuum.dispellable": "Dispellable",
+  "tag.entity_type.arcanuscontinuum.magic_rune_ignored": "Does not trigger Magic Runes",
   "tag.entity_type.arcanuscontinuum.spatial_rift_immune": "Immune to Spatial Rifts",
   "tag.entity_type.c.immovable": "Immovable",
   "tag.item.arcanuscontinuum.copper_curse_immune": "Ignored by Copper Curse",

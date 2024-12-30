@@ -6,6 +6,8 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusEntityTags;
+import dev.cammiescorner.arcanuscontinuum.common.util.PlayerHelper;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -48,7 +50,7 @@ public class MagicRuneEntity extends Entity implements Targetable {
 		}
 
 		if(level() instanceof ServerLevel serverWorld && tickCount > ArcanusConfig.SpellShapes.RuneShapeProperties.delay) {
-			LivingEntity entity = level().getNearestEntity(LivingEntity.class, TargetingConditions.forNonCombat().selector(livingEntity -> livingEntity.isAlive() && !livingEntity.isSpectator() && livingEntity.arcanuscontinuum$canBeTargeted()), null, getX(), getY(), getZ(), new AABB(-0.5, 0, -0.5, 0.5, 0.2, 0.5).move(position()));
+			LivingEntity entity = level().getNearestEntity(LivingEntity.class, TargetingConditions.forNonCombat().selector(MagicRuneEntity::isValidTarget), null, getX(), getY(), getZ(), new AABB(-0.5, 0, -0.5, 0.5, 0.2, 0.5).move(position()));
 
 			if(entity != null) {
 				for(SpellEffect effect : new HashSet<>(effects))
@@ -136,5 +138,13 @@ public class MagicRuneEntity extends Entity implements Targetable {
 		this.spellGroups = groups;
 		this.groupIndex = groupIndex;
 		this.potency = potency;
+	}
+
+	private static boolean isValidTarget(LivingEntity livingEntity) {
+		if(!livingEntity.isAlive() || livingEntity.isSpectator() || livingEntity.isIgnoringBlockTriggers() || PlayerHelper.isFakePlayer(livingEntity)) {
+			return false;
+		}
+
+		return livingEntity.arcanuscontinuum$canBeTargeted() && !livingEntity.getType().is(ArcanusEntityTags.RUNE_TRIGGER_IGNORED);
 	}
 }

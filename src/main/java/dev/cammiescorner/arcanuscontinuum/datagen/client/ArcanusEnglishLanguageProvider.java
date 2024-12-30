@@ -137,6 +137,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 
 		tag(builder, ArcanusEntityTags.C_IMMOVABLE, "Immovable");
 		tag(builder, ArcanusEntityTags.DISPELLABLE, "Dispellable");
+		tag(builder, ArcanusEntityTags.RUNE_TRIGGER_IGNORED, "Does not trigger Magic Runes");
 		tag(builder, ArcanusEntityTags.SPATIAL_RIFT_IMMUNE, "Immune to Spatial Rifts");
 
 		tag(builder, ArcanusItemTags.C_FEATHERS, "Feathers");
