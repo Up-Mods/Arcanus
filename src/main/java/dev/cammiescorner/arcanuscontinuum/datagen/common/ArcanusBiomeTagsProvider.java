@@ -1,6 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.datagen.common;
 
 import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusBiomeTags;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
@@ -41,5 +42,20 @@ public class ArcanusBiomeTagsProvider extends FabricTagProvider<Biome> {
 			.add(Biomes.ICE_SPIKES)
 			.add(Biomes.SUNFLOWER_PLAINS)
 			.add(Biomes.MANGROVE_SWAMP);
+
+		getOrCreateTagBuilder(BiomeTags.WITHOUT_PATROL_SPAWNS)
+			.add(ArcanusBiomes.POCKET_DIMENSION);
+
+		getOrCreateTagBuilder(BiomeTags.WITHOUT_ZOMBIE_SIEGES)
+			.add(ArcanusBiomes.POCKET_DIMENSION);
+
+		getOrCreateTagBuilder(BiomeTags.WITHOUT_WANDERING_TRADER_SPAWNS)
+			.add(ArcanusBiomes.POCKET_DIMENSION);
+
+		getOrCreateTagBuilder(ArcanusBiomeTags.IS_POCKET_DIMENSION)
+			.add(ArcanusBiomes.POCKET_DIMENSION);
+
+		getOrCreateTagBuilder(BiomeTags.MINESHAFT_BLOCKING)
+			.add(ArcanusBiomes.POCKET_DIMENSION);
 	}
 }

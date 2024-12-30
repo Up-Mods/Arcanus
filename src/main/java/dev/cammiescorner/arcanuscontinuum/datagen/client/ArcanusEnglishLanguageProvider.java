@@ -17,6 +17,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DeathMessageType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.WeatheringCopper;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,6 +97,8 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		itemStack(builder, BattleMageArmorItem.getStack(ArcanusItems.BATTLE_MAGE_BOOTS, WeatheringCopper.WeatherState.OXIDIZED, false), "Oxidized Battle Mage Boots");
 		itemStack(builder, BattleMageArmorItem.getStack(ArcanusItems.BATTLE_MAGE_BOOTS, WeatheringCopper.WeatherState.OXIDIZED, true), "Waxed Oxidized Battle Mage Boots");
 
+		biome(builder, ArcanusBiomes.POCKET_DIMENSION, "Pocket Dimension");
+
 		builder.add(ArcanusBlocks.ARCANE_WORKBENCH.get(), "Arcane Workbench");
 		builder.add(ArcanusBlocks.MAGIC_DOOR.get(), "Magic Door");
 		builder.add(ArcanusBlocks.MAGIC_BLOCK.get(), "Magic Block");
@@ -130,6 +133,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 
 		tag(builder, ArcanusBiomeTags.C_HAS_VILLAGE, "Has Village");
 		tag(builder, ArcanusBiomeTags.HAS_WIZARD_TOWER, "Has Wizard Tower");
+		tag(builder, ArcanusBiomeTags.IS_POCKET_DIMENSION, "Is Pocket Dimension");
 
 		tag(builder, ArcanusBlockTags.WARDING_NOT_ALLOWED, "Warding Not Allowed");
 
@@ -436,5 +440,9 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		var registryName = tag.registry().location().toShortLanguageKey().replace('/', '.');
 		var tagName = Util.makeDescriptionId("tag." + registryName, tag.location());
 		builder.add(tagName, translation);
+	}
+
+	private void biome(TranslationBuilder builder, ResourceKey<Biome> biome, String translation) {
+		builder.add(Util.makeDescriptionId("biome", biome.location()), translation);
 	}
 }

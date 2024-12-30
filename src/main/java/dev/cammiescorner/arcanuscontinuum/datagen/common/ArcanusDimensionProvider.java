@@ -1,5 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.datagen.common;
 
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusBiomes;
 import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusDimensionTypes;
 import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusDimensions;
 import dev.cammiescorner.arcanuscontinuum.common.util.datagen.DynamicRegistryEntryProvider;
@@ -7,7 +8,6 @@ import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.valueproviders.ConstantInt;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
@@ -28,7 +28,7 @@ public class ArcanusDimensionProvider extends DynamicRegistryEntryProvider {
 		builder.add(Registries.LEVEL_STEM, context -> {
 			var dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
 			var biomes = context.lookup(Registries.BIOME);
-			context.register(Registries.levelToLevelStem(ArcanusDimensions.POCKET_DIMENSION), new LevelStem(dimensionTypes.getOrThrow(ArcanusDimensionTypes.POCKET_DIMENSION), new FlatLevelSource(new FlatLevelGeneratorSettings(Optional.empty(), biomes.getOrThrow(Biomes.THE_VOID), List.of()))));
+			context.register(Registries.levelToLevelStem(ArcanusDimensions.POCKET_DIMENSION), new LevelStem(dimensionTypes.getOrThrow(ArcanusDimensionTypes.POCKET_DIMENSION), new FlatLevelSource(new FlatLevelGeneratorSettings(Optional.empty(), biomes.getOrThrow(ArcanusBiomes.POCKET_DIMENSION), List.of()))));
 		});
 	}
 }

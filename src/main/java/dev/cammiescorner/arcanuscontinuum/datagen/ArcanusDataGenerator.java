@@ -21,8 +21,9 @@ public class ArcanusDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void buildRegistry(RegistrySetBuilder builder) {
 		DynamicRegistryEntryProvider.builder()
-			.add(ArcanusDimensionProvider::new)
+			.add(ArcanusBiomeProvider::new)
 			.add(ArcanusDamageTypeProvider::new)
+			.add(ArcanusDimensionProvider::new)
 			.add(ArcanusStructureProvider::new)
 			.build(builder);
 	}

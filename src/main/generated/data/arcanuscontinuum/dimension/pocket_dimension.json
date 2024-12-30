@@ -3,7 +3,7 @@
   "generator": {
     "type": "minecraft:flat",
     "settings": {
-      "biome": "minecraft:the_void",
+      "biome": "arcanuscontinuum:pocket_dimension",
       "features": false,
       "lakes": false,
       "layers": []
