@@ -35,7 +35,7 @@ public class SpellComponentWidget extends AbstractButton {
 
 		if(component instanceof SpellShape shape) {
 			if(shape.getManaMultiplier() != 0)
-				textList.add(Component.translatable("spell_boo.arcanuscontinuum.mana_multiplier").append(": ").withStyle(ChatFormatting.LIGHT_PURPLE).append(Component.literal(shape.getManaMultiplierAsString()).withStyle(ChatFormatting.GRAY)));
+				textList.add(Component.translatable("spell_book.arcanuscontinuum.mana_multiplier").append(": ").withStyle(ChatFormatting.LIGHT_PURPLE).append(Component.literal(shape.getManaMultiplierAsString()).withStyle(ChatFormatting.GRAY)));
 			if(shape.getPotencyModifier() != 0)
 				textList.add(Component.translatable("spell_book.arcanuscontinuum.potency_modifier").append(": ").withStyle(ChatFormatting.YELLOW).append(Component.literal(shape.getPotencyModifierAsString()).withStyle(ChatFormatting.GRAY)));
 		}
