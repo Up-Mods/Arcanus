@@ -135,7 +135,9 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 
 		tag(builder, ArcanusDimensionTags.WARDING_NOT_ALLOWED, "Warding Not Allowed");
 
+		tag(builder, ArcanusEntityTags.C_IMMOVABLE, "Immovable");
 		tag(builder, ArcanusEntityTags.DISPELLABLE, "Dispellable");
+		tag(builder, ArcanusEntityTags.SPATIAL_RIFT_IMMUNE, "Immune to Spatial Rifts");
 
 		tag(builder, ArcanusItemTags.C_FEATHERS, "Feathers");
 		tag(builder, ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS, "Spellbooks");

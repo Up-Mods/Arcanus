@@ -114,6 +114,11 @@ public class AreaOfEffectEntity extends Entity implements Targetable {
 	}
 
 	@Override
+	public boolean canChangeDimensions() {
+		return false;
+	}
+
+	@Override
 	protected void readAdditionalSaveData(CompoundTag tag) {
 		effects.clear();
 		spellGroups.clear();

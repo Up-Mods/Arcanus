@@ -95,6 +95,11 @@ public class BeamEntity extends Entity implements Targetable {
 	}
 
 	@Override
+	public boolean canChangeDimensions() {
+		return false;
+	}
+
+	@Override
 	protected void readAdditionalSaveData(CompoundTag tag) {
 		effects.clear();
 		groups.clear();

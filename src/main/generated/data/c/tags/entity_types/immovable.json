@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "arcanuscontinuum:area_of_effect",
+    "arcanuscontinuum:beam",
+    "arcanuscontinuum:mana_shield",
+    "arcanuscontinuum:pocket_dimension_portal",
+    "arcanuscontinuum:smite"
+  ]
+}

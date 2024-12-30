@@ -3,7 +3,9 @@ package dev.cammiescorner.arcanuscontinuum.common.entities.magic;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
+import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusEntityTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -52,7 +54,7 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 					});
 
 					if (ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.canSuckEntitiesIn) {
-						level().getEntities(this, box, entity -> entity.isAlive() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && !(entity instanceof Player player && (player.isCreative() || ArcanusComponents.hasPortalCoolDown(player)))).forEach(entity -> {
+						level().getEntities(this, box, entity -> canTeleportSafely(entity) && !ArcanusComponents.hasPortalCoolDown(entity)).forEach(entity -> {
 							double distanceSq = position().distanceToSqr(entity.position());
 
 							if (distanceSq <= boxRadiusSq && distanceSq != 0) {
@@ -103,6 +105,11 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	}
 
 	@Override
+	public boolean canChangeDimensions() {
+		return false;
+	}
+
+	@Override
 	protected void readAdditionalSaveData(CompoundTag tag) {
 		casterId = tag.getUUID("CasterId");
 		pullStrength = tag.getDouble("PullStrength");
@@ -137,5 +144,13 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 		setPos(pos);
 		this.casterId = casterId;
 		this.pullStrength = pullStrength;
+	}
+
+	private static boolean canTeleportSafely(Entity entity) {
+		if(entity.isSpectator() || !entity.isAlive() || !entity.canChangeDimensions() || entity instanceof FakePlayer) {
+			return false;
+		}
+
+		return !entity.getType().is(ArcanusEntityTags.SPATIAL_RIFT_IMMUNE);
 	}
 }
