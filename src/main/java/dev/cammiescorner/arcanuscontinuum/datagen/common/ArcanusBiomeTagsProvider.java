@@ -27,7 +27,7 @@ public class ArcanusBiomeTagsProvider extends FabricTagProvider<Biome> {
 			.forceAddTag(BiomeTags.HAS_VILLAGE_TAIGA);
 
 		getOrCreateTagBuilder(ArcanusBiomeTags.HAS_WIZARD_TOWER)
-			.addTag(ArcanusBiomeTags.C_HAS_VILLAGE)
+			.addOptionalTag(ArcanusBiomeTags.C_HAS_VILLAGE)
 			.forceAddTag(BiomeTags.HAS_PILLAGER_OUTPOST)
 			.forceAddTag(BiomeTags.HAS_SWAMP_HUT)
 			.forceAddTag(BiomeTags.HAS_WOODLAND_MANSION)
