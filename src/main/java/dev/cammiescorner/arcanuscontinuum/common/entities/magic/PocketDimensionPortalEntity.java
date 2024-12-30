@@ -45,11 +45,9 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 			double boxRadius = box.getXsize() / 2;
 			double boxRadiusSq = boxRadius * boxRadius;
 
-			// TODO tag for entities that are immune to portals, which should include portals themselves
-			// TODO should probably also exclude fake players
 			if (caster instanceof ServerPlayer serverCaster) {
 				if (getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.portalGrowTime) {
-					level().getEntities(this, getBoundingBox(), entity -> entity.canChangeDimensions() && !entity.isSpectator() && !(entity instanceof PocketDimensionPortalEntity) && (!(entity instanceof Player player) || !ArcanusComponents.hasPortalCoolDown(player))).forEach(entity -> {
+					level().getEntities(this, getBoundingBox(), entity -> canTeleportSafely(entity) && !ArcanusComponents.hasPortalCoolDown(entity)).forEach(entity -> {
 						PocketDimensionComponent.get(getServer()).teleportToPocketDimension(serverCaster.getGameProfile(), entity);
 					});
 
