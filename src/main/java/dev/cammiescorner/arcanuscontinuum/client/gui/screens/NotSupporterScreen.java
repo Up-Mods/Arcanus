@@ -20,7 +20,7 @@ import java.util.Objects;
 public class NotSupporterScreen extends Screen {
 
 	private static final ResourceLocation DEMO_BACKGROUND_LOCATION = new ResourceLocation("textures/gui/demo_background.png");
-	private static final String CAMMIE_KOFI_URL = "https://ko-fi.com/cammiescorner";
+	private static final String CAMMIE_KOFI_URL = "https://ko-fi.com/camellias";
 	private static final String UP_KOFI_URL = "https://upcraft.dev/links/ko-fi";
 
 	private final Screen parent;
@@ -40,10 +40,9 @@ public class NotSupporterScreen extends Screen {
 		var centerX = this.width / 2;
 		var centerY = this.height / 2;
 
-		var wlcm = Component.literal("");
-		var prks = Component.literal("");
-		welcomeMessage = MultiLineLabel.create(this.font, Component.translatable("screen.arcanuscontinuum.support_us.welcome_header", currentPlayerProfile.getName()), wlcm /*Component.translatable("screen.arcanuscontinuum.support_us.welcome_message")*/);
-		perksMessage = MultiLineLabel.create(this.font, prks /*Component.translatable("screen.arcanuscontinuum.support_us.perks_message")*/, 218);
+		// TODO maybe link to mod list page once it exists?
+		welcomeMessage = MultiLineLabel.create(this.font, Component.translatable("screen.arcanuscontinuum.support_us.welcome_message", currentPlayerProfile.getName()), 218);
+		perksMessage = MultiLineLabel.create(this.font, Component.translatable("screen.arcanuscontinuum.support_us.perks_message"), 218);
 
 		this.addRenderableWidget(Button.builder(Component.translatable("screen.arcanuscontinuum.support_us.button_support_cammie"), (button) -> {
 			button.active = false;

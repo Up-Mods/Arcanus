@@ -298,9 +298,8 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 
 		builder.add("screen.arcanuscontinuum.support_us.title", "Support %s");
 		builder.add("screen.arcanuscontinuum.support_us.title2", "Arcanus: Continuum");
-		builder.add("screen.arcanuscontinuum.support_us.welcome_header", "Hey there, %s!");
-		builder.add("screen.arcanuscontinuum.support_us.welcome_message", "");
-		builder.add("screen.arcanuscontinuum.support_us.perks_message", "");
+		builder.add("screen.arcanuscontinuum.support_us.welcome_message", "Hey there, %s! If you wish to support the development of our many mods, please consider donating.");
+		builder.add("screen.arcanuscontinuum.support_us.perks_message", "Monthly subscribers get various perks across our mods, like being able to customize your magic color as well as access to more staves/wands!");
 		builder.add("screen.arcanuscontinuum.support_us.button_support_cammie", "Support Cammie!");
 		builder.add("screen.arcanuscontinuum.support_us.button_support_up", "Support Up!");
 
