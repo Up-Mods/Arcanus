@@ -6,16 +6,20 @@ on:
       - '*'
   pull_request:
 
+env:
+  JAVA_VERSION: 21
+  BUILD_NUMBER: ${{ github.run_number }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
           distribution: 'microsoft'
-          java-version: 17
+          java-version: ${{ env.JAVA_VERSION }}
           cache: 'gradle'
       - name: Validate Gradle Wrapper
         uses: gradle/actions/wrapper-validation@v4

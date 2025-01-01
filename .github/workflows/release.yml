@@ -5,16 +5,24 @@ on:
     tags:
       - '*'
 
+env:
+  JAVA_VERSION: 21
+  TAG: ${{ github.ref_name }}
+  BUILD_NUMBER: ${{ github.run_number }}
+  MAVEN_UPLOAD_URL: ${{ secrets.MAVEN_UPLOAD_URL }}
+  MAVEN_UPLOAD_USERNAME: ${{ secrets.MAVEN_UPLOAD_USERNAME }}
+  MAVEN_UPLOAD_PASSWORD: ${{ secrets.MAVEN_UPLOAD_PASSWORD }}
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 17
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
           distribution: 'microsoft'
-          java-version: 17
+          java-version: ${{ env.JAVA_VERSION }}
       - name: Validate Gradle Wrapper
         uses: gradle/actions/wrapper-validation@v4
       - name: Grant execute permission for gradlew
@@ -24,24 +32,14 @@ jobs:
         id: current_time
         with:
           format: YY.MMDD.HHmm
-      - name: Setup ENV
-        run: echo "TAG=${{github.ref_name}}" >> $GITHUB_ENV
-      - name: Copy Maven Upload URL
-        id: extract_maven_upload_url
-        run: echo "maven_upload_url=${{secrets.MAVEN_UPLOAD_URL}}" >> $GITHUB_OUTPUT
       - name: Build with Gradle
         env:
           BUILD_TIME: ${{ steps.current_time.outputs.formattedTime }}
-          BUILD_NUMBER: ${{ github.run_number }}
         run: ./gradlew assemble
       - name: Maven Release
-        if: steps.extract_maven_upload_url.outputs.maven_upload_url
+        if: ${{ env.MAVEN_UPLOAD_URL }}
         env:
           BUILD_TIME: ${{ steps.current-time.outputs.formattedTime }}
-          BUILD_NUMBER: ${{ github.run_number }}
-          MAVEN_UPLOAD_URL: ${{ secrets.MAVEN_UPLOAD_URL }}
-          MAVEN_UPLOAD_USERNAME: ${{ secrets.MAVEN_UPLOAD_USERNAME }}
-          MAVEN_UPLOAD_PASSWORD: ${{ secrets.MAVEN_UPLOAD_PASSWORD }}
         run: ./gradlew publish
       - name: Publish (GitHub Releases)
         uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659
@@ -56,7 +54,7 @@ jobs:
         with:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          version: ${{ github.ref_name }}+Fabric
+          version: ${{ env.TAG }}+Fabric
           version-type: beta
           files: |
             build/libs/!(*-@(dev|sources|javadoc|slim)).jar
@@ -64,7 +62,7 @@ jobs:
       - name: Notify Discord
         uses: Up-Mods/action-discord-release@main
         with:
-          version: ${{ github.ref_name }}
+          version: ${{ env.TAG }}
           webhook-url: ${{ secrets.ANNOUNCEMENT_WEBHOOK_URL }}
           curseforge-project-id: ${{ steps.publish_fabric.outputs.curseforge-id }}
           modrinth-project-id: ${{ steps.publish_fabric.outputs.modrinth-id }}
