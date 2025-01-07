@@ -64,7 +64,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeableArmorItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -180,13 +179,12 @@ public class ArcanusClient implements ClientModInitializer {
 		ItemProperties.register(ArcanusItems.BATTLE_MAGE_BOOTS.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
 
 		ArcanusItems.ITEMS.stream().forEach(holder -> {
-			Item item = holder.get();
-			if (item instanceof StaffItem) {
+			if (holder.get() instanceof StaffItem item) {
 				ResourceLocation id = holder.getId();
 				StaffItemRenderer staffItemRenderer = new StaffItemRenderer(id);
 				ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(staffItemRenderer);
 				BuiltinItemRendererRegistry.INSTANCE.register(item, staffItemRenderer);
-				ModelLoadingPlugin.register(ctx -> ctx.addModels(new ModelResourceLocation(id.withPath(id.getPath() + "_gui"), "inventory"), new ModelResourceLocation(id.withPath(id.getPath() + "_handheld"), "inventory")));
+				ModelLoadingPlugin.register(ctx -> ctx.addModels(new ModelResourceLocation(id.withSuffix("_gui"), "inventory"), new ModelResourceLocation(id.withSuffix("_handheld"), "inventory")));
 			}
 		});
 
