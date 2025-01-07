@@ -88,6 +88,8 @@ dependencies {
 		parchment "org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip"
 	}
 
+	compileOnly libs.jetbrains.annotations
+
 	modImplementation libs.fabric.loader
 	modImplementation libs.fabric.api
 
