@@ -15,11 +15,8 @@ import net.minecraft.data.models.model.ModelTemplate;
 import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-
-import java.util.function.Supplier;
 
 public class ArcanusModelProvider extends FabricModelProvider {
 
@@ -49,21 +46,14 @@ public class ArcanusModelProvider extends FabricModelProvider {
 		gen.generateFlatItem(ArcanusItems.WIZARD_SPAWN_EGG.get(), SPAWN_EGG_TEMPLATE);
 		gen.generateFlatItem(ArcanusItems.OPOSSUM_SPAWN_EGG.get(), SPAWN_EGG_TEMPLATE);
 
-		gen.generateFlatItem(ArcanusItems.WIZARD_HAT.get(), ModelTemplates.FLAT_ITEM);
-		gen.generateFlatItem(ArcanusItems.WIZARD_ROBES.get(), ModelTemplates.FLAT_ITEM);
+		var wizardHatModel = ModelLocationUtils.getModelLocation(ArcanusItems.WIZARD_HAT.get());
+		var wizardHatTexture = TextureMapping.getItemTexture(ArcanusItems.WIZARD_HAT.get());
+		gen.generateLayeredItem(wizardHatModel, wizardHatTexture, wizardHatTexture.withSuffix("_trim"));
+		var wizardRobesModel = ModelLocationUtils.getModelLocation(ArcanusItems.WIZARD_ROBES.get());
+		var wizardRobesTexture = TextureMapping.getItemTexture(ArcanusItems.WIZARD_ROBES.get());
+		gen.generateLayeredItem(wizardRobesModel, wizardRobesTexture, wizardRobesTexture.withSuffix("_trim"));
 		gen.generateFlatItem(ArcanusItems.WIZARD_PANTS.get(), ModelTemplates.FLAT_ITEM);
 		gen.generateFlatItem(ArcanusItems.WIZARD_BOOTS.get(), ModelTemplates.FLAT_ITEM);
-
-	}
-
-	private void staff(ItemModelGenerators gen, Supplier<? extends Item> staff) {
-		var item = staff.get();
-		var guiModelLoc = ModelLocationUtils.getModelLocation(item, "_gui");
-		var handheldModelLoc = ModelLocationUtils.getModelLocation(item, "_handheld");
-
-		var focusTexture = TextureMapping.getItemTexture(item, "_focus");
-		var handleTexture = TextureMapping.getItemTexture(item, "_handle");
-		gen.generateLayeredItem(guiModelLoc, focusTexture, handleTexture);
 	}
 
 	public final void copyModelNoItem(BlockModelGenerators gen, Block sourceBlock, Block targetBlock) {
