@@ -41,19 +41,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings("ALL")
-public class
-OpossumEntity extends TamableAnimal implements SmartBrainOwner<OpossumEntity> {
+public class OpossumEntity extends TamableAnimal implements SmartBrainOwner<OpossumEntity> {
+
 	public OpossumEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
 		super(entityType, world);
 		Arrays.fill(armorDropChances, 1F);
 	}
 
 	public static AttributeSupplier.Builder createMobAttributes() {
-		return TamableAnimal.createMobAttributes()
-				.add(Attributes.MAX_HEALTH, 10)
-				.add(Attributes.ATTACK_DAMAGE, 0)
-				.add(Attributes.MOVEMENT_SPEED, 0.28);
+		return TamableAnimal.createMobAttributes().add(Attributes.MAX_HEALTH, 10).add(Attributes.ATTACK_DAMAGE, 0).add(Attributes.MOVEMENT_SPEED, 0.28);
 	}
 
 	@Override
@@ -62,49 +58,47 @@ OpossumEntity extends TamableAnimal implements SmartBrainOwner<OpossumEntity> {
 		ItemStack stack = handStack.copy();
 		ItemStack hatStack = getItemBySlot(EquipmentSlot.HEAD).copy();
 
-		if(isTame()) {
-			if(handStack.is(ArcanusItems.WIZARD_HAT.get())) {
+		if (isTame()) {
+			if (handStack.is(ArcanusItems.WIZARD_HAT.get())) {
 				setItemSlot(EquipmentSlot.HEAD, stack);
 
-				if(!player.isCreative())
+				if (!player.isCreative())
 					handStack.shrink(1);
-				if(!getItemBySlot(EquipmentSlot.HEAD).isEmpty() && !player.isCreative())
+				if (!getItemBySlot(EquipmentSlot.HEAD).isEmpty() && !player.isCreative())
 					player.setItemInHand(hand, hatStack);
 
 				return InteractionResult.SUCCESS;
 			}
 
-			if(isFood(handStack) && getHealth() < getMaxHealth()) {
+			if (isFood(handStack) && getHealth() < getMaxHealth()) {
 				heal(4);
 
-				if(!player.isCreative())
+				if (!player.isCreative())
 					handStack.shrink(1);
 
 				return InteractionResult.SUCCESS;
 			}
 
-			if(handStack.isEmpty() && player.isShiftKeyDown() && !getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+			if (handStack.isEmpty() && player.isShiftKeyDown() && !getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
 				player.setItemInHand(hand, hatStack);
 				setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
 				return InteractionResult.SUCCESS;
 			}
 
-			if(getOwner() != null && player.getId() == getOwner().getId()) {
+			if (getOwner() != null && player.getId() == getOwner().getId()) {
 				setOrderedToSit(!isOrderedToSit());
 				return InteractionResult.SUCCESS;
 			}
-		}
-		else if(handStack.is(Items.CARROT)) {
-			if(!level().isClientSide) {
-				if(!player.isCreative())
+		} else if (handStack.is(Items.CARROT)) {
+			if (!level().isClientSide) {
+				if (!player.isCreative())
 					handStack.shrink(1);
 
-				if(random.nextInt(3) == 0) {
+				if (random.nextInt(3) == 0) {
 					tame(player);
 					navigation.stop();
 					level().broadcastEntityEvent(this, (byte) 7);
-				}
-				else {
+				} else {
 					level().broadcastEntityEvent(this, (byte) 6);
 				}
 
@@ -126,7 +120,7 @@ OpossumEntity extends TamableAnimal implements SmartBrainOwner<OpossumEntity> {
 		OpossumEntity opossumEntity = ArcanusEntities.OPOSSUM.get().create(world);
 		UUID uUID = getOwnerUUID();
 
-		if(uUID != null && opossumEntity != null) {
+		if (uUID != null && opossumEntity != null) {
 			opossumEntity.setOwnerUUID(uUID);
 			opossumEntity.setTame(true);
 		}
@@ -147,42 +141,24 @@ OpossumEntity extends TamableAnimal implements SmartBrainOwner<OpossumEntity> {
 
 	@Override
 	public List<ExtendedSensor<OpossumEntity>> getSensors() {
-		return ObjectArrayList.of(
-				new NearbyLivingEntitySensor<>(),
-				new HurtBySensor<>()
-		);
+		return ObjectArrayList.of(new NearbyLivingEntitySensor<>(), new HurtBySensor<>());
 	}
 
 	@Override
 	public BrainActivityGroup<OpossumEntity> getCoreTasks() {
-		return BrainActivityGroup.coreTasks(
-				new FloatToSurfaceOfFluid<>(),
-				new FleeTarget<>().speedModifier(1.5F).stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit()),
-				new LookAtTarget<>(),
-				new FollowOwner<>().stopIf(entity -> entity.isOrderedToSit()),
-				new MoveToWalkTarget<>().stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit())
-		);
+		return BrainActivityGroup.coreTasks(new FloatToSurfaceOfFluid<>(), new FleeTarget<>().speedModifier(1.5F).stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit()), new LookAtTarget<>(), new FollowOwner<>().stopIf(entity -> entity.isOrderedToSit()), new MoveToWalkTarget<>().stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit()));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public BrainActivityGroup<OpossumEntity> getIdleTasks() {
-		return BrainActivityGroup.idleTasks(
-				new FirstApplicableBehaviour<OpossumEntity>(
-						new SetRetaliateTarget<>(),
-						new SetPlayerLookTarget<>(),
-						new SetRandomLookTarget<>()
-				),
-				new OneRandomBehaviour<>(
-						new SetRandomWalkTarget<>().stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit()),
-						new Idle<>().runFor(entity -> entity.getRandom().nextInt(30) + 30)
-				)
-		);
+		return BrainActivityGroup.idleTasks(new FirstApplicableBehaviour<OpossumEntity>(new SetRetaliateTarget<>(), new SetPlayerLookTarget<>(), new SetRandomLookTarget<>()), new OneRandomBehaviour<>(new SetRandomWalkTarget<>().stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit()), new Idle<>().runFor(entity -> entity.getRandom().nextInt(30) + 30)));
 	}
 
 	@Override
 	public BrainActivityGroup<OpossumEntity> getFightTasks() {
 		return BrainActivityGroup.fightTasks(
-				// TODO Fix later
+			// TODO Fix later
 //				new ForgetAttackTargetTask().m_nwhekhlv(target -> !target.isAlive() || target.squaredDistanceTo(this) > (32 * 32) || target instanceof PlayerEntity player && player.isCreative())
 		);
 	}
