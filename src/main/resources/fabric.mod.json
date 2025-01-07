@@ -27,15 +27,14 @@
       "curseforge": "905345",
       "modrinth": "UnnRjucf",
       "dependencies": [
-        "fabric-api(required)#{curseforge:306612}{modrinth:P7dR8mSH}",
-        "patchouli(required)#{modrinth:nU0bVIaL}{curseforge:393236}",
-        "resourcefulconfig(required)#{modrinth:M1953qlQ}{curseforge:714059}",
-        "smartbrainlib(required)#{modrinth:PuyPazRT}{curseforge:661293}",
-        "sparkweave(required)#{modrinth:nf68xfAw}{curseforge:911456}",
-
-        "firstperson(optional)#{modrinth:H5XMjpHi}{curseforge:333287}",
-        "lambdynamiclights(optional)#{modrinth:yBW8D80W}{curseforge:393442}",
-        "pehkui(optional)#{modrinth:t5W7Jfwy}{curseforge:319596}"
+        "fabric-api(required){curseforge:306612}{modrinth:P7dR8mSH}",
+        "patchouli(required){modrinth:nU0bVIaL}{curseforge:393236}",
+        "resourcefulconfig(required){modrinth:M1953qlQ}{curseforge:714059}",
+        "smartbrainlib(required){modrinth:PuyPazRT}{curseforge:661293}",
+        "sparkweave(required){modrinth:nf68xfAw}{curseforge:911456}",
+        "firstperson(optional){modrinth:H5XMjpHi}{curseforge:333287}",
+        "lambdynamiclights(optional){modrinth:yBW8D80W}{curseforge:393442}",
+        "pehkui(optional){modrinth:t5W7Jfwy}{curseforge:319596}"
       ],
       "loaders": [
         "fabric",
