@@ -32,6 +32,11 @@
         "resourcefulconfig(required){modrinth:M1953qlQ}{curseforge:714059}",
         "smartbrainlib(required){modrinth:PuyPazRT}{curseforge:661293}",
         "sparkweave(required){modrinth:nf68xfAw}{curseforge:911456}",
+        "cardinal-components-base(required){modrinth:K01OU20C}{curseforge:318449}",
+        "cardinal-components-block#(ignore:true)",
+        "cardinal-components-chunk#(ignore:true)",
+        "cardinal-components-entity#(ignore:true)",
+        "cardinal-components-scoreboard#(ignore:true)",
         "firstperson(optional){modrinth:H5XMjpHi}{curseforge:333287}",
         "lambdynamiclights(optional){modrinth:yBW8D80W}{curseforge:393442}",
         "pehkui(optional){modrinth:t5W7Jfwy}{curseforge:319596}"
@@ -39,6 +44,9 @@
       "loaders": [
         "fabric",
         "quilt"
+      ],
+      "java": [
+        "${java_version}"
       ]
     },
     "modmenu": {
