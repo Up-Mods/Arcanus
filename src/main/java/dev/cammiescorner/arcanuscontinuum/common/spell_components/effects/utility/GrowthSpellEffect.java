@@ -25,7 +25,7 @@ public class GrowthSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		int growthCount = (int) (effects.stream().filter(ArcanusSpellComponents.GROWTH::is).count() * potency);
 
 		if(target.getType() == HitResult.Type.ENTITY) {
@@ -39,8 +39,8 @@ public class GrowthSpellEffect extends SpellEffect {
 			BlockPos pos = blockHit.getBlockPos().relative(blockHit.getDirection());
 
 			for(int i = 0; i < growthCount; i++) {
-				BoneMealItem.growCrop(ItemStack.EMPTY, world, pos);
-				BoneMealItem.growWaterPlant(ItemStack.EMPTY, world, pos, blockHit.getDirection());
+				BoneMealItem.growCrop(ItemStack.EMPTY, level, pos);
+				BoneMealItem.growWaterPlant(ItemStack.EMPTY, level, pos, blockHit.getDirection());
 			}
 		}
 	}

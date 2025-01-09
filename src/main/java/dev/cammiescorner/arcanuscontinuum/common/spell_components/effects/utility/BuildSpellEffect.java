@@ -27,17 +27,17 @@ public class BuildSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.BLOCK) {
 			BlockHitResult blockHit = (BlockHitResult) target;
 			BlockPos pos = blockHit.getBlockPos().relative(blockHit.getDirection());
 
-			if(world.getBlockState(pos).canBeReplaced() && (!(caster instanceof Player player) || world.mayInteract(player, pos))) {
-				world.setBlock(pos, ArcanusBlocks.MAGIC_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
-				world.scheduleTick(pos, world.getBlockState(pos).getBlock(), (int) (ArcanusConfig.UtilityEffects.BuildEffectProperties.baseLifeSpan * effects.stream().filter(ArcanusSpellComponents.BUILD::is).count() * potency));
+			if(level.getBlockState(pos).canBeReplaced() && (!(caster instanceof Player player) || level.mayInteract(player, pos))) {
+				level.setBlock(pos, ArcanusBlocks.MAGIC_BLOCK.get().defaultBlockState(), Block.UPDATE_CLIENTS);
+				level.scheduleTick(pos, level.getBlockState(pos).getBlock(), (int) (ArcanusConfig.UtilityEffects.BuildEffectProperties.baseLifeSpan * effects.stream().filter(ArcanusSpellComponents.BUILD::is).count() * potency));
 
 				if(caster != null) {
-					world.getBlockEntity(pos, ArcanusBlockEntities.MAGIC_BLOCK.get()).ifPresent(blockEntity -> ArcanusHelper.copyMagicColor(blockEntity, caster));
+					level.getBlockEntity(pos, ArcanusBlockEntities.MAGIC_BLOCK.get()).ifPresent(blockEntity -> ArcanusHelper.copyMagicColor(blockEntity, caster));
 				}
 			}
 		}

@@ -23,13 +23,13 @@ public class MineSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.BLOCK) {
 			BlockHitResult blockHit = (BlockHitResult) target;
-			BlockState state = world.getBlockState(blockHit.getBlockPos());
+			BlockState state = level.getBlockState(blockHit.getBlockPos());
 
-			if(state.getDestroySpeed(world, blockHit.getBlockPos()) > 0) {
-				if(!(caster instanceof Player player) || world.mayInteract(player, blockHit.getBlockPos())) {
+			if(state.getDestroySpeed(level, blockHit.getBlockPos()) > 0) {
+				if(!(caster instanceof Player player) || level.mayInteract(player, blockHit.getBlockPos())) {
 					int count = (int) effects.stream().filter(ArcanusSpellComponents.MINE::is).count();
 
 					if(count < 2 && state.is(BlockTags.NEEDS_STONE_TOOL))
@@ -39,7 +39,7 @@ public class MineSpellEffect extends SpellEffect {
 					if(count < 4 && state.is(BlockTags.NEEDS_DIAMOND_TOOL))
 						return;
 
-					world.destroyBlock(blockHit.getBlockPos(), true, caster);
+					level.destroyBlock(blockHit.getBlockPos(), true, caster);
 				}
 			}
 		}

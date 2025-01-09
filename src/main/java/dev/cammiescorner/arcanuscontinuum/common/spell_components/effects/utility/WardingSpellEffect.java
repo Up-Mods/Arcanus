@@ -25,20 +25,20 @@ public class WardingSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if (target.getType() == HitResult.Type.BLOCK && caster instanceof Player player) {
 			var blockHit = (BlockHitResult) target;
 			var pos = blockHit.getBlockPos();
-			var state = world.getBlockState(pos);
+			var state = level.getBlockState(pos);
 
-			if (world.mayInteract(player, pos)) {
-				var isWarded = ArcanusComponents.isBlockWarded(world, pos);
-				if (isWarded || !state.getCollisionShape(world, pos).isEmpty()) {
+			if (level.mayInteract(player, pos)) {
+				var isWarded = ArcanusComponents.isBlockWarded(level, pos);
+				if (isWarded || !state.getCollisionShape(level, pos).isEmpty()) {
 					if (isWarded) {
 						ArcanusComponents.removeWardedBlock(player, pos);
 					} else {
-						var dimensionTypes = world.registryAccess().lookupOrThrow(Registries.DIMENSION_TYPE);
-						var dimensionHolder = dimensionTypes.getOrThrow(world.dimensionTypeId());
+						var dimensionTypes = level.registryAccess().lookupOrThrow(Registries.DIMENSION_TYPE);
+						var dimensionHolder = dimensionTypes.getOrThrow(level.dimensionTypeId());
 						if (dimensionHolder.is(ArcanusDimensionTags.WARDING_NOT_ALLOWED)) {
 							// TODO make translatable
 							player.sendSystemMessage(Component.literal("Cannot ward blocks in this dimension!"));

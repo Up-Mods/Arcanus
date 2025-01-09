@@ -27,7 +27,7 @@ public class IceSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.ENTITY) {
 			EntityHitResult entityHit = (EntityHitResult) target;
 			Entity entity = entityHit.getEntity();
@@ -42,12 +42,12 @@ public class IceSpellEffect extends SpellEffect {
 			BlockHitResult blockHit = (BlockHitResult) target;
 			BlockPos pos = blockHit.getBlockPos().relative(blockHit.getDirection());
 
-			if(world.getBlockState(blockHit.getBlockPos()).getFluidState().is(Fluids.WATER))
-				world.setBlockAndUpdate(blockHit.getBlockPos(), Blocks.ICE.defaultBlockState());
-			else if(world.getBlockState(blockHit.getBlockPos()).getFluidState().is(Fluids.LAVA))
-				world.setBlockAndUpdate(blockHit.getBlockPos(), Blocks.OBSIDIAN.defaultBlockState());
-			else if(world.loadedAndEntityCanStandOn(pos.below(), caster) && world.isUnobstructed(Blocks.SNOW.defaultBlockState(), pos, CollisionContext.empty()) && world.getBlockState(pos).canBeReplaced())
-				world.setBlockAndUpdate(pos, Blocks.SNOW.defaultBlockState());
+			if(level.getBlockState(blockHit.getBlockPos()).getFluidState().is(Fluids.WATER))
+				level.setBlockAndUpdate(blockHit.getBlockPos(), Blocks.ICE.defaultBlockState());
+			else if(level.getBlockState(blockHit.getBlockPos()).getFluidState().is(Fluids.LAVA))
+				level.setBlockAndUpdate(blockHit.getBlockPos(), Blocks.OBSIDIAN.defaultBlockState());
+			else if(level.loadedAndEntityCanStandOn(pos.below(), caster) && level.isUnobstructed(Blocks.SNOW.defaultBlockState(), pos, CollisionContext.empty()) && level.getBlockState(pos).canBeReplaced())
+				level.setBlockAndUpdate(pos, Blocks.SNOW.defaultBlockState());
 		}
 	}
 }

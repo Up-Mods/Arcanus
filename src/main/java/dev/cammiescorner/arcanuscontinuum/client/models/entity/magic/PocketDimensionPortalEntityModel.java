@@ -25,7 +25,8 @@ public class PocketDimensionPortalEntityModel extends EntityModel<Entity> {
 		PartDefinition root = data.getRoot();
 
 		PartDefinition box = root.addOrReplaceChild("box", CubeListBuilder.create().texOffs(4, 5).addBox(-24.0F, -32.0F, -24.0F, 48.0F, 32.0F, 48.0F, new CubeDeformation(0.0F))
-		.texOffs(0, 85).addBox(-25.0F, -32.0F, -25.0F, 50.0F, 33.0F, 50.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+			.texOffs(0, 85).addBox(-25.0F, -32.0F, -25.0F, 50.0F, 33.0F, 50.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
 		PartDefinition skybox = root.addOrReplaceChild("skybox", CubeListBuilder.create().texOffs(0, 192).addBox(-32.0F, 1.25F, -32.0F, 64.0F, 0.0F, 64.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
 		return LayerDefinition.create(data, 256, 320);

@@ -24,7 +24,7 @@ public class TeleportSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(caster != null && caster.position().distanceTo(target.getLocation()) <= ArcanusConfig.MovementEffects.TeleportEffectProperties.baseTeleportDistance * effects.stream().filter(ArcanusSpellComponents.TELEPORT::is).count() * potency) {
 			Vec3 pos = target.getLocation();
 
@@ -33,14 +33,14 @@ public class TeleportSpellEffect extends SpellEffect {
 				pos = pos.add(blockHit.getDirection().getStepX() * 0.5, blockHit.getDirection() == Direction.DOWN ? -2 : 0, blockHit.getDirection().getStepZ() * 0.5);
 			}
 
-			world.broadcastEntityEvent(caster, EntityEvent.TELEPORT);
+			level.broadcastEntityEvent(caster, EntityEvent.TELEPORT);
 
 			if(caster.isPassenger())
 				caster.dismountTo(pos.x(), pos.y(), pos.z());
 			else
 				caster.teleportTo(pos.x(), pos.y(), pos.z());
 
-			world.broadcastEntityEvent(caster, EntityEvent.TELEPORT);
+			level.broadcastEntityEvent(caster, EntityEvent.TELEPORT);
 		}
 	}
 }

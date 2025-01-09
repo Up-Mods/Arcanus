@@ -21,16 +21,16 @@ import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL31;
 
 public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDimensionPortalEntity> {
-	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/magic/pocket_dimension_portal.png");
+	private static final ResourceLocation PORTAL_TEXTURE = Arcanus.id("textures/entity/magic/pocket_dimension_portal.png");
 	private static final ResourceLocation SIGIL_TEXTURE = Arcanus.id("textures/entity/magic/spatial_rift_sigil.png");
 	private final Minecraft client = Minecraft.getInstance();
-	private final Tesselator tessellator = Tesselator.getInstance();
-	private final PocketDimensionPortalEntityModel model;
+	private final Tesselator tesselator = Tesselator.getInstance();
+	private final PocketDimensionPortalEntityModel portalModel;
 	private final SpatialRiftEntitySigilModel sigilModel;
 
 	public PocketDimensionPortalEntityRenderer(EntityRendererProvider.Context ctx) {
 		super(ctx);
-		model = new PocketDimensionPortalEntityModel(ctx.getModelSet().bakeLayer(PocketDimensionPortalEntityModel.MODEL_LAYER));
+		portalModel = new PocketDimensionPortalEntityModel(ctx.getModelSet().bakeLayer(PocketDimensionPortalEntityModel.MODEL_LAYER));
 		sigilModel = new SpatialRiftEntitySigilModel(ctx.getModelSet().bakeLayer(SpatialRiftEntitySigilModel.MODEL_LAYER));
 	}
 
@@ -38,8 +38,8 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 	public void render(PocketDimensionPortalEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertices, light);
 		StencilBuffer stencilBuffer = ((StencilBuffer) client.getMainRenderTarget());
-		RenderType layer = ArcanusClient.getMagicPortal(TEXTURE);
-		RenderType sigilLayer = ArcanusClient.getMagicPortal(SIGIL_TEXTURE);
+		RenderType portalLayer = ArcanusClient.getMagicPortal(PORTAL_TEXTURE);
+		RenderType sigilLayer = ArcanusClient.getMagicCircles(SIGIL_TEXTURE);
 		Color color = ArcanusHelper.getMagicColor(entity);
 		float ageDelta = entity.getTrueAge() + tickDelta;
 		float maxScale = 0.75f;
@@ -49,7 +49,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		matrices.translate(0, 1.625, 0);
 		matrices.mulPose(Axis.ZP.rotationDegrees(180));
 		matrices.scale(scale, 1, scale);
-		model.skybox.render(matrices, vertices.getBuffer(RenderType.entitySolid(TEXTURE)), light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
+		portalModel.skybox.render(matrices, vertices.getBuffer(RenderType.entitySolid(PORTAL_TEXTURE)), light, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
 		matrices.popPose();
 
 		matrices.pushPose();
@@ -60,7 +60,6 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		if(!stencilBuffer.arcanuscontinuum$isStencilBufferEnabled())
 			stencilBuffer.arcanuscontinuum$enableStencilBufferAndReload(true);
 
-		GL31.glDisable(GL31.GL_DEPTH_TEST);
 		GL31.glEnable(GL31.GL_STENCIL_TEST);
 
 		GL31.glDepthMask(false);
@@ -73,7 +72,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		GameRenderer.getPositionShader().apply();
 		GL31.glColorMask(true, false, false, true);
 		GL31.glDepthFunc(GL31.GL_LEQUAL);
-		drawStencil(matrices, tessellator);
+		drawStencil(matrices, tesselator);
 		GameRenderer.getPositionShader().clear();
 		RenderType.waterMask().clearRenderState();
 
@@ -85,7 +84,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		matrices.translate(-0.375, 0, 0);
 		matrices.mulPose(Axis.ZP.rotationDegrees(90));
 		matrices.scale(maxScale, maxScale, maxScale);
-		model.renderToBuffer(matrices, vertices.getBuffer(layer), light, OverlayTexture.NO_OVERLAY, color.redF(), color.greenF(), color.blueF(), 1.0F);
+		portalModel.renderToBuffer(matrices, vertices.getBuffer(portalLayer), light, OverlayTexture.NO_OVERLAY, color.redF(), color.greenF(), color.blueF(), 1.0F);
 		matrices.popPose();
 
 		if(vertices instanceof MultiBufferSource.BufferSource immediate) {
@@ -101,7 +100,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		RenderType.waterMask().setupRenderState();
 		GameRenderer.getPositionShader().apply();
 		GL31.glDepthFunc(GL31.GL_ALWAYS);
-		drawStencil(matrices, tessellator);
+		drawStencil(matrices, tesselator);
 		GameRenderer.getPositionShader().clear();
 		RenderType.waterMask().clearRenderState();
 
@@ -125,7 +124,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 
 	@Override
 	public ResourceLocation getTextureLocation(PocketDimensionPortalEntity entity) {
-		return TEXTURE;
+		return PORTAL_TEXTURE;
 	}
 
 	public static void drawStencil(PoseStack matrices, Tesselator tessellator) {

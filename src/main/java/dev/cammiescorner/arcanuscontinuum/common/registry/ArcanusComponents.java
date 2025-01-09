@@ -321,8 +321,8 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 		POCKET_DIMENSION_PORTAL_COMPONENT.get(player).createPortal(world, pos, pullStrength);
 	}
 
-	public static Vec3 getPortalPos(Player player) {
-		return POCKET_DIMENSION_PORTAL_COMPONENT.get(player).getPortalPos();
+	public static Vec3 getPortalPos(Player player, Level level) {
+		return POCKET_DIMENSION_PORTAL_COMPONENT.get(player).getPortalPos(level);
 	}
 
 	public static boolean isTimeSlowed(Entity entity) {

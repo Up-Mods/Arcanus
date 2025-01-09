@@ -28,9 +28,9 @@ public class NecromancySpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(caster != null) {
-			NecroSkeletonEntity skeleton = ArcanusEntities.NECRO_SKELETON.get().create(world);
+			NecroSkeletonEntity skeleton = ArcanusEntities.NECRO_SKELETON.get().create(level);
 			int effectCount = (int) effects.stream().filter(ArcanusSpellComponents.NECROMANCY::is).count();
 
 			if(skeleton != null) {
@@ -45,7 +45,7 @@ public class NecromancySpellEffect extends SpellEffect {
 				if(damage != null)
 					damage.addPermanentModifier(new AttributeModifier("Attack Damage", (effectCount / 2d) * potency, AttributeModifier.Operation.ADDITION));
 
-				world.addFreshEntity(skeleton);
+				level.addFreshEntity(skeleton);
 			}
 		}
 	}

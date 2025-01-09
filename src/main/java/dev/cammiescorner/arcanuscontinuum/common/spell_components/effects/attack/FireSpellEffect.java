@@ -29,7 +29,7 @@ public class FireSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.ENTITY) {
 			EntityHitResult entityHit = (EntityHitResult) target;
 			Entity entity = entityHit.getEntity();
@@ -51,8 +51,8 @@ public class FireSpellEffect extends SpellEffect {
 				case EAST -> FireBlock.WEST;
 			}, blockHit.getDirection() != Direction.UP);
 
-			if(world.isUnobstructed(state, pos, CollisionContext.empty()) && world.getBlockState(pos).canBeReplaced())
-				world.setBlockAndUpdate(pos, state);
+			if(level.isUnobstructed(state, pos, CollisionContext.empty()) && level.getBlockState(pos).canBeReplaced())
+				level.setBlockAndUpdate(pos, state);
 		}
 	}
 }

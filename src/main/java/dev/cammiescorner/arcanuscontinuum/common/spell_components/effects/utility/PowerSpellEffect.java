@@ -26,38 +26,38 @@ public class PowerSpellEffect extends SpellEffect {
 	}
 
 	@Override
-	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level world, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() == HitResult.Type.BLOCK) {
 			BlockHitResult blockHit = (BlockHitResult) target;
 			BlockPos pos = blockHit.getBlockPos();
 			BlockPos pos1 = pos.relative(blockHit.getDirection());
-			BlockState state = world.getBlockState(pos);
-			BlockState state1 = world.getBlockState(pos1);
+			BlockState state = level.getBlockState(pos);
+			BlockState state1 = level.getBlockState(pos1);
 			int maxPower = (int) (ArcanusConfig.UtilityEffects.PowerEffectProperties.basePower + effects.stream().filter(ArcanusSpellComponents.POWER::is).count() * potency);
 
 			if(state.getProperties().contains(BlockStateProperties.POWER)) {
-				world.gameEvent(caster, GameEvent.BLOCK_ACTIVATE, pos);
-				world.setBlock(pos, state.setValue(BlockStateProperties.POWER, maxPower), Block.UPDATE_ALL);
-				world.updateNeighborsAt(pos, state.getBlock());
-				world.scheduleTick(pos, state.getBlock(), 2);
+				level.gameEvent(caster, GameEvent.BLOCK_ACTIVATE, pos);
+				level.setBlock(pos, state.setValue(BlockStateProperties.POWER, maxPower), Block.UPDATE_ALL);
+				level.updateNeighborsAt(pos, state.getBlock());
+				level.scheduleTick(pos, state.getBlock(), 2);
 			}
 			if(state.getProperties().contains(BlockStateProperties.POWERED)) {
-				world.gameEvent(caster, GameEvent.BLOCK_ACTIVATE, pos);
-				world.setBlock(pos, state.setValue(BlockStateProperties.POWERED, true), Block.UPDATE_ALL);
-				world.updateNeighborsAt(pos, state.getBlock());
-				world.scheduleTick(pos, state.getBlock(), 2);
+				level.gameEvent(caster, GameEvent.BLOCK_ACTIVATE, pos);
+				level.setBlock(pos, state.setValue(BlockStateProperties.POWERED, true), Block.UPDATE_ALL);
+				level.updateNeighborsAt(pos, state.getBlock());
+				level.scheduleTick(pos, state.getBlock(), 2);
 			}
 			if(state1.getProperties().contains(BlockStateProperties.POWER)) {
-				world.gameEvent(caster, GameEvent.BLOCK_ACTIVATE, pos1);
-				world.setBlock(pos1, state1.setValue(BlockStateProperties.POWER, maxPower), Block.UPDATE_ALL);
-				world.updateNeighborsAt(pos1, state1.getBlock());
-				world.scheduleTick(pos1, state1.getBlock(), 2);
+				level.gameEvent(caster, GameEvent.BLOCK_ACTIVATE, pos1);
+				level.setBlock(pos1, state1.setValue(BlockStateProperties.POWER, maxPower), Block.UPDATE_ALL);
+				level.updateNeighborsAt(pos1, state1.getBlock());
+				level.scheduleTick(pos1, state1.getBlock(), 2);
 			}
 			if(state1.getProperties().contains(BlockStateProperties.POWERED)) {
-				world.gameEvent(caster, GameEvent.BLOCK_ACTIVATE, pos1);
-				world.setBlock(pos1, state1.setValue(BlockStateProperties.POWERED, true), Block.UPDATE_ALL);
-				world.updateNeighborsAt(pos1, state1.getBlock());
-				world.scheduleTick(pos1, state1.getBlock(), 2);
+				level.gameEvent(caster, GameEvent.BLOCK_ACTIVATE, pos1);
+				level.setBlock(pos1, state1.setValue(BlockStateProperties.POWERED, true), Block.UPDATE_ALL);
+				level.updateNeighborsAt(pos1, state1.getBlock());
+				level.scheduleTick(pos1, state1.getBlock(), 2);
 			}
 		}
 	}

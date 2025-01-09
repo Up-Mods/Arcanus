@@ -62,7 +62,7 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 	}
 
 	public static PocketDimensionComponent get(Level world) {
-		if (world instanceof ServerLevel serverWorld) {
+		if(world instanceof ServerLevel serverWorld) {
 			return serverWorld.getScoreboard().getComponent(ArcanusComponents.POCKET_DIMENSION_COMPONENT);
 		}
 
@@ -77,14 +77,14 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 		existingPlots.clear();
 		exitSpot.clear();
 
-		for (int i = 0; i < plotNbtList.size(); i++) {
+		for(int i = 0; i < plotNbtList.size(); i++) {
 			var entry = PocketDimensionPlot.fromNbt(plotNbtList.getCompound(i));
-			if (entry != null) {
+			if(entry != null) {
 				existingPlots.put(entry.ownerId(), entry);
 			}
 		}
 
-		for (int i = 0; i < exitNbtList.size(); i++) {
+		for(int i = 0; i < exitNbtList.size(); i++) {
 			CompoundTag entry = exitNbtList.getCompound(i);
 			exitSpot.put(entry.getUUID("EntityId"), new Tuple<>(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(entry.getString("WorldKey"))), new Vec3(entry.getDouble("X"), entry.getDouble("Y"), entry.getDouble("Z"))));
 		}
@@ -122,14 +122,18 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 	}
 
 	public void teleportToPocketDimension(GameProfile pocketOwner, Entity entity) {
-		if (!entity.level().isClientSide()) {
+		if(!entity.level().isClientSide()) {
 			ServerLevel pocketDim = server.getLevel(ArcanusDimensions.POCKET_DIMENSION);
-			if (pocketDim != null) {
+			ArcanusComponents.setPortalCoolDown(entity, 200);
+
+			if(pocketDim != null) {
 				var plot = getAssignedPlotSpace(pocketOwner.getId());
-				if (plot == null) {
+
+				if(plot == null) {
 					plot = assignNewPlot(pocketDim, pocketOwner, entity.level().getRandom());
 					replacePlotSpace(pocketOwner.getId(), pocketDim, RegenerateType.FULL);
-				} else if (!chunksExist(plot, pocketDim)) {
+				}
+				else if(!chunksExist(plot, pocketDim)) {
 					Arcanus.LOGGER.warn("Pocket dimension plot for player {} ({}) failed integrity check! regenerating boundary...", pocketOwner.getName(), pocketOwner.getId());
 					replacePlotSpace(pocketOwner.getId(), pocketDim, RegenerateType.WALLS_ONLY);
 				}
@@ -141,20 +145,20 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 	}
 
 	public boolean teleportOutOfPocketDimension(Entity entity) {
-		if (PlayerHelper.isFakePlayer(entity) || entity.level().isClientSide() || entity.level().dimension() != ArcanusDimensions.POCKET_DIMENSION) {
+		if(PlayerHelper.isFakePlayer(entity) || entity.level().isClientSide() || entity.level().dimension() != ArcanusDimensions.POCKET_DIMENSION)
 			return false;
-		}
-
-		ArcanusComponents.setPortalCoolDown(entity, 200);
 
 		UUID ownerId = existingPlots.values().stream().filter(plot -> entity.getBoundingBox().intersects(AABB.of(plot.getBounds()))).map(PocketDimensionPlot::ownerId).findFirst().orElse(null);
-		if (ownerId != null) {
+		ArcanusComponents.setPortalCoolDown(entity, 200);
+
+		if(ownerId != null) {
 			Tuple<ResourceKey<Level>, Vec3> pair = exitSpot.get(ownerId);
-			if (pair != null) {
+
+			if(pair != null) {
 				ServerLevel targetWorld = server.getLevel(pair.getA());
 				Vec3 targetPos = pair.getB();
 
-				if (targetWorld == null) {
+				if(targetWorld == null) {
 					Arcanus.LOGGER.error("Unable to find dimension {}, defaulting to overworld", pair.getA().location());
 					targetWorld = server.overworld();
 					targetPos = Vec3.atBottomCenterOf(targetWorld.getSharedSpawnPos());
@@ -165,18 +169,20 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 			}
 		}
 
-		if (entity instanceof ServerPlayer player) {
+		if(entity instanceof ServerPlayer player) {
 			var profile = player.getGameProfile();
 			Arcanus.LOGGER.warn("Failed to determine pocket dimension exit spot for player {} ({}), sending them to their spawn position!", profile.getName(), profile.getId());
 
 			var spawnPos = player.getRespawnPosition();
 			var angle = player.getRespawnAngle();
 			var world = server.getLevel(player.getRespawnDimension());
-			if (!player.isRespawnForced() || world == null || spawnPos == null) {
+
+			if(!player.isRespawnForced() || world == null || spawnPos == null) {
 				world = server.overworld();
 				spawnPos = world.getSharedSpawnPos();
 				angle = entity.getYRot();
 			}
+
 			FabricDimensions.teleport(entity, world, new PortalInfo(Vec3.atBottomCenterOf(spawnPos), Vec3.ZERO, angle, entity.getXRot()));
 		}
 
@@ -195,22 +201,20 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 
 		var worldBorder = pocketDimension.getWorldBorder();
 
-		if (worldBorder.getAbsoluteMaxSize() - worldBorder.getWarningBlocks() - DIMENSION_PADDING_XZ < halfWidth) {
+		if(worldBorder.getAbsoluteMaxSize() - worldBorder.getWarningBlocks() - DIMENSION_PADDING_XZ < halfWidth) {
 			Arcanus.LOGGER.error("Pocket dimension plot for player {} ({}) failed integrity check! world border too small!", target.getName(), target.getId());
 			return PocketDimensionPlot.of(target.getId(), originalBox);
 		}
 
 		int maxOffsetXZ = worldBorder.getAbsoluteMaxSize() - worldBorder.getWarningBlocks() - halfWidth - DIMENSION_PADDING_XZ;
-
 		var minY = pocketDimension.getMinBuildHeight() + DIMENSION_PADDING_Y;
 		var maxY = pocketDimension.getMaxBuildHeight() - DIMENSION_PADDING_Y - pocketHeight;
-
 		var existingPlotsWithSpacing = existingPlots.values().stream().map(existing -> existing.getBounds().inflatedBy(POCKET_MARGIN)).toList();
 
 		// TODO better algorithm for finding plot spaces that does not rely on random
 		BoundingBox box = originalBox;
-		for (int attempts = 0; attempts < 100; attempts++) {
-			if (isValidBounds(pocketDimension, box, worldBorder) && existingPlotsWithSpacing.stream().noneMatch(box::intersects)) {
+		for(int attempts = 0; attempts < 100; attempts++) {
+			if(isValidBounds(pocketDimension, box, worldBorder) && existingPlotsWithSpacing.stream().noneMatch(box::intersects)) {
 				var plot = PocketDimensionPlot.of(target.getId(), box);
 				existingPlots.put(plot.ownerId(), plot);
 				return plot;
@@ -219,6 +223,7 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 			var dX = random.nextInt(Mth.floor(worldBorder.getCenterX()) - maxOffsetXZ, Mth.ceil(worldBorder.getCenterX()) + maxOffsetXZ);
 			var dZ = random.nextInt(Mth.floor(worldBorder.getCenterZ()) - maxOffsetXZ, Mth.ceil(worldBorder.getCenterZ()) + maxOffsetXZ);
 			var dY = random.nextInt(minY, maxY);
+
 			box = originalBox.moved(dX, dY, dZ);
 		}
 
@@ -263,31 +268,32 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 		var plot = getAssignedPlotSpace(target);
 
 		// might happen if the command is ran before a player first enters their pocket dimension
-		if (plot == null) {
+		if(plot == null)
 			return false;
-		}
 
-		if (regenerateType.clearInterior()) {
+		if(regenerateType.clearInterior()) {
 			pocketDim.getEntitiesOfClass(Entity.class, AABB.of(plot.getBounds())).forEach(entity -> {
-				if (PlayerHelper.isFakePlayer(entity) || !(entity instanceof ServerPlayer player)) {
+				if(PlayerHelper.isFakePlayer(entity) || !(entity instanceof ServerPlayer player)) {
 					entity.discard();
 					return;
 				}
 
 				var overworld = server.overworld();
-				FabricDimensions.teleport(player, overworld, new PortalInfo(Vec3.atBottomCenterOf(overworld.getSharedSpawnPos()), Vec3.ZERO, overworld.getSharedSpawnAngle(), 0.0F));
 
+				FabricDimensions.teleport(player, overworld, new PortalInfo(Vec3.atBottomCenterOf(overworld.getSharedSpawnPos()), Vec3.ZERO, overworld.getSharedSpawnAngle(), 0.0F));
 				player.sendSystemMessage(Component.translatable("command.arcanuscontinuum.pocket_dimension.regenerate.warn.teleport"));
 			});
 		}
 
 		BlockPos.betweenClosedStream(plot.min(), plot.max()).forEach(pos -> {
 			var isNotWall = pos.getX() != plot.min().getX() && pos.getX() != plot.max().getX() && pos.getY() != plot.min().getY() && pos.getY() != plot.max().getY() && pos.getZ() != plot.min().getZ() && pos.getZ() != plot.max().getZ();
-			if (isNotWall) {
-				if (regenerateType.clearInterior()) {
+
+			if(isNotWall) {
+				if(regenerateType.clearInterior()) {
 					Clearable.tryClear(pocketDim.getBlockEntity(pos));
 					pocketDim.setBlock(pos, Blocks.AIR.defaultBlockState(), REPLACE_FLAGS);
 				}
+
 				return;
 			}
 			else if(!regenerateType.placeWalls()) {
@@ -304,12 +310,13 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 		if(regenerateType.placeWalls()) {
 			var center = plot.getBounds().getCenter().atY(plot.min().getY());
 			var pos = center.mutable();
-			for (int x = 0; x < 4; x++) {
-				for (int z = 0; z < 4; z++) {
+
+			for(int x = 0; x < 4; x++) {
+				for(int z = 0; z < 4; z++) {
 					pos.set(center.getX() + x - 2, center.getY(), center.getZ() + z - 2);
 
-					if (x == 0) {
-						switch (z) {
+					if(x == 0) {
+						switch(z) {
 							case 0 ->
 								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 							case 1, 2 ->
@@ -317,8 +324,9 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 							case 3 ->
 								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.WEST).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 						}
-					} else if (x == 3) {
-						switch (z) {
+					}
+					else if(x == 3) {
+						switch(z) {
 							case 0 ->
 								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.EAST).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 							case 1, 2 ->
@@ -326,11 +334,14 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 							case 3 ->
 								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 						}
-					} else if (z == 0) {
+					}
+					else if(z == 0) {
 						pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.NORTH), REPLACE_FLAGS);
-					} else if (z == 3) {
+					}
+					else if(z == 3) {
 						pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH), REPLACE_FLAGS);
-					} else {
+					}
+					else {
 						pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT.get().defaultBlockState().setValue(SpatialRiftExitBlock.ACTIVE, x == 1 && z == 1), REPLACE_FLAGS);
 					}
 

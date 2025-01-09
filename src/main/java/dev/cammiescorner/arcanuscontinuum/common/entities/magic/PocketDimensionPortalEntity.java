@@ -23,6 +23,8 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.UUID;
 
+import static dev.cammiescorner.arcanuscontinuum.common.components.entity.PocketDimensionPortalComponent.POCKET_DIMENSION_WORLD_KEY;
+
 public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	private static final EntityDataAccessor<Integer> TRUE_AGE = SynchedEntityData.defineId(PocketDimensionPortalEntity.class, EntityDataSerializers.INT);
 	private UUID casterId = Util.NIL_UUID;
@@ -35,7 +37,7 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	@Override
 	public void tick() {
 		var caster = getCaster();
-		if (!level().isClientSide() && (caster == null || !caster.isAlive()) || getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan + 20) {
+		if(!level().isClientSide() && (caster == null || !caster.isAlive()) || getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan + 20) {
 			kill();
 			return;
 		}
@@ -45,13 +47,16 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 			double boxRadius = box.getXsize() / 2;
 			double boxRadiusSq = boxRadius * boxRadius;
 
-			if (caster instanceof ServerPlayer serverCaster) {
-				if (getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.portalGrowTime) {
+			if(caster instanceof ServerPlayer serverCaster) {
+				if(getTrueAge() > ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.portalGrowTime) {
 					level().getEntities(this, getBoundingBox(), entity -> canTeleportSafely(entity) && !ArcanusComponents.hasPortalCoolDown(entity)).forEach(entity -> {
-						PocketDimensionComponent.get(getServer()).teleportToPocketDimension(serverCaster.getGameProfile(), entity);
+						if(level().dimension() != POCKET_DIMENSION_WORLD_KEY)
+							PocketDimensionComponent.get(getServer()).teleportToPocketDimension(serverCaster.getGameProfile(), entity);
+						else
+							PocketDimensionComponent.get(level()).teleportOutOfPocketDimension(entity);
 					});
 
-					if (ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.canSuckEntitiesIn) {
+					if(ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.canSuckEntitiesIn) {
 						level().getEntities(this, box, entity -> canTeleportSafely(entity) && !ArcanusComponents.hasPortalCoolDown(entity)).forEach(entity -> {
 							double distanceSq = position().distanceToSqr(entity.position());
 
@@ -67,20 +72,17 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 				}
 			}
 			else {
-				for (int i = 0; i < boxRadius * 2; ++i) {
+				for(int i = 0; i < boxRadius * 2; ++i) {
 					double particleX = position().x() + random.nextGaussian() * boxRadius;
 					double particleY = position().y();
 					double particleZ = position().z() + random.nextGaussian() * boxRadius;
 					Vec3 particlePos = new Vec3(particleX, particleY, particleZ);
 					Vec3 particleVelocity = particlePos.subtract(position());
 
-					if (particlePos.distanceToSqr(position()) <= boxRadiusSq) {
+					if(particlePos.distanceToSqr(position()) <= boxRadiusSq)
 						level().addParticle(ParticleTypes.PORTAL, particleX, particleY, particleZ, particleVelocity.x(), particleVelocity.y(), particleVelocity.z());
-					}
 				}
 			}
-
-
 		}
 
 		super.tick();
@@ -123,13 +125,11 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 
 	private Player getCaster() {
 		var server = getServer();
-		if (server != null) {
-			for (ServerLevel serverWorld : server.getAllLevels()) {
-				if (serverWorld.getEntity(casterId) instanceof Player caster) {
+
+		if(server != null)
+			for(ServerLevel serverWorld : server.getAllLevels())
+				if(serverWorld.getEntity(casterId) instanceof Player caster)
 					return caster;
-				}
-			}
-		}
 
 		return null;
 	}
@@ -145,9 +145,8 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	}
 
 	private static boolean canTeleportSafely(Entity entity) {
-		if(entity.isSpectator() || !entity.isAlive() || !entity.canChangeDimensions() || PlayerHelper.isFakePlayer(entity)) {
+		if(entity.isSpectator() || !entity.isAlive() || !entity.canChangeDimensions() || PlayerHelper.isFakePlayer(entity))
 			return false;
-		}
 
 		return !entity.getType().is(ArcanusEntityTags.SPATIAL_RIFT_IMMUNE);
 	}

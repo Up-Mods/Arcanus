@@ -29,9 +29,8 @@ public class SpatialRiftExitBlock extends Block implements EntityBlock {
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (!world.isClientSide() && !PocketDimensionComponent.get(world).teleportOutOfPocketDimension(player)) {
+		if(!world.isClientSide() && !PocketDimensionComponent.get(world).teleportOutOfPocketDimension(player))
 			return InteractionResult.FAIL;
-		}
 
 		return InteractionResult.sidedSuccess(world.isClientSide());
 	}
