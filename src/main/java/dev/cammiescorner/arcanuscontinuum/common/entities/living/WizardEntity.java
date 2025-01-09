@@ -5,7 +5,6 @@ import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusTradeOffers;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
@@ -22,9 +21,10 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.player.Player;
@@ -34,35 +34,37 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetPlayerLookTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRetaliateTarget;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class WizardEntity extends AbstractVillager implements SmartBrainOwner<WizardEntity>, NeutralMob {
+public class WizardEntity extends AbstractVillager implements NeutralMob {
 	private static final EntityDataAccessor<Integer> ROBE_COLOR = SynchedEntityData.defineId(WizardEntity.class, EntityDataSerializers.INT);
 
 	public WizardEntity(EntityType<? extends AbstractVillager> entityType, Level world) {
 		super(entityType, world);
-		Arrays.fill(armorDropChances, 0.1F);
-		Arrays.fill(handDropChances, 0.05F);
+		Arrays.fill(armorDropChances, 0.1f);
+		Arrays.fill(handDropChances, 0.05f);
+	}
+
+	@Override
+	protected void registerGoals() {
+		goalSelector.addGoal(1, new FloatGoal(this));
+		goalSelector.addGoal(2, new TradeWithPlayerGoal(this));
+		goalSelector.addGoal(2, new LookAtTradingPlayerGoal(this));
+		goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Zombie.class, 8f, 1, 2));
+		goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Evoker.class, 12f, 1, 2));
+		goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Vindicator.class, 8f, 1, 2));
+		goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Vex.class, 8f, 1, 2));
+		goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Pillager.class, 15f, 1, 2));
+		goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Illusioner.class, 12f, 1, 2));
+		goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Zoglin.class, 10f, 1, 2));
+		goalSelector.addGoal(3, new MoveTowardsRestrictionGoal(this, 1));
+		goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1));
+		goalSelector.addGoal(5, new InteractGoal(this, Player.class, 3f, 1f));
+		goalSelector.addGoal(6, new LookAtPlayerGoal(this, Mob.class, 8f));
 	}
 
 	@Override
@@ -93,13 +95,13 @@ public class WizardEntity extends AbstractVillager implements SmartBrainOwner<Wi
 		ambientSoundTime = -getAmbientSoundInterval();
 		rewardTradeXp(offer);
 
-		if (getTradingPlayer() instanceof ServerPlayer player)
+		if(getTradingPlayer() instanceof ServerPlayer player)
 			CriteriaTriggers.TRADE.trigger(player, this, offer.getResult());
 	}
 
 	@Override
 	protected void rewardTradeXp(MerchantOffer offer) {
-		if (offer.shouldRewardExp())
+		if(offer.shouldRewardExp())
 			level().addFreshEntity(new ExperienceOrb(level(), getX(), getY() + 0.5, getZ(), 3 + random.nextInt(4)));
 	}
 
@@ -108,7 +110,7 @@ public class WizardEntity extends AbstractVillager implements SmartBrainOwner<Wi
 		VillagerTrades.ItemListing[] factories = ArcanusTradeOffers.WIZARD_TRADES.get(1);
 		VillagerTrades.ItemListing[] factories1 = ArcanusTradeOffers.WIZARD_TRADES.get(2);
 
-		if (factories != null && factories1 != null) {
+		if(factories != null && factories1 != null) {
 			MerchantOffers tradeOfferList = getOffers();
 			addOffersFromItemListings(tradeOfferList, factories, 6);
 
@@ -116,7 +118,7 @@ public class WizardEntity extends AbstractVillager implements SmartBrainOwner<Wi
 			VillagerTrades.ItemListing factory = factories1[i];
 			MerchantOffer tradeOffer = factory.getOffer(this, random);
 
-			if (tradeOffer != null)
+			if(tradeOffer != null)
 				tradeOfferList.add(tradeOffer);
 		}
 	}
@@ -132,13 +134,14 @@ public class WizardEntity extends AbstractVillager implements SmartBrainOwner<Wi
 
 	@Override
 	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
-		if (!level().isClientSide()) {
-			if (ArcanusComponents.getWizardLevel(player) > 0 || player.getItemBySlot(EquipmentSlot.HEAD).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.CHEST).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.LEGS).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.FEET).is(ArcanusItemTags.WIZARD_ARMOR)) {
-				if (!getOffers().isEmpty()) {
+		if(!level().isClientSide()) {
+			if(ArcanusComponents.getWizardLevel(player) > 0 || player.getItemBySlot(EquipmentSlot.HEAD).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.CHEST).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.LEGS).is(ArcanusItemTags.WIZARD_ARMOR) || player.getItemBySlot(EquipmentSlot.FEET).is(ArcanusItemTags.WIZARD_ARMOR)) {
+				if(!getOffers().isEmpty()) {
 					setTradingPlayer(player);
 					openTradingScreen(player, getDisplayName(), 1);
 				}
-			} else {
+			}
+			else {
 				player.displayClientMessage(Component.translatable("text.arcanuscontinuum.wizard_dialogue.no_wizard_armor").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC).withStyle(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("tooltip.arcanuscontinuum.wizard_dialogue.no_wizard_armor").withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC)))), false);
 			}
 		}
@@ -150,7 +153,7 @@ public class WizardEntity extends AbstractVillager implements SmartBrainOwner<Wi
 	public void readAdditionalSaveData(CompoundTag nbt) {
 		super.readAdditionalSaveData(nbt);
 
-		if (nbt.contains("RobeColor", Tag.TAG_ANY_NUMERIC)) {
+		if(nbt.contains("RobeColor", Tag.TAG_ANY_NUMERIC)) {
 			entityData.set(ROBE_COLOR, nbt.getInt("RobeColor"));
 		}
 	}
@@ -177,48 +180,6 @@ public class WizardEntity extends AbstractVillager implements SmartBrainOwner<Wi
 		return false;
 	}
 
-	@Override
-	protected void customServerAiStep() {
-		super.customServerAiStep();
-		tickBrain(this);
-	}
-
-	@Override
-	protected Brain.Provider<?> brainProvider() {
-		return new SmartBrainProvider<>(this);
-	}
-
-	@Override
-	public List<ExtendedSensor<WizardEntity>> getSensors() {
-		return ObjectArrayList.of(
-			new NearbyLivingEntitySensor<>(),
-			new HurtBySensor<>()
-		);
-	}
-
-	@Override
-	public BrainActivityGroup<WizardEntity> getCoreTasks() {
-		return BrainActivityGroup.coreTasks(
-			new FloatToSurfaceOfFluid<>(),
-			new LookAtTarget<>(),
-			new MoveToWalkTarget<>().stopIf(pathAwareEntity -> getTradingPlayer() != null)
-		);
-	}
-
-	@Override
-	public BrainActivityGroup<WizardEntity> getIdleTasks() {
-		return BrainActivityGroup.idleTasks(
-			new FirstApplicableBehaviour<WizardEntity>(
-				new SetRetaliateTarget<>(),
-				new SetPlayerLookTarget<>(),
-				new SetRandomLookTarget<>()
-			), new OneRandomBehaviour<>(
-				new SetRandomWalkTarget<>().startCondition(pathAwareEntity -> getTradingPlayer() != null),
-				new Idle<>().runFor(entity -> entity.getRandom().nextInt(30) + 30)
-			)
-		);
-	}
-
 	private ItemStack getRandomStaff(RandomSource random) {
 		// TODO use a tag for this
 		List<Item> staves = List.of(
@@ -242,7 +203,7 @@ public class WizardEntity extends AbstractVillager implements SmartBrainOwner<Wi
 
 	private int newRandomRobeColor(RandomSource random) {
 		// Rare Colors
-		if (random.nextDouble() <= 0.1) {
+		if(random.nextDouble() <= 0.1) {
 			var list = List.of(
 				0xff005a, // Folly Red
 				0xf2dd50 // Lotus Gold

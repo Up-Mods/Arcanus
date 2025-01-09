@@ -2,7 +2,6 @@ package dev.cammiescorner.arcanuscontinuum.common.entities.living;
 
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -10,46 +9,39 @@ import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FleeTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowOwner;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetPlayerLookTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRetaliateTarget;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
-public class OpossumEntity extends TamableAnimal implements SmartBrainOwner<OpossumEntity> {
-
+public class OpossumEntity extends TamableAnimal {
 	public OpossumEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
 		super(entityType, world);
-		Arrays.fill(armorDropChances, 1F);
+		Arrays.fill(armorDropChances, 1f);
 	}
 
 	public static AttributeSupplier.Builder createMobAttributes() {
 		return TamableAnimal.createMobAttributes().add(Attributes.MAX_HEALTH, 10).add(Attributes.ATTACK_DAMAGE, 0).add(Attributes.MOVEMENT_SPEED, 0.28);
+	}
+
+	@Override
+	protected void registerGoals() {
+		goalSelector.addGoal(1, new FloatGoal(this));
+		goalSelector.addGoal(2, new SitWhenOrderedToGoal(this));
+		goalSelector.addGoal(3, new FollowOwnerGoal(this, 1, 2, 4, false));
+		goalSelector.addGoal(4, new TemptGoal(this, 1, Ingredient.of(Items.CARROT), false));
+		goalSelector.addGoal(4, new BreedGoal(this, 1));
+		goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1));
+		goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8f));
+		goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 	}
 
 	@Override
@@ -126,40 +118,5 @@ public class OpossumEntity extends TamableAnimal implements SmartBrainOwner<Opos
 		}
 
 		return opossumEntity;
-	}
-
-	@Override
-	protected void customServerAiStep() {
-		super.customServerAiStep();
-		tickBrain(this);
-	}
-
-	@Override
-	protected Brain.Provider<?> brainProvider() {
-		return new SmartBrainProvider<>(this);
-	}
-
-	@Override
-	public List<ExtendedSensor<OpossumEntity>> getSensors() {
-		return ObjectArrayList.of(new NearbyLivingEntitySensor<>(), new HurtBySensor<>());
-	}
-
-	@Override
-	public BrainActivityGroup<OpossumEntity> getCoreTasks() {
-		return BrainActivityGroup.coreTasks(new FloatToSurfaceOfFluid<>(), new FleeTarget<>().speedModifier(1.5F).stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit()), new LookAtTarget<>(), new FollowOwner<>().stopIf(entity -> entity.isOrderedToSit()), new MoveToWalkTarget<>().stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit()));
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public BrainActivityGroup<OpossumEntity> getIdleTasks() {
-		return BrainActivityGroup.idleTasks(new FirstApplicableBehaviour<OpossumEntity>(new SetRetaliateTarget<>(), new SetPlayerLookTarget<>(), new SetRandomLookTarget<>()), new OneRandomBehaviour<>(new SetRandomWalkTarget<>().stopIf(entity -> ((OpossumEntity) entity).isOrderedToSit()), new Idle<>().runFor(entity -> entity.getRandom().nextInt(30) + 30)));
-	}
-
-	@Override
-	public BrainActivityGroup<OpossumEntity> getFightTasks() {
-		return BrainActivityGroup.fightTasks(
-			// TODO Fix later
-//				new ForgetAttackTargetTask().m_nwhekhlv(target -> !target.isAlive() || target.squaredDistanceTo(this) > (32 * 32) || target instanceof PlayerEntity player && player.isCreative())
-		);
 	}
 }
