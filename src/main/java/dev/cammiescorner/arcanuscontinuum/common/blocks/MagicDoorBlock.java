@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class MagicDoorBlock extends DoorBlock implements EntityBlock, BlockItemProvider {
 	public MagicDoorBlock() {
-		super(BlockBehaviour.Properties.of().strength(2F, 3F).sound(SoundType.WOOD), BlockSetType.OAK);
+		super(BlockBehaviour.Properties.of().strength(2F, 3F).sound(SoundType.WOOD).noOcclusion(), BlockSetType.OAK);
 	}
 
 	@Override
