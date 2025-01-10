@@ -21,7 +21,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -65,19 +64,15 @@ public class ExplosionSpellShape extends SpellShape {
 						for(; h > 0F; h -= 0.225F) {
 							BlockPos blockPos = new BlockPos((int) m, (int) n, (int) o);
 							BlockState blockState = world.getBlockState(blockPos);
-							FluidState fluidState = world.getFluidState(blockPos);
 
-							if(!world.isInWorldBounds(blockPos)) {
+							if(!world.isInWorldBounds(blockPos))
 								break;
-							}
 
-							if(!blockState.isAir() || !fluidState.isEmpty()) {
-								h -= (Math.max(blockState.getBlock().getExplosionResistance(), fluidState.getExplosionResistance()) + 0.3F) * 0.3F;
-							}
+							if(!blockState.isAir())
+								h -= (blockState.getBlock().getExplosionResistance() + 0.3F) * 0.3F;
 
-							if(!world.isEmptyBlock(blockPos)) {
+							if(!world.isEmptyBlock(blockPos))
 								affectedBlocks.add(blockPos);
-							}
 
 							m += d * 0.3F;
 							n += e * 0.3F;
