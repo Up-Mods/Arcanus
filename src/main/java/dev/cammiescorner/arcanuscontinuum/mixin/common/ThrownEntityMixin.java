@@ -11,14 +11,14 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(ThrowableProjectile.class)
 public abstract class ThrownEntityMixin extends Projectile {
-
 	public ThrownEntityMixin(EntityType<? extends Projectile> entityType, Level world) {
 		super(entityType, world);
 	}
 
 	@SuppressWarnings("ConstantValue")
-	@ModifyArg(method = "tick", at = @At(value = "INVOKE",
-										 target = "Lnet/minecraft/world/phys/Vec3;scale(D)Lnet/minecraft/world/phys/Vec3;"
+	@ModifyArg(method = "tick", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/world/phys/Vec3;scale(D)Lnet/minecraft/world/phys/Vec3;"
 	))
 	private double arcanuscontinuum$noWaterDrag(double value) {
 		return ((Object) this) instanceof AggressorbEntity && this.isInWater() ? 0.99f : value;

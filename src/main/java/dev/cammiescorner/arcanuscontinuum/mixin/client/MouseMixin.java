@@ -13,9 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(MouseHandler.class)
 public class MouseMixin {
-	@Shadow
-	@Final
-	private Minecraft minecraft;
+	@Shadow @Final private Minecraft minecraft;
 
 	@ModifyArg(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), index = 0)
 	public double arcanuscontinuum$invertMouseX(double x) {

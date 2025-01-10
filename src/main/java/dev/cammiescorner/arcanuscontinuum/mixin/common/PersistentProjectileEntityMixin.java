@@ -11,12 +11,14 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(AbstractArrow.class)
 public abstract class PersistentProjectileEntityMixin extends Projectile {
-
 	public PersistentProjectileEntityMixin(EntityType<? extends Projectile> entityType, Level world) {
 		super(entityType, world);
 	}
 
-	@ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;canHarmPlayer(Lnet/minecraft/world/entity/player/Player;)Z"))
+	@ModifyExpressionValue(method = "tick", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/world/entity/player/Player;canHarmPlayer(Lnet/minecraft/world/entity/player/Player;)Z"
+	))
 	private boolean ignorePvpFlag(boolean original) {
 		return original || ((Object) this) instanceof MagicProjectileEntity;
 	}

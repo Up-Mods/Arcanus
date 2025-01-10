@@ -10,9 +10,7 @@ import java.util.function.Consumer;
 
 @Mixin(Advancement.Builder.class)
 public abstract class AdvancementBuilderMixin implements AdvancementBuilderExt {
-
-	@Shadow
-	public abstract Advancement save(Consumer<Advancement> consumer, String id);
+	@Shadow public abstract Advancement save(Consumer<Advancement> consumer, String id);
 
 	@Override
 	public Advancement save(Consumer<Advancement> consumer, ResourceLocation id) {

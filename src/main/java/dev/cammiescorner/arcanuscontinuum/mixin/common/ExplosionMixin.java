@@ -11,18 +11,21 @@ import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(Explosion.class)
 public class ExplosionMixin {
-	@ModifyExpressionValue(method = "explode", at = @At(value = "INVOKE",
-														target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+	@ModifyExpressionValue(method = "explode", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
 	))
 	private boolean arcanuscontinuum$captureDamageReturn(boolean original, @Share("tookDamage") LocalBooleanRef ref) {
 		ref.set(original);
 		return original;
 	}
 
-	@ModifyExpressionValue(method = "explode", slice = @Slice(from = @At(value = "INVOKE",
-																		 target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
-	)), at = @At(value = "NEW",
-				 target = "(DDD)Lnet/minecraft/world/phys/Vec3;"
+	@ModifyExpressionValue(method = "explode", slice = @Slice(from = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
+	)), at = @At(
+		value = "NEW",
+		target = "(DDD)Lnet/minecraft/world/phys/Vec3;"
 	))
 	private Vec3 arcanuscontinuum$noKnockback(Vec3 original, @Share("tookDamage") LocalBooleanRef ref) {
 		return !ref.get() ? Vec3.ZERO : original;

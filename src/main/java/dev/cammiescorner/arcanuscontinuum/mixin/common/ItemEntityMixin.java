@@ -23,8 +23,9 @@ public abstract class ItemEntityMixin extends Entity implements TraceableEntity 
 		super(variant, world);
 	}
 
-	@WrapOperation(method = "playerTouch", at = @At(value = "INVOKE",
-													target = "Lnet/minecraft/world/entity/player/Inventory;add(Lnet/minecraft/world/item/ItemStack;)Z"
+	@WrapOperation(method = "playerTouch", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/world/entity/player/Inventory;add(Lnet/minecraft/world/item/ItemStack;)Z"
 	))
 	private boolean arcanuscontinuum$copperCurse(Inventory instance, ItemStack stack, Operation<Boolean> original, Player player) {
 		if(player.hasEffect(ArcanusMobEffects.COPPER_CURSE.get()) && !stack.is(ArcanusItemTags.COPPER_CURSE_IMMUNE) && stack.getItem() != Items.RAW_COPPER && (instance.getSlotWithRemainingSpace(stack) >= 0 || instance.getFreeSlot() >= 0)) {

@@ -9,10 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(EnderDragonPart.class)
 public abstract class EnderDragonPartMixin implements Targetable {
-
-	@Shadow
-	@Final
-	public EnderDragon parentMob;
+	@Shadow @Final public EnderDragon parentMob;
 
 	@Override
 	public boolean arcanuscontinuum$canBeTargeted() {

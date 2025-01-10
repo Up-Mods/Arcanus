@@ -28,11 +28,12 @@ import java.util.function.Predicate;
 
 @Mixin(PlayerList.class)
 public class PlayerManagerMixin {
-	@Shadow
-	@Final
-	private LayeredRegistryAccess<RegistryLayer> registries;
+	@Shadow @Final private LayeredRegistryAccess<RegistryLayer> registries;
 
-	@ModifyReceiver(method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
+	@ModifyReceiver(method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V", at = @At(
+		value = "INVOKE",
+		target = "Ljava/util/List;iterator()Ljava/util/Iterator;"
+	))
 	private List<ServerPlayer> arcanuscontinuum$restrictMagicDoorChatMessage(List<ServerPlayer> original, PlayerChatMessage chatMessage, Predicate<ServerPlayer> predicate, @Nullable ServerPlayer player, ChatType.Bound parameters) {
 		if(player != null && this.registries.compositeAccess().registryOrThrow(Registries.CHAT_TYPE).getResourceKey(parameters.chatType()).map(key -> key.equals(ChatType.CHAT)).orElse(false)) {
 			ServerLevel world = player.serverLevel();
@@ -51,9 +52,8 @@ public class PlayerManagerMixin {
 				}
 			});
 
-			if(beep[0]) {
+			if(beep[0])
 				return List.of();
-			}
 		}
 		return original;
 	}

@@ -20,8 +20,9 @@ public abstract class CraftingScreenMixin extends AbstractContainerScreen<Crafti
 		super(handler, inventory, title);
 	}
 
-	@Inject(method = "render", at = @At(value = "INVOKE",
-										target = "Lnet/minecraft/client/gui/screens/inventory/CraftingScreen;renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V"
+	@Inject(method = "render", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/client/gui/screens/inventory/CraftingScreen;renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V"
 	))
 	private void arcanuscontinuum$render(GuiGraphics gui, int mouseX, int mouseY, float delta, CallbackInfo info) {
 		PoseStack matrices = gui.pose();

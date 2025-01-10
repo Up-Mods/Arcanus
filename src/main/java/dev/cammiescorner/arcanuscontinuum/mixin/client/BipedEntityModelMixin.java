@@ -21,19 +21,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HumanoidModel.class)
 public abstract class BipedEntityModelMixin<T extends LivingEntity> extends AgeableListModel<T> implements ArmedModel, HeadedModel {
-	@Shadow
-	@Final
-	public ModelPart rightArm;
-	@Shadow
-	@Final
-	public ModelPart leftArm;
-	@Shadow
-	@Final
-	public ModelPart head;
+	@Shadow @Final public ModelPart rightArm;
+	@Shadow @Final public ModelPart leftArm;
+	@Shadow @Final public ModelPart head;
 
-	@Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE_ASSIGN",
-																							target = "Lnet/minecraft/util/Mth;cos(F)F",
-																							ordinal = 1
+	@Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(
+		value = "INVOKE_ASSIGN",
+		target = "Lnet/minecraft/util/Mth;cos(F)F",
+		ordinal = 1
 	))
 	private void arcanuscontinuum$modifyArmSwing(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo info) {
 		if(!livingEntity.isSprinting() && !livingEntity.isSwimming() && !livingEntity.isFallFlying()) {
@@ -73,9 +68,10 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
 		}
 	}
 
-	@Inject(method = "poseRightArm", at = @At(value = "FIELD",
-											  target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
-											  ordinal = 2
+	@Inject(method = "poseRightArm", at = @At(
+		value = "FIELD",
+		target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
+		ordinal = 2
 	), cancellable = true)
 	private void arcanuscontinuum$positionRightArm(T entity, CallbackInfo info) {
 		Minecraft client = Minecraft.getInstance();
@@ -120,9 +116,10 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
 		}
 	}
 
-	@Inject(method = "poseLeftArm", at = @At(value = "FIELD",
-											 target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
-											 ordinal = 2
+	@Inject(method = "poseLeftArm", at = @At(
+		value = "FIELD",
+		target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
+		ordinal = 2
 	), cancellable = true)
 	private void arcanuscontinuum$positionLeftArm(T entity, CallbackInfo info) {
 		Minecraft client = Minecraft.getInstance();

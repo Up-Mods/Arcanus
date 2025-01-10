@@ -28,8 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends EntityRenderer<T> implements RenderLayerParent<T, M> {
-	@Shadow
-	protected abstract boolean addLayer(RenderLayer<T, M> feature);
+	@Shadow protected abstract boolean addLayer(RenderLayer<T, M> feature);
 
 	protected LivingEntityRendererMixin(EntityRendererProvider.Context context) {
 		super(context);
@@ -41,8 +40,9 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		addLayer(new CounterFeatureRenderer<>(this));
 	}
 
-	@Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE",
-																																											 target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
+	@Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
 	))
 	private void arcanuscontinuum$boltRenderer(T livingEntity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light, CallbackInfo info) {
 		Vec3 offset = new Vec3(Mth.lerp(tickDelta, livingEntity.xOld, livingEntity.getX()), Mth.lerp(tickDelta, livingEntity.yOld, livingEntity.getY()), Mth.lerp(tickDelta, livingEntity.zOld, livingEntity.getZ())).add(getRenderOffset(livingEntity, tickDelta));
@@ -53,8 +53,9 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		matrices.popPose();
 	}
 
-	@Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE",
-																																											 target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getAttackAnim(Lnet/minecraft/world/entity/LivingEntity;F)F"
+	@Inject(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getAttackAnim(Lnet/minecraft/world/entity/LivingEntity;F)F"
 	))
 	private void arcanuscontinuum$render(T livingEntity, float f, float g, PoseStack matrices, MultiBufferSource vertexConsumerProvider, int i, CallbackInfo info) {
 		if(livingEntity instanceof Player player && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(livingEntity) && livingEntity.getMainHandItem().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF && ArcanusComponents.isCasting(livingEntity))

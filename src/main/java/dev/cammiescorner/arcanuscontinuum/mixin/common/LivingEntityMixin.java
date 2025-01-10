@@ -52,43 +52,21 @@ import java.util.List;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Targetable {
-	@Unique
-	private final LivingEntity self = (LivingEntity) (Entity) this;
-	@Unique
-	private Vec3 prevVelocity;
+	@Unique private final LivingEntity self = (LivingEntity) (Entity) this;
+	@Unique private Vec3 prevVelocity;
 
-	@Shadow
-	protected boolean jumping;
+	@Shadow protected boolean jumping;
 
-	@Shadow
-	public abstract @Nullable AttributeInstance getAttribute(Attribute attribute);
-
-	@Shadow
-	public abstract ItemStack getMainHandItem();
-
-	@Shadow
-	public abstract boolean hasEffect(MobEffect effect);
-
-	@Shadow
-	public abstract MobEffectInstance getEffect(MobEffect effect);
-
-	@Shadow
-	public abstract boolean removeEffect(MobEffect type);
-
-	@Shadow
-	public abstract boolean isDamageSourceBlocked(DamageSource source);
-
-	@Shadow
-	public abstract boolean removeAllEffects();
-
-	@Shadow
-	public abstract boolean addEffect(MobEffectInstance effect);
-
-	@Shadow
-	public abstract float getSpeed();
-
-	@Shadow
-	public abstract boolean randomTeleport(double x, double y, double z, boolean particleEffects);
+	@Shadow public abstract @Nullable AttributeInstance getAttribute(Attribute attribute);
+	@Shadow public abstract ItemStack getMainHandItem();
+	@Shadow public abstract boolean hasEffect(MobEffect effect);
+	@Shadow public abstract MobEffectInstance getEffect(MobEffect effect);
+	@Shadow public abstract boolean removeEffect(MobEffect type);
+	@Shadow public abstract boolean isDamageSourceBlocked(DamageSource source);
+	@Shadow public abstract boolean removeAllEffects();
+	@Shadow public abstract boolean addEffect(MobEffectInstance effect);
+	@Shadow public abstract float getSpeed();
+	@Shadow public abstract boolean randomTeleport(double x, double y, double z, boolean particleEffects);
 
 	public LivingEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
@@ -243,9 +221,10 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 			.add(ArcanusEntityAttributes.SPELL_COOL_DOWN.get());
 	}
 
-	@WrapOperation(method = "handleRelativeFrictionAndCalculateMovement", at = @At(value = "INVOKE",
-																				   target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
-																				   ordinal = 1
+	@WrapOperation(method = "handleRelativeFrictionAndCalculateMovement", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
+		ordinal = 1
 	))
 	private Vec3 arcanuscontinuum$floatAround(LivingEntity livingEntity, Operation<Vec3> original, Vec3 movementInput, float slipperiness) {
 		// FIXME smooth out vertical movement, currently a bit jolting

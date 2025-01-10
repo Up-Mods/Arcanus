@@ -9,8 +9,9 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LevelRenderer.class)
 public class WorldRendererMixin {
-	@ModifyExpressionValue(method = "renderLevel", at = @At(value = "INVOKE",
-															target = "Lnet/minecraft/client/multiplayer/ClientLevel;entitiesForRendering()Ljava/lang/Iterable;"
+	@ModifyExpressionValue(method = "renderLevel", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/client/multiplayer/ClientLevel;entitiesForRendering()Ljava/lang/Iterable;"
 	))
 	private Iterable<Entity> arcanuscontinuum$sortEntitiesForRendering(Iterable<Entity> entities) {
 		return EntityRendererSorter.ENTITY_ORDERING.sortedCopy(entities);

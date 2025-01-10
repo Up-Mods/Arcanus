@@ -9,7 +9,6 @@ import java.util.List;
 
 @Mixin(RegistrySetBuilder.class)
 public abstract class RegistrySetBuilderMixin implements RegistrySetBuilderExt {
-
 	@Override
 	@Accessor("entries")
 	public abstract List<RegistrySetBuilder.RegistryStub<?>> getEntries();
