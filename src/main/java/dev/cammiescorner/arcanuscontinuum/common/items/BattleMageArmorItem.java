@@ -44,12 +44,6 @@ public class BattleMageArmorItem extends WizardArmorItem {
 		return super.getDescriptionId(stack) + s + getOxidation(stack).name().toLowerCase(Locale.ROOT);
 	}
 
-	@Override
-	public int getColor(ItemStack stack) {
-		CompoundTag tag = stack.getTagElement(ItemStack.TAG_DAMAGE);
-		return tag != null && tag.contains(ItemStack.TAG_COLOR, Tag.TAG_ANY_NUMERIC) ? tag.getInt(ItemStack.TAG_COLOR) : 0xb38ef3;
-	}
-
 	public static boolean isWaxed(ItemStack stack) {
 		CompoundTag tag = stack.getTagElement(ItemStack.TAG_DISPLAY);
 		return tag != null && tag.getBoolean("waxed");

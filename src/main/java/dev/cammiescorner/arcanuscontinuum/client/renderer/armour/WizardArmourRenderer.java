@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanuscontinuum.client.renderer.armour;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.models.armour.WizardArmourModel;
-import dev.cammiescorner.arcanuscontinuum.common.items.WizardArmorItem;
+import dev.cammiescorner.arcanuscontinuum.common.items.WizardRobesArmorItem;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -29,7 +29,7 @@ public class WizardArmourRenderer implements ArmorRenderer {
 		if(model == null)
 			model = new WizardArmourModel<>(client.getEntityModels().bakeLayer(WizardArmourModel.MODEL_LAYER));
 
-		if(stack.getItem() instanceof WizardArmorItem wizardArmour) {
+		if(stack.getItem() instanceof WizardRobesArmorItem wizardArmour) {
 			int hexColour = wizardArmour.getColor(stack);
 			float r = (hexColour >> 16 & 255) / 255F;
 			float g = (hexColour >> 8 & 255) / 255F;

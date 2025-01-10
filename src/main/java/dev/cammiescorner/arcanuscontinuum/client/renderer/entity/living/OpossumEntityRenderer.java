@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.OpossumEntityModel;
 import dev.cammiescorner.arcanuscontinuum.common.entities.living.OpossumEntity;
-import dev.cammiescorner.arcanuscontinuum.common.items.WizardArmorItem;
+import dev.cammiescorner.arcanuscontinuum.common.items.WizardRobesArmorItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -33,7 +33,7 @@ public class OpossumEntityRenderer extends MobRenderer<OpossumEntity, OpossumEnt
 
 		super.render(opossum, yaw, tickDelta, matrices, verteces, i);
 
-		if(hatStack.getItem() instanceof WizardArmorItem wizardArmour) {
+		if(hatStack.getItem() instanceof WizardRobesArmorItem wizardArmour) {
 			int hexColour = wizardArmour.getColor(hatStack);
 			float r = (hexColour >> 16 & 255) / 255F;
 			float g = (hexColour >> 8 & 255) / 255F;

@@ -63,7 +63,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.DyeableArmorItem;
+import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -162,15 +162,11 @@ public class ArcanusClient implements ClientModInitializer {
 			ArcanusItems.MAGE_PISTOL.get()
 		);
 
-		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableArmorItem) stack.getItem()).getColor(stack) : -1,
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableLeatherItem) stack.getItem()).getColor(stack) : -1,
 			ArcanusItems.WIZARD_HAT.get(),
 			ArcanusItems.WIZARD_ROBES.get(),
 			ArcanusItems.WIZARD_PANTS.get(),
-			ArcanusItems.WIZARD_BOOTS.get(),
-			ArcanusItems.BATTLE_MAGE_HELMET.get(),
-			ArcanusItems.BATTLE_MAGE_CHESTPLATE.get(),
-			ArcanusItems.BATTLE_MAGE_LEGGINGS.get(),
-			ArcanusItems.BATTLE_MAGE_BOOTS.get()
+			ArcanusItems.WIZARD_BOOTS.get()
 		);
 
 		ItemProperties.register(ArcanusItems.BATTLE_MAGE_HELMET.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);

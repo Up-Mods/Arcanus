@@ -6,16 +6,14 @@ import com.google.common.collect.Multimap;
 import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import net.minecraft.core.cauldron.CauldronInteraction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class WizardArmorItem extends DyeableArmorItem {
+public class WizardArmorItem extends ArmorItem {
 	private static final Map<Type, UUID> MODIFIER_IDS = Map.of(
 		Type.BOOTS, UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"),
 		Type.LEGGINGS, UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
@@ -59,12 +57,6 @@ public class WizardArmorItem extends DyeableArmorItem {
 
 		if(!world.isClientSide() && stack.isDamaged() && entity instanceof LivingEntity livingEntity && livingEntity.getItemBySlot(getEquipmentSlot()) == stack && ArcanusComponents.getMana(livingEntity) >= manaDrain && ArcanusComponents.drainMana(livingEntity, manaDrain, false))
 			stack.setDamageValue(stack.getDamageValue() - 1);
-	}
-
-	@Override
-	public int getColor(ItemStack stack) {
-		CompoundTag tag = stack.getTagElement(ItemStack.TAG_DISPLAY);
-		return tag != null && tag.contains(ItemStack.TAG_COLOR, Tag.TAG_ANY_NUMERIC) ? tag.getInt(ItemStack.TAG_COLOR) : 0x52392a;
 	}
 
 	@Override
