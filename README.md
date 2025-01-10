@@ -1,4 +1,5 @@
 # Arcanus: Continuum
+
 a simple magic mod inspired by the mod Electroblob's Wizardry and the server Wynncraft.
 <br><br>
 The mod's main goal is to maintain simplicity above all else, to make for an accessible experience for all players.

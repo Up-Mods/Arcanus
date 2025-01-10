@@ -147,7 +147,7 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 
 	public static void removeWardedBlock(Player player, BlockPos pos) {
 		WardedBlocksComponent component = getWardedBlocksComponent(player.level(), pos);
-		if (component != null)
+		if(component != null)
 			component.removeWardedBlock(player, pos);
 	}
 

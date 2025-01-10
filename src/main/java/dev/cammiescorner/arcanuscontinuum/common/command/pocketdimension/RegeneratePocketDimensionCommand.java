@@ -31,14 +31,16 @@ public class RegeneratePocketDimensionCommand {
 		var pocketDimension = server.getLevel(ArcanusDimensions.POCKET_DIMENSION);
 		var component = PocketDimensionComponent.get(server);
 
-		if (!component.replacePlotSpace(target.getId(), pocketDimension, regenerateType)) {
+		if(!component.replacePlotSpace(target.getId(), pocketDimension, regenerateType)) {
 			context.getSource().sendFailure(Component.literal("Pocket dimension location not found for player %s (%s)".formatted(target.getName(), target.getId())));
 			return 0;
 		}
 
-		context.getSource().sendSuccess(() -> switch (regenerateType) {
-			case WALLS_ONLY -> Component.translatable("command.arcanuscontinuum.pocket_dimension.regenerate.success.walls_only", target.getName());
-			case FULL -> Component.translatable("command.arcanuscontinuum.pocket_dimension.regenerate.success.full", target.getName());
+		context.getSource().sendSuccess(() -> switch(regenerateType) {
+			case WALLS_ONLY ->
+				Component.translatable("command.arcanuscontinuum.pocket_dimension.regenerate.success.walls_only", target.getName());
+			case FULL ->
+				Component.translatable("command.arcanuscontinuum.pocket_dimension.regenerate.success.full", target.getName());
 			default -> throw new UnsupportedOperationException();
 		}, true);
 		return Command.SINGLE_SUCCESS;

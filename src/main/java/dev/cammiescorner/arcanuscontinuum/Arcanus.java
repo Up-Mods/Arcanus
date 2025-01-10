@@ -78,7 +78,7 @@ public class Arcanus implements ModInitializer {
 		ArcanusRecipes.RECIPE_SERIALIZERS.accept(registryService);
 		ArcanusScreenHandlers.SCREEN_HANDLERS.accept(registryService);
 		ArcanusSpellComponents.SPELL_COMPONENTS.accept(registryService);
-		ArcanusStatusEffects.STATUS_EFFECTS.accept(registryService);
+		ArcanusMobEffects.MOB_EFFECTS.accept(registryService);
 		ArcanusStructureProcessorTypes.STRUCTURE_PROCESSORS.accept(registryService);
 
 		ArcanusCriteriaTriggers.register();
@@ -91,7 +91,7 @@ public class Arcanus implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register(ArcanusCommands::init);
 
-		EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> entity.hasEffect(ArcanusStatusEffects.MANA_WINGS.get()));
+		EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> entity.hasEffect(ArcanusMobEffects.MANA_WINGS.get()));
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			var hostProfile = server.getSingleplayerProfile();
@@ -99,7 +99,7 @@ public class Arcanus implements ModInitializer {
 				SyncConfigValuesPacket.send(handler.player);
 			}
 
-			SyncStatusEffectPacket.sendToAll(handler.player, ArcanusStatusEffects.ANONYMITY.get(), handler.player.hasEffect(ArcanusStatusEffects.ANONYMITY.get()));
+			SyncStatusEffectPacket.sendToAll(handler.player, ArcanusMobEffects.ANONYMITY.get(), handler.player.hasEffect(ArcanusMobEffects.ANONYMITY.get()));
 		});
 
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
@@ -109,7 +109,7 @@ public class Arcanus implements ModInitializer {
 
 		EntityTrackingEvents.START_TRACKING.register((trackedEntity, player) -> {
 			if(trackedEntity instanceof ServerPlayer playerEntity)
-				SyncStatusEffectPacket.sendTo(player, playerEntity, ArcanusStatusEffects.ANONYMITY.get(), playerEntity.hasEffect(ArcanusStatusEffects.ANONYMITY.get()));
+				SyncStatusEffectPacket.sendTo(player, playerEntity, ArcanusMobEffects.ANONYMITY.get(), playerEntity.hasEffect(ArcanusMobEffects.ANONYMITY.get()));
 
 			// FIXME temporal dilation no worky
 //			if(trackedEntity instanceof LivingEntity livingEntity)
@@ -118,13 +118,13 @@ public class Arcanus implements ModInitializer {
 
 		EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
 			if(!entity.level().isClientSide() && entity.level().getDayTime() == 24000) {
-				MobEffectInstance copperCurse = entity.getEffect(ArcanusStatusEffects.COPPER_CURSE.get());
+				MobEffectInstance copperCurse = entity.getEffect(ArcanusMobEffects.COPPER_CURSE.get());
 
 				if(copperCurse != null) {
-					entity.removeEffect(ArcanusStatusEffects.COPPER_CURSE.get());
+					entity.removeEffect(ArcanusMobEffects.COPPER_CURSE.get());
 
 					if(copperCurse.getDuration() > 24000)
-						entity.addEffect(new MobEffectInstance(ArcanusStatusEffects.COPPER_CURSE.get(), copperCurse.getDuration() - 24000, 0, true, false));
+						entity.addEffect(new MobEffectInstance(ArcanusMobEffects.COPPER_CURSE.get(), copperCurse.getDuration() - 24000, 0, true, false));
 				}
 			}
 		});

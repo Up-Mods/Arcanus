@@ -24,7 +24,9 @@ public class ArcanusSpellComponents {
 	public static final RegistryHandler<SpellComponent> SPELL_COMPONENTS = RegistryHandler.create(Arcanus.SPELL_COMPONENTS_REGISTRY_KEY, Arcanus.MOD_ID);
 
 	//-----Empty Spell-----//
-	/** DO NOT DELETE OR DISABLE. WILL BREAK THE ENTIRE MOD. **/
+	/**
+	 * DO NOT DELETE OR DISABLE. WILL BREAK THE ENTIRE MOD.
+	 **/
 	public static final RegistrySupplier<SpellComponent> EMPTY = SPELL_COMPONENTS.register("empty", () -> new SpellShape(true, Weight.NONE, 0, 1, 0, 0, 0) {
 		@Override
 		public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
@@ -67,7 +69,7 @@ public class ArcanusSpellComponents {
 	public static final RegistrySupplier<SpellEffect> FORTIFY = SPELL_COMPONENTS.register("fortify_effect", () -> new FortifySpellEffect(SupportEffects.FortifyEffectProperties.enabled, SpellType.SUPPORT, SupportEffects.FortifyEffectProperties.weight, SupportEffects.FortifyEffectProperties.manaCost, SupportEffects.FortifyEffectProperties.coolDown, SupportEffects.FortifyEffectProperties.minimumLevel));
 	public static final RegistrySupplier<SpellEffect> HASTE = SPELL_COMPONENTS.register("haste_effect", () -> new HasteSpellEffect(SupportEffects.HasteEffectProperties.enabled, SpellType.SUPPORT, SupportEffects.HasteEffectProperties.weight, SupportEffects.HasteEffectProperties.manaCost, SupportEffects.HasteEffectProperties.coolDown, SupportEffects.HasteEffectProperties.minimumLevel));
 	public static final RegistrySupplier<SpellEffect> MANA_SHIELD = SPELL_COMPONENTS.register("mana_shield_effect", () -> new ManaShieldSpellEffect(SupportEffects.ManaShieldEffectProperties.enabled, SpellType.SUPPORT, SupportEffects.ManaShieldEffectProperties.weight, SupportEffects.ManaShieldEffectProperties.manaCost, SupportEffects.ManaShieldEffectProperties.coolDown, SupportEffects.ManaShieldEffectProperties.minimumLevel));
-//	public static final RegistrySupplier<SpellEffect> TEMPORAL_DILATION = SPELL_COMPONENTS.register("temporal_dilation_effect", () -> new TemporalDilationSpellEffect(temporalDilationEffectProperties.enabled, SpellType.SUPPORT, temporalDilationEffectProperties.weight, temporalDilationEffectProperties.manaCost, temporalDilationEffectProperties.coolDown, temporalDilationEffectProperties.minimumLevel));
+	//	public static final RegistrySupplier<SpellEffect> TEMPORAL_DILATION = SPELL_COMPONENTS.register("temporal_dilation_effect", () -> new TemporalDilationSpellEffect(temporalDilationEffectProperties.enabled, SpellType.SUPPORT, temporalDilationEffectProperties.weight, temporalDilationEffectProperties.manaCost, temporalDilationEffectProperties.coolDown, temporalDilationEffectProperties.minimumLevel));
 	public static final RegistrySupplier<SpellEffect> DANGER_SENSE = SPELL_COMPONENTS.register("danger_sense_effect", () -> new DangerSenseSpellEffect(SupportEffects.DangerSenseEffectProperties.enabled, SpellType.SUPPORT, SupportEffects.DangerSenseEffectProperties.weight, SupportEffects.DangerSenseEffectProperties.manaCost, SupportEffects.DangerSenseEffectProperties.coolDown, SupportEffects.DangerSenseEffectProperties.minimumLevel));
 
 	public static final RegistrySupplier<SpellEffect> BUILD = SPELL_COMPONENTS.register("build_effect", () -> new BuildSpellEffect(UtilityEffects.BuildEffectProperties.enabled, SpellType.UTILITY, UtilityEffects.BuildEffectProperties.weight, UtilityEffects.BuildEffectProperties.manaCost, UtilityEffects.BuildEffectProperties.coolDown, UtilityEffects.BuildEffectProperties.minimumLevel));

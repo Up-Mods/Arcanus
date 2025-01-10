@@ -30,7 +30,7 @@ public class SyncScalePacket {
 	@Environment(EnvType.CLIENT)
 	public static void handle(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
 		int entityId = buf.readInt();
-		SpellEffect effect = buf.readBoolean() ?  ArcanusSpellComponents.SHRINK.get() : ArcanusSpellComponents.ENLARGE.get();
+		SpellEffect effect = buf.readBoolean() ? ArcanusSpellComponents.SHRINK.get() : ArcanusSpellComponents.ENLARGE.get();
 		double strength = buf.readDouble();
 
 		client.execute(() ->

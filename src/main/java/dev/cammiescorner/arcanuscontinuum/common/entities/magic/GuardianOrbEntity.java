@@ -62,12 +62,12 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		LivingEntity caster = getCaster();
 		LivingEntity target = getTarget();
 
-		if (caster == null || (!level().isClientSide && !ArcanusComponents.getGuardianOrbId(caster).equals(getUUID())) || target == null || caster.distanceToSqr(target) > 32 * 32) {
+		if(caster == null || (!level().isClientSide && !ArcanusComponents.getGuardianOrbId(caster).equals(getUUID())) || target == null || caster.distanceToSqr(target) > 32 * 32) {
 			kill();
 			return;
 		}
 
-		if (!level().isClientSide() && entityData.get(TARGET_ID) == -1)
+		if(!level().isClientSide() && entityData.get(TARGET_ID) == -1)
 			entityData.set(TARGET_ID, target.getId());
 
 		setYRot(target.getYRot());
@@ -82,15 +82,15 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		Vec3 direction = targetPos.subtract(position());
 		move(MoverType.SELF, direction.scale(0.25f));
 
-		if (tickCount % 8 == 0) {
+		if(tickCount % 8 == 0) {
 			Vec3 vel = (direction.lengthSqr() <= 1 ? direction : direction.normalize()).scale(0.125f);
 			level().addParticle(ParticleTypes.END_ROD, getX(), getY() + getBbHeight() / 2, getZ(), vel.x(), vel.y(), vel.z());
 		}
 
-		if (tickCount % 100 == 0 && ArcanusComponents.drainMana(caster, ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.baseManaDrain * effects.size(), false)) {
+		if(tickCount % 100 == 0 && ArcanusComponents.drainMana(caster, ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.baseManaDrain * effects.size(), false)) {
 			EntityHitResult hitResult = new EntityHitResult(target);
 
-			for (SpellEffect effect : new HashSet<>(effects))
+			for(SpellEffect effect : new HashSet<>(effects))
 				effect.effect(caster, this, level(), hitResult, effects, stack, potency);
 		}
 
@@ -135,9 +135,9 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		ListTag effectList = tag.getList("Effects", Tag.TAG_STRING);
 		ListTag groupsList = tag.getList("SpellGroups", Tag.TAG_COMPOUND);
 
-		for (int i = 0; i < effectList.size(); i++)
+		for(int i = 0; i < effectList.size(); i++)
 			effects.add((SpellEffect) Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(effectList.getString(i))));
-		for (int i = 0; i < groupsList.size(); i++)
+		for(int i = 0; i < groupsList.size(); i++)
 			groups.add(SpellGroup.fromNbt(groupsList.getCompound(i)));
 	}
 
@@ -152,9 +152,9 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		tag.putInt("GroupIndex", groupIndex);
 		tag.putDouble("Potency", potency);
 
-		for (SpellEffect effect : effects)
+		for(SpellEffect effect : effects)
 			effectList.add(StringTag.valueOf(Arcanus.SPELL_COMPONENTS.getKey(effect).toString()));
-		for (SpellGroup group : groups)
+		for(SpellGroup group : groups)
 			groupsList.add(group.toNbt());
 
 		tag.put("Effects", effectList);
@@ -171,18 +171,18 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 	}
 
 	public LivingEntity getCaster() {
-		if (level() instanceof ServerLevel serverWorld && serverWorld.getEntity(getCasterId()) instanceof LivingEntity caster)
+		if(level() instanceof ServerLevel serverWorld && serverWorld.getEntity(getCasterId()) instanceof LivingEntity caster)
 			return caster;
-		else if (level().isClientSide() && level().getEntity(entityData.get(OWNER_ID)) instanceof LivingEntity caster)
+		else if(level().isClientSide() && level().getEntity(entityData.get(OWNER_ID)) instanceof LivingEntity caster)
 			return caster;
 
 		return null;
 	}
 
 	public LivingEntity getTarget() {
-		if (level() instanceof ServerLevel serverWorld && serverWorld.getEntity(targetId) instanceof LivingEntity target)
+		if(level() instanceof ServerLevel serverWorld && serverWorld.getEntity(targetId) instanceof LivingEntity target)
 			return target;
-		else if (level().isClientSide() && level().getEntity(entityData.get(TARGET_ID)) instanceof LivingEntity target)
+		else if(level().isClientSide() && level().getEntity(entityData.get(TARGET_ID)) instanceof LivingEntity target)
 			return target;
 
 		return null;
@@ -194,7 +194,7 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 		this.effects.addAll(effects);
 		this.groups.addAll(groups);
 
-		if (caster != null) {
+		if(caster != null) {
 			this.casterId = caster.getUUID();
 			this.entityData.set(OWNER_ID, caster.getId());
 

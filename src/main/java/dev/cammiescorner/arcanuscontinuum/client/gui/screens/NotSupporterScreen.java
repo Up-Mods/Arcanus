@@ -85,7 +85,8 @@ public class NotSupporterScreen extends Screen {
 		try {
 			var uri = new URIBuilder(target).addParameter("source", "mod:%s/%s".formatted(meta.getId(), meta.getVersion())).build();
 			Util.getPlatform().openUri(uri);
-		} catch (URISyntaxException e) {
+		}
+		catch(URISyntaxException e) {
 			Arcanus.LOGGER.error("Failed to create URI", e);
 			Util.getPlatform().openUri(target);
 		}

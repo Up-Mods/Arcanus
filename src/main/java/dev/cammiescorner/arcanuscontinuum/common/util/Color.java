@@ -28,7 +28,7 @@ public class Color {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || getClass() != o.getClass())
+		if(o == null || getClass() != o.getClass())
 			return false;
 		Color color = (Color) o;
 		return Objects.deepEquals(rgba, color.rgba);
@@ -118,16 +118,16 @@ public class Color {
 
 	public float[] asFloats(Color.Ordering ordering) {
 		float[] values = new float[ordering.expectedLength];
-		if (ordering.hasRed()) {
+		if(ordering.hasRed()) {
 			values[ordering.iR()] = redF();
 		}
-		if (ordering.hasGreen()) {
+		if(ordering.hasGreen()) {
 			values[ordering.iG()] = greenF();
 		}
-		if (ordering.hasBlue()) {
+		if(ordering.hasBlue()) {
 			values[ordering.iB()] = blueF();
 		}
-		if (ordering.hasAlpha()) {
+		if(ordering.hasAlpha()) {
 			values[ordering.iA()] = alphaF();
 		}
 		return values;
@@ -141,19 +141,19 @@ public class Color {
 		int value = 0;
 		int maxIdx = ordering.expectedLength() - 1;
 
-		if (ordering.hasRed()) {
+		if(ordering.hasRed()) {
 			assert ordering.iR() <= maxIdx;
 			value |= red() << ((maxIdx - ordering.iR()) * 8);
 		}
-		if (ordering.hasGreen()) {
+		if(ordering.hasGreen()) {
 			assert ordering.iG() <= maxIdx;
 			value |= green() << ((maxIdx - ordering.iG()) * 8);
 		}
-		if (ordering.hasBlue()) {
+		if(ordering.hasBlue()) {
 			assert ordering.iB() <= maxIdx;
 			value |= blue() << ((maxIdx - ordering.iB()) * 8);
 		}
-		if (ordering.hasAlpha()) {
+		if(ordering.hasAlpha()) {
 			assert ordering.iA() <= maxIdx;
 			value |= alpha() << ((maxIdx - ordering.iA()) * 8);
 		}

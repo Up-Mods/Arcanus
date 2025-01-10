@@ -46,10 +46,10 @@ public class ExplosionSpellShape extends SpellShape {
 		world.gameEvent(caster, GameEvent.EXPLODE, new Vec3(castFrom.x(), castFrom.y(), castFrom.z()));
 		Set<BlockPos> affectedBlocks = Sets.newHashSet();
 
-		for (int j = 0; j < 16; ++j) {
-			for (int k = 0; k < 16; ++k) {
-				for (int l = 0; l < 16; ++l) {
-					if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
+		for(int j = 0; j < 16; ++j) {
+			for(int k = 0; k < 16; ++k) {
+				for(int l = 0; l < 16; ++l) {
+					if(j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
 						double d = j / 15F * 2F - 1F;
 						double e = k / 15F * 2F - 1F;
 						double f = l / 15F * 2F - 1F;
@@ -62,20 +62,20 @@ public class ExplosionSpellShape extends SpellShape {
 						double n = castFrom.y();
 						double o = castFrom.z();
 
-						for (; h > 0F; h -= 0.225F) {
+						for(; h > 0F; h -= 0.225F) {
 							BlockPos blockPos = new BlockPos((int) m, (int) n, (int) o);
 							BlockState blockState = world.getBlockState(blockPos);
 							FluidState fluidState = world.getFluidState(blockPos);
 
-							if (!world.isInWorldBounds(blockPos)) {
+							if(!world.isInWorldBounds(blockPos)) {
 								break;
 							}
 
-							if (!blockState.isAir() || !fluidState.isEmpty()) {
+							if(!blockState.isAir() || !fluidState.isEmpty()) {
 								h -= (Math.max(blockState.getBlock().getExplosionResistance(), fluidState.getExplosionResistance()) + 0.3F) * 0.3F;
 							}
 
-							if (!world.isEmptyBlock(blockPos)) {
+							if(!world.isEmptyBlock(blockPos)) {
 								affectedBlocks.add(blockPos);
 							}
 
@@ -97,23 +97,23 @@ public class ExplosionSpellShape extends SpellShape {
 		int u = Mth.floor(castFrom.z() + f + 1);
 		List<Entity> affectedEntities = world.getEntities(sourceEntity == caster ? caster : null, new AABB(k, r, t, l, s, u), entity -> entity.isAlive() && !entity.isSpectator()).stream().toList();
 
-		for (SpellEffect effect : new HashSet<>(effects)) {
-			if (effect.shouldTriggerOnceOnExplosion()) {
+		for(SpellEffect effect : new HashSet<>(effects)) {
+			if(effect.shouldTriggerOnceOnExplosion()) {
 				effect.effect(caster, sourceEntity, world, new EntityHitResult(sourceEntity), effects, stack, potency);
 				continue;
 			}
 
-			for (Entity entity : affectedEntities) {
+			for(Entity entity : affectedEntities) {
 				effect.effect(caster, sourceEntity, world, new EntityHitResult(entity), effects, stack, potency);
 			}
-			for (BlockPos blockPos : affectedBlocks) {
+			for(BlockPos blockPos : affectedBlocks) {
 				effect.effect(caster, sourceEntity, world, new BlockHitResult(Vec3.atCenterOf(blockPos), Direction.UP, blockPos, true), effects, stack, potency);
 			}
 		}
 
 		world.playSeededSound(null, castFrom.x(), castFrom.y(), castFrom.z(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, 4F, (1F + (world.random.nextFloat() - world.random.nextFloat()) * 0.2F) * 0.7F, 1L);
 
-		for (ServerPlayer player : PlayerLookup.tracking(world, BlockPos.containing(castFrom.x(), castFrom.y(), castFrom.z()))) {
+		for(ServerPlayer player : PlayerLookup.tracking(world, BlockPos.containing(castFrom.x(), castFrom.y(), castFrom.z()))) {
 			SyncExplosionParticlesPacket.send(player, castFrom.x(), castFrom.y(), castFrom.z(), strength, effects.contains(ArcanusSpellComponents.MINE.get()));
 		}
 		castNext(caster, castFrom, castSource, world, stack, spellGroups, groupIndex, potency);

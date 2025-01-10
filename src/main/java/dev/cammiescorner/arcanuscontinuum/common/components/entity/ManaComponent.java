@@ -53,7 +53,7 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 	public double getMaxMana() {
 		AttributeInstance maxManaAttr = entity.getAttribute(ArcanusEntityAttributes.MAX_MANA.get());
 
-		if (maxManaAttr != null)
+		if(maxManaAttr != null)
 			return maxManaAttr.getValue();
 
 		return 0;
@@ -62,15 +62,15 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 	public double getManaLock() {
 		AttributeInstance manaLockAttr = entity.getAttribute(ArcanusEntityAttributes.MANA_LOCK.get());
 
-		if (manaLockAttr != null)
+		if(manaLockAttr != null)
 			return manaLockAttr.getValue();
 
 		return 0;
 	}
 
 	public boolean addMana(double amount, boolean simulate) {
-		if (getMana() < getTrueMaxMana()) {
-			if (!simulate)
+		if(getMana() < getTrueMaxMana()) {
+			if(!simulate)
 				setMana(getMana() + amount);
 
 			return true;
@@ -81,16 +81,16 @@ public class ManaComponent implements AutoSyncedComponent, ServerTickingComponen
 
 	public boolean drainMana(double amount, boolean simulate) {
 		AttributeInstance instance = entity.getAttribute(ArcanusEntityAttributes.MANA_COST.get());
-		if (instance != null) {
+		if(instance != null) {
 			amount *= instance.getValue();
 		}
 
-		if (getMana() >= 0 && getMana() + getTrueMaxMana() >= amount) {
-			if (!simulate) {
-				if (amount > getMana()) {
+		if(getMana() >= 0 && getMana() + getTrueMaxMana() >= amount) {
+			if(!simulate) {
+				if(amount > getMana()) {
 					ArcanusComponents.addBurnout(entity, amount - getMana(), false);
 
-					if (ArcanusComponents.getBurnout(entity) >= ArcanusComponents.getMaxMana(entity) * 0.5F)
+					if(ArcanusComponents.getBurnout(entity) >= ArcanusComponents.getMaxMana(entity) * 0.5F)
 						entity.hurt(entity.damageSources().fellOutOfWorld(), (float) Math.min(entity.getHealth() - 1, amount - getMana()));
 				}
 

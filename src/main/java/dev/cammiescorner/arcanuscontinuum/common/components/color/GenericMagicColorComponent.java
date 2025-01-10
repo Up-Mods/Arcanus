@@ -53,7 +53,7 @@ public class GenericMagicColorComponent implements MagicColorComponent, AutoSync
 	}
 
 	private void updateStoredColor() {
-		if (!Util.NIL_UUID.equals(sourceId)) {
+		if(!Util.NIL_UUID.equals(sourceId)) {
 			Arcanus.WIZARD_DATA.get(sourceId);
 		}
 	}

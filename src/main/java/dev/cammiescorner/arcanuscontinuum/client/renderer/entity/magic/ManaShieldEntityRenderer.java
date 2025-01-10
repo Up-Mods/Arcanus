@@ -26,16 +26,16 @@ public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
 	private static final ResourceLocation TEXTURE = Arcanus.id("textures/block/magic_block.png");
 	private static final RenderType LAYER = ArcanusClient.getMagicCirclesTri(TEXTURE);
 	public static final List<Vector3f> VERTICES = List.of(
-			new Vector3f(0, 0, 1), new Vector3f(0.894F, 0F, 0.447F), new Vector3f(0.276F, 0.851F, 0.447F),
-			new Vector3f(-0.724F, 0.526F, 0.447F), new Vector3f(-0.724F, -0.526F, 0.447F), new Vector3f(0.276F, -0.851F, 0.447F),
-			new Vector3f(0.724F, 0.526F, -0.447F), new Vector3f(-0.276F, 0.851F, -0.447F), new Vector3f(-0.894F, 0F, -0.447F),
-			new Vector3f(-0.276F, -0.851F, -0.447F), new Vector3f(0.724F, -0.526F, -0.447F), new Vector3f(0F, 0F, -1F)
+		new Vector3f(0, 0, 1), new Vector3f(0.894F, 0F, 0.447F), new Vector3f(0.276F, 0.851F, 0.447F),
+		new Vector3f(-0.724F, 0.526F, 0.447F), new Vector3f(-0.724F, -0.526F, 0.447F), new Vector3f(0.276F, -0.851F, 0.447F),
+		new Vector3f(0.724F, 0.526F, -0.447F), new Vector3f(-0.276F, 0.851F, -0.447F), new Vector3f(-0.894F, 0F, -0.447F),
+		new Vector3f(-0.276F, -0.851F, -0.447F), new Vector3f(0.724F, -0.526F, -0.447F), new Vector3f(0F, 0F, -1F)
 	);
 	public static final List<Vector3i> FACES = List.of(
-			new Vector3i(0, 1, 2), new Vector3i(0, 2, 3), new Vector3i(0, 3, 4), new Vector3i(0, 4, 5), new Vector3i(0, 5, 1),
-			new Vector3i(11, 6, 7), new Vector3i(11, 7, 8), new Vector3i(11, 8, 9), new Vector3i(11, 9, 10), new Vector3i(11, 10, 6),
-			new Vector3i(1, 2, 6), new Vector3i(2, 3, 7), new Vector3i(3, 4, 8), new Vector3i(4, 5, 9), new Vector3i(5, 1, 10),
-			new Vector3i(6, 7, 2), new Vector3i(7, 8, 3), new Vector3i(8, 9, 4), new Vector3i(9, 10, 5), new Vector3i(10, 6, 1)
+		new Vector3i(0, 1, 2), new Vector3i(0, 2, 3), new Vector3i(0, 3, 4), new Vector3i(0, 4, 5), new Vector3i(0, 5, 1),
+		new Vector3i(11, 6, 7), new Vector3i(11, 7, 8), new Vector3i(11, 8, 9), new Vector3i(11, 9, 10), new Vector3i(11, 10, 6),
+		new Vector3i(1, 2, 6), new Vector3i(2, 3, 7), new Vector3i(3, 4, 8), new Vector3i(4, 5, 9), new Vector3i(5, 1, 10),
+		new Vector3i(6, 7, 2), new Vector3i(7, 8, 3), new Vector3i(8, 9, 4), new Vector3i(9, 10, 5), new Vector3i(10, 6, 1)
 	);
 
 	public ManaShieldEntityRenderer(EntityRendererProvider.Context ctx) {

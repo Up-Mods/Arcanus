@@ -14,7 +14,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -38,7 +41,8 @@ import java.util.UUID;
 
 public class NecroSkeletonEntity extends AbstractSkeleton implements Summon {
 	private static final UUID HEALTH_UUID = UUID.fromString("65691cf4-6e7e-445f-8e5c-bb37a2b660d4");
-	private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(NecroSkeletonEntity.class, EntityDataSerializers.INT);;
+	private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(NecroSkeletonEntity.class, EntityDataSerializers.INT);
+	;
 	private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 	private UUID ownerId = Util.NIL_UUID;
 	private UUID persistentAngerTarget = Util.NIL_UUID;
@@ -118,8 +122,8 @@ public class NecroSkeletonEntity extends AbstractSkeleton implements Summon {
 
 	public static AttributeSupplier.Builder createAttributes() {
 		return AbstractSkeleton.createAttributes()
-				.add(Attributes.ATTACK_DAMAGE, 1)
-				.add(Attributes.MAX_HEALTH, 0);
+			.add(Attributes.ATTACK_DAMAGE, 1)
+			.add(Attributes.MAX_HEALTH, 0);
 	}
 
 	@Override

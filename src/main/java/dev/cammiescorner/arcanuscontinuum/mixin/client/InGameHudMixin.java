@@ -12,8 +12,10 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Gui.class)
 public class InGameHudMixin {
-	@Shadow private int screenWidth;
-	@Shadow private int screenHeight;
+	@Shadow
+	private int screenWidth;
+	@Shadow
+	private int screenHeight;
 
 	@WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V", ordinal = 0))
 	private void arcanuscontinuum$moveCrosshair(GuiGraphics instance, ResourceLocation id, int x, int y, int u, int v, int w, int h, Operation<Void> original) {

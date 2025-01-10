@@ -16,10 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CraftingScreen.class)
 public abstract class CraftingScreenMixin extends AbstractContainerScreen<CraftingMenu> {
-	public CraftingScreenMixin(CraftingMenu handler, Inventory inventory, Component title) { super(handler, inventory, title); }
+	public CraftingScreenMixin(CraftingMenu handler, Inventory inventory, Component title) {
+		super(handler, inventory, title);
+	}
 
 	@Inject(method = "render", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/gui/screens/inventory/CraftingScreen;renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V"
+										target = "Lnet/minecraft/client/gui/screens/inventory/CraftingScreen;renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V"
 	))
 	private void arcanuscontinuum$render(GuiGraphics gui, int mouseX, int mouseY, float delta, CallbackInfo info) {
 		PoseStack matrices = gui.pose();

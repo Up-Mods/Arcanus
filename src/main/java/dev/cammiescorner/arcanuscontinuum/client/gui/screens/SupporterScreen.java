@@ -48,10 +48,10 @@ public class SupporterScreen extends Screen {
 
 		this.userEntitlements = userEntitlements;
 
-		if (userEntitlements.keys().contains(WizardData.ID)) {
+		if(userEntitlements.keys().contains(WizardData.ID)) {
 			this.wizardData = Arcanus.WIZARD_DATA.getOrDefault(clientProfile.getId(), WizardData.empty());
 		}
-		if (userEntitlements.keys().contains(HaloData.ID)) {
+		if(userEntitlements.keys().contains(HaloData.ID)) {
 			this.haloData = Arcanus.HALO_DATA.getOrDefault(clientProfile.getId(), HaloData.empty());
 			this.haloEnabled = this.haloData.shouldShow();
 		}
@@ -84,8 +84,8 @@ public class SupporterScreen extends Screen {
 		int centerY = height / 2;
 		int yOffset = 0;
 
-		if (hasHaloData()) {
-			if (hasWizardData()) {
+		if(hasHaloData()) {
+			if(hasWizardData()) {
 				yOffset = -35;
 			}
 
@@ -101,7 +101,7 @@ public class SupporterScreen extends Screen {
 			yOffset = 35;
 		}
 
-		if (hasWizardData()) {
+		if(hasWizardData()) {
 			magicColorField = addRenderableWidget(new EditBox(font, centerX + 11, centerY + yOffset - 10, 64, 20, Component.empty()));
 			magicColorField.setHint(Component.translatable("config.arcanuscontinuum.supporter_settings.magic_color"));
 			magicColorField.setValue(String.format("#%06X", wizardData.magicColor().asInt(Color.Ordering.RGB)));
@@ -115,17 +115,17 @@ public class SupporterScreen extends Screen {
 
 		addRenderableWidget(Button.builder(Component.translatable("config.arcanuscontinuum.supporter_settings.save_and_exit"), buttonWidget -> {
 			List<CompletableFuture<Void>> saveFutures = new ArrayList<>();
-			if (hasHaloData()) {
+			if(hasHaloData()) {
 				var newHaloData = getColorFromField(haloColorField).map(haloData::withColor).orElse(haloData).withEnabled(haloEnabled);
-				if (!newHaloData.equals(haloData)) {
+				if(!newHaloData.equals(haloData)) {
 					saveFutures.add(Arcanus.HALO_DATA.setData(newHaloData));
 				}
 			}
 
-			if (hasWizardData()) {
+			if(hasWizardData()) {
 				var newWizardData = getColorFromField(magicColorField).map(wizardData::withColor).orElse(wizardData);
 				newWizardData = getColorFromField(pocketDimensionColorField).map(newWizardData::withPocketDimensionColor).orElse(newWizardData);
-				if (!newWizardData.equals(wizardData)) {
+				if(!newWizardData.equals(wizardData)) {
 					saveFutures.add(Arcanus.WIZARD_DATA.setData(newWizardData));
 				}
 			}
@@ -150,14 +150,15 @@ public class SupporterScreen extends Screen {
 
 	private Optional<Color> getColorFromField(EditBox field) {
 		String fieldText = field.getValue().trim().replace("#", "");
-		if (fieldText.length() != 6) {
+		if(fieldText.length() != 6) {
 			return Optional.of(StandardColors.BLACK);
 		}
 
 		try {
 			var rgb = Integer.parseInt(fieldText, 16);
 			return Optional.of(Color.fromInt(rgb, Color.Ordering.RGB));
-		} catch (NumberFormatException e) {
+		}
+		catch(NumberFormatException e) {
 			return Optional.empty();
 		}
 	}
@@ -177,8 +178,8 @@ public class SupporterScreen extends Screen {
 
 		int yOffset = 0;
 		int xOffset = -130;
-		if (hasHaloData()) {
-			if (hasWizardData()) {
+		if(hasHaloData()) {
+			if(hasWizardData()) {
 				yOffset = -35;
 			}
 			renderColorDisplay(graphics, centerX - 2, centerY + yOffset, getColorFromField(haloColorField));
@@ -188,7 +189,7 @@ public class SupporterScreen extends Screen {
 			yOffset = 35;
 		}
 
-		if (hasWizardData()) {
+		if(hasWizardData()) {
 			renderColorDisplay(graphics, centerX - 2, centerY + yOffset, getColorFromField(magicColorField));
 			graphics.drawString(font, Component.translatable("config.arcanuscontinuum.supporter_settings.magic_color"), centerX + xOffset, centerY + yOffset - font.lineHeight / 2, 0xffffff, false);
 

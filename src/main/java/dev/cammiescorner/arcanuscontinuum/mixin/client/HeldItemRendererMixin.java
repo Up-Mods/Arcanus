@@ -22,12 +22,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class HeldItemRendererMixin {
-	@Shadow @Final private Minecraft minecraft;
-	@Shadow private ItemStack mainHandItem;
-	@Shadow private float oMainHandHeight;
-	@Shadow private float mainHandHeight;
+	@Shadow
+	@Final
+	private Minecraft minecraft;
+	@Shadow
+	private ItemStack mainHandItem;
+	@Shadow
+	private float oMainHandHeight;
+	@Shadow
+	private float mainHandHeight;
 
-	@Shadow protected abstract void renderPlayerArm(PoseStack matrices, MultiBufferSource vertexConsumers, int light, float equipProgress, float swingProgress, HumanoidArm arm);
+	@Shadow
+	protected abstract void renderPlayerArm(PoseStack matrices, MultiBufferSource vertexConsumers, int light, float equipProgress, float swingProgress, HumanoidArm arm);
 
 	@Inject(method = "renderHandsWithItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", ordinal = 0))
 	private void arcanuscontinuum$animateStaff(float tickDelta, PoseStack matrices, MultiBufferSource.BufferSource vertexConsumers, LocalPlayer player, int light, CallbackInfo info) {

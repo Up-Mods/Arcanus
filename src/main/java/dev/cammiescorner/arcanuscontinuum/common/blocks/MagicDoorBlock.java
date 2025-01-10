@@ -49,7 +49,7 @@ public class MagicDoorBlock extends DoorBlock implements EntityBlock, BlockItemP
 
 	@Override
 	public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (world.isClientSide) return InteractionResult.SUCCESS;
+		if(world.isClientSide) return InteractionResult.SUCCESS;
 
 		ItemStack stack = player.getItemInHand(hand);
 		MagicDoorBlockEntity door = getBlockEntity(world, state, pos);
@@ -62,7 +62,8 @@ public class MagicDoorBlock extends DoorBlock implements EntityBlock, BlockItemP
 				door.setPassword(password);
 				player.displayClientMessage(Component.translatable("door.arcanuscontinuum.password_set", password)
 					.withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC), true);
-			} else
+			}
+			else
 				player.displayClientMessage(Component.translatable("door.arcanuscontinuum.not_owner").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
 		else
 			player.displayClientMessage(Component.translatable("door.arcanuscontinuum.say_magic_word").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);

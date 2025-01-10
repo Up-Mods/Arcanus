@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
@@ -13,11 +13,13 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(MouseHandler.class)
 public class MouseMixin {
-	@Shadow @Final private Minecraft minecraft;
+	@Shadow
+	@Final
+	private Minecraft minecraft;
 
 	@ModifyArg(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), index = 0)
 	public double arcanuscontinuum$invertMouseX(double x) {
-		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusStatusEffects.DISCOMBOBULATE.get()))
+		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get()))
 			return -x;
 
 		return x;
@@ -25,7 +27,7 @@ public class MouseMixin {
 
 	@ModifyArg(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), index = 1)
 	public double arcanuscontinuum$invertMouseY(double y) {
-		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusStatusEffects.DISCOMBOBULATE.get()))
+		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get()))
 			return -y;
 
 		return y;
@@ -33,7 +35,7 @@ public class MouseMixin {
 
 	@ModifyArg(method = "onPress", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants$Type;getOrCreate(I)Lcom/mojang/blaze3d/platform/InputConstants$Key;"), index = 0)
 	public int arcanuscontinuum$invertMouseButtons(int i) {
-		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusStatusEffects.DISCOMBOBULATE.get())) {
+		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get())) {
 			return switch(i) {
 				case 0 -> {
 					KeyMapping.set(InputConstants.Type.MOUSE.getOrCreate(0), false);

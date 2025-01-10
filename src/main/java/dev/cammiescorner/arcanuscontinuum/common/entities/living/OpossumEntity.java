@@ -50,47 +50,49 @@ public class OpossumEntity extends TamableAnimal {
 		ItemStack stack = handStack.copy();
 		ItemStack hatStack = getItemBySlot(EquipmentSlot.HEAD).copy();
 
-		if (isTame()) {
-			if (handStack.is(ArcanusItems.WIZARD_HAT.get())) {
+		if(isTame()) {
+			if(handStack.is(ArcanusItems.WIZARD_HAT.get())) {
 				setItemSlot(EquipmentSlot.HEAD, stack);
 
-				if (!player.isCreative())
+				if(!player.isCreative())
 					handStack.shrink(1);
-				if (!getItemBySlot(EquipmentSlot.HEAD).isEmpty() && !player.isCreative())
+				if(!getItemBySlot(EquipmentSlot.HEAD).isEmpty() && !player.isCreative())
 					player.setItemInHand(hand, hatStack);
 
 				return InteractionResult.SUCCESS;
 			}
 
-			if (isFood(handStack) && getHealth() < getMaxHealth()) {
+			if(isFood(handStack) && getHealth() < getMaxHealth()) {
 				heal(4);
 
-				if (!player.isCreative())
+				if(!player.isCreative())
 					handStack.shrink(1);
 
 				return InteractionResult.SUCCESS;
 			}
 
-			if (handStack.isEmpty() && player.isShiftKeyDown() && !getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
+			if(handStack.isEmpty() && player.isShiftKeyDown() && !getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
 				player.setItemInHand(hand, hatStack);
 				setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
 				return InteractionResult.SUCCESS;
 			}
 
-			if (getOwner() != null && player.getId() == getOwner().getId()) {
+			if(getOwner() != null && player.getId() == getOwner().getId()) {
 				setOrderedToSit(!isOrderedToSit());
 				return InteractionResult.SUCCESS;
 			}
-		} else if (handStack.is(Items.CARROT)) {
-			if (!level().isClientSide) {
-				if (!player.isCreative())
+		}
+		else if(handStack.is(Items.CARROT)) {
+			if(!level().isClientSide) {
+				if(!player.isCreative())
 					handStack.shrink(1);
 
-				if (random.nextInt(3) == 0) {
+				if(random.nextInt(3) == 0) {
 					tame(player);
 					navigation.stop();
 					level().broadcastEntityEvent(this, (byte) 7);
-				} else {
+				}
+				else {
 					level().broadcastEntityEvent(this, (byte) 6);
 				}
 
@@ -112,7 +114,7 @@ public class OpossumEntity extends TamableAnimal {
 		OpossumEntity opossumEntity = ArcanusEntities.OPOSSUM.get().create(world);
 		UUID uUID = getOwnerUUID();
 
-		if (uUID != null && opossumEntity != null) {
+		if(uUID != null && opossumEntity != null) {
 			opossumEntity.setOwnerUUID(uUID);
 			opossumEntity.setTame(true);
 		}

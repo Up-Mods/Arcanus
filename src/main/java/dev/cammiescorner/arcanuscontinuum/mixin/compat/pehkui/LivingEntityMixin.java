@@ -20,7 +20,7 @@ public abstract class LivingEntityMixin extends Entity {
 	private float arcanuscontinuum$alterFallDistance(float fallDistance) {
 		float scale = ScaleTypes.MOTION.getScaleData(this).getScale();
 
-		if (scale < 1)
+		if(scale < 1)
 			fallDistance *= scale / 2;
 
 		return fallDistance;

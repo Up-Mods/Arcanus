@@ -25,14 +25,14 @@ public class ArcanusHelper {
 		}
 
 		var component = ArcanusComponents.MAGIC_COLOR.getNullable(provider);
-		if (component != null) {
+		if(component != null) {
 			return component.getColor();
 		}
 
 		// if Entity
-		if (provider instanceof TraceableEntity ownable) {
+		if(provider instanceof TraceableEntity ownable) {
 			var owner = ownable.getOwner();
-			if (owner != null) {
+			if(owner != null) {
 				return getMagicColor(owner);
 			}
 		}
@@ -46,14 +46,14 @@ public class ArcanusHelper {
 		}
 
 		var component = ArcanusComponents.MAGIC_COLOR.getNullable(provider);
-		if (component != null) {
+		if(component != null) {
 			return component.getPocketDimensionColor();
 		}
 
 		// if Entity
-		if (provider instanceof TraceableEntity ownable) {
+		if(provider instanceof TraceableEntity ownable) {
 			var owner = ownable.getOwner();
-			if (owner != null) {
+			if(owner != null) {
 				return getPocketDimensionColor(owner);
 			}
 		}
@@ -62,7 +62,7 @@ public class ArcanusHelper {
 	}
 
 	public static Color getMagicColor(@Nullable UUID playerId) {
-		if (playerId == null || Util.NIL_UUID.equals(playerId)) {
+		if(playerId == null || Util.NIL_UUID.equals(playerId)) {
 			return Arcanus.DEFAULT_MAGIC_COLOUR;
 		}
 
@@ -70,7 +70,7 @@ public class ArcanusHelper {
 	}
 
 	public static Color getPocketDimensionColor(@Nullable UUID playerId) {
-		if (playerId == null || Util.NIL_UUID.equals(playerId)) {
+		if(playerId == null || Util.NIL_UUID.equals(playerId)) {
 			return Arcanus.DEFAULT_MAGIC_COLOUR;
 		}
 
@@ -87,7 +87,7 @@ public class ArcanusHelper {
 		maxDistance *= maxDistance;
 		HitResult entityHitResult = ProjectileUtil.getEntityHitResult(origin, startPos, endPos, origin.getBoundingBox().expandTowards(rotation.scale(maxDistance)).inflate(1.0D, 1D, 1D), entity -> !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted(), maxDistance);
 
-		if (includeEntities && entityHitResult != null)
+		if(includeEntities && entityHitResult != null)
 			hitResult = entityHitResult;
 
 		return hitResult;
@@ -111,8 +111,8 @@ public class ArcanusHelper {
 	 * sets the magic color if the entity can store it
 	 *
 	 * @param from the entity to take the color from.
-	 *               If this entity does not have an attached {@link MagicColorComponent},
-	 *               will default to {@link Arcanus#DEFAULT_MAGIC_COLOUR}
+	 *             If this entity does not have an attached {@link MagicColorComponent},
+	 *             will default to {@link Arcanus#DEFAULT_MAGIC_COLOUR}
 	 */
 	public static void copyMagicColor(Object to, Entity from) {
 		ArcanusComponents.MAGIC_COLOR.maybeGet(from).ifPresent(sourceComponent -> setMagicColorSource(to, sourceComponent.getSourceId()));

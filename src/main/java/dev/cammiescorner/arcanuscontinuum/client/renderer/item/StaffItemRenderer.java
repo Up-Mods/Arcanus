@@ -52,7 +52,7 @@ public class StaffItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
 		matrices.popPose();
 		matrices.pushPose();
 
-		switch (mode) {
+		switch(mode) {
 			case FIRST_PERSON_LEFT_HAND, THIRD_PERSON_LEFT_HAND ->
 				itemRenderer.render(stack, mode, true, matrices, vertexConsumers, light, overlay, worldItemModel);
 			case FIRST_PERSON_RIGHT_HAND, THIRD_PERSON_RIGHT_HAND ->

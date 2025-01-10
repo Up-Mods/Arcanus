@@ -4,8 +4,8 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +28,7 @@ public class FloatSpellEffect extends SpellEffect {
 			EntityHitResult entityHit = (EntityHitResult) target;
 
 			if(entityHit.getEntity() instanceof LivingEntity livingEntity)
-				livingEntity.addEffect(new MobEffectInstance(ArcanusStatusEffects.FLOAT.get(), (int) (ArcanusConfig.MovementEffects.FloatEffectProperties.baseEffectDuration * effects.stream().filter(ArcanusSpellComponents.FLOAT::is).count() * potency), 0, true, false));
+				livingEntity.addEffect(new MobEffectInstance(ArcanusMobEffects.FLOAT.get(), (int) (ArcanusConfig.MovementEffects.FloatEffectProperties.baseEffectDuration * effects.stream().filter(ArcanusSpellComponents.FLOAT::is).count() * potency), 0, true, false));
 		}
 	}
 }

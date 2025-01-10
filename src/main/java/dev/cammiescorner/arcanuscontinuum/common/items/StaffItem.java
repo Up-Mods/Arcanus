@@ -60,13 +60,13 @@ public class StaffItem extends Item {
 
 	@Override
 	public void onCraftedBy(ItemStack stack, Level world, Player player) {
-		if (!world.isClientSide()) {
+		if(!world.isClientSide()) {
 			CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 
-			if (tag.isEmpty()) {
+			if(tag.isEmpty()) {
 				ListTag list = new ListTag();
 
-				for (int i = 0; i < 8; i++)
+				for(int i = 0; i < 8; i++)
 					list.add(i, new Spell().toNbt());
 
 				tag.put("Spells", list);
@@ -78,13 +78,13 @@ public class StaffItem extends Item {
 
 	@Override
 	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
-		if (!world.isClientSide()) {
+		if(!world.isClientSide()) {
 			CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 
-			if (tag.isEmpty()) {
+			if(tag.isEmpty()) {
 				ListTag list = new ListTag();
 
-				for (int i = 0; i < 8; i++)
+				for(int i = 0; i < 8; i++)
 					list.add(i, new Spell().toNbt());
 
 				tag.put("Spells", list);
@@ -102,13 +102,13 @@ public class StaffItem extends Item {
 		tooltip.add(Component.translatable("staff.arcanuscontinuum.secondary_color").withStyle(style -> style.withColor(secondaryColour)).append(Component.literal(": " + String.format(Locale.ROOT, "#%06X", secondaryColour)).withStyle(ChatFormatting.GRAY)));
 		tooltip.add(Component.empty());
 
-		if (tag != null && !tag.isEmpty()) {
+		if(tag != null && !tag.isEmpty()) {
 			ListTag list = tag.getList("Spells", Tag.TAG_COMPOUND);
 
-			for (int i = 0; i < list.size(); i++) {
+			for(int i = 0; i < list.size(); i++) {
 				Spell spell = Spell.fromNbt(list.getCompound(i));
 
-				if (spell.getComponentGroups().isEmpty()) {
+				if(spell.getComponentGroups().isEmpty()) {
 					tooltip.add(Component.translatable("staff.arcanuscontinuum.invalid_data").withStyle(ChatFormatting.DARK_RED));
 					return;
 				}
@@ -137,7 +137,7 @@ public class StaffItem extends Item {
 		var color = ((StaffItem) stack.getItem()).defaultPrimaryColor;
 		var tag = stack.getTagElement(Arcanus.MOD_ID);
 
-		if (tag != null && tag.contains("PrimaryColor", Tag.TAG_INT)) {
+		if(tag != null && tag.contains("PrimaryColor", Tag.TAG_INT)) {
 			color = Color.fromInt(tag.getInt("PrimaryColor"), Color.Ordering.RGB);
 		}
 
@@ -155,7 +155,7 @@ public class StaffItem extends Item {
 	public static Color getSecondaryColor(ItemStack stack) {
 		var color = ((StaffItem) stack.getItem()).defaultSecondaryColor;
 		var tag = stack.getTagElement(Arcanus.MOD_ID);
-		if (tag != null && tag.contains("SecondaryColor", Tag.TAG_INT)) {
+		if(tag != null && tag.contains("SecondaryColor", Tag.TAG_INT)) {
 			color = Color.fromInt(tag.getInt("SecondaryColor"), Color.Ordering.RGB);
 		}
 

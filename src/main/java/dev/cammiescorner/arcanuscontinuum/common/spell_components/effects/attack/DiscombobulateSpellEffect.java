@@ -4,8 +4,8 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,16 +25,16 @@ public class DiscombobulateSpellEffect extends SpellEffect {
 
 	@Override
 	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
-		if (target.getType() == HitResult.Type.ENTITY) {
+		if(target.getType() == HitResult.Type.ENTITY) {
 			EntityHitResult entityHit = (EntityHitResult) target;
 			Entity entity = entityHit.getEntity();
 
-			if (entity instanceof Player playerTarget && caster instanceof Player playerCaster && !playerCaster.canHarmPlayer(playerTarget)) {
+			if(entity instanceof Player playerTarget && caster instanceof Player playerCaster && !playerCaster.canHarmPlayer(playerTarget)) {
 				return;
 			}
 
-			if (entity instanceof LivingEntity livingEntity && livingEntity.arcanuscontinuum$canBeTargeted()) {
-				livingEntity.addEffect(new MobEffectInstance(ArcanusStatusEffects.DISCOMBOBULATE.get(), ArcanusConfig.AttackEffects.DiscombobulateEffectProperties.baseEffectDuration + (int) (ArcanusConfig.AttackEffects.DiscombobulateEffectProperties.effectDurationModifier * effects.stream().filter(ArcanusSpellComponents.DISCOMBOBULATE::is).count() * potency), 0, true, false));
+			if(entity instanceof LivingEntity livingEntity && livingEntity.arcanuscontinuum$canBeTargeted()) {
+				livingEntity.addEffect(new MobEffectInstance(ArcanusMobEffects.DISCOMBOBULATE.get(), ArcanusConfig.AttackEffects.DiscombobulateEffectProperties.baseEffectDuration + (int) (ArcanusConfig.AttackEffects.DiscombobulateEffectProperties.effectDurationModifier * effects.stream().filter(ArcanusSpellComponents.DISCOMBOBULATE::is).count() * potency), 0, true, false));
 			}
 		}
 	}

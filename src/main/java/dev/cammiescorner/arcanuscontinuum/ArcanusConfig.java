@@ -14,7 +14,8 @@ public final class ArcanusConfig {
 
 	@Category(id = "spellShapeProperties", translation = "config." + Arcanus.MOD_ID + ".spellShapesCategory", sortOrder = 0)
 	public static final class SpellShapes {
-		@Category(id = "selfShapeProperties", translation = "config." + Arcanus.MOD_ID + ".selfShapeProperties", sortOrder = 0) public static final class SelfShapeProperties {
+		@Category(id = "selfShapeProperties", translation = "config." + Arcanus.MOD_ID + ".selfShapeProperties", sortOrder = 0)
+		public static final class SelfShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -40,7 +41,8 @@ public final class ArcanusConfig {
 			public static double potencyModifier = 0;
 		}
 
-		@Category(id = "touchShapeProperties", translation = "config." + Arcanus.MOD_ID + ".touchShapeProperties", sortOrder = 1) public static final class TouchShapeProperties {
+		@Category(id = "touchShapeProperties", translation = "config." + Arcanus.MOD_ID + ".touchShapeProperties", sortOrder = 1)
+		public static final class TouchShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -66,7 +68,8 @@ public final class ArcanusConfig {
 			public static double potencyModifier = 0.2;
 		}
 
-		@Category(id = "projectileShapeProperties", translation = "config." + Arcanus.MOD_ID + ".projectileShapeProperties", sortOrder = 2) public static final class ProjectileShapeProperties {
+		@Category(id = "projectileShapeProperties", translation = "config." + Arcanus.MOD_ID + ".projectileShapeProperties", sortOrder = 2)
+		public static final class ProjectileShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -99,7 +102,8 @@ public final class ArcanusConfig {
 			public static int baseLifeSpan = 20;
 		}
 
-		@Category(id = "lobShapeProperties", translation = "config." + Arcanus.MOD_ID + ".lobShapeProperties", sortOrder = 3) public static final class LobShapeProperties {
+		@Category(id = "lobShapeProperties", translation = "config." + Arcanus.MOD_ID + ".lobShapeProperties", sortOrder = 3)
+		public static final class LobShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -128,7 +132,8 @@ public final class ArcanusConfig {
 			public static float projectileSpeed = 2f;
 		}
 
-		@Category(id = "boltShapeProperties", translation = "config." + Arcanus.MOD_ID + ".boltShapeProperties", sortOrder = 4) public static final class BoltShapeProperties {
+		@Category(id = "boltShapeProperties", translation = "config." + Arcanus.MOD_ID + ".boltShapeProperties", sortOrder = 4)
+		public static final class BoltShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -158,7 +163,8 @@ public final class ArcanusConfig {
 			public static double range = 6;
 		}
 
-		@Category(id = "beamShapeProperties", translation = "config." + Arcanus.MOD_ID + ".beamShapeProperties", sortOrder = 5) public static final class BeamShapeProperties {
+		@Category(id = "beamShapeProperties", translation = "config." + Arcanus.MOD_ID + ".beamShapeProperties", sortOrder = 5)
+		public static final class BeamShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -192,7 +198,8 @@ public final class ArcanusConfig {
 			public static int delay = 40;
 		}
 
-		@Category(id = "runeShapeProperties", translation = "config." + Arcanus.MOD_ID + ".runeShapeProperties", sortOrder = 6) public static final class RuneShapeProperties {
+		@Category(id = "runeShapeProperties", translation = "config." + Arcanus.MOD_ID + ".runeShapeProperties", sortOrder = 6)
+		public static final class RuneShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -222,7 +229,8 @@ public final class ArcanusConfig {
 			public static int delay = 60;
 		}
 
-		@Category(id = "explosionShapeProperties", translation = "config." + Arcanus.MOD_ID + ".explosionShapeProperties", sortOrder = 7) public static final class ExplosionShapeProperties {
+		@Category(id = "explosionShapeProperties", translation = "config." + Arcanus.MOD_ID + ".explosionShapeProperties", sortOrder = 7)
+		public static final class ExplosionShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -252,7 +260,8 @@ public final class ArcanusConfig {
 			public static float strength = 3.5f;
 		}
 
-		@Category(id = "counterShapeProperties", translation = "config." + Arcanus.MOD_ID + ".counterShapeProperties", sortOrder = 8) public static final class CounterShapeProperties {
+		@Category(id = "counterShapeProperties", translation = "config." + Arcanus.MOD_ID + ".counterShapeProperties", sortOrder = 8)
+		public static final class CounterShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -282,7 +291,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 100;
 		}
 
-		@Category(id = "aoeShapeProperties", translation = "config." + Arcanus.MOD_ID + ".aoeShapeProperties", sortOrder = 9) public static final class AOEShapeProperties {
+		@Category(id = "aoeShapeProperties", translation = "config." + Arcanus.MOD_ID + ".aoeShapeProperties", sortOrder = 9)
+		public static final class AOEShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -312,7 +322,8 @@ public final class ArcanusConfig {
 			public static int baseLifeSpan = 100;
 		}
 
-		@Category(id = "smiteShapeProperties", translation = "config." + Arcanus.MOD_ID + ".smiteShapeProperties", sortOrder = 10) public static final class SmiteShapeProperties {
+		@Category(id = "smiteShapeProperties", translation = "config." + Arcanus.MOD_ID + ".smiteShapeProperties", sortOrder = 10)
+		public static final class SmiteShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -338,7 +349,8 @@ public final class ArcanusConfig {
 			public static double potencyModifier = 0.5;
 		}
 
-		@Category(id = "guardianOrbShapeProperties", translation = "config." + Arcanus.MOD_ID + ".guardianOrbShapeProperties", sortOrder = 11) public static final class GuardianOrbShapeProperties {
+		@Category(id = "guardianOrbShapeProperties", translation = "config." + Arcanus.MOD_ID + ".guardianOrbShapeProperties", sortOrder = 11)
+		public static final class GuardianOrbShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -372,7 +384,8 @@ public final class ArcanusConfig {
 			public static double baseManaDrain = 3;
 		}
 
-		@Category(id = "aggressorbShapeProperties", translation = "config." + Arcanus.MOD_ID + ".aggressorbShapeProperties", sortOrder = 12) public static final class AggressorbShapeProperties {
+		@Category(id = "aggressorbShapeProperties", translation = "config." + Arcanus.MOD_ID + ".aggressorbShapeProperties", sortOrder = 12)
+		public static final class AggressorbShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -408,7 +421,8 @@ public final class ArcanusConfig {
 
 	@Category(id = "attackEffectsCategory", translation = "config." + Arcanus.MOD_ID + ".attackEffectsCategory", sortOrder = 1)
 	public static final class AttackEffects {
-		@Category(id = "damageEffectProperties", translation = "config." + Arcanus.MOD_ID + ".damageEffectProperties", sortOrder = 0) public static final class DamageEffectProperties {
+		@Category(id = "damageEffectProperties", translation = "config." + Arcanus.MOD_ID + ".damageEffectProperties", sortOrder = 0)
+		public static final class DamageEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -432,7 +446,8 @@ public final class ArcanusConfig {
 			public static float baseDamage = 1.5f;
 		}
 
-		@Category(id = "fireEffectProperties", translation = "config." + Arcanus.MOD_ID + ".fireEffectProperties", sortOrder = 1) public static final class FireEffectProperties {
+		@Category(id = "fireEffectProperties", translation = "config." + Arcanus.MOD_ID + ".fireEffectProperties", sortOrder = 1)
+		public static final class FireEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -456,7 +471,8 @@ public final class ArcanusConfig {
 			public static int baseTimeOnFire = 3;
 		}
 
-		@Category(id = "electricEffectProperties", translation = "config." + Arcanus.MOD_ID + ".electricEffectProperties", sortOrder = 2) public static final class ElectricEffectProperties {
+		@Category(id = "electricEffectProperties", translation = "config." + Arcanus.MOD_ID + ".electricEffectProperties", sortOrder = 2)
+		public static final class ElectricEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -484,7 +500,8 @@ public final class ArcanusConfig {
 			public static float wetEntityDamageMultiplier = 2f;
 		}
 
-		@Category(id = "iceEffectProperties", translation = "config." + Arcanus.MOD_ID + ".iceEffectProperties", sortOrder = 3) public static final class IceEffectProperties {
+		@Category(id = "iceEffectProperties", translation = "config." + Arcanus.MOD_ID + ".iceEffectProperties", sortOrder = 3)
+		public static final class IceEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -508,7 +525,8 @@ public final class ArcanusConfig {
 			public static int baseFreezingTime = 20;
 		}
 
-		@Category(id = "vulnerabilityEffectProperties", translation = "config." + Arcanus.MOD_ID + ".vulnerabilityEffectProperties", sortOrder = 4) public static final class VulnerabilityEffectProperties {
+		@Category(id = "vulnerabilityEffectProperties", translation = "config." + Arcanus.MOD_ID + ".vulnerabilityEffectProperties", sortOrder = 4)
+		public static final class VulnerabilityEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -532,7 +550,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 300;
 		}
 
-		@Category(id = "manaLockEffectProperties", translation = "config." + Arcanus.MOD_ID + ".manaLockEffectProperties", sortOrder = 5) public static final class ManaLockEffectProperties {
+		@Category(id = "manaLockEffectProperties", translation = "config." + Arcanus.MOD_ID + ".manaLockEffectProperties", sortOrder = 5)
+		public static final class ManaLockEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -556,7 +575,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 200;
 		}
 
-		@Category(id = "witheringEffectProperties", translation = "config." + Arcanus.MOD_ID + ".witheringEffectProperties", sortOrder = 6) public static final class WitheringEffectProperties {
+		@Category(id = "witheringEffectProperties", translation = "config." + Arcanus.MOD_ID + ".witheringEffectProperties", sortOrder = 6)
+		public static final class WitheringEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -580,7 +600,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 60;
 		}
 
-		@Category(id = "necromancyEffectProperties", translation = "config." + Arcanus.MOD_ID + ".necromancyEffectProperties", sortOrder = 7) public static final class NecromancyEffectProperties {
+		@Category(id = "necromancyEffectProperties", translation = "config." + Arcanus.MOD_ID + ".necromancyEffectProperties", sortOrder = 7)
+		public static final class NecromancyEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -604,7 +625,8 @@ public final class ArcanusConfig {
 			public static int baseHealth = 10;
 		}
 
-		@Category(id = "manaSplitEffectProperties", translation = "config." + Arcanus.MOD_ID + ".manaSplitEffectProperties", sortOrder = 8) public static final class ManaSplitEffectProperties {
+		@Category(id = "manaSplitEffectProperties", translation = "config." + Arcanus.MOD_ID + ".manaSplitEffectProperties", sortOrder = 8)
+		public static final class ManaSplitEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -624,7 +646,8 @@ public final class ArcanusConfig {
 			public static int minimumLevel = 6;
 		}
 
-		@Category(id = "copperCurseEffectProperties", translation = "config." + Arcanus.MOD_ID + ".copperCurseEffectProperties", sortOrder = 9) public static final class CopperCurseEffectProperties {
+		@Category(id = "copperCurseEffectProperties", translation = "config." + Arcanus.MOD_ID + ".copperCurseEffectProperties", sortOrder = 9)
+		public static final class CopperCurseEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -656,7 +679,8 @@ public final class ArcanusConfig {
 			public static double baseChanceToActivate = 0.0625;
 		}
 
-		@Category(id = "discombobulateEffectProperties", translation = "config." + Arcanus.MOD_ID + ".discombobulateEffectProperties", sortOrder = 10) public static final class DiscombobulateEffectProperties {
+		@Category(id = "discombobulateEffectProperties", translation = "config." + Arcanus.MOD_ID + ".discombobulateEffectProperties", sortOrder = 10)
+		public static final class DiscombobulateEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -684,7 +708,8 @@ public final class ArcanusConfig {
 			public static int effectDurationModifier = 15;
 		}
 
-		@Category(id = "stockpileEffectProperties", translation = "config." + Arcanus.MOD_ID + ".stockpileEffectProperties", sortOrder = 11) public static final class StockpileEffectProperties {
+		@Category(id = "stockpileEffectProperties", translation = "config." + Arcanus.MOD_ID + ".stockpileEffectProperties", sortOrder = 11)
+		public static final class StockpileEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -719,7 +744,8 @@ public final class ArcanusConfig {
 
 	@Category(id = "supportEffectsCategory", translation = "config." + Arcanus.MOD_ID + ".supportEffectsCategory", sortOrder = 2)
 	public static final class SupportEffects {
-		@Category(id = "healEffectProperties", translation = "config." + Arcanus.MOD_ID + ".healEffectProperties", sortOrder = 0) public static final class HealEffectProperties {
+		@Category(id = "healEffectProperties", translation = "config." + Arcanus.MOD_ID + ".healEffectProperties", sortOrder = 0)
+		public static final class HealEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -743,7 +769,8 @@ public final class ArcanusConfig {
 			public static float baseHealAmount = 3f;
 		}
 
-		@Category(id = "dispelEffectProperties", translation = "config." + Arcanus.MOD_ID + ".dispelEffectProperties", sortOrder = 1) public static final class DispelEffectProperties {
+		@Category(id = "dispelEffectProperties", translation = "config." + Arcanus.MOD_ID + ".dispelEffectProperties", sortOrder = 1)
+		public static final class DispelEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -763,7 +790,8 @@ public final class ArcanusConfig {
 			public static int minimumLevel = 6;
 		}
 
-		@Category(id = "regenerateEffectProperties", translation = "config." + Arcanus.MOD_ID + ".regenerateEffectProperties", sortOrder = 2) public static final class RegenerateEffectProperties {
+		@Category(id = "regenerateEffectProperties", translation = "config." + Arcanus.MOD_ID + ".regenerateEffectProperties", sortOrder = 2)
+		public static final class RegenerateEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -787,7 +815,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 100;
 		}
 
-		@Category(id = "fortifyEffectProperties", translation = "config." + Arcanus.MOD_ID + ".fortifyEffectProperties", sortOrder = 3) public static final class FortifyEffectProperties {
+		@Category(id = "fortifyEffectProperties", translation = "config." + Arcanus.MOD_ID + ".fortifyEffectProperties", sortOrder = 3)
+		public static final class FortifyEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -811,7 +840,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 500;
 		}
 
-		@Category(id = "hasteEffectProperties", translation = "config." + Arcanus.MOD_ID + ".hasteEffectProperties", sortOrder = 4) public static final class HasteEffectProperties {
+		@Category(id = "hasteEffectProperties", translation = "config." + Arcanus.MOD_ID + ".hasteEffectProperties", sortOrder = 4)
+		public static final class HasteEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -835,7 +865,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 200;
 		}
 
-		@Category(id = "manaShieldEffectProperties", translation = "config." + Arcanus.MOD_ID + ".manaShieldEffectProperties", sortOrder = 5) public static final class ManaShieldEffectProperties {
+		@Category(id = "manaShieldEffectProperties", translation = "config." + Arcanus.MOD_ID + ".manaShieldEffectProperties", sortOrder = 5)
+		public static final class ManaShieldEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -863,7 +894,8 @@ public final class ArcanusConfig {
 			public static int lifeSpanModifier = 40;
 		}
 
-		@Category(id = "dangerSenseEffectProperties", translation = "config." + Arcanus.MOD_ID + ".dangerSenseEffectProperties", sortOrder = 6) public static final class DangerSenseEffectProperties {
+		@Category(id = "dangerSenseEffectProperties", translation = "config." + Arcanus.MOD_ID + ".dangerSenseEffectProperties", sortOrder = 6)
+		public static final class DangerSenseEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -894,7 +926,8 @@ public final class ArcanusConfig {
 
 	@Category(id = "utilityEffectsCategory", translation = "config." + Arcanus.MOD_ID + ".utilityEffectsCategory", sortOrder = 3)
 	public static final class UtilityEffects {
-		@Category(id = "buildEffectProperties", translation = "config." + Arcanus.MOD_ID + ".buildEffectProperties", sortOrder = 0) public static final class BuildEffectProperties {
+		@Category(id = "buildEffectProperties", translation = "config." + Arcanus.MOD_ID + ".buildEffectProperties", sortOrder = 0)
+		public static final class BuildEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -918,7 +951,8 @@ public final class ArcanusConfig {
 			public static int baseLifeSpan = 220;
 		}
 
-		@Category(id = "powerEffectProperties", translation = "config." + Arcanus.MOD_ID + ".powerEffectProperties", sortOrder = 1) public static final class PowerEffectProperties {
+		@Category(id = "powerEffectProperties", translation = "config." + Arcanus.MOD_ID + ".powerEffectProperties", sortOrder = 1)
+		public static final class PowerEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -942,7 +976,8 @@ public final class ArcanusConfig {
 			public static int basePower = 4;
 		}
 
-		@Category(id = "anonymityEffectProperties", translation = "config." + Arcanus.MOD_ID + ".anonymityEffectProperties", sortOrder = 2) public static final class AnonymityEffectProperties {
+		@Category(id = "anonymityEffectProperties", translation = "config." + Arcanus.MOD_ID + ".anonymityEffectProperties", sortOrder = 2)
+		public static final class AnonymityEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -966,7 +1001,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 220;
 		}
 
-		@Category(id = "mineEffectProperties", translation = "config." + Arcanus.MOD_ID + ".mineEffectProperties", sortOrder = 3) public static final class MineEffectProperties {
+		@Category(id = "mineEffectProperties", translation = "config." + Arcanus.MOD_ID + ".mineEffectProperties", sortOrder = 3)
+		public static final class MineEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -986,7 +1022,8 @@ public final class ArcanusConfig {
 			public static int minimumLevel = 4;
 		}
 
-		@Category(id = "growthEffectProperties", translation = "config." + Arcanus.MOD_ID + ".growthEffectProperties", sortOrder = 4) public static final class GrowthEffectProperties {
+		@Category(id = "growthEffectProperties", translation = "config." + Arcanus.MOD_ID + ".growthEffectProperties", sortOrder = 4)
+		public static final class GrowthEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1006,7 +1043,8 @@ public final class ArcanusConfig {
 			public static int minimumLevel = 4;
 		}
 
-		@Category(id = "shrinkEffectProperties", translation = "config." + Arcanus.MOD_ID + ".shrinkEffectProperties", sortOrder = 5) public static final class ShrinkEffectProperties {
+		@Category(id = "shrinkEffectProperties", translation = "config." + Arcanus.MOD_ID + ".shrinkEffectProperties", sortOrder = 5)
+		public static final class ShrinkEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1034,7 +1072,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 100;
 		}
 
-		@Category(id = "enlargeEffectProperties", translation = "config." + Arcanus.MOD_ID + ".enlargeEffectProperties", sortOrder = 6) public static final class EnlargeEffectProperties {
+		@Category(id = "enlargeEffectProperties", translation = "config." + Arcanus.MOD_ID + ".enlargeEffectProperties", sortOrder = 6)
+		public static final class EnlargeEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1062,7 +1101,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 100;
 		}
 
-		@Category(id = "spatialRiftEffectProperties", translation = "config." + Arcanus.MOD_ID + ".spatialRiftEffectProperties", sortOrder = 7) public static final class SpatialRiftEffectProperties {
+		@Category(id = "spatialRiftEffectProperties", translation = "config." + Arcanus.MOD_ID + ".spatialRiftEffectProperties", sortOrder = 7)
+		public static final class SpatialRiftEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1103,7 +1143,8 @@ public final class ArcanusConfig {
 			public static int baseLifeSpan = 700;
 		}
 
-		@Category(id = "wardingEffectProperties", translation = "config." + Arcanus.MOD_ID + ".wardingEffectProperties", sortOrder = 8) public static final class WardingEffectProperties {
+		@Category(id = "wardingEffectProperties", translation = "config." + Arcanus.MOD_ID + ".wardingEffectProperties", sortOrder = 8)
+		public static final class WardingEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1129,7 +1170,8 @@ public final class ArcanusConfig {
 
 	@Category(id = "movementEffectsCategory", translation = "config." + Arcanus.MOD_ID + ".movementEffectsCategory", sortOrder = 4)
 	public static final class MovementEffects {
-		@Category(id = "pushEffectProperties", translation = "config." + Arcanus.MOD_ID + ".pushEffectProperties", sortOrder = 0) public static final class PushEffectProperties {
+		@Category(id = "pushEffectProperties", translation = "config." + Arcanus.MOD_ID + ".pushEffectProperties", sortOrder = 0)
+		public static final class PushEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1153,7 +1195,8 @@ public final class ArcanusConfig {
 			public static double basePushAmount = 0.2;
 		}
 
-		@Category(id = "pullEffectProperties", translation = "config." + Arcanus.MOD_ID + ".pullEffectProperties", sortOrder = 1) public static final class PullEffectProperties {
+		@Category(id = "pullEffectProperties", translation = "config." + Arcanus.MOD_ID + ".pullEffectProperties", sortOrder = 1)
+		public static final class PullEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1177,7 +1220,8 @@ public final class ArcanusConfig {
 			public static double basePullAmount = 0.2;
 		}
 
-		@Category(id = "levitateEffectProperties", translation = "config." + Arcanus.MOD_ID + ".levitateEffectProperties", sortOrder = 2) public static final class LevitateEffectProperties {
+		@Category(id = "levitateEffectProperties", translation = "config." + Arcanus.MOD_ID + ".levitateEffectProperties", sortOrder = 2)
+		public static final class LevitateEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1201,7 +1245,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 60;
 		}
 
-		@Category(id = "speedEffectProperties", translation = "config." + Arcanus.MOD_ID + ".speedEffectProperties", sortOrder = 3) public static final class SpeedEffectProperties {
+		@Category(id = "speedEffectProperties", translation = "config." + Arcanus.MOD_ID + ".speedEffectProperties", sortOrder = 3)
+		public static final class SpeedEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1225,7 +1270,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 300;
 		}
 
-		@Category(id = "teleportEffectProperties", translation = "config." + Arcanus.MOD_ID + ".teleportEffectProperties", sortOrder = 4) public static final class TeleportEffectProperties {
+		@Category(id = "teleportEffectProperties", translation = "config." + Arcanus.MOD_ID + ".teleportEffectProperties", sortOrder = 4)
+		public static final class TeleportEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1249,7 +1295,8 @@ public final class ArcanusConfig {
 			public static double baseTeleportDistance = 5;
 		}
 
-		@Category(id = "bouncyEffectProperties", translation = "config." + Arcanus.MOD_ID + ".bouncyEffectProperties", sortOrder = 5) public static final class BouncyEffectProperties {
+		@Category(id = "bouncyEffectProperties", translation = "config." + Arcanus.MOD_ID + ".bouncyEffectProperties", sortOrder = 5)
+		public static final class BouncyEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1273,7 +1320,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 220;
 		}
 
-		@Category(id = "featherEffectProperties", translation = "config." + Arcanus.MOD_ID + ".featherEffectProperties", sortOrder = 6) public static final class FeatherEffectProperties {
+		@Category(id = "featherEffectProperties", translation = "config." + Arcanus.MOD_ID + ".featherEffectProperties", sortOrder = 6)
+		public static final class FeatherEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1297,7 +1345,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 100;
 		}
 
-		@Category(id = "floatEffectProperties", translation = "config." + Arcanus.MOD_ID + ".floatEffectProperties", sortOrder = 7) public static final class FloatEffectProperties {
+		@Category(id = "floatEffectProperties", translation = "config." + Arcanus.MOD_ID + ".floatEffectProperties", sortOrder = 7)
+		public static final class FloatEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 
@@ -1324,7 +1373,8 @@ public final class ArcanusConfig {
 			public static int baseEffectDuration = 1200;
 		}
 
-		@Category(id = "manaWingsEffectProperties", translation = "config." + Arcanus.MOD_ID + ".manaWingsEffectProperties", sortOrder = 8) public static final class ManaWingsEffectProperties {
+		@Category(id = "manaWingsEffectProperties", translation = "config." + Arcanus.MOD_ID + ".manaWingsEffectProperties", sortOrder = 8)
+		public static final class ManaWingsEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config." + Arcanus.MOD_ID + ".enabled")
 			public static boolean enabled = true;
 

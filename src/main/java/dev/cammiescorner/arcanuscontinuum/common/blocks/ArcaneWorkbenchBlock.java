@@ -32,11 +32,11 @@ import java.util.List;
 
 public class ArcaneWorkbenchBlock extends HorizontalDirectionalBlock implements EntityBlock, BlockItemProvider {
 	private static final VoxelShape SHAPE = Shapes.or(
-			Shapes.box(0, 0.1875, 0, 1, 0.8125, 1),
-			Shapes.box(0, 0, 0, 0.125, 0.1875, 0.125),
-			Shapes.box(0.875, 0, 0, 1, 0.1875, 0.125),
-			Shapes.box(0, 0, 0.875, 0.125, 0.1875, 1),
-			Shapes.box(0.875, 0, 0.875, 1, 0.1875, 1)
+		Shapes.box(0, 0.1875, 0, 1, 0.8125, 1),
+		Shapes.box(0, 0, 0, 0.125, 0.1875, 0.125),
+		Shapes.box(0.875, 0, 0, 1, 0.1875, 0.125),
+		Shapes.box(0, 0, 0.875, 0.125, 0.1875, 1),
+		Shapes.box(0.875, 0, 0.875, 1, 0.1875, 1)
 	);
 
 	public ArcaneWorkbenchBlock() {
@@ -57,10 +57,14 @@ public class ArcaneWorkbenchBlock extends HorizontalDirectionalBlock implements 
 		Direction direction = state.getValue(FACING);
 		Vec3 d = Vec3.atLowerCornerOf(blockPos);
 		List<Vec3> vec3ds = switch(direction) {
-			case NORTH -> List.of(new Vec3(0.0625, 1.125, 0.8125), new Vec3(0.3125, 1.1875, 0.9375), new Vec3(0.6875, 1.1875, 0.9375), new Vec3(0.9375, 1.125, 0.8125));
-			case SOUTH -> List.of(new Vec3(0.0625, 1.125, 0.1875), new Vec3(0.3125, 1.1875, 0.0625), new Vec3(0.6875, 1.1875, 0.0625), new Vec3(0.9375, 1.125, 0.1875));
-			case WEST -> List.of(new Vec3(0.8125, 1.125, 0.0625), new Vec3(0.9375, 1.1875, 0.3125), new Vec3(0.9375, 1.1875, 0.6875), new Vec3(0.8125, 1.125, 0.9375));
-			case EAST -> List.of(new Vec3(0.1875, 1.125, 0.0625), new Vec3(0.0625, 1.1875, 0.3125), new Vec3(0.0625, 1.1875, 0.6875), new Vec3(0.1875, 1.125, 0.9375));
+			case NORTH ->
+				List.of(new Vec3(0.0625, 1.125, 0.8125), new Vec3(0.3125, 1.1875, 0.9375), new Vec3(0.6875, 1.1875, 0.9375), new Vec3(0.9375, 1.125, 0.8125));
+			case SOUTH ->
+				List.of(new Vec3(0.0625, 1.125, 0.1875), new Vec3(0.3125, 1.1875, 0.0625), new Vec3(0.6875, 1.1875, 0.0625), new Vec3(0.9375, 1.125, 0.1875));
+			case WEST ->
+				List.of(new Vec3(0.8125, 1.125, 0.0625), new Vec3(0.9375, 1.1875, 0.3125), new Vec3(0.9375, 1.1875, 0.6875), new Vec3(0.8125, 1.125, 0.9375));
+			case EAST ->
+				List.of(new Vec3(0.1875, 1.125, 0.0625), new Vec3(0.0625, 1.1875, 0.3125), new Vec3(0.0625, 1.1875, 0.6875), new Vec3(0.1875, 1.125, 0.9375));
 			default -> List.of();
 		};
 		float f = random.nextFloat();
@@ -81,10 +85,14 @@ public class ArcaneWorkbenchBlock extends HorizontalDirectionalBlock implements 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
 		VoxelShape shape = switch(state.getValue(FACING)) {
-			case NORTH -> Shapes.or(Shapes.box(0, 0.8125, 0.75, 0.125, 1, 0.875), Shapes.box(0.25, 0.8125, 0.875, 0.375, 1.0625, 1), Shapes.box(0.625, 0.8125, 0.875, 0.75, 1.0625, 1), Shapes.box(0.875, 0.8125, 0.75, 1, 1, 0.875));
-			case SOUTH -> Shapes.or(Shapes.box(0, 0.8125, 0.125, 0.125, 1, 0.25), Shapes.box(0.25, 0.8125, 0, 0.375, 1.0625, 0.125), Shapes.box(0.625, 0.8125, 0, 0.75, 1.0625, 0.125), Shapes.box(0.875, 0.8125, 0.125, 1, 1, 0.25));
-			case WEST -> Shapes.or(Shapes.box(0.75, 0.8125, 0, 0.875, 1, 0.125), Shapes.box(0.875, 0.8125, 0.25, 1, 1.0625, 0.375), Shapes.box(0.875, 0.8125, 0.625, 1, 1.0625, 0.75), Shapes.box(0.75, 0.8125, 0.875, 0.875, 1, 1));
-			case EAST -> Shapes.or(Shapes.box(0.125, 0.8125, 0, 0.25, 1, 0.125), Shapes.box(0, 0.8125, 0.25, 0.125, 1.0625, 0.375), Shapes.box(0, 0.8125, 0.625, 0.125, 1.0625, 0.75), Shapes.box(0.125, 0.8125, 0.875, 0.25, 1, 1));
+			case NORTH ->
+				Shapes.or(Shapes.box(0, 0.8125, 0.75, 0.125, 1, 0.875), Shapes.box(0.25, 0.8125, 0.875, 0.375, 1.0625, 1), Shapes.box(0.625, 0.8125, 0.875, 0.75, 1.0625, 1), Shapes.box(0.875, 0.8125, 0.75, 1, 1, 0.875));
+			case SOUTH ->
+				Shapes.or(Shapes.box(0, 0.8125, 0.125, 0.125, 1, 0.25), Shapes.box(0.25, 0.8125, 0, 0.375, 1.0625, 0.125), Shapes.box(0.625, 0.8125, 0, 0.75, 1.0625, 0.125), Shapes.box(0.875, 0.8125, 0.125, 1, 1, 0.25));
+			case WEST ->
+				Shapes.or(Shapes.box(0.75, 0.8125, 0, 0.875, 1, 0.125), Shapes.box(0.875, 0.8125, 0.25, 1, 1.0625, 0.375), Shapes.box(0.875, 0.8125, 0.625, 1, 1.0625, 0.75), Shapes.box(0.75, 0.8125, 0.875, 0.875, 1, 1));
+			case EAST ->
+				Shapes.or(Shapes.box(0.125, 0.8125, 0, 0.25, 1, 0.125), Shapes.box(0, 0.8125, 0.25, 0.125, 1.0625, 0.375), Shapes.box(0, 0.8125, 0.625, 0.125, 1.0625, 0.75), Shapes.box(0.125, 0.8125, 0.875, 0.25, 1, 1));
 			default -> Shapes.empty();
 		};
 

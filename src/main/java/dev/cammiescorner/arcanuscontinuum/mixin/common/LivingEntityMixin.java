@@ -11,7 +11,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Pattern;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Spell;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -52,22 +52,43 @@ import java.util.List;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements Targetable {
-	@Unique private final LivingEntity self = (LivingEntity) (Entity) this;
-	@Unique private Vec3 prevVelocity;
+	@Unique
+	private final LivingEntity self = (LivingEntity) (Entity) this;
+	@Unique
+	private Vec3 prevVelocity;
 
-	@Shadow protected boolean jumping;
+	@Shadow
+	protected boolean jumping;
 
-	@Shadow public abstract @Nullable AttributeInstance getAttribute(Attribute attribute);
-	@Shadow public abstract ItemStack getMainHandItem();
-	@Shadow public abstract boolean hasEffect(MobEffect effect);
-	@Shadow public abstract MobEffectInstance getEffect(MobEffect effect);
-	@Shadow public abstract boolean removeEffect(MobEffect type);
-	@Shadow public abstract boolean isDamageSourceBlocked(DamageSource source);
-	@Shadow public abstract boolean removeAllEffects();
-	@Shadow public abstract boolean addEffect(MobEffectInstance effect);
-	@Shadow public abstract float getSpeed();
+	@Shadow
+	public abstract @Nullable AttributeInstance getAttribute(Attribute attribute);
 
-	@Shadow public abstract boolean randomTeleport(double x, double y, double z, boolean particleEffects);
+	@Shadow
+	public abstract ItemStack getMainHandItem();
+
+	@Shadow
+	public abstract boolean hasEffect(MobEffect effect);
+
+	@Shadow
+	public abstract MobEffectInstance getEffect(MobEffect effect);
+
+	@Shadow
+	public abstract boolean removeEffect(MobEffect type);
+
+	@Shadow
+	public abstract boolean isDamageSourceBlocked(DamageSource source);
+
+	@Shadow
+	public abstract boolean removeAllEffects();
+
+	@Shadow
+	public abstract boolean addEffect(MobEffectInstance effect);
+
+	@Shadow
+	public abstract float getSpeed();
+
+	@Shadow
+	public abstract boolean randomTeleport(double x, double y, double z, boolean particleEffects);
 
 	public LivingEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
@@ -79,13 +100,13 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 			if(ArcanusComponents.isCounterActive(self) && source.getDirectEntity() instanceof LivingEntity attacker)
 				ArcanusComponents.castCounter(self, attacker);
 
-			if(hasEffect(ArcanusStatusEffects.MANA_WINGS.get()) && ArcanusConfig.MovementEffects.ManaWingsEffectProperties.removedUponTakingDamage)
-				removeEffect(ArcanusStatusEffects.MANA_WINGS.get());
-			if(hasEffect(ArcanusStatusEffects.FLOAT.get()) && ArcanusConfig.MovementEffects.FloatEffectProperties.removedUponTakingDamage)
-				removeEffect(ArcanusStatusEffects.FLOAT.get());
+			if(hasEffect(ArcanusMobEffects.MANA_WINGS.get()) && ArcanusConfig.MovementEffects.ManaWingsEffectProperties.removedUponTakingDamage)
+				removeEffect(ArcanusMobEffects.MANA_WINGS.get());
+			if(hasEffect(ArcanusMobEffects.FLOAT.get()) && ArcanusConfig.MovementEffects.FloatEffectProperties.removedUponTakingDamage)
+				removeEffect(ArcanusMobEffects.FLOAT.get());
 
-			if(hasEffect(ArcanusStatusEffects.STOCKPILE.get()) && amount >= ArcanusConfig.AttackEffects.StockpileEffectProperties.damageNeededToIncrease) {
-				MobEffectInstance stockpile = getEffect(ArcanusStatusEffects.STOCKPILE.get());
+			if(hasEffect(ArcanusMobEffects.STOCKPILE.get()) && amount >= ArcanusConfig.AttackEffects.StockpileEffectProperties.damageNeededToIncrease) {
+				MobEffectInstance stockpile = getEffect(ArcanusMobEffects.STOCKPILE.get());
 
 				if(stockpile.getAmplifier() < 9) {
 					removeAllEffects();
@@ -94,8 +115,8 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 				}
 			}
 
-			if(hasEffect(ArcanusStatusEffects.DANGER_SENSE.get()) && (source.is(DamageTypeTags.IS_PROJECTILE) || source.is(DamageTypeTags.IS_EXPLOSION))) {
-				MobEffectInstance dangerSense = getEffect(ArcanusStatusEffects.DANGER_SENSE.get());
+			if(hasEffect(ArcanusMobEffects.DANGER_SENSE.get()) && (source.is(DamageTypeTags.IS_PROJECTILE) || source.is(DamageTypeTags.IS_EXPLOSION))) {
+				MobEffectInstance dangerSense = getEffect(ArcanusMobEffects.DANGER_SENSE.get());
 
 				if(random.nextFloat() < ArcanusConfig.SupportEffects.DangerSenseEffectProperties.baseChanceToActivate * (dangerSense.getAmplifier() + 1)) {
 					if(level() instanceof ServerLevel world) {
@@ -106,9 +127,9 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 						for(int i = 0; i < 16; ++i) {
 							double g = getX() + (random.nextDouble() - 0.5) * 16.0;
 							double h = Mth.clamp(
-									getY() + random.nextInt(16) - 8,
-									world.getMinBuildHeight(),
-									world.getMinBuildHeight() + world.getLogicalHeight() - 1
+								getY() + random.nextInt(16) - 8,
+								world.getMinBuildHeight(),
+								world.getMinBuildHeight() + world.getLogicalHeight() - 1
 							);
 							double j = getZ() + (random.nextDouble() - 0.5) * 16.0;
 
@@ -127,7 +148,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 						}
 					}
 
-					removeEffect(ArcanusStatusEffects.DANGER_SENSE.get());
+					removeEffect(ArcanusMobEffects.DANGER_SENSE.get());
 					info.setReturnValue(false);
 				}
 			}
@@ -140,13 +161,13 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 
 		if(attributeInstance != null && source.is(DamageTypeTags.WITCH_RESISTANT_TO))
 			amount /= Math.max((float) attributeInstance.getValue(), 0.000001F);
-		if(hasEffect(ArcanusStatusEffects.FORTIFY.get()))
-			amount /= 1 + (getEffect(ArcanusStatusEffects.FORTIFY.get()).getAmplifier() + 1) * 0.25F;
-		if(hasEffect(ArcanusStatusEffects.VULNERABILITY.get()))
-			amount *= 1 + 0.8F * ((getEffect(ArcanusStatusEffects.VULNERABILITY.get()).getAmplifier() + 1) / 10F);
-		if(source.getEntity() instanceof LivingEntity attacker && attacker.hasEffect(ArcanusStatusEffects.STOCKPILE.get())) {
-			amount *= attacker.getEffect(ArcanusStatusEffects.STOCKPILE.get()).getAmplifier() + 1;
-			attacker.removeEffect(ArcanusStatusEffects.STOCKPILE.get());
+		if(hasEffect(ArcanusMobEffects.FORTIFY.get()))
+			amount /= 1 + (getEffect(ArcanusMobEffects.FORTIFY.get()).getAmplifier() + 1) * 0.25F;
+		if(hasEffect(ArcanusMobEffects.VULNERABILITY.get()))
+			amount *= 1 + 0.8F * ((getEffect(ArcanusMobEffects.VULNERABILITY.get()).getAmplifier() + 1) / 10F);
+		if(source.getEntity() instanceof LivingEntity attacker && attacker.hasEffect(ArcanusMobEffects.STOCKPILE.get())) {
+			amount *= attacker.getEffect(ArcanusMobEffects.STOCKPILE.get()).getAmplifier() + 1;
+			attacker.removeEffect(ArcanusMobEffects.STOCKPILE.get());
 		}
 
 		return amount;
@@ -154,9 +175,9 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 
 	@ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/particles/BlockParticleOption;<init>(Lnet/minecraft/core/particles/ParticleType;Lnet/minecraft/world/level/block/state/BlockState;)V"))
 	private BlockState arcanuscontinuum$bouncy(BlockState value) {
-		if(hasEffect(ArcanusStatusEffects.BOUNCY.get()))
+		if(hasEffect(ArcanusMobEffects.BOUNCY.get()))
 			return Blocks.SLIME_BLOCK.defaultBlockState();
-		if(hasEffect(ArcanusStatusEffects.FLOAT.get()))
+		if(hasEffect(ArcanusMobEffects.FLOAT.get()))
 			fallDistance = 0;
 
 		return value;
@@ -164,7 +185,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 
 	@Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$negateFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
-		if(prevVelocity != null && !damageSources().source(DamageTypes.STALAGMITE).equals(damageSource) && fallDistance > getMaxFallDistance() && hasEffect(ArcanusStatusEffects.BOUNCY.get())) {
+		if(prevVelocity != null && !damageSources().source(DamageTypes.STALAGMITE).equals(damageSource) && fallDistance > getMaxFallDistance() && hasEffect(ArcanusMobEffects.BOUNCY.get())) {
 			if(!level().isClientSide) {
 				level().playSound(null, this, SoundEvents.SLIME_BLOCK_FALL, getSoundSource(), 1, 1);
 
@@ -180,27 +201,28 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void arcanuscontinuum$tick(CallbackInfo info) {
-		if (!level().isClientSide() && ArcanusComponents.PATTERN_COMPONENT.isProvidedBy(this) && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(this)) {
+		if(!level().isClientSide() && ArcanusComponents.PATTERN_COMPONENT.isProvidedBy(this) && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(this)) {
 			prevVelocity = getDeltaMovement();
 
 			AttributeInstance speedAttr = getAttribute(Attributes.MOVEMENT_SPEED);
 			List<Pattern> pattern = ArcanusComponents.getPattern((LivingEntity) (Object) this);
 			ItemStack stack = getMainHandItem();
 
-			if (speedAttr != null) {
-				if (stack.getItem() instanceof StaffItem && ArcanusComponents.isCasting((LivingEntity) (Object) this) && pattern.size() == 3) {
+			if(speedAttr != null) {
+				if(stack.getItem() instanceof StaffItem && ArcanusComponents.isCasting((LivingEntity) (Object) this) && pattern.size() == 3) {
 					int index = Arcanus.getSpellIndex(pattern);
 					CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 					ListTag list = tag.getList("Spells", Tag.TAG_COMPOUND);
 
-					if (!list.isEmpty() && index < list.size()) {
+					if(!list.isEmpty() && index < list.size()) {
 						Spell spell = Spell.fromNbt(list.getCompound(index));
 						AttributeModifier speedMod = new AttributeModifier(Arcanus.SPELL_SPEED_MODIFIER_ID, "Spell Speed Modifier", spell.getWeight().getSlowdown(), AttributeModifier.Operation.MULTIPLY_TOTAL);
 
-						if (!speedAttr.hasModifier(speedMod))
+						if(!speedAttr.hasModifier(speedMod))
 							speedAttr.addTransientModifier(speedMod);
 					}
-				} else if (speedAttr.getModifier(Arcanus.SPELL_SPEED_MODIFIER_ID) != null)
+				}
+				else if(speedAttr.getModifier(Arcanus.SPELL_SPEED_MODIFIER_ID) != null)
 					speedAttr.removeModifier(Arcanus.SPELL_SPEED_MODIFIER_ID);
 			}
 		}
@@ -222,12 +244,12 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	}
 
 	@WrapOperation(method = "handleRelativeFrictionAndCalculateMovement", at = @At(value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
-		ordinal = 1
+																				   target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
+																				   ordinal = 1
 	))
 	private Vec3 arcanuscontinuum$floatAround(LivingEntity livingEntity, Operation<Vec3> original, Vec3 movementInput, float slipperiness) {
 		// FIXME smooth out vertical movement, currently a bit jolting
-		if(hasEffect(ArcanusStatusEffects.FLOAT.get())) {
+		if(hasEffect(ArcanusMobEffects.FLOAT.get())) {
 			return getDeltaMovement().add(0, jumping ? getSpeed() : isShiftKeyDown() ? -getSpeed() : 0, 0);
 		}
 
@@ -236,14 +258,14 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 
 	@Inject(method = "onEffectRemoved", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$cantRemoveCurse(MobEffectInstance effect, CallbackInfo info) {
-		if(effect.getEffect() == ArcanusStatusEffects.COPPER_CURSE.get()) {
+		if(effect.getEffect() == ArcanusMobEffects.COPPER_CURSE.get()) {
 			info.cancel();
 		}
 	}
 
 	@ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
 	public Vec3 arcanuscontinuum$invertInput(Vec3 movementInput) {
-		if(!(self instanceof Player) && hasEffect(ArcanusStatusEffects.DISCOMBOBULATE.get())) {
+		if(!(self instanceof Player) && hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get())) {
 			movementInput = movementInput.multiply(-1, 1, -1);
 		}
 

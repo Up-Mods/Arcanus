@@ -20,7 +20,6 @@ import java.util.Set;
 
 public class SizeComponent implements CommonTickingComponent {
 	private static final Set<ScaleType> SUPPORTED_SCALE_TYPES = Set.of(ScaleTypes.HEIGHT, ScaleTypes.WIDTH, ScaleTypes.REACH, ScaleTypes.MOTION);
-
 	private final Entity entity;
 	private int timer = 0;
 	private int scaleTicks = 0;
@@ -34,26 +33,27 @@ public class SizeComponent implements CommonTickingComponent {
 
 	@Override
 	public void tick() {
-		if (ArcanusConfig.sizeChangingIsPermanent) {
+		if(ArcanusConfig.sizeChangingIsPermanent)
 			return;
-		}
 
-		if (entity instanceof Player || (entity instanceof TamableAnimal tameable && tameable.getOwnerUUID() != null)) {
-			if (ScaleTypes.HEIGHT.getScaleData(entity).getBaseValueModifiers().contains(ArcanusScaleModifier.INSTANCE)) {
-				if (timer <= 0) {
+		if(entity instanceof Player || (entity instanceof TamableAnimal tameable && tameable.getOwnerUUID() != null)) {
+			if(ScaleTypes.HEIGHT.getScaleData(entity).getBaseValueModifiers().contains(ArcanusScaleModifier.INSTANCE)) {
+				if(timer <= 0) {
 					float normalHeight = unmodifiedHeight / ScaleTypes.HEIGHT.getScaleData(entity).getScale();
 
-					if (entity.getBbHeight() > normalHeight || entity.level().noCollision(entity, new AABB(entity.getBoundingBox().minX, entity.getBoundingBox().minY, entity.getBoundingBox().minZ, entity.getBoundingBox().maxX, entity.getBoundingBox().maxY * normalHeight, entity.getBoundingBox().maxZ))) {
-						if (scaleTicks <= 0)
+					if(entity.getBbHeight() > normalHeight || entity.level().noCollision(entity, new AABB(entity.getBoundingBox().minX, entity.getBoundingBox().minY, entity.getBoundingBox().minZ, entity.getBoundingBox().maxX, entity.getBoundingBox().maxY * normalHeight, entity.getBoundingBox().maxZ))) {
+						if(scaleTicks <= 0) {
 							resetScale();
+						}
 						else {
 							scaleTicks--;
 							SUPPORTED_SCALE_TYPES.forEach(scaleType ->
 								scaleType.getScaleData(entity).onUpdate());
 						}
 					}
-				} else {
-					if (scaleTicks < 10) {
+				}
+				else {
+					if(scaleTicks < 10) {
 						scaleTicks++;
 						SUPPORTED_SCALE_TYPES.forEach(scaleType ->
 							scaleType.getScaleData(entity).onUpdate());
@@ -61,7 +61,8 @@ public class SizeComponent implements CommonTickingComponent {
 
 					timer--;
 				}
-			} else {
+			}
+			else {
 				scaleTicks = 0;
 			}
 		}
@@ -84,12 +85,12 @@ public class SizeComponent implements CommonTickingComponent {
 		scaleMultiplier = ArcanusSpellComponents.SHRINK.is(effect) ? ArcanusConfig.UtilityEffects.ShrinkEffectProperties.baseShrinkAmount : ArcanusConfig.UtilityEffects.EnlargeEffectProperties.baseEnlargeAmount;
 		SUPPORTED_SCALE_TYPES.forEach(scaleType -> {
 			ScaleData data = scaleType.getScaleData(entity);
-			if (!data.getBaseValueModifiers().contains(ArcanusScaleModifier.INSTANCE)) {
+			if(!data.getBaseValueModifiers().contains(ArcanusScaleModifier.INSTANCE)) {
 				data.getBaseValueModifiers().add(ArcanusScaleModifier.INSTANCE);
 				data.onUpdate();
 			}
 		});
-		if (Math.abs(previousScaleMultiplier - scaleMultiplier) > 0.001)
+		if(Math.abs(previousScaleMultiplier - scaleMultiplier) > 0.001)
 			scaleTicks = 0;
 		timer = (int) Math.round((ArcanusSpellComponents.SHRINK.is(effect) ? ArcanusConfig.UtilityEffects.ShrinkEffectProperties.baseEffectDuration : ArcanusConfig.UtilityEffects.EnlargeEffectProperties.baseEffectDuration) * strength);
 	}
@@ -112,10 +113,10 @@ public class SizeComponent implements CommonTickingComponent {
 			Entity entity = data.getEntity();
 
 			SizeComponent component = entity.getComponent(ArcanusComponents.SIZE);
-			if (type == ScaleTypes.HEIGHT)
+			if(type == ScaleTypes.HEIGHT)
 				component.unmodifiedHeight = modifiedScale;
 
-			if (component.scaleTicks >= 10)
+			if(component.scaleTicks >= 10)
 				return modifiedScale * component.scaleMultiplier;
 
 			float progress = (float) component.scaleTicks + delta;

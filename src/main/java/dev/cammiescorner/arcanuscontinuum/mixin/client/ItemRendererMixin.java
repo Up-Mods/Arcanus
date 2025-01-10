@@ -18,7 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
-	@Shadow @Final private ItemModelShaper itemModelShaper;
+	@Shadow
+	@Final
+	private ItemModelShaper itemModelShaper;
 
 	@Inject(method = "getModel", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$getHeldItemModel(ItemStack stack, Level world, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {

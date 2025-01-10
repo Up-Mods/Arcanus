@@ -51,11 +51,11 @@ public class SpellBookItem extends Item {
 		// TODO make ALL of it translatable
 		tooltip.add(Component.literal(spell.getName()).withStyle(ChatFormatting.GOLD));
 		tooltip.add(Component.translatable("spell_book.arcanuscontinuum.weight").append(": ").withStyle(ChatFormatting.GREEN)
-				.append(Component.translatable("spell_book.arcanuscontinuum.weight", spell.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
+			.append(Component.translatable("spell_book.arcanuscontinuum.weight", spell.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
 		tooltip.add(Component.translatable("spell_book.arcanuscontinuum.mana_cost").append(": ").withStyle(ChatFormatting.BLUE)
-				.append(Component.literal(manaCost).withStyle(ChatFormatting.GRAY)));
+			.append(Component.literal(manaCost).withStyle(ChatFormatting.GRAY)));
 		tooltip.add(Component.translatable("spell_book.arcanuscontinuum.cool_down").append(": ").withStyle(ChatFormatting.RED)
-				.append(Component.literal(coolDown).append(Component.translatable("spell_book.arcanuscontinuum.seconds")).withStyle(ChatFormatting.GRAY)));
+			.append(Component.literal(coolDown).append(Component.translatable("spell_book.arcanuscontinuum.seconds")).withStyle(ChatFormatting.GRAY)));
 
 		super.appendHoverText(stack, world, tooltip, context);
 	}

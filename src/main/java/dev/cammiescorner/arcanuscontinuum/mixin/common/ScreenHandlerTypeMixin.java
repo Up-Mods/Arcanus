@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ScreenHandlerTypeMixin {
 	@Inject(method = "register(Ljava/lang/String;Lnet/minecraft/world/inventory/MenuType$MenuSupplier;)Lnet/minecraft/world/inventory/MenuType;", at = @At("HEAD"), cancellable = true)
 	private static void arcanuscontinuum$register(String id, MenuType.MenuSupplier<AbstractContainerMenu> factory, CallbackInfoReturnable<MenuType<AbstractContainerMenu>> info) {
-		if ("lectern".equals(id)) {
+		if("lectern".equals(id)) {
 			info.setReturnValue(Registry.register(BuiltInRegistries.MENU, id, new ExtendedScreenHandlerType<>((syncId, inventory, buf) -> new LecternMenu(syncId))));
 		}
 	}

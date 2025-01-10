@@ -7,7 +7,10 @@ import java.util.UUID;
 
 public interface Summon extends NeutralMob {
 	LivingEntity getCaster();
+
 	UUID getOwnerId();
+
 	void setOwner(LivingEntity entity);
+
 	boolean wantsToAttack(LivingEntity target, LivingEntity caster);
 }

@@ -146,11 +146,11 @@ public class ArcanusClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(SyncExplosionParticlesPacket.ID, SyncExplosionParticlesPacket::handle);
 		ArcanusCompat.PEHKUI.ifEnabled(() -> () -> ClientPlayNetworking.registerGlobalReceiver(SyncScalePacket.ID, SyncScalePacket::handle));
 
-		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> switch (tintIndex) {
-			case 0 -> StaffItem.getPrimaryColorRGB(stack);
-			case 1 -> StaffItem.getSecondaryColorRGB(stack);
-			default -> -1;
-		},
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> switch(tintIndex) {
+				case 0 -> StaffItem.getPrimaryColorRGB(stack);
+				case 1 -> StaffItem.getSecondaryColorRGB(stack);
+				default -> -1;
+			},
 			ArcanusItems.WOODEN_STAFF.get(),
 			ArcanusItems.CRYSTAL_STAFF.get(),
 			ArcanusItems.DIVINATION_STAFF.get(),
@@ -179,7 +179,7 @@ public class ArcanusClient implements ClientModInitializer {
 		ItemProperties.register(ArcanusItems.BATTLE_MAGE_BOOTS.get(), Arcanus.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
 
 		ArcanusItems.ITEMS.stream().forEach(holder -> {
-			if (holder.get() instanceof StaffItem item) {
+			if(holder.get() instanceof StaffItem item) {
 				ResourceLocation id = holder.getId();
 				StaffItemRenderer staffItemRenderer = new StaffItemRenderer(id);
 				ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(staffItemRenderer);
@@ -189,7 +189,7 @@ public class ArcanusClient implements ClientModInitializer {
 		});
 
 		WorldRenderEvents.AFTER_ENTITIES.register(context -> {
-			if (!context.camera().isDetached() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean())
+			if(!context.camera().isDetached() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean())
 				renderFirstPersonBolt(context);
 		});
 
@@ -201,13 +201,13 @@ public class ArcanusClient implements ClientModInitializer {
 			MultiBufferSource vertices = context.consumers();
 			Vec3 cameraPos = context.camera().getPosition();
 
-			if (player != null && vertices != null && interactionManager != null) {
-				if (client.hitResult instanceof BlockHitResult hitResult && ArcanusComponents.isBlockWarded(world, hitResult.getBlockPos()) && player.swinging) {
-					if (client.options.keyAttack.isDown() && player.attackAnim == 0) {
+			if(player != null && vertices != null && interactionManager != null) {
+				if(client.hitResult instanceof BlockHitResult hitResult && ArcanusComponents.isBlockWarded(world, hitResult.getBlockPos()) && player.swinging) {
+					if(client.options.keyAttack.isDown() && player.attackAnim == 0) {
 						hitTimer = 20;
 					}
 
-					if (!ArcanusComponents.isOwnerOfBlock(player, hitResult.getBlockPos()) || hitTimer > 0) {
+					if(!ArcanusComponents.isOwnerOfBlock(player, hitResult.getBlockPos()) || hitTimer > 0) {
 						BlockPos blockPos = hitResult.getBlockPos();
 						float alpha = Mth.clamp(hitTimer / 20f, 0.0F, 1.0F);
 
@@ -215,21 +215,21 @@ public class ArcanusClient implements ClientModInitializer {
 						player.displayClientMessage(Component.translatable("text.arcanuscontinuum.block_is_warded").withStyle(ChatFormatting.RED), true);
 					}
 
-					if (hitTimer > 0) {
+					if(hitTimer > 0) {
 						hitTimer -= 1;
 					}
 				}
 
-				if (player.getMainHandItem().is(ArcanusItemTags.STAVES) || player.getOffhandItem().is(ArcanusItemTags.STAVES)) {
+				if(player.getMainHandItem().is(ArcanusItemTags.STAVES) || player.getOffhandItem().is(ArcanusItemTags.STAVES)) {
 					AtomicReferenceArray<LevelChunk> chunks = context.world().getChunkSource().storage.chunks;
 					float alpha = Mth.sin(world.getGameTime() * 0.06f) * 0.4f + 0.6f;
 
-					for (int i = 0; i < chunks.length(); i++) {
+					for(int i = 0; i < chunks.length(); i++) {
 						ChunkAccess chunk = chunks.get(i);
 
-						if (chunk != null) {
+						if(chunk != null) {
 							ArcanusComponents.getWardedBlocks(chunk).forEach((blockPos, uuid) -> {
-								if (blockPos.distSqr(context.camera().getBlockPosition()) < 256)
+								if(blockPos.distSqr(context.camera().getBlockPosition()) < 256)
 									renderWardedBlock(matrices, vertices, world, cameraPos, blockPos, alpha);
 							});
 						}
@@ -244,20 +244,20 @@ public class ArcanusClient implements ClientModInitializer {
 			PoseStack matrices = gui.pose();
 			Player player = client.player;
 
-			if (player != null && !player.isSpectator()) {
+			if(player != null && !player.isSpectator()) {
 				int stunTimer = ArcanusComponents.getStunTimer(player);
 
-				if (stunTimer > 0) {
-					if (stunTimer > 5)
+				if(stunTimer > 0) {
+					if(stunTimer > 5)
 						renderOverlay(STUN_OVERLAY, Math.min(1F, 0.5F + (stunTimer % 5F) / 10F));
 					else
 						renderOverlay(STUN_OVERLAY, Math.min(1F, stunTimer / 5F));
 				}
 
-				if (!client.gameRenderer.getMainCamera().isDetached() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean()) {
+				if(!client.gameRenderer.getMainCamera().isDetached() && !FIRST_PERSON_MODEL_ENABLED.getAsBoolean()) {
 					List<Pattern> list = ArcanusComponents.getPattern(player);
 
-					if (!list.isEmpty()) {
+					if(!list.isEmpty()) {
 						MultiBufferSource.BufferSource vertices = client.renderBuffers().bufferSource();
 						RenderType renderLayer = getMagicCircles(MAGIC_CIRCLES);
 						VertexConsumer vertex = vertices.getBuffer(renderLayer);
@@ -269,11 +269,11 @@ public class ArcanusClient implements ClientModInitializer {
 						matrices.pushPose();
 						matrices.translate(x, y, 0);
 
-						for (int i = 0; i < list.size(); i++) {
+						for(int i = 0; i < list.size(); i++) {
 							Pattern pattern = list.get(i);
 							matrices.pushPose();
 
-							if (i == 1)
+							if(i == 1)
 								matrices.mulPose(Axis.ZP.rotationDegrees((player.tickCount + player.getId() + tickDelta) * (5 + (2.5F * i))));
 							else
 								matrices.mulPose(Axis.ZN.rotationDegrees((player.tickCount + player.getId() + tickDelta) * (5 + (2.5F * i))));
@@ -294,12 +294,12 @@ public class ArcanusClient implements ClientModInitializer {
 				double burnout = ArcanusComponents.getBurnout(player);
 				double manaLock = ArcanusComponents.getManaLock(player);
 
-				if (player.getMainHandItem().getItem() instanceof StaffItem)
+				if(player.getMainHandItem().getItem() instanceof StaffItem)
 					hudTimer = Math.min(hudTimer + 1, 40);
 				else
 					hudTimer = Math.max(hudTimer - 1, 0);
 
-				if (hudTimer > 0) {
+				if(hudTimer > 0) {
 					int x = 0;
 					int y = client.getWindow().getGuiScaledHeight() - 28;
 					int width = 96;
@@ -360,7 +360,7 @@ public class ArcanusClient implements ClientModInitializer {
 	}
 
 	public static void renderBolts(LivingEntity entity, Vec3 startPos, PoseStack matrices, MultiBufferSource vertices) {
-		if (ArcanusComponents.shouldRenderBolt(entity)) {
+		if(ArcanusComponents.shouldRenderBolt(entity)) {
 			VertexConsumer vertex = vertices.getBuffer(getMagicCircles(WHITE));
 			RandomSource random = RandomSource.create((entity.tickCount + entity.getId()) / 2);
 			Vec3 endPos = ArcanusComponents.getBoltPos(entity);
@@ -379,33 +379,33 @@ public class ArcanusClient implements ClientModInitializer {
 		Matrix4f modelMatrix = matrices.last().pose();
 		Matrix3f normalMatrix = matrices.last().normal();
 
-		for (int i = currentStep; i < steps; i++) {
+		for(int i = currentStep; i < steps; i++) {
 			Vec3 randomOffset = new Vec3(random.nextGaussian(), random.nextIntBetweenInclusive(-1 / (steps * 2), 1 / (steps * 2)), random.nextGaussian());
 			Vec3 nextPos = startPos.add(direction.scale((i + 1) / (float) steps)).add(randomOffset.scale(1 / 12F));
 
-			for (int j = 0; j < 4; j++) {
-				Vec3 vert1 = switch (j) {
+			for(int j = 0; j < 4; j++) {
+				Vec3 vert1 = switch(j) {
 					case 0 -> lastPos.add(0.025, 0.025, 0);
 					case 1 -> lastPos.add(-0.025, 0.025, 0);
 					case 2 -> lastPos.add(-0.025, -0.025, 0);
 					case 3 -> lastPos.add(0.025, -0.025, 0);
 					default -> lastPos;
 				};
-				Vec3 vert2 = switch (j) {
+				Vec3 vert2 = switch(j) {
 					case 0 -> lastPos.add(-0.025, 0.025, 0);
 					case 1 -> lastPos.add(-0.025, -0.025, 0);
 					case 2 -> lastPos.add(0.025, -0.025, 0);
 					case 3 -> lastPos.add(0.025, 0.025, 0);
 					default -> lastPos;
 				};
-				Vec3 vert3 = switch (j) {
+				Vec3 vert3 = switch(j) {
 					case 0 -> nextPos.add(0.025, 0.025, 0);
 					case 1 -> nextPos.add(-0.025, 0.025, 0);
 					case 2 -> nextPos.add(-0.025, -0.025, 0);
 					case 3 -> nextPos.add(0.025, -0.025, 0);
 					default -> nextPos;
 				};
-				Vec3 vert4 = switch (j) {
+				Vec3 vert4 = switch(j) {
 					case 0 -> nextPos.add(-0.025, 0.025, 0);
 					case 1 -> nextPos.add(-0.025, -0.025, 0);
 					case 2 -> nextPos.add(0.025, -0.025, 0);
@@ -420,7 +420,7 @@ public class ArcanusClient implements ClientModInitializer {
 				vertex.vertex(modelMatrix, (float) vert1.x(), (float) vert1.y(), (float) vert1.z()).color(r, g, b, 0.6F).uv(0, 0).overlayCoords(overlay).uv2(light).normal(normalMatrix, (float) normal.x(), (float) normal.y(), (float) normal.z()).endVertex();
 			}
 
-			while (recurse && random.nextFloat() < 0.2F) {
+			while(recurse && random.nextFloat() < 0.2F) {
 				Vec3 randomOffset1 = new Vec3(random.nextGaussian(), random.nextGaussian(), random.nextGaussian());
 				renderBolt(matrices, vertex, random, lastPos, endPos.add(randomOffset1.scale(Math.min(random.nextFloat(), 0.6F))), steps, i + 1, false, r, g, b, overlay, light);
 			}
@@ -449,14 +449,14 @@ public class ArcanusClient implements ClientModInitializer {
 
 		color = Color.fromFloatsRGB(r, g, b);
 
-		for (Direction direction : Direction.values()) {
+		for(Direction direction : Direction.values()) {
 			BlockPos posToSide = blockPos.relative(direction);
 			BlockState stateToSide = world.getBlockState(posToSide);
 
-			if (stateToSide.isFaceSturdy(world, posToSide, direction.getOpposite(), SupportType.FULL) || ArcanusComponents.isBlockWarded(world, posToSide))
+			if(stateToSide.isFaceSturdy(world, posToSide, direction.getOpposite(), SupportType.FULL) || ArcanusComponents.isBlockWarded(world, posToSide))
 				continue;
 
-			switch (direction) {
+			switch(direction) {
 				case SOUTH ->
 					renderSide(matrix4f, consumer, 0F, 1F, 0F, 1F, 1F, 1F, 1F, 1F, color, light, overlay, matrix3f, Direction.SOUTH);
 				case NORTH ->
@@ -477,7 +477,7 @@ public class ArcanusClient implements ClientModInitializer {
 
 	private static void renderFirstPersonBolt(WorldRenderContext context) {
 		LocalPlayer player = context.gameRenderer().getMinecraft().player;
-		if (player != null) {
+		if(player != null) {
 			PoseStack matrices = context.matrixStack();
 			Vec3 camPos = context.camera().getPosition();
 			float tickDelta = context.tickDelta();

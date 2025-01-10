@@ -24,12 +24,12 @@ public class BattleMageArmorItem extends WizardArmorItem {
 	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
 		super.inventoryTick(stack, world, entity, slot, selected);
 
-		if (world instanceof ServerLevel serverWorld && entity instanceof LivingEntity living && living.getItemBySlot(getEquipmentSlot()).equals(stack) && !isWaxed(stack)) {
+		if(world instanceof ServerLevel serverWorld && entity instanceof LivingEntity living && living.getItemBySlot(getEquipmentSlot()).equals(stack) && !isWaxed(stack)) {
 			int randomTickSpeed = serverWorld.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
 			int oxidation = getOxidation(stack).ordinal();
 			CompoundTag nbt = stack.getOrCreateTagElement(ItemStack.TAG_DISPLAY);
 
-			if (serverWorld.random.nextFloat() < 0.00001 * randomTickSpeed && oxidation < WeatheringCopper.WeatherState.values().length - 1)
+			if(serverWorld.random.nextFloat() < 0.00001 * randomTickSpeed && oxidation < WeatheringCopper.WeatherState.values().length - 1)
 				nbt.putInt("oxidation", oxidation + 1);
 		}
 	}
@@ -38,7 +38,7 @@ public class BattleMageArmorItem extends WizardArmorItem {
 	public String getDescriptionId(ItemStack stack) {
 		String s = "_";
 
-		if (isWaxed(stack))
+		if(isWaxed(stack))
 			s = "_waxed_";
 
 		return super.getDescriptionId(stack) + s + getOxidation(stack).name().toLowerCase(Locale.ROOT);
@@ -70,10 +70,10 @@ public class BattleMageArmorItem extends WizardArmorItem {
 
 	public static ItemStack getStack(Supplier<? extends ItemLike> itemProvider, WeatheringCopper.WeatherState oxidizationLevel, boolean waxed) {
 		var stack = new ItemStack(itemProvider.get());
-		if (waxed) {
+		if(waxed) {
 			setWaxed(stack, true);
 		}
-		if (oxidizationLevel != WeatheringCopper.WeatherState.UNAFFECTED) {
+		if(oxidizationLevel != WeatheringCopper.WeatherState.UNAFFECTED) {
 			setOxidation(stack, oxidizationLevel);
 		}
 		return stack;

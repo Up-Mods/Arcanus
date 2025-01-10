@@ -13,7 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Mob.class)
 public abstract class MobEntityMixin extends LivingEntity {
-	protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) { super(entityType, world); }
+	protected MobEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
+		super(entityType, world);
+	}
 
 	@Inject(method = "doHurtTarget", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$tryAttack(Entity target, CallbackInfoReturnable<Boolean> info) {

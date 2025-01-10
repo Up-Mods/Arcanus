@@ -57,7 +57,7 @@ public abstract class DynamicRegistryEntryProvider {
 
 			public void build(RegistrySetBuilder registrySetBuilder) {
 				fabricBuilderHack = registrySetBuilder;
-				for (var provider : providers) {
+				for(var provider : providers) {
 					provider.get().generate(registrySetBuilder);
 				}
 			}

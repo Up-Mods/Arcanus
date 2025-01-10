@@ -119,17 +119,17 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add(ArcanusEntities.SMITE.get(), "Smite");
 		builder.add(ArcanusEntities.WIZARD.get(), "Wizard");
 
-		builder.add(ArcanusStatusEffects.ANONYMITY.get(), "Anonymity");
-		builder.add(ArcanusStatusEffects.BOUNCY.get(), "Bouncy");
-		builder.add(ArcanusStatusEffects.COPPER_CURSE.get(), "Copper Curse");
-		builder.add(ArcanusStatusEffects.DANGER_SENSE.get(), "Danger Sense");
-		builder.add(ArcanusStatusEffects.DISCOMBOBULATE.get(), "Discombobulate");
-		builder.add(ArcanusStatusEffects.FLOAT.get(), "Float");
-		builder.add(ArcanusStatusEffects.FORTIFY.get(), "Fortify");
-		builder.add(ArcanusStatusEffects.MANA_LOCK.get(), "Mana Lock");
-		builder.add(ArcanusStatusEffects.MANA_WINGS.get(), "Mana Wings");
-		builder.add(ArcanusStatusEffects.STOCKPILE.get(), "Stockpile");
-		builder.add(ArcanusStatusEffects.VULNERABILITY.get(), "Vulnerability");
+		builder.add(ArcanusMobEffects.ANONYMITY.get(), "Anonymity");
+		builder.add(ArcanusMobEffects.BOUNCY.get(), "Bouncy");
+		builder.add(ArcanusMobEffects.COPPER_CURSE.get(), "Copper Curse");
+		builder.add(ArcanusMobEffects.DANGER_SENSE.get(), "Danger Sense");
+		builder.add(ArcanusMobEffects.DISCOMBOBULATE.get(), "Discombobulate");
+		builder.add(ArcanusMobEffects.FLOAT.get(), "Float");
+		builder.add(ArcanusMobEffects.FORTIFY.get(), "Fortify");
+		builder.add(ArcanusMobEffects.MANA_LOCK.get(), "Mana Lock");
+		builder.add(ArcanusMobEffects.MANA_WINGS.get(), "Mana Wings");
+		builder.add(ArcanusMobEffects.STOCKPILE.get(), "Stockpile");
+		builder.add(ArcanusMobEffects.VULNERABILITY.get(), "Vulnerability");
 
 		tag(builder, ArcanusBiomeTags.C_HAS_VILLAGE, "Has Village");
 		tag(builder, ArcanusBiomeTags.HAS_WIZARD_TOWER, "Has Wizard Tower");
@@ -411,7 +411,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 			var damageTypes = registries.lookupOrThrow(Registries.DAMAGE_TYPE);
 			var type = damageTypes.getOrThrow(typeKey).value();
 
-			if (type.deathMessageType() != DeathMessageType.DEFAULT) {
+			if(type.deathMessageType() != DeathMessageType.DEFAULT) {
 				throw new IllegalArgumentException("Death message type not currently supported: " + type.deathMessageType());
 			}
 

@@ -43,7 +43,7 @@ public class SpatialRiftExitBlock extends Block implements EntityBlock {
 	@Nullable
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		if (state.getValue(ACTIVE))
+		if(state.getValue(ACTIVE))
 			return new SpatialRiftExitBlockEntity(pos, state);
 
 		return null;

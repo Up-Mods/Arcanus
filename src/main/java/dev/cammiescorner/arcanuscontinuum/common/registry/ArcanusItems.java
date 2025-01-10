@@ -53,7 +53,7 @@ public class ArcanusItems {
 		entries.accept(SPELL_BOOK.get());
 		entries.accept(SCROLL_OF_KNOWLEDGE.get());
 
-		if (SparkweaveApi.CLIENTSIDE_ENVIRONMENT) {
+		if(SparkweaveApi.CLIENTSIDE_ENVIRONMENT) {
 			var currentPlayerId = GameProfileHelper.getClientProfile().getId();
 			entries.accept(StaffItem.setCraftedBy(new ItemStack(WOODEN_STAFF.get()), currentPlayerId));
 			entries.accept(StaffItem.setCraftedBy(new ItemStack(CRYSTAL_STAFF.get()), currentPlayerId));
@@ -61,14 +61,15 @@ public class ArcanusItems {
 			entries.accept(StaffItem.setCraftedBy(new ItemStack(CRESCENT_STAFF.get()), currentPlayerId));
 			entries.accept(StaffItem.setCraftedBy(new ItemStack(ANCIENT_STAFF.get()), currentPlayerId));
 
-			if (WizardData.isSupporter(currentPlayerId)) {
+			if(WizardData.isSupporter(currentPlayerId)) {
 				entries.accept(StaffItem.setCraftedBy(new ItemStack(WAND.get()), currentPlayerId));
 				entries.accept(StaffItem.setCraftedBy(new ItemStack(THAUMATURGES_GAUNTLET.get()), currentPlayerId));
 				entries.accept(StaffItem.setCraftedBy(new ItemStack(MIND_STAFF.get()), currentPlayerId));
 				entries.accept(StaffItem.setCraftedBy(new ItemStack(MAGIC_TOME.get()), currentPlayerId));
 				entries.accept(StaffItem.setCraftedBy(new ItemStack(MAGE_PISTOL.get()), currentPlayerId));
 			}
-		} else {
+		}
+		else {
 			var dummyId = UUID.fromString("6147825f-5493-4154-87c5-5c03c6b0a7c2");
 			entries.accept(StaffItem.setCraftedBy(new ItemStack(WOODEN_STAFF.get()), dummyId));
 			entries.accept(StaffItem.setCraftedBy(new ItemStack(CRYSTAL_STAFF.get()), dummyId));

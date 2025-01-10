@@ -33,9 +33,9 @@ public class SpellBindingRecipe extends CustomRecipe {
 	public NonNullList<ItemStack> getRemainingItems(CraftingContainer inventory) {
 		NonNullList<ItemStack> list = NonNullList.withSize(inventory.getContainerSize(), ItemStack.EMPTY);
 
-		for (int i = 0; i < list.size(); ++i) {
+		for(int i = 0; i < list.size(); ++i) {
 			ItemStack stack = inventory.getItem(i);
-			if (stack.is(ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS)) {
+			if(stack.is(ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS)) {
 				list.set(i, stack.copy());
 			}
 		}
@@ -48,12 +48,12 @@ public class SpellBindingRecipe extends CustomRecipe {
 		List<ItemStack> spellBooks = Lists.newArrayList();
 		ItemStack result = ItemStack.EMPTY;
 
-		for (int i = 0; i < inv.getContainerSize(); ++i) {
+		for(int i = 0; i < inv.getContainerSize(); ++i) {
 			ItemStack stack = inv.getItem(i);
 
-			if (!stack.isEmpty()) {
+			if(!stack.isEmpty()) {
 				if(stack.is(ArcanusItemTags.STAVES)) {
-					if (i != 4) {
+					if(i != 4) {
 						return false;
 					}
 
@@ -76,7 +76,7 @@ public class SpellBindingRecipe extends CustomRecipe {
 	public ItemStack assemble(CraftingContainer inv, RegistryAccess manager) {
 		ItemStack result = inv.getItem(4).copy();
 
-		if (!result.is(ArcanusItemTags.STAVES)) {
+		if(!result.is(ArcanusItemTags.STAVES)) {
 			return ItemStack.EMPTY;
 		}
 
@@ -86,23 +86,24 @@ public class SpellBindingRecipe extends CustomRecipe {
 		var spells = new Spell[8];
 		Arrays.fill(spells, new Spell());
 
-		for (int i = 0; i < list.size(); i++) {
+		for(int i = 0; i < list.size(); i++) {
 			try {
 				spells[i] = Spell.fromNbt(list.getCompound(i));
-			} catch (Exception e) {
+			}
+			catch(Exception e) {
 				Arcanus.LOGGER.error("Failed to load spell from NBT", e);
 			}
 		}
 
 		int count = 0;
 
-		for (int i = 0; i < inv.getContainerSize(); i++) {
-			if (i == 4) {
+		for(int i = 0; i < inv.getContainerSize(); i++) {
+			if(i == 4) {
 				continue;
 			}
 
 			ItemStack stack = inv.getItem(i);
-			if (stack.is(ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS)) {
+			if(stack.is(ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS)) {
 				spells[INDICES[i]] = SpellBookItem.getSpell(stack);
 				count++;
 			}
@@ -113,7 +114,7 @@ public class SpellBindingRecipe extends CustomRecipe {
 		}
 
 		list.clear();
-		for (Spell spell : spells) {
+		for(Spell spell : spells) {
 			list.add(spell.toNbt());
 		}
 		tag.put("Spells", list);

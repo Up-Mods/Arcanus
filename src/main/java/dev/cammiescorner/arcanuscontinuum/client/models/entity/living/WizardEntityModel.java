@@ -37,23 +37,23 @@ public class WizardEntityModel extends EntityModel<WizardEntity> implements Arme
 		PartDefinition root = modelData.getRoot();
 
 		PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -6.0F, -8.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
-				.texOffs(32, 0).addBox(-4.0F, 4.0F, -8.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
-				.texOffs(64, 0).addBox(-2.0F, 1.0F, -12.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(92, 30).addBox(-4.5F, -7.0F, -8.5F, 9.0F, 6.0F, 9.0F, new CubeDeformation(0.05F)), PartPose.offset(0.0F, 2.0F, -3.0F));
+			.texOffs(32, 0).addBox(-4.0F, 4.0F, -8.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
+			.texOffs(64, 0).addBox(-2.0F, 1.0F, -12.0F, 4.0F, 6.0F, 4.0F, new CubeDeformation(0.0F))
+			.texOffs(92, 30).addBox(-4.5F, -7.0F, -8.5F, 9.0F, 6.0F, 9.0F, new CubeDeformation(0.05F)), PartPose.offset(0.0F, 2.0F, -3.0F));
 
 		PartDefinition hatTip = head.addOrReplaceChild("hatTip", CubeListBuilder.create().texOffs(100, 2).addBox(-2.5F, -13.2F, -4.7F, 5.0F, 4.0F, 9.0F, new CubeDeformation(0.05F)), PartPose.offsetAndRotation(0.0F, 4.0F, -4.0F, -0.6545F, 0.0F, 0.0F));
 		PartDefinition hatStalk = head.addOrReplaceChild("hatStalk", CubeListBuilder.create().texOffs(96, 15).addBox(-3.5F, -11.8F, -1.5F, 7.0F, 6.0F, 9.0F, new CubeDeformation(0.05F)), PartPose.offsetAndRotation(0.0F, 4.0F, -4.0F, 0.2618F, 0.0F, 0.0F));
 		PartDefinition hatRim = head.addOrReplaceChild("hatRim", CubeListBuilder.create().texOffs(60, 45).addBox(-9.0F, -6.0F, -8.5F, 17.0F, 2.0F, 17.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 4.0F, -4.0F, 0.0F, 0.0F, 0.1309F));
 
 		PartDefinition body = root.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 20).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 38).addBox(-4.5F, 0.0F, -3.0F, 9.0F, 20.0F, 6.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 2.0F, 0.0F));
+			.texOffs(0, 38).addBox(-4.5F, 0.0F, -3.0F, 9.0F, 20.0F, 6.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 2.0F, 0.0F));
 
 		PartDefinition leftArm = root.addOrReplaceChild("leftArm", CubeListBuilder.create().texOffs(28, 22).mirror().addBox(-1.0F, -1.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.01F)).mirror(false)
-				.texOffs(30, 38).mirror().addBox(-1.5F, -1.5F, -2.5F, 5.0F, 12.0F, 5.0F, new CubeDeformation(0.01F)).mirror(false), PartPose.offset(5.0F, 4.0F, -1.0F));
+			.texOffs(30, 38).mirror().addBox(-1.5F, -1.5F, -2.5F, 5.0F, 12.0F, 5.0F, new CubeDeformation(0.01F)).mirror(false), PartPose.offset(5.0F, 4.0F, -1.0F));
 		PartDefinition leftCuff = leftArm.addOrReplaceChild("leftCuff", CubeListBuilder.create().texOffs(30, 55).mirror().addBox(-2.5F, -4.6F, -0.4F, 5.0F, 5.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(1.0F, 10.0F, 2.5F, 0.7418F, 0.0F, 0.0F));
 
 		PartDefinition rightArm = root.addOrReplaceChild("rightArm", CubeListBuilder.create().texOffs(28, 22).addBox(-3.0F, -1.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.01F))
-				.texOffs(30, 38).addBox(-3.5F, -1.5F, -2.5F, 5.0F, 12.0F, 5.0F, new CubeDeformation(0.01F)), PartPose.offset(-5.0F, 4.0F, -1.0F));
+			.texOffs(30, 38).addBox(-3.5F, -1.5F, -2.5F, 5.0F, 12.0F, 5.0F, new CubeDeformation(0.01F)), PartPose.offset(-5.0F, 4.0F, -1.0F));
 		PartDefinition rightCuff = rightArm.addOrReplaceChild("rightCuff", CubeListBuilder.create().texOffs(30, 55).addBox(-2.5F, -4.6F, -0.4F, 5.0F, 5.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, 10.0F, 2.5F, 0.7418F, 0.0F, 0.0F));
 
 		PartDefinition leftLeg = root.addOrReplaceChild("leftLeg", CubeListBuilder.create().texOffs(44, 22).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 12.0F, 0.0F));

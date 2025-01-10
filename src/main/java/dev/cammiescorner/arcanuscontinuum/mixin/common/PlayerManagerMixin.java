@@ -34,7 +34,7 @@ public class PlayerManagerMixin {
 
 	@ModifyReceiver(method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V", at = @At(value = "INVOKE", target = "Ljava/util/List;iterator()Ljava/util/Iterator;"))
 	private List<ServerPlayer> arcanuscontinuum$restrictMagicDoorChatMessage(List<ServerPlayer> original, PlayerChatMessage chatMessage, Predicate<ServerPlayer> predicate, @Nullable ServerPlayer player, ChatType.Bound parameters) {
-		if (player != null && this.registries.compositeAccess().registryOrThrow(Registries.CHAT_TYPE).getResourceKey(parameters.chatType()).map(key -> key.equals(ChatType.CHAT)).orElse(false)) {
+		if(player != null && this.registries.compositeAccess().registryOrThrow(Registries.CHAT_TYPE).getResourceKey(parameters.chatType()).map(key -> key.equals(ChatType.CHAT)).orElse(false)) {
 			ServerLevel world = player.serverLevel();
 			PoiManager poiStorage = world.getChunkSource().getPoiManager();
 
@@ -42,8 +42,8 @@ public class PlayerManagerMixin {
 
 			poiStorage.getInRange(poiTypeHolder -> poiTypeHolder.is(ArcanusPointsOfInterest.MAGIC_DOOR), player.blockPosition(), 8, PoiManager.Occupancy.ANY).map(PoiRecord::getPos).forEach(pos -> {
 				BlockState state = world.getBlockState(pos);
-				if (state.getBlock() instanceof MagicDoorBlock doorBlock && world.getBlockEntity(pos) instanceof MagicDoorBlockEntity door) {
-					if (chatMessage.signedContent().equalsIgnoreCase(door.getPassword())) {
+				if(state.getBlock() instanceof MagicDoorBlock doorBlock && world.getBlockEntity(pos) instanceof MagicDoorBlockEntity door) {
+					if(chatMessage.signedContent().equalsIgnoreCase(door.getPassword())) {
 						doorBlock.setOpen(null, world, state, pos, true);
 						player.displayClientMessage(Component.translatable("door.arcanuscontinuum.access_granted").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);
 						beep[0] = true;
@@ -51,7 +51,7 @@ public class PlayerManagerMixin {
 				}
 			});
 
-			if (beep[0]) {
+			if(beep[0]) {
 				return List.of();
 			}
 		}

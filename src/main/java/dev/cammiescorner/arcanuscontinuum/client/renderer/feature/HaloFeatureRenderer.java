@@ -7,7 +7,7 @@ import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.models.feature.HaloModel;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import dev.cammiescorner.arcanuscontinuum.common.util.StaffType;
 import dev.cammiescorner.arcanuscontinuum.common.util.supporters.HaloData;
@@ -34,7 +34,7 @@ public class HaloFeatureRenderer<T extends Player, M extends EntityModel<T>> ext
 
 	@Override
 	public void render(PoseStack matrices, MultiBufferSource vertices, int light, T player, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		if(!player.hasEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+		if(!player.hasEffect(ArcanusMobEffects.ANONYMITY.get())) {
 			HaloData data = player.datasync$getOrDefault(Arcanus.HALO_DATA, HaloData.empty());
 
 			if(data.shouldShow()) {
@@ -46,7 +46,7 @@ public class HaloFeatureRenderer<T extends Player, M extends EntityModel<T>> ext
 
 				matrices.pushPose();
 
-				if (ArcanusComponents.isCasting(player) && player.getMainHandItem().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF)
+				if(ArcanusComponents.isCasting(player) && player.getMainHandItem().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF)
 					matrices.mulPose(Axis.YP.rotationDegrees(player.getMainArm() == HumanoidArm.RIGHT ? 65 : -65));
 
 				model.renderToBuffer(matrices, vertices.getBuffer(ArcanusClient.getMagicCircles(TEXTURE)), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color.redF(), color.greenF(), color.blueF(), 1.0F);

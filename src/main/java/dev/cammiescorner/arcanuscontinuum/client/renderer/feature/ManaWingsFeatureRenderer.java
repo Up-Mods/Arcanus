@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ElytraModel;
@@ -28,7 +28,7 @@ public class ManaWingsFeatureRenderer<T extends LivingEntity, M extends EntityMo
 
 	@Override
 	public void render(PoseStack matrices, MultiBufferSource vertices, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
-		if(entity.hasEffect(ArcanusStatusEffects.MANA_WINGS.get())) {
+		if(entity.hasEffect(ArcanusMobEffects.MANA_WINGS.get())) {
 
 			var color = ArcanusHelper.getMagicColor(entity);
 

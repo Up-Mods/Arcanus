@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ServerLevel.class)
 public class ServerWorldMixin {
 	@WrapWithCondition(method = "tickNonPassenger", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/Entity;tick()V"
+															 target = "Lnet/minecraft/world/entity/Entity;tick()V"
 	))
 	private boolean arcanuscontinuum$blockEntityTick(Entity entity) {
 		return !ArcanusComponents.areUpdatesBlocked(entity);

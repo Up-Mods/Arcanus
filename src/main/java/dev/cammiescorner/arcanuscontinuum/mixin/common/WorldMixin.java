@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @SuppressWarnings("ConstantValue")
 @Mixin(Level.class)
 public abstract class WorldMixin {
-	@Shadow public abstract BlockState getBlockState(BlockPos pos);
+	@Shadow
+	public abstract BlockState getBlockState(BlockPos pos);
 
 	@Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$noReplacingWardedBlocks(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> info) {

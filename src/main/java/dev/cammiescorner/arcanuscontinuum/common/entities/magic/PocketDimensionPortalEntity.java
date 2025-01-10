@@ -42,7 +42,7 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 			return;
 		}
 
-		if (getTrueAge() <= ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan) {
+		if(getTrueAge() <= ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.baseLifeSpan) {
 			AABB box = new AABB(0, 0, 0, 0, 0, 0).inflate(4 + pullStrength).move(position());
 			double boxRadius = box.getXsize() / 2;
 			double boxRadiusSq = boxRadius * boxRadius;
@@ -60,7 +60,7 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 						level().getEntities(this, box, entity -> canTeleportSafely(entity) && !ArcanusComponents.hasPortalCoolDown(entity)).forEach(entity -> {
 							double distanceSq = position().distanceToSqr(entity.position());
 
-							if (distanceSq <= boxRadiusSq && distanceSq != 0) {
+							if(distanceSq <= boxRadiusSq && distanceSq != 0) {
 								Vec3 direction = position().subtract(entity.position()).normalize();
 								double inverseSq = 1 / distanceSq;
 

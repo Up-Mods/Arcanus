@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.common.effects;
 
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncStatusEffectPacket;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -19,10 +19,10 @@ public class ArcanusStatusEffect extends MobEffect {
 
 		if(entity.level() instanceof ServerLevel) {
 			// FIXME temporal dilation no worky
-			if(this == ArcanusStatusEffects.ANONYMITY.get() || /*this == ArcanusStatusEffects.TEMPORAL_DILATION.get() ||*/ this == ArcanusStatusEffects.MANA_WINGS.get())
+			if(this == ArcanusMobEffects.ANONYMITY.get() || /*this == ArcanusStatusEffects.TEMPORAL_DILATION.get() ||*/ this == ArcanusMobEffects.MANA_WINGS.get())
 				SyncStatusEffectPacket.sendToAll(entity, this, true);
 
-			if(this == ArcanusStatusEffects.FLOAT.get())
+			if(this == ArcanusMobEffects.FLOAT.get())
 				entity.setNoGravity(true);
 		}
 	}
@@ -33,10 +33,10 @@ public class ArcanusStatusEffect extends MobEffect {
 
 		if(entity.level() instanceof ServerLevel) {
 			// FIXME temporal dilation no worky
-			if(this == ArcanusStatusEffects.ANONYMITY.get() || /*this == ArcanusStatusEffects.TEMPORAL_DILATION.get() ||*/ this == ArcanusStatusEffects.MANA_WINGS.get())
+			if(this == ArcanusMobEffects.ANONYMITY.get() || /*this == ArcanusStatusEffects.TEMPORAL_DILATION.get() ||*/ this == ArcanusMobEffects.MANA_WINGS.get())
 				SyncStatusEffectPacket.sendToAll(entity, this, false);
 
-			if(this == ArcanusStatusEffects.FLOAT.get())
+			if(this == ArcanusMobEffects.FLOAT.get())
 				entity.setNoGravity(false);
 		}
 	}

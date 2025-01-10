@@ -20,17 +20,19 @@ import java.util.function.Supplier;
 
 @Mixin(ClientLevel.class)
 public abstract class ClientWorldMixin extends Level {
-	protected ClientWorldMixin(WritableLevelData worldProperties, ResourceKey<Level> registryKey, RegistryAccess registryManager, Holder<DimensionType> dimension, Supplier<ProfilerFiller> profiler, boolean client, boolean debug, long seed, int maxChainedNeighborUpdates) { super(worldProperties, registryKey, registryManager, dimension, profiler, client, debug, seed, maxChainedNeighborUpdates); }
+	protected ClientWorldMixin(WritableLevelData worldProperties, ResourceKey<Level> registryKey, RegistryAccess registryManager, Holder<DimensionType> dimension, Supplier<ProfilerFiller> profiler, boolean client, boolean debug, long seed, int maxChainedNeighborUpdates) {
+		super(worldProperties, registryKey, registryManager, dimension, profiler, client, debug, seed, maxChainedNeighborUpdates);
+	}
 
 	@WrapWithCondition(method = "levelEvent", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/LevelRenderer;levelEvent(ILnet/minecraft/core/BlockPos;I)V"
+													   target = "Lnet/minecraft/client/renderer/LevelRenderer;levelEvent(ILnet/minecraft/core/BlockPos;I)V"
 	))
 	private boolean arcanuscontinuum$noBreakingSoundsOrParticles(LevelRenderer target, int eventId, BlockPos pos, int data) {
 		return eventId != 2001 || !ArcanusComponents.isBlockWarded(this, pos);
 	}
 
 	@WrapWithCondition(method = "tickNonPassenger", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/Entity;tick()V"
+															 target = "Lnet/minecraft/world/entity/Entity;tick()V"
 	))
 	private boolean arcanuscontinuum$blockEntityTick(Entity entity) {
 		return !ArcanusComponents.areUpdatesBlocked(entity);

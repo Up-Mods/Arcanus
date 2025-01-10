@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.common;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusStatusEffects;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -13,11 +13,13 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
-	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) { super(entityType, world); }
+	protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
+		super(entityType, world);
+	}
 
 	@ModifyReturnValue(method = "getName", at = @At("RETURN"))
 	private Component arcanuscontinuum$getName(Component original) {
-		if(hasEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+		if(hasEffect(ArcanusMobEffects.ANONYMITY.get())) {
 			return Component.literal("Yog-Sothoth").withStyle(ChatFormatting.OBFUSCATED);
 		}
 
@@ -26,7 +28,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 	@ModifyReturnValue(method = "getScoreboardName", at = @At("RETURN"))
 	private String arcanuscontinuum$getEntityName(String original) {
-		if(hasEffect(ArcanusStatusEffects.ANONYMITY.get())) {
+		if(hasEffect(ArcanusMobEffects.ANONYMITY.get())) {
 			return "Yog-Sothoth";
 		}
 

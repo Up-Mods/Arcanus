@@ -37,18 +37,32 @@ import java.util.UUID;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftClientMixin implements ClientUtils {
-	@Unique private boolean isCasting = false;
-	@Unique private int timer = 0;
-	@Unique private int mouseDownTimer = 0;
-	@Unique private KeyMapping lastMouseDown = null;
-	@Unique private final List<Pattern> pattern = new ArrayList<>(3);
+	@Unique
+	private boolean isCasting = false;
+	@Unique
+	private int timer = 0;
+	@Unique
+	private int mouseDownTimer = 0;
+	@Unique
+	private KeyMapping lastMouseDown = null;
+	@Unique
+	private final List<Pattern> pattern = new ArrayList<>(3);
 
-	@Shadow @Nullable public LocalPlayer player;
-	@Shadow @Final public Options options;
-	@Shadow @Nullable public ClientLevel level;
+	@Shadow
+	@Nullable
+	public LocalPlayer player;
+	@Shadow
+	@Final
+	public Options options;
+	@Shadow
+	@Nullable
+	public ClientLevel level;
 
-	@Shadow public abstract float getFrameTime();
-	@Shadow public abstract boolean isLocalServer();
+	@Shadow
+	public abstract float getFrameTime();
+
+	@Shadow
+	public abstract boolean isLocalServer();
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void arcanuscontinuum$tick(CallbackInfo info) {
@@ -107,7 +121,7 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"
+												target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"
 	), cancellable = true)
 	public void arcanuscontinuum$onBlockBreak(CallbackInfo info) {
 		if(isCasting)
@@ -115,8 +129,8 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/Minecraft;startAttack()Z",
-			ordinal = 0
+												target = "Lnet/minecraft/client/Minecraft;startAttack()Z",
+												ordinal = 0
 	), cancellable = true)
 	public void arcanuscontinuum$onLeftClick(CallbackInfo info) {
 		if(isCasting)
@@ -150,8 +164,8 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
-			ordinal = 0
+												target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
+												ordinal = 0
 	), cancellable = true)
 	public void arcanuscontinuum$onRightClick(CallbackInfo info) {
 		if(isCasting)
@@ -175,8 +189,8 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At(value = "INVOKE",
-		target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
-		ordinal = 1
+												target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
+												ordinal = 1
 	), cancellable = true)
 	public void arcanuscontinuum$onRightClickBlock(CallbackInfo info) {
 		if(isCasting || (player != null && !player.isSpectator() && player.getMainHandItem().getItem() instanceof StaffItem))

@@ -5,7 +5,7 @@ import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 
-public class SlowTimeComponent  implements AutoSyncedComponent {
+public class SlowTimeComponent implements AutoSyncedComponent {
 	private final Entity entity;
 	private boolean slowTime;
 	private boolean blockUpdates;

@@ -52,36 +52,36 @@ public class ArcaneWorkbenchScreenHandler extends RecipeBookMenu<TransientCrafti
 
 	@Override
 	public boolean clickMenuButton(Player player, int id) {
-		if (id == 0) {
-			switch (getMode()) {
+		if(id == 0) {
+			switch(getMode()) {
 				case CUSTOMIZE -> setMode(WorkbenchMode.SPELLBINDING);
 				case SPELLBINDING -> setMode(WorkbenchMode.CUSTOMIZE);
 			}
 
-			if (player instanceof ServerPlayer serverPlayer)
+			if(player instanceof ServerPlayer serverPlayer)
 				SyncWorkbenchModePacket.send(serverPlayer, getMode());
 		}
 
-		if (template instanceof StaffItem staff && templates.contains(staff) && (id == 1 || id == 2)) {
+		if(template instanceof StaffItem staff && templates.contains(staff) && (id == 1 || id == 2)) {
 			int index = templates.indexOf(staff);
 
-			if (id == 1) {
+			if(id == 1) {
 				index -= 1;
 
-				if (index < 0)
+				if(index < 0)
 					index = templates.size() - 1;
 			}
 
-			if (id == 2) {
+			if(id == 2) {
 				index += 1;
 
-				if (index > templates.size() - 1)
+				if(index > templates.size() - 1)
 					index = 0;
 			}
 
 			setTemplate(templates.get(index));
 
-			if (player instanceof ServerPlayer serverPlayer)
+			if(player instanceof ServerPlayer serverPlayer)
 				SyncStaffTemplatePacket.send(serverPlayer, getTemplate());
 		}
 
@@ -92,46 +92,49 @@ public class ArcaneWorkbenchScreenHandler extends RecipeBookMenu<TransientCrafti
 	public ItemStack quickMoveStack(Player player, int fromIndex) {
 		ItemStack itemStack = ItemStack.EMPTY;
 		Slot slot = slots.get(fromIndex);
-		int maxSlots = switch (mode) {
+		int maxSlots = switch(mode) {
 			case CUSTOMIZE -> 4;
 			case SPELLBINDING -> 10;
 		};
 
-		if (slot.hasItem()) {
+		if(slot.hasItem()) {
 			ItemStack itemStack2 = slot.getItem();
 			itemStack = itemStack2.copy();
 
-			if (fromIndex == 0) {
+			if(fromIndex == 0) {
 				context.execute((world, pos) -> itemStack2.getItem().onCraftedBy(itemStack2, world, player));
 
-				if (!moveItemStackTo(itemStack2, maxSlots, maxSlots + 36, true))
+				if(!moveItemStackTo(itemStack2, maxSlots, maxSlots + 36, true))
 					return ItemStack.EMPTY;
 
 				slot.onQuickCraft(itemStack2, itemStack);
-			} else if (fromIndex >= maxSlots && fromIndex < maxSlots + 36) {
-				if (!moveItemStackTo(itemStack2, 1, maxSlots, false)) {
-					if (fromIndex < maxSlots + 27) {
-						if (!moveItemStackTo(itemStack2, maxSlots + 27, maxSlots + 36, false))
+			}
+			else if(fromIndex >= maxSlots && fromIndex < maxSlots + 36) {
+				if(!moveItemStackTo(itemStack2, 1, maxSlots, false)) {
+					if(fromIndex < maxSlots + 27) {
+						if(!moveItemStackTo(itemStack2, maxSlots + 27, maxSlots + 36, false))
 							return ItemStack.EMPTY;
-					} else if (!moveItemStackTo(itemStack2, maxSlots, maxSlots + 27, false)) {
+					}
+					else if(!moveItemStackTo(itemStack2, maxSlots, maxSlots + 27, false)) {
 						return ItemStack.EMPTY;
 					}
 				}
-			} else if (!moveItemStackTo(itemStack2, maxSlots, maxSlots + 36, false)) {
+			}
+			else if(!moveItemStackTo(itemStack2, maxSlots, maxSlots + 36, false)) {
 				return ItemStack.EMPTY;
 			}
 
-			if (itemStack2.isEmpty())
+			if(itemStack2.isEmpty())
 				slot.set(ItemStack.EMPTY);
 			else
 				slot.setChanged();
 
-			if (itemStack2.getCount() == itemStack.getCount())
+			if(itemStack2.getCount() == itemStack.getCount())
 				return ItemStack.EMPTY;
 
 			slot.onTake(player, itemStack2);
 
-			if (fromIndex == 0)
+			if(fromIndex == 0)
 				player.drop(itemStack2, false);
 		}
 
@@ -165,14 +168,14 @@ public class ArcaneWorkbenchScreenHandler extends RecipeBookMenu<TransientCrafti
 	public void getSlotsForMode(WorkbenchMode mode) {
 		slots.clear();
 
-		switch (mode) {
+		switch(mode) {
 			case SPELLBINDING -> {
 				input = new TransientCraftingContainer(this, 3, 3);
 
 				addSlot(new ResultSlot(player, input, result, 0, 135, 31));
 
-				for (int i = 0; i < 3; ++i)
-					for (int j = 0; j < 3; ++j)
+				for(int i = 0; i < 3; ++i)
+					for(int j = 0; j < 3; ++j)
 						addSlot(new Slot(input, j + i * 3, 24 + j * 20, 11 + i * 20));
 			}
 			case CUSTOMIZE -> {
@@ -181,10 +184,10 @@ public class ArcaneWorkbenchScreenHandler extends RecipeBookMenu<TransientCrafti
 				addSlot(new ResultSlot(player, input, result, 0, 136, 35) {
 					@Override
 					public void onTake(Player player, ItemStack stack) {
-						for (int i = 0; i < input.getContainerSize(); i++)
+						for(int i = 0; i < input.getContainerSize(); i++)
 							input.getItem(i).shrink(1);
 
-						if (player instanceof ServerPlayer serverPlayer)
+						if(player instanceof ServerPlayer serverPlayer)
 							SyncStaffTemplatePacket.send(serverPlayer, Items.AIR);
 					}
 				});
@@ -216,53 +219,54 @@ public class ArcaneWorkbenchScreenHandler extends RecipeBookMenu<TransientCrafti
 			}
 		}
 
-		for (int i = 0; i < 3; ++i)
-			for (int j = 0; j < 9; ++j)
+		for(int i = 0; i < 3; ++i)
+			for(int j = 0; j < 9; ++j)
 				addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
 
-		for (int i = 0; i < 9; ++i)
+		for(int i = 0; i < 9; ++i)
 			addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
 	}
 
 	protected static void updateResult(ArcaneWorkbenchScreenHandler handler, Level world, Player player, TransientCraftingContainer input, ResultContainer result) {
-		if (!world.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+		if(!world.isClientSide() && player instanceof ServerPlayer serverPlayer) {
 			ItemStack itemStack = ItemStack.EMPTY;
 
-			if (handler.getMode() == WorkbenchMode.SPELLBINDING) {
+			if(handler.getMode() == WorkbenchMode.SPELLBINDING) {
 				Optional<CraftingRecipe> optional = world.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, world);
 
-				if (optional.isPresent()) {
+				if(optional.isPresent()) {
 					CraftingRecipe craftingRecipe = optional.get();
 
-					if (result.setRecipeUsed(world, serverPlayer, craftingRecipe)) {
+					if(result.setRecipeUsed(world, serverPlayer, craftingRecipe)) {
 						ItemStack itemStack2 = craftingRecipe.assemble(input, world.registryAccess());
 
-						if (itemStack2.isItemEnabled(world.enabledFeatures()))
+						if(itemStack2.isItemEnabled(world.enabledFeatures()))
 							itemStack = itemStack2;
 					}
 				}
-			} else {
+			}
+			else {
 				ItemStack staffStack = input.getItem(0);
 
-				if (staffStack.getItem() instanceof StaffItem && handler.getTemplate() instanceof StaffItem) {
+				if(staffStack.getItem() instanceof StaffItem && handler.getTemplate() instanceof StaffItem) {
 					ItemStack itemStack2 = new ItemStack(handler.getTemplate(), staffStack.getCount());
 					itemStack2.setTag(staffStack.copy().getTag());
 
-					if (input.getItem(1).getItem() instanceof DyeItem dye) {
+					if(input.getItem(1).getItem() instanceof DyeItem dye) {
 						StaffItem.setPrimaryColor(itemStack2, Color.fromInt(dye.getDyeColor().getFireworkColor(), Color.Ordering.RGB));
 					}
 
-					if (input.getItem(2).getItem() instanceof DyeItem dye) {
+					if(input.getItem(2).getItem() instanceof DyeItem dye) {
 						int color = dye.getDyeColor().getTextColor();
 
-						if (dye.getDyeColor() == DyeColor.BLACK) {
+						if(dye.getDyeColor() == DyeColor.BLACK) {
 							color = dye.getDyeColor().getFireworkColor();
 						}
 
 						StaffItem.setSecondaryColor(itemStack2, Color.fromInt(color, Color.Ordering.RGB));
 					}
 
-					if (!ItemStack.isSameItem(itemStack2, staffStack) || !StaffItem.getPrimaryColor(itemStack2).equals(StaffItem.getPrimaryColor(staffStack)) || !StaffItem.getSecondaryColor(itemStack2).equals(StaffItem.getSecondaryColor(staffStack))) {
+					if(!ItemStack.isSameItem(itemStack2, staffStack) || !StaffItem.getPrimaryColor(itemStack2).equals(StaffItem.getPrimaryColor(staffStack)) || !StaffItem.getSecondaryColor(itemStack2).equals(StaffItem.getSecondaryColor(staffStack))) {
 						itemStack = itemStack2;
 					}
 				}
@@ -303,7 +307,7 @@ public class ArcaneWorkbenchScreenHandler extends RecipeBookMenu<TransientCrafti
 
 	@Override
 	public boolean recipeMatches(Recipe<? super TransientCraftingContainer> recipe) {
-		if (mode == WorkbenchMode.SPELLBINDING)
+		if(mode == WorkbenchMode.SPELLBINDING)
 			return recipe.matches(input, player.level());
 		else
 			return true;

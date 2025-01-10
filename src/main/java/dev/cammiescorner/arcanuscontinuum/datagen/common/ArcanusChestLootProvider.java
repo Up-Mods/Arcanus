@@ -111,7 +111,7 @@ public class ArcanusChestLootProvider extends SimpleFabricLootTableProvider {
 		var spell = new Spell(List.of(
 			new SpellGroup(ArcanusSpellComponents.SMITE.get(), List.of(ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get()), List.of(new Vector2i(117, 46), new Vector2i(173, 73), new Vector2i(144, 128), new Vector2i(77, 124), new Vector2i(60, 65))),
 			new SpellGroup(ArcanusSpellComponents.EXPLOSION.get(), List.of(), List.of(new Vector2i(117, 91)))
-			), "Smite");
+		), "Smite");
 		return spell.toNbt();
 	}
 

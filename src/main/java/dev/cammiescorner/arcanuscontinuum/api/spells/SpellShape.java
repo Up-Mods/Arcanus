@@ -15,6 +15,7 @@ public abstract class SpellShape extends SpellComponent {
 	public static SpellShape empty() {
 		return (SpellShape) ArcanusSpellComponents.EMPTY.get();
 	}
+
 	private final double manaMultiplier;
 	private final double potencyModifier;
 
