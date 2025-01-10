@@ -42,10 +42,10 @@ public class IceSpellEffect extends SpellEffect {
 			BlockHitResult blockHit = (BlockHitResult) target;
 			BlockPos pos = blockHit.getBlockPos().relative(blockHit.getDirection());
 
-			if(level.getBlockState(blockHit.getBlockPos()).getFluidState().is(Fluids.WATER))
-				level.setBlockAndUpdate(blockHit.getBlockPos(), Blocks.ICE.defaultBlockState());
-			else if(level.getBlockState(blockHit.getBlockPos()).getFluidState().is(Fluids.LAVA))
-				level.setBlockAndUpdate(blockHit.getBlockPos(), Blocks.OBSIDIAN.defaultBlockState());
+			if(level.getBlockState(pos).getFluidState().is(Fluids.WATER))
+				level.setBlockAndUpdate(pos, Blocks.ICE.defaultBlockState());
+			else if(level.getBlockState(pos).getFluidState().is(Fluids.LAVA))
+				level.setBlockAndUpdate(pos, Blocks.OBSIDIAN.defaultBlockState());
 			else if(level.loadedAndEntityCanStandOn(pos.below(), caster) && level.isUnobstructed(Blocks.SNOW.defaultBlockState(), pos, CollisionContext.empty()) && level.getBlockState(pos).canBeReplaced())
 				level.setBlockAndUpdate(pos, Blocks.SNOW.defaultBlockState());
 		}
