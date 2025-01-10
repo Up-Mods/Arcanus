@@ -3,8 +3,8 @@
   "display": {
     "thirdperson_righthand": {
       "scale": [
-        1.5,
-        1.5,
+        2,
+        2,
         1
       ],
       "rotation": [
@@ -20,8 +20,8 @@
     },
     "thirdperson_lefthand": {
       "scale": [
-        1.5,
-        1.5,
+        2,
+        2,
         1
       ],
       "rotation": [
@@ -37,8 +37,8 @@
     },
     "firstperson_righthand": {
       "scale": [
-        1.5,
-        1.5,
+        2,
+        2,
         1
       ],
       "rotation": [
@@ -54,8 +54,8 @@
     },
     "firstperson_lefthand": {
       "scale": [
-        1.5,
-        1.5,
+        2,
+        2,
         1
       ],
       "rotation": [
