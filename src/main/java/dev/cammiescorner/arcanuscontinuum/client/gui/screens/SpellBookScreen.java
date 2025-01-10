@@ -113,7 +113,7 @@ public class SpellBookScreen extends AbstractContainerScreen<SpellBookScreenHand
 
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
-		MutableComponent weight = Component.translatable("spell_book.arcanuscontinuum.weight", getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.DARK_GREEN);
+		MutableComponent weight = Component.translatable("spell_book.arcanuscontinuum.weight." + getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.DARK_GREEN);
 		MutableComponent mana = Component.literal(Arcanus.format(getManaCost())).withStyle(ChatFormatting.BLUE);
 		MutableComponent coolDown = Component.literal(Arcanus.format(getCoolDown() / 20D)).append(Component.translatable("spell_book.arcanuscontinuum.seconds")).withStyle(ChatFormatting.RED);
 

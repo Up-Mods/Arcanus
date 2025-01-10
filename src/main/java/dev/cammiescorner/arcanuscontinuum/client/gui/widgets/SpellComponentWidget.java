@@ -30,7 +30,7 @@ public class SpellComponentWidget extends AbstractButton {
 		// TODO make ALL of it translatable
 		List<Component> textList = new ArrayList<>();
 		textList.add(component.getName());
-		textList.add(Component.translatable("spell_book.arcanuscontinuum.weight").append(": ").withStyle(ChatFormatting.GREEN).append(Component.translatable("spell_book.arcanuscontinuum.weight", component.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
+		textList.add(Component.translatable("spell_book.arcanuscontinuum.weight").append(": ").withStyle(ChatFormatting.GREEN).append(Component.translatable("spell_book.arcanuscontinuum.weight." + component.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
 		textList.add(Component.translatable("spell_book.arcanuscontinuum.mana_cost").append(": ").withStyle(ChatFormatting.BLUE).append(Component.literal(component.getManaCostAsString()).withStyle(ChatFormatting.GRAY)));
 
 		if(component instanceof SpellShape shape) {

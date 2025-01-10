@@ -386,7 +386,7 @@ public class SpellcraftScreen extends AbstractContainerScreen<SpellcraftScreenHa
 		gui.drawString(font, " / ", 128 - font.width(" / ") / 2, 11, 0x555555, false);
 		gui.drawString(font, maxSpellComponentCount, 138 - font.width(maxSpellComponentCount) / 2, 11, componentCounterColour, false);
 
-		MutableComponent weight = Component.translatable("spell_book.arcanuscontinuum.weight", getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.DARK_GREEN);
+		MutableComponent weight = Component.translatable("spell_book.arcanuscontinuum.weight" + getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.DARK_GREEN);
 		MutableComponent mana = Component.literal(Arcanus.format(getManaCost())).withStyle(ChatFormatting.BLUE);
 		MutableComponent coolDown = Component.literal(Arcanus.format(getCoolDown() / 20D)).append(Component.translatable("spell_book.arcanuscontinuum.seconds")).withStyle(ChatFormatting.RED);
 
