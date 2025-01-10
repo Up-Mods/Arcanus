@@ -9,8 +9,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 
 public class ArcanusStatusEffect extends MobEffect {
-	public ArcanusStatusEffect(MobEffectCategory type, int color) {
+	private final boolean shouldSync;
+
+	public ArcanusStatusEffect(MobEffectCategory type, int color, boolean shouldSync) {
 		super(type, color);
+		this.shouldSync = shouldSync;
+	}
+
+	public ArcanusStatusEffect(MobEffectCategory type, int color) {
+		this(type, color, false);
 	}
 
 	@Override
@@ -18,8 +25,7 @@ public class ArcanusStatusEffect extends MobEffect {
 		super.addAttributeModifiers(entity, attributes, amplifier);
 
 		if(entity.level() instanceof ServerLevel) {
-			// FIXME temporal dilation no worky
-			if(this == ArcanusMobEffects.ANONYMITY.get() || /*this == ArcanusStatusEffects.TEMPORAL_DILATION.get() ||*/ this == ArcanusMobEffects.MANA_WINGS.get())
+			if(shouldSync)
 				SyncStatusEffectPacket.sendToAll(entity, this, true);
 
 			if(this == ArcanusMobEffects.FLOAT.get())
@@ -32,8 +38,7 @@ public class ArcanusStatusEffect extends MobEffect {
 		super.removeAttributeModifiers(entity, attributes, amplifier);
 
 		if(entity.level() instanceof ServerLevel) {
-			// FIXME temporal dilation no worky
-			if(this == ArcanusMobEffects.ANONYMITY.get() || /*this == ArcanusStatusEffects.TEMPORAL_DILATION.get() ||*/ this == ArcanusMobEffects.MANA_WINGS.get())
+			if(shouldSync)
 				SyncStatusEffectPacket.sendToAll(entity, this, false);
 
 			if(this == ArcanusMobEffects.FLOAT.get())
