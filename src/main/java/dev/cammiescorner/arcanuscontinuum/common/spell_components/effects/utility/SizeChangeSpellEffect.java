@@ -35,7 +35,7 @@ public class SizeChangeSpellEffect extends SpellEffect {
 //				if(ArcanusSpellComponents.SHRINK.is(this))
 //					entity.addEffect(new MobEffectInstance(ArcanusMobEffects.SHRINK.get(), (int) (ArcanusConfig.UtilityEffects.ShrinkEffectProperties.baseEffectDuration * effects.stream().filter(ArcanusSpellComponents.SHRINK::is).count() * potency), 0, false, true, true));
 //				else if(ArcanusSpellComponents.ENLARGE.is(this))
-//					entity.addEffect(new MobEffectInstance(ArcanusMobEffects.ENLARGE.get(), (int) (ArcanusConfig.UtilityEffects.ShrinkEffectProperties.baseEffectDuration * effects.stream().filter(ArcanusSpellComponents.ENLARGE::is).count() * potency), 0, false, true, true));
+//					entity.addEffect(new MobEffectInstance(ArcanusMobEffects.ENLARGE.get(), (int) (ArcanusConfig.UtilityEffects.GrowthEffectProperties.baseEffectDuration * effects.stream().filter(ArcanusSpellComponents.ENLARGE::is).count() * potency), 0, false, true, true));
 //			}
 
 			if(ArcanusSpellComponents.SHRINK.is(this))
