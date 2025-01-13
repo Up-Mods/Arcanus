@@ -59,6 +59,11 @@ public class StaffItem extends Item {
 	}
 
 	@Override
+	public boolean isEnchantable(ItemStack stack) {
+		return true;
+	}
+
+	@Override
 	public void onCraftedBy(ItemStack stack, Level world, Player player) {
 		if(!world.isClientSide()) {
 			CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);

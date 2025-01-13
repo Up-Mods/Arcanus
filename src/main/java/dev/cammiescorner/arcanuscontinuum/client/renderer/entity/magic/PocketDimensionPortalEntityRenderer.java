@@ -40,7 +40,8 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		StencilBuffer stencilBuffer = ((StencilBuffer) client.getMainRenderTarget());
 		RenderType portalLayer = ArcanusClient.getMagicPortal(PORTAL_TEXTURE);
 		RenderType sigilLayer = ArcanusClient.getMagicCircles(SIGIL_TEXTURE);
-		Color color = ArcanusHelper.getMagicColor(entity);
+		Color pocketDimColor = ArcanusHelper.getPocketDimensionColor(entity);
+		Color magicColor = ArcanusHelper.getMagicColor(entity);
 		float ageDelta = entity.getTrueAge() + tickDelta;
 		float maxScale = 0.75f;
 		float scale = entity.getTrueAge() <= 100 ? Math.min(maxScale, (ageDelta / 100f) * maxScale) : entity.getTrueAge() > 700 ? Math.max(0, (1 - (ageDelta - 700) / 20f) * maxScale) : maxScale;
@@ -84,7 +85,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		matrices.translate(-0.375, 0, 0);
 		matrices.mulPose(Axis.ZP.rotationDegrees(90));
 		matrices.scale(maxScale, maxScale, maxScale);
-		portalModel.renderToBuffer(matrices, vertices.getBuffer(portalLayer), light, OverlayTexture.NO_OVERLAY, color.redF(), color.greenF(), color.blueF(), 1.0F);
+		portalModel.renderToBuffer(matrices, vertices.getBuffer(portalLayer), light, OverlayTexture.NO_OVERLAY, pocketDimColor.redF(), pocketDimColor.greenF(), pocketDimColor.blueF(), 1.0F);
 		matrices.popPose();
 
 		if(vertices instanceof MultiBufferSource.BufferSource immediate) {
@@ -118,7 +119,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		matrices.mulPose(Axis.XP.rotationDegrees(180.0F));
 		matrices.scale(scale / maxScale, 1.0F, scale / maxScale);
 		sigilModel.sigil.yRot = (entity.tickCount + tickDelta) * 0.015F;
-		sigilModel.renderToBuffer(matrices, vertices.getBuffer(sigilLayer), light, OverlayTexture.NO_OVERLAY, color.redF(), color.greenF(), color.blueF(), 1.0F);
+		sigilModel.renderToBuffer(matrices, vertices.getBuffer(sigilLayer), light, OverlayTexture.NO_OVERLAY, magicColor.redF(), magicColor.greenF(), magicColor.blueF(), 1.0F);
 		matrices.popPose();
 	}
 
