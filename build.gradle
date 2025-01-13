@@ -100,6 +100,8 @@ dependencies {
 	modCompileOnly libs.patchouli
 	modLocalRuntime libs.patchouli
 
+	modImplementation libs.trinkets
+
 	modImplementation libs.resourceful.config
 
 	modImplementation libs.reach.attr
@@ -110,7 +112,6 @@ dependencies {
 
 	// first person model
 	modCompileOnly libs.firstperson
-//	modLocalRuntime libs.firstperson
 
 	// sodium
 	modCompileOnly libs.sodium

@@ -27,6 +27,7 @@ sodium = "mc1.20.1-0.5.3"
 iris = "1.6.11+1.20.1"
 explosive_enhancement = "1.2.2-1.20.x"
 datasync = "0.9.0"
+trinkets = "3.7.1" # refmap doesnt work on 3.7.2
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -55,6 +56,7 @@ spruceui = { module = "dev.lambdaurora:spruceui", version.ref = "spruceui" }
 sodium = { module = "maven.modrinth:sodium", version.ref = "sodium" }
 iris = { module = "maven.modrinth:iris", version.ref = "iris" }
 explosive_enhancement = { module = "maven.modrinth:explosive-enhancement", version.ref = "explosive_enhancement" }
+trinkets = { module = "dev.emi:trinkets", version.ref = "trinkets" }
 
 # If you have multiple similar dependencies, you can declare a dependency bundle and reference it on the build script with "libs.bundles.example".
 [bundles]
