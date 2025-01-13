@@ -10,14 +10,16 @@ import net.minecraft.world.entity.ai.attributes.AttributeMap;
 
 public class ArcanusStatusEffect extends MobEffect {
 	private final boolean shouldSync;
+	private final boolean shouldTick;
 
-	public ArcanusStatusEffect(MobEffectCategory type, int color, boolean shouldSync) {
+	public ArcanusStatusEffect(MobEffectCategory type, int color, boolean shouldSync, boolean shouldTick) {
 		super(type, color);
 		this.shouldSync = shouldSync;
+		this.shouldTick = shouldTick;
 	}
 
 	public ArcanusStatusEffect(MobEffectCategory type, int color) {
-		this(type, color, false);
+		this(type, color, false, false);
 	}
 
 	@Override
@@ -46,11 +48,12 @@ public class ArcanusStatusEffect extends MobEffect {
 		}
 	}
 
+	@Override
+	public boolean isDurationEffectTick(int duration, int amplifier) {
+		return shouldTick;
+	}
+
 	// FIXME temporal dilation no worky
-//	@Override
-//	public boolean canApplyUpdateEffect(int duration, int amplifier) {
-//		return this == ArcanusStatusEffects.TEMPORAL_DILATION.get();
-//	}
 //
 //	@Override
 //	public void applyUpdateEffect(LivingEntity entity, int amplifier) {
