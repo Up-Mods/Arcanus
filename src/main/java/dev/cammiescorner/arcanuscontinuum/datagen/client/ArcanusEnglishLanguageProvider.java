@@ -119,6 +119,8 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add(ArcanusEntities.SMITE.get(), "Smite");
 		builder.add(ArcanusEntities.WIZARD.get(), "Wizard");
 
+		builder.add(ArcanusEnchantments.SOUL_BOUND.get(), "Soul Bound");
+
 		builder.add(ArcanusMobEffects.ANONYMITY.get(), "Anonymity");
 		builder.add(ArcanusMobEffects.BOUNCY.get(), "Bouncy");
 		builder.add(ArcanusMobEffects.COPPER_CURSE.get(), "Copper Curse");
