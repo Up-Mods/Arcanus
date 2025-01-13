@@ -6,6 +6,7 @@ import dev.cammiescorner.arcanuscontinuum.api.spells.Pattern;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellComponent;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.MagicDoorBlock;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.MagicDoorBlockEntity;
+import dev.cammiescorner.arcanuscontinuum.common.enchantments.ManaPoolEnchantment;
 import dev.cammiescorner.arcanuscontinuum.common.packets.c2s.*;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncConfigValuesPacket;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncStatusEffectPacket;
@@ -22,6 +23,7 @@ import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.item.v1.ModifyItemAttributeModifiersCallback;
 import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -36,10 +38,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,6 +96,22 @@ public class Arcanus implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(ShootOrbsPacket.ID, ShootOrbsPacket::handler);
 
 		CommandRegistrationCallback.EVENT.register(ArcanusCommands::init);
+
+		ModifyItemAttributeModifiersCallback.EVENT.register((stack, slot, attributeModifiers) -> {
+			if(ArcanusConfig.Enchantments.ManaPool.maxLevel <= 0)
+				return;
+
+			int manaPoolLevel = EnchantmentHelper.getItemEnchantmentLevel(ArcanusEnchantments.MANA_POOL.get(), stack);
+
+			if(slot.isArmor() && manaPoolLevel > 0) {
+				if(stack.getItem() instanceof ArmorItem armorItem && armorItem.getEquipmentSlot() != slot)
+					return;
+
+				AttributeModifier maxManaModifier = new AttributeModifier(ManaPoolEnchantment.getUuidForSlot(slot), "Mana Pool Max Mana Modifier", ArcanusConfig.Enchantments.ManaPool.manaPerLevel * manaPoolLevel, AttributeModifier.Operation.ADDITION);
+
+				attributeModifiers.put(ArcanusEntityAttributes.MAX_MANA.get(), maxManaModifier);
+			}
+		});
 
 		EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> entity.hasEffect(ArcanusMobEffects.MANA_WINGS.get()));
 

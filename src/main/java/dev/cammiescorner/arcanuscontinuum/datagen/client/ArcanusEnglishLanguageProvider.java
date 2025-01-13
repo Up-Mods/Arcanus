@@ -119,7 +119,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add(ArcanusEntities.SMITE.get(), "Smite");
 		builder.add(ArcanusEntities.WIZARD.get(), "Wizard");
 
-		builder.add(ArcanusEnchantments.SOUL_BOUND.get(), "Soul Bound");
+		builder.add(ArcanusEnchantments.MANA_POOL.get(), "Mana Pool");
 
 		builder.add(ArcanusMobEffects.ANONYMITY.get(), "Anonymity");
 		builder.add(ArcanusMobEffects.BOUNCY.get(), "Bouncy");
@@ -132,6 +132,8 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add(ArcanusMobEffects.MANA_WINGS.get(), "Mana Wings");
 		builder.add(ArcanusMobEffects.STOCKPILE.get(), "Stockpile");
 		builder.add(ArcanusMobEffects.VULNERABILITY.get(), "Vulnerability");
+		builder.add(ArcanusMobEffects.SHRINK.get(), "Shrink");
+		builder.add(ArcanusMobEffects.ENLARGE.get(), "Enlarge");
 
 		tag(builder, ArcanusBiomeTags.C_HAS_VILLAGE, "Has Village");
 		tag(builder, ArcanusBiomeTags.HAS_WIZARD_TOWER, "Has Wizard Tower");
@@ -145,6 +147,8 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		tag(builder, ArcanusEntityTags.DISPELLABLE, "Dispellable");
 		tag(builder, ArcanusEntityTags.RUNE_TRIGGER_IGNORED, "Does not trigger Magic Runes");
 		tag(builder, ArcanusEntityTags.SPATIAL_RIFT_IMMUNE, "Immune to Spatial Rifts");
+
+		tag(builder, ArcanusEnchantmentTags.MANA_POOL_COMPATIBLE_WITH, "Compatible enchantments for Mana Pool");
 
 		tag(builder, ArcanusItemTags.C_FEATHERS, "Feathers");
 		tag(builder, ArcanusItemTags.CRAFTING_SPELLBINDING_SPELLBOOKS, "Spellbooks");
@@ -305,10 +309,11 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("screen.arcanuscontinuum.support_us.button_support_cammie", "Support Cammie!");
 		builder.add("screen.arcanuscontinuum.support_us.button_support_up", "Support Up!");
 
-
 		builder.add("item.arcanuscontinuum.compendium_arcanus", "Compendium Arcanus");
 		builder.add("item.arcanuscontinuum.compendium_arcanus.landing_text", "Arcanus: Continuum introduces a new magic system to the world of Minecraft. Players can create their own custom spells to suit however they like to play the game!");
 
+		builder.add("config.arcanuscontinuum.enchantments_category", "Enchantments");
+		builder.add("config.arcanuscontinuum.mana_pool", "Mana Pool");
 		builder.add("config.arcanuscontinuum.spellShapesCategory", "Spell Shapes");
 		builder.add("config.arcanuscontinuum.attackEffectsCategory", "Attack Effects");
 		builder.add("config.arcanuscontinuum.supportEffectsCategory", "Support Effects");
@@ -316,6 +321,8 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("config.arcanuscontinuum.movementEffectsCategory", "Movement Effects");
 		builder.add("config.arcanuscontinuum.castingSpeedHasCoolDown", "Use Attack Cool Down for Casting?");
 		builder.add("config.arcanuscontinuum.sizeChangingIsPermanent", "Size Changing Effects are Permanent for Players and Tamed Animals (Requires Pehkui)");
+		builder.add("config.arcanuscontinuum.max_enchantment_level", "Max Enchantment Level");
+		builder.add("config.arcanuscontinuum.mana_per_level", "Extra Mana Per Level");
 		builder.add("config.arcanuscontinuum.enabled", "Enabled (Requires Restart)");
 		builder.add("config.arcanuscontinuum.weight", "Weight (Requires Restart)");
 		builder.add("config.arcanuscontinuum.manaCost", "Mana Cost (Requires Restart)");

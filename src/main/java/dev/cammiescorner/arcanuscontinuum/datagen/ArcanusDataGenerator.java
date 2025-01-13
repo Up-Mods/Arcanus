@@ -38,6 +38,7 @@ public class ArcanusDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(ArcanusBiomeTagsProvider::new);
 		pack.addProvider(ArcanusDamageTagsProvider::new);
 		pack.addProvider(ArcanusEntityTagsProvider::new);
+		pack.addProvider(ArcanusEnchantmentTagsProvider::new);
 		pack.addProvider(ArcanusDimensionTagsProvider::new);
 		pack.addProvider(ArcanusAdvancementRewardProvider::new);
 		pack.addProvider(ArcanusBlockLootProvider::new);
