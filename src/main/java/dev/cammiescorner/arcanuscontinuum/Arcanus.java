@@ -107,7 +107,7 @@ public class Arcanus implements ModInitializer {
 				if(stack.getItem() instanceof ArmorItem armorItem && armorItem.getEquipmentSlot() != slot)
 					return;
 
-				AttributeModifier maxManaModifier = new AttributeModifier(ManaPoolEnchantment.getUuidForSlot(slot), "Mana Pool Max Mana Modifier", ArcanusConfig.Enchantments.ManaPool.manaPerLevel * manaPoolLevel, AttributeModifier.Operation.ADDITION);
+				AttributeModifier maxManaModifier = new AttributeModifier(ManaPoolEnchantment.getUuidForSlot(slot), "Mana Pool Max Mana Modifier", ArcanusConfig.Enchantments.ManaPool.manaPerLevel * manaPoolLevel, ArcanusConfig.Enchantments.ManaPool.manaModifierOperation);
 
 				attributeModifiers.put(ArcanusEntityAttributes.MAX_MANA.get(), maxManaModifier);
 			}

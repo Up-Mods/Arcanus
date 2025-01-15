@@ -163,6 +163,7 @@
   "config.arcanuscontinuum.manaShieldEffectProperties": "Mana Shield Effect",
   "config.arcanuscontinuum.manaSplitEffectProperties": "Mana Split Effect",
   "config.arcanuscontinuum.manaWingsEffectProperties": "Mana Wings Effect",
+  "config.arcanuscontinuum.mana_modifier_operation": "Mana Modifier Operation",
   "config.arcanuscontinuum.mana_per_level": "Extra Mana Per Level",
   "config.arcanuscontinuum.mana_pool": "Mana Pool",
   "config.arcanuscontinuum.max_enchantment_level": "Max Enchantment Level",

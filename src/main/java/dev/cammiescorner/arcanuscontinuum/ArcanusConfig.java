@@ -3,6 +3,7 @@ package dev.cammiescorner.arcanuscontinuum;
 import com.teamresourceful.resourcefulconfig.common.annotations.*;
 import com.teamresourceful.resourcefulconfig.common.config.EntryType;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 @Config(Arcanus.MOD_ID)
 public final class ArcanusConfig {
@@ -20,7 +21,10 @@ public final class ArcanusConfig {
 			public static int maxLevel = 5;
 
 			@ConfigEntry(id = "manaPerLevel", type = EntryType.DOUBLE, translation = "config.arcanuscontinuum.mana_per_level")
-			public static double manaPerLevel = 5;
+			public static double manaPerLevel = 0.05;
+
+			@ConfigEntry(id = "manaModifierOperation", type = EntryType.ENUM, translation = "config.arcanuscontinuum.mana_modifier_operation")
+			public static AttributeModifier.Operation manaModifierOperation = AttributeModifier.Operation.MULTIPLY_BASE;
 		}
 	}
 

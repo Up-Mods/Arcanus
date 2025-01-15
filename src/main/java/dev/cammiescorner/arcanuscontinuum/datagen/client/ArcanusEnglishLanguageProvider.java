@@ -323,6 +323,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("config.arcanuscontinuum.sizeChangingIsPermanent", "Size Changing Effects are Permanent for Players and Tamed Animals (Requires Pehkui)");
 		builder.add("config.arcanuscontinuum.max_enchantment_level", "Max Enchantment Level");
 		builder.add("config.arcanuscontinuum.mana_per_level", "Extra Mana Per Level");
+		builder.add("config.arcanuscontinuum.mana_modifier_operation", "Mana Modifier Operation");
 		builder.add("config.arcanuscontinuum.enabled", "Enabled (Requires Restart)");
 		builder.add("config.arcanuscontinuum.weight", "Weight (Requires Restart)");
 		builder.add("config.arcanuscontinuum.manaCost", "Mana Cost (Requires Restart)");
