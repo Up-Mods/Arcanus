@@ -21,8 +21,8 @@ public abstract class MilkBucketItemMixin extends Item {
 	}
 
 	@Inject(method = "finishUsingItem", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/LivingEntity;removeAllEffects()Z"
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/LivingEntity;removeAllEffects()Z"
 	))
 	private void arcanus$dontClearCopperCurse(ItemStack stack, Level world, LivingEntity user, CallbackInfoReturnable<ItemStack> info, @Share("copperCurse") LocalRef<MobEffectInstance> copperCurse) {
 		if(user.hasEffect(ArcanusMobEffects.COPPER_CURSE.get()))
@@ -30,8 +30,8 @@ public abstract class MilkBucketItemMixin extends Item {
 	}
 
 	@Inject(method = "finishUsingItem", at = @At(
-		value = "INVOKE_ASSIGN",
-		target = "Lnet/minecraft/world/entity/LivingEntity;removeAllEffects()Z"
+			value = "INVOKE_ASSIGN",
+			target = "Lnet/minecraft/world/entity/LivingEntity;removeAllEffects()Z"
 	))
 	private void arcanus$dontClearCopperCurse2(ItemStack stack, Level world, LivingEntity user, CallbackInfoReturnable<ItemStack> info, @Share("copperCurse") LocalRef<MobEffectInstance> copperCurse) {
 		var curse = copperCurse.get();

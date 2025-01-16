@@ -1,21 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "building",
-  "key": {
-    "#": {
-      "tag": "minecraft:planks"
-    },
-    "A": {
-      "item": "minecraft:amethyst_shard"
-    }
-  },
-  "pattern": [
-    "##",
-    "AA",
-    "##"
-  ],
-  "result": {
-    "item": "arcanus:magic_door"
-  },
-  "show_notification": true
+	"type": "minecraft:crafting_shaped",
+	"category": "building",
+	"key": {
+		"#": {
+			"tag": "minecraft:planks"
+		},
+		"A": {
+			"item": "minecraft:amethyst_shard"
+		}
+	},
+	"pattern": [
+		"##",
+		"AA",
+		"##"
+	],
+	"result": {
+		"item": "arcanus:magic_door"
+	},
+	"show_notification": true
 }

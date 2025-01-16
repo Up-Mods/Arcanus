@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus.fabric.common.packets.c2s;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.fabric.common.items.SpellBookItem;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

@@ -1,13 +1,13 @@
 {
-  "replace": false,
-  "values": [
-    "arcanus:wizard_hat",
-    "arcanus:wizard_robes",
-    "arcanus:wizard_pants",
-    "arcanus:wizard_boots",
-    "arcanus:battle_mage_helmet",
-    "arcanus:battle_mage_chestplate",
-    "arcanus:battle_mage_leggings",
-    "arcanus:battle_mage_boots"
-  ]
+	"replace": false,
+	"values": [
+		"arcanus:wizard_hat",
+		"arcanus:wizard_robes",
+		"arcanus:wizard_pants",
+		"arcanus:wizard_boots",
+		"arcanus:battle_mage_helmet",
+		"arcanus:battle_mage_chestplate",
+		"arcanus:battle_mage_leggings",
+		"arcanus:battle_mage_boots"
+	]
 }

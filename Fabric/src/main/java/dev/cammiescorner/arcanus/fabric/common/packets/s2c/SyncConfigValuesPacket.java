@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus.fabric.common.packets.s2c;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

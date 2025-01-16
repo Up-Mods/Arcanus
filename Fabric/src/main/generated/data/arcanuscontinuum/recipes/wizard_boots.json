@@ -1,20 +1,20 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "equipment",
-  "key": {
-    "#": {
-      "item": "minecraft:leather"
-    },
-    "G": {
-      "tag": "c:gold_ingots"
-    }
-  },
-  "pattern": [
-    "G G",
-    "# #"
-  ],
-  "result": {
-    "item": "arcanus:wizard_boots"
-  },
-  "show_notification": true
+	"type": "minecraft:crafting_shaped",
+	"category": "equipment",
+	"key": {
+		"#": {
+			"item": "minecraft:leather"
+		},
+		"G": {
+			"tag": "c:gold_ingots"
+		}
+	},
+	"pattern": [
+		"G G",
+		"# #"
+	],
+	"result": {
+		"item": "arcanus:wizard_boots"
+	},
+	"show_notification": true
 }

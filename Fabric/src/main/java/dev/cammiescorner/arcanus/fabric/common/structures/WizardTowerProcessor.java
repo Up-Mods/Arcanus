@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus.fabric.common.structures;
 
 import com.mojang.serialization.Codec;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusStructureProcessorTypes;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.ContainerHelper;

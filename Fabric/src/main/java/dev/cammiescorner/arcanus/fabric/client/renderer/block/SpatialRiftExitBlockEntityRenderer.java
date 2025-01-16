@@ -1,12 +1,12 @@
 package dev.cammiescorner.arcanus.fabric.client.renderer.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
 import dev.cammiescorner.arcanus.fabric.client.models.entity.magic.SpatialRiftEntitySigilModel;
 import dev.cammiescorner.arcanus.fabric.common.blocks.entities.SpatialRiftExitBlockEntity;
 import dev.cammiescorner.arcanus.fabric.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

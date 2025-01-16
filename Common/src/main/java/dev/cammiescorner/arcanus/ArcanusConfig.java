@@ -1,11 +1,10 @@
 package dev.cammiescorner.arcanus;
 
 import com.teamresourceful.resourcefulconfig.api.annotations.*;
-import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption.*;
+import com.teamresourceful.resourcefulconfig.api.annotations.ConfigOption.Range;
 import com.teamresourceful.resourcefulconfig.api.types.options.EntryType;
 import net.minecraft.util.random.Weight;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import org.checkerframework.common.value.qual.IntRange;
 
 @Config(Arcanus.MOD_ID)
 public final class ArcanusConfig {

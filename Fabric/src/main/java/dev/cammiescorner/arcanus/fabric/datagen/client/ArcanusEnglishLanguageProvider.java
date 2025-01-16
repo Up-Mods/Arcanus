@@ -2,13 +2,9 @@ package dev.cammiescorner.arcanus.fabric.datagen.client;
 
 import dev.cammiescorner.arcanus.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanus.api.spells.SpellComponent;
-import dev.cammiescorner.arcanus.common.data.*;
 import dev.cammiescorner.arcanus.fabric.common.data.*;
-import dev.cammiescorner.arcanus.fabric.common.registry.*;
-import dev.cammiescorner.fabric.common.data.*;
 import dev.cammiescorner.arcanus.fabric.common.items.BattleMageArmorItem;
-import dev.cammiescorner.arcanus.common.registry.*;
-import dev.cammiescorner.fabric.common.registry.*;
+import dev.cammiescorner.arcanus.fabric.common.registry.*;
 import dev.upcraft.sparkweave.api.registry.RegistrySupplier;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;

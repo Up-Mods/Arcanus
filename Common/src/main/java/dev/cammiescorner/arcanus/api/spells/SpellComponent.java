@@ -1,7 +1,6 @@
 package dev.cammiescorner.arcanus.api.spells;
 
 import dev.cammiescorner.arcanus.Arcanus;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;

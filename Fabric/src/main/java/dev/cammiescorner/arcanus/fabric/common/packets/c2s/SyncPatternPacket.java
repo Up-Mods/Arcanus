@@ -1,6 +1,5 @@
 package dev.cammiescorner.arcanus.fabric.common.packets.c2s;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanus.api.spells.Pattern;
 import dev.cammiescorner.arcanus.api.spells.Spell;
@@ -9,6 +8,7 @@ import dev.cammiescorner.arcanus.api.spells.SpellGroup;
 import dev.cammiescorner.arcanus.fabric.common.data.ArcanusItemTags;
 import dev.cammiescorner.arcanus.fabric.common.items.StaffItem;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

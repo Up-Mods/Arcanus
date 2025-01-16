@@ -1,12 +1,11 @@
 package dev.cammiescorner.arcanus.fabric.common.compat;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.components.entity.SizeComponent;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.world.entity.Entity;
-import virtuoel.pehkui.api.ScaleRegistries;
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
 
 public class PehkuiCompat {
 

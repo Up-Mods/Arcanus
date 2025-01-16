@@ -2,12 +2,12 @@ package dev.cammiescorner.arcanus.fabric.client.renderer.entity.magic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
 import dev.cammiescorner.arcanus.fabric.client.models.entity.magic.MagicRuneEntityModel;
 import dev.cammiescorner.arcanus.fabric.common.entities.magic.MagicRuneEntity;
 import dev.cammiescorner.arcanus.fabric.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,18 +20,18 @@ public class MagicRuneEntityRenderer extends EntityRenderer<MagicRuneEntity> {
 	private static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/magic/rune.png");
 	private final MagicRuneEntityModel model;
 	private final int[] keyFrames = {
-		16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-		4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16
+			16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+			4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16
 	};
 
 	public MagicRuneEntityRenderer(EntityRendererProvider.Context ctx) {

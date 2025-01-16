@@ -1,32 +1,32 @@
 {
-  "parent": "arcanus:arcane/wizard_level_8",
-  "criteria": {
-    "has_level_9": {
-      "conditions": {
-        "level": 9
-      },
-      "trigger": "arcanus:wizard_level"
-    }
-  },
-  "display": {
-    "announce_to_chat": false,
-    "description": {
-      "translate": "advancements.arcanus.arcane.wizard_level_9.description"
-    },
-    "frame": "task",
-    "hidden": false,
-    "icon": {
-      "item": "arcanus:scroll_of_knowledge"
-    },
-    "show_toast": false,
-    "title": {
-      "translate": "advancements.arcanus.arcane.wizard_level_9.title"
-    }
-  },
-  "requirements": [
-    [
-      "has_level_9"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "arcanus:arcane/wizard_level_8",
+	"criteria": {
+		"has_level_9": {
+			"conditions": {
+				"level": 9
+			},
+			"trigger": "arcanus:wizard_level"
+		}
+	},
+	"display": {
+		"announce_to_chat": false,
+		"description": {
+			"translate": "advancements.arcanus.arcane.wizard_level_9.description"
+		},
+		"frame": "task",
+		"hidden": false,
+		"icon": {
+			"item": "arcanus:scroll_of_knowledge"
+		},
+		"show_toast": false,
+		"title": {
+			"translate": "advancements.arcanus.arcane.wizard_level_9.title"
+		}
+	},
+	"requirements": [
+		[
+			"has_level_9"
+		]
+	],
+	"sends_telemetry_event": true
 }

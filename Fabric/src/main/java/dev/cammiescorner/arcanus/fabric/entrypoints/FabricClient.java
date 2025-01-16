@@ -4,6 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import dev.cammiescorner.arcanus.api.spells.Pattern;
+import dev.cammiescorner.arcanus.client.models.entity.magic.*;
+import dev.cammiescorner.arcanus.client.renderer.entity.magic.*;
+import dev.cammiescorner.arcanus.common.packets.s2c.*;
+import dev.cammiescorner.arcanus.common.registry.*;
 import dev.cammiescorner.arcanus.fabric.client.gui.screens.ArcaneWorkbenchScreen;
 import dev.cammiescorner.arcanus.fabric.client.gui.screens.SpellBookScreen;
 import dev.cammiescorner.arcanus.fabric.client.gui.screens.SpellcraftScreen;
@@ -11,12 +15,7 @@ import dev.cammiescorner.arcanus.fabric.client.models.armour.BattleMageArmourMod
 import dev.cammiescorner.arcanus.fabric.client.models.armour.WizardArmourModel;
 import dev.cammiescorner.arcanus.fabric.client.models.entity.living.OpossumEntityModel;
 import dev.cammiescorner.arcanus.fabric.client.models.entity.living.WizardEntityModel;
-import dev.cammiescorner.arcanus.client.models.entity.magic.*;
 import dev.cammiescorner.arcanus.fabric.client.models.entity.magic.*;
-import dev.cammiescorner.arcanus.fabric.client.renderer.entity.magic.*;
-import dev.cammiescorner.arcanus.fabric.common.packets.s2c.*;
-import dev.cammiescorner.arcanus.fabric.common.registry.*;
-import dev.cammiescorner.fabric.client.models.entity.magic.*;
 import dev.cammiescorner.arcanus.fabric.client.models.feature.HaloModel;
 import dev.cammiescorner.arcanus.fabric.client.models.feature.SpellPatternModel;
 import dev.cammiescorner.arcanus.fabric.client.particles.CollapseParticle;
@@ -26,20 +25,21 @@ import dev.cammiescorner.arcanus.fabric.client.renderer.block.MagicBlockEntityRe
 import dev.cammiescorner.arcanus.fabric.client.renderer.block.SpatialRiftExitBlockEntityRenderer;
 import dev.cammiescorner.arcanus.fabric.client.renderer.entity.living.OpossumEntityRenderer;
 import dev.cammiescorner.arcanus.fabric.client.renderer.entity.living.WizardEntityRenderer;
-import dev.cammiescorner.arcanus.client.renderer.entity.magic.*;
-import dev.cammiescorner.fabric.client.renderer.entity.magic.*;
+import dev.cammiescorner.arcanus.fabric.client.renderer.entity.magic.*;
 import dev.cammiescorner.arcanus.fabric.client.renderer.item.StaffItemRenderer;
 import dev.cammiescorner.arcanus.fabric.common.compat.ArcanusCompat;
 import dev.cammiescorner.arcanus.fabric.common.compat.FirstPersonCompat;
 import dev.cammiescorner.arcanus.fabric.common.data.ArcanusItemTags;
 import dev.cammiescorner.arcanus.fabric.common.items.BattleMageArmorItem;
 import dev.cammiescorner.arcanus.fabric.common.items.StaffItem;
-import dev.cammiescorner.arcanus.common.packets.s2c.*;
-import dev.cammiescorner.arcanus.common.registry.*;
-import dev.cammiescorner.fabric.common.packets.s2c.*;
-import dev.cammiescorner.fabric.common.registry.*;
+import dev.cammiescorner.arcanus.fabric.common.packets.s2c.*;
+import dev.cammiescorner.arcanus.fabric.common.registry.*;
 import dev.cammiescorner.arcanus.fabric.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
+import dev.cammiescorner.fabric.client.models.entity.magic.*;
+import dev.cammiescorner.fabric.client.renderer.entity.magic.*;
+import dev.cammiescorner.fabric.common.packets.s2c.*;
+import dev.cammiescorner.fabric.common.registry.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -154,26 +154,26 @@ public class FabricClient implements ClientModInitializer {
 		ArcanusCompat.PEHKUI.ifEnabled(() -> () -> ClientPlayNetworking.registerGlobalReceiver(SyncScalePacket.ID, SyncScalePacket::handle));
 
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> switch(tintIndex) {
-				case 0 -> StaffItem.getPrimaryColorRGB(stack);
-				case 1 -> StaffItem.getSecondaryColorRGB(stack);
-				default -> -1;
-			},
-			ArcanusItems.WOODEN_STAFF.get(),
-			ArcanusItems.CRYSTAL_STAFF.get(),
-			ArcanusItems.DIVINATION_STAFF.get(),
-			ArcanusItems.CRESCENT_STAFF.get(),
-			ArcanusItems.ANCIENT_STAFF.get(),
-			ArcanusItems.WAND.get(),
-			ArcanusItems.THAUMATURGES_GAUNTLET.get(),
-			ArcanusItems.MAGIC_TOME.get(),
-			ArcanusItems.MAGE_PISTOL.get()
+					case 0 -> StaffItem.getPrimaryColorRGB(stack);
+					case 1 -> StaffItem.getSecondaryColorRGB(stack);
+					default -> -1;
+				},
+				ArcanusItems.WOODEN_STAFF.get(),
+				ArcanusItems.CRYSTAL_STAFF.get(),
+				ArcanusItems.DIVINATION_STAFF.get(),
+				ArcanusItems.CRESCENT_STAFF.get(),
+				ArcanusItems.ANCIENT_STAFF.get(),
+				ArcanusItems.WAND.get(),
+				ArcanusItems.THAUMATURGES_GAUNTLET.get(),
+				ArcanusItems.MAGIC_TOME.get(),
+				ArcanusItems.MAGE_PISTOL.get()
 		);
 
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> tintIndex == 0 ? ((DyeableLeatherItem) stack.getItem()).getColor(stack) : -1,
-			ArcanusItems.WIZARD_HAT.get(),
-			ArcanusItems.WIZARD_ROBES.get(),
-			ArcanusItems.WIZARD_PANTS.get(),
-			ArcanusItems.WIZARD_BOOTS.get()
+				ArcanusItems.WIZARD_HAT.get(),
+				ArcanusItems.WIZARD_ROBES.get(),
+				ArcanusItems.WIZARD_PANTS.get(),
+				ArcanusItems.WIZARD_BOOTS.get()
 		);
 
 		ItemProperties.register(ArcanusItems.BATTLE_MAGE_HELMET.get(), FabricMain.id("oxidation"), (stack, world, entity, seed) -> BattleMageArmorItem.getOxidation(stack).ordinal() / 10f);
@@ -461,17 +461,17 @@ public class FabricClient implements ClientModInitializer {
 
 			switch(direction) {
 				case SOUTH ->
-					renderSide(matrix4f, consumer, 0F, 1F, 0F, 1F, 1F, 1F, 1F, 1F, color, light, overlay, matrix3f, Direction.SOUTH);
+						renderSide(matrix4f, consumer, 0F, 1F, 0F, 1F, 1F, 1F, 1F, 1F, color, light, overlay, matrix3f, Direction.SOUTH);
 				case NORTH ->
-					renderSide(matrix4f, consumer, 0F, 1F, 1F, 0F, 0F, 0F, 0F, 0F, color, light, overlay, matrix3f, Direction.NORTH);
+						renderSide(matrix4f, consumer, 0F, 1F, 1F, 0F, 0F, 0F, 0F, 0F, color, light, overlay, matrix3f, Direction.NORTH);
 				case EAST ->
-					renderSide(matrix4f, consumer, 1F, 1F, 1F, 0F, 0F, 1F, 1F, 0F, color, light, overlay, matrix3f, Direction.EAST);
+						renderSide(matrix4f, consumer, 1F, 1F, 1F, 0F, 0F, 1F, 1F, 0F, color, light, overlay, matrix3f, Direction.EAST);
 				case WEST ->
-					renderSide(matrix4f, consumer, 0F, 0F, 0F, 1F, 0F, 1F, 1F, 0F, color, light, overlay, matrix3f, Direction.WEST);
+						renderSide(matrix4f, consumer, 0F, 0F, 0F, 1F, 0F, 1F, 1F, 0F, color, light, overlay, matrix3f, Direction.WEST);
 				case DOWN ->
-					renderSide(matrix4f, consumer, 0F, 1F, 0F, 0F, 0F, 0F, 1F, 1F, color, light, overlay, matrix3f, Direction.DOWN);
+						renderSide(matrix4f, consumer, 0F, 1F, 0F, 0F, 0F, 0F, 1F, 1F, color, light, overlay, matrix3f, Direction.DOWN);
 				case UP ->
-					renderSide(matrix4f, consumer, 0F, 1F, 1F, 1F, 1F, 1F, 0F, 0F, color, light, overlay, matrix3f, Direction.UP);
+						renderSide(matrix4f, consumer, 0F, 1F, 1F, 1F, 1F, 1F, 0F, 0F, color, light, overlay, matrix3f, Direction.UP);
 			}
 		}
 

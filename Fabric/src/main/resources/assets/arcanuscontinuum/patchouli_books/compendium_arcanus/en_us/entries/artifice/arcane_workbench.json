@@ -1,23 +1,23 @@
 {
-  "name": "Arcane Workbench",
-  "icon": "arcanus:arcane_workbench",
-  "category": "arcanus:artifice",
-  "advancement": "arcanus:arcane/a_magical_crystal",
-  "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "The Arcane Workbench is used by wizards to bind spells to their staves, as well as make their staves unique to themselves. It's common practice for a wizard to customize their staff to match their own personality and aesthetic."
-    },
-    {
-      "type": "patchouli:image",
-      "border": true,
-      "images": [
-        "arcanus:textures/gui/patchouli/entries/arcane_workbench.png"
-      ]
-    },
-    {
-      "type": "patchouli:crafting",
-      "recipe": "arcanus:crafting_table/arcane_workbench"
-    }
-  ]
+	"name": "Arcane Workbench",
+	"icon": "arcanus:arcane_workbench",
+	"category": "arcanus:artifice",
+	"advancement": "arcanus:arcane/a_magical_crystal",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "The Arcane Workbench is used by wizards to bind spells to their staves, as well as make their staves unique to themselves. It's common practice for a wizard to customize their staff to match their own personality and aesthetic."
+		},
+		{
+			"type": "patchouli:image",
+			"border": true,
+			"images": [
+				"arcanus:textures/gui/patchouli/entries/arcane_workbench.png"
+			]
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "arcanus:crafting_table/arcane_workbench"
+		}
+	]
 }

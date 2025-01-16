@@ -11,8 +11,8 @@ public class CreateSpellbookCommand {
 
 	public static void register(LiteralArgumentBuilder<CommandSourceStack> builder) {
 		builder.then(Commands.literal("create_random_spellbook")
-			.requires(serverCommandSource -> serverCommandSource.hasPermission(Commands.LEVEL_MODERATORS))
-			.executes(context -> CreateSpellbookCommand.createRandomSpellbook(context, context.getSource().getPlayerOrException()))
+				.requires(serverCommandSource -> serverCommandSource.hasPermission(Commands.LEVEL_MODERATORS))
+				.executes(context -> CreateSpellbookCommand.createRandomSpellbook(context, context.getSource().getPlayerOrException()))
 		);
 	}
 

@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus.fabric.common.items;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.fabric.common.screens.SpellBookScreenHandler;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -51,11 +51,11 @@ public class SpellBookItem extends Item {
 		// TODO make ALL of it translatable
 		tooltip.add(Component.literal(spell.getName()).withStyle(ChatFormatting.GOLD));
 		tooltip.add(Component.translatable("spell_book.arcanus.weight").append(": ").withStyle(ChatFormatting.GREEN)
-			.append(Component.translatable("spell_book.arcanus.weight", spell.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
+				.append(Component.translatable("spell_book.arcanus.weight", spell.getWeight().toString().toLowerCase(Locale.ROOT)).withStyle(ChatFormatting.GRAY)));
 		tooltip.add(Component.translatable("spell_book.arcanus.mana_cost").append(": ").withStyle(ChatFormatting.BLUE)
-			.append(Component.literal(manaCost).withStyle(ChatFormatting.GRAY)));
+				.append(Component.literal(manaCost).withStyle(ChatFormatting.GRAY)));
 		tooltip.add(Component.translatable("spell_book.arcanus.cool_down").append(": ").withStyle(ChatFormatting.RED)
-			.append(Component.literal(coolDown).append(Component.translatable("spell_book.arcanus.seconds")).withStyle(ChatFormatting.GRAY)));
+				.append(Component.literal(coolDown).append(Component.translatable("spell_book.arcanus.seconds")).withStyle(ChatFormatting.GRAY)));
 
 		super.appendHoverText(stack, world, tooltip, context);
 	}

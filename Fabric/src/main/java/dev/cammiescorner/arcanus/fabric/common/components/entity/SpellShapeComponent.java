@@ -1,12 +1,13 @@
 package dev.cammiescorner.arcanus.fabric.common.components.entity;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.spells.SpellShape;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 public class SpellShapeComponent implements AutoSyncedComponent {
 	private final Entity entity;
@@ -17,12 +18,12 @@ public class SpellShapeComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		shape = (SpellShape) FabricMain.SPELL_COMPONENTS.get(new ResourceLocation(tag.getString("SpellShape")));
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		tag.putString("SpellShape", FabricMain.SPELL_COMPONENTS.getKey(shape).toString());
 	}
 

@@ -1,11 +1,11 @@
 package dev.cammiescorner.arcanus.fabric.common.components.color;
 
 import com.google.common.base.MoreObjects;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.components.MagicColorComponent;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanus.fabric.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;

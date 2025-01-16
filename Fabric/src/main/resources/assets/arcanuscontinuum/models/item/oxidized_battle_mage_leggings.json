@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "arcanus:item/oxidized_battle_mage_leggings"
-  }
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "arcanus:item/oxidized_battle_mage_leggings"
+	}
 }

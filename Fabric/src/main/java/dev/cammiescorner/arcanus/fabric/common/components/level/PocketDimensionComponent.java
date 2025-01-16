@@ -2,18 +2,17 @@ package dev.cammiescorner.arcanus.fabric.common.components.level;
 
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
-import dev.cammiescorner.arcanus.common.MainHelper;
-import dev.cammiescorner.arcanus.fabric.common.FabricMainDuck;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
+import dev.cammiescorner.arcanus.common.MainHelper;
 import dev.cammiescorner.arcanus.fabric.common.blocks.SpatialRiftExitBlock;
 import dev.cammiescorner.arcanus.fabric.common.blocks.SpatialRiftExitEdgeBlock;
 import dev.cammiescorner.arcanus.fabric.common.data.ArcanusDimensions;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
-import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -35,7 +34,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.Scoreboard;
@@ -43,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.component.Component {
+public class PocketDimensionComponent implements org.ladysnake.cca.api.v3.component.Component {
 
 	private static final int REPLACE_FLAGS = Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS;
 	private static final int DIMENSION_PADDING_Y = 8;
@@ -71,7 +69,7 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		ListTag plotNbtList = tag.getList("PlotMap", Tag.TAG_COMPOUND);
 		ListTag exitNbtList = tag.getList("ExitSpots", Tag.TAG_COMPOUND);
 
@@ -87,12 +85,12 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 
 		for(int i = 0; i < exitNbtList.size(); i++) {
 			CompoundTag entry = exitNbtList.getCompound(i);
-			exitSpot.put(entry.getUUID("EntityId"), new Tuple<>(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(entry.getString("WorldKey"))), new Vec3(entry.getDouble("X"), entry.getDouble("Y"), entry.getDouble("Z"))));
+			exitSpot.put(entry.getUUID("EntityId"), new Tuple<>(ResourceKey.create(Registries.DIMENSION, ResourceLocation.tryParse(entry.getString("WorldKey"))), new Vec3(entry.getDouble("X"), entry.getDouble("Y"), entry.getDouble("Z"))));
 		}
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		ListTag plotNbtList = new ListTag();
 		ListTag exitNbtList = new ListTag();
 
@@ -304,8 +302,8 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 			pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_WALL.get().defaultBlockState(), REPLACE_FLAGS);
 
 			Optional.ofNullable(pocketDim.getBlockEntity(pos))
-				.flatMap(ArcanusComponents.MAGIC_COLOR::maybeGet)
-				.ifPresent(component -> component.setSourceId(target));
+					.flatMap(ArcanusComponents.MAGIC_COLOR::maybeGet)
+					.ifPresent(component -> component.setSourceId(target));
 		});
 
 		if(regenerateType.placeWalls()) {
@@ -319,21 +317,21 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 					if(x == 0) {
 						switch(z) {
 							case 0 ->
-								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+									pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 							case 1, 2 ->
-								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.WEST), REPLACE_FLAGS);
+									pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.WEST), REPLACE_FLAGS);
 							case 3 ->
-								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.WEST).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+									pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.WEST).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 						}
 					}
 					else if(x == 3) {
 						switch(z) {
 							case 0 ->
-								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.EAST).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+									pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.EAST).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 							case 1, 2 ->
-								pocketDim.setBlockAndUpdate(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.EAST));
+									pocketDim.setBlockAndUpdate(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.EAST));
 							case 3 ->
-								pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
+									pocketDim.setBlock(pos, ArcanusBlocks.SPATIAL_RIFT_EXIT_EDGE.get().defaultBlockState().setValue(SpatialRiftExitEdgeBlock.FACING, Direction.SOUTH).setValue(SpatialRiftExitEdgeBlock.CORNER, true), REPLACE_FLAGS);
 						}
 					}
 					else if(z == 0) {

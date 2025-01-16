@@ -16,7 +16,7 @@ public class ArcanusEnchantmentTagsProvider extends FabricTagProvider.Enchantmen
 	@Override
 	protected void addTags(HolderLookup.Provider arg) {
 		getOrCreateTagBuilder(ArcanusEnchantmentTags.MANA_POOL_COMPATIBLE_WITH)
-			.add(Enchantments.UNBREAKING)
-			.add(Enchantments.MENDING);
+				.add(Enchantments.UNBREAKING)
+				.add(Enchantments.MENDING);
 	}
 }

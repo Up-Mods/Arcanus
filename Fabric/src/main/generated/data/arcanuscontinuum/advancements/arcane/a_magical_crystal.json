@@ -1,38 +1,38 @@
 {
-  "parent": "arcanus:arcane/root",
-  "criteria": {
-    "has_amethyst": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:amethyst_shard"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    }
-  },
-  "display": {
-    "announce_to_chat": true,
-    "description": {
-      "translate": "advancements.arcanus.arcane.a_magical_crystal.description"
-    },
-    "frame": "goal",
-    "hidden": false,
-    "icon": {
-      "item": "minecraft:amethyst_shard"
-    },
-    "show_toast": true,
-    "title": {
-      "translate": "advancements.arcanus.arcane.a_magical_crystal.title"
-    }
-  },
-  "requirements": [
-    [
-      "has_amethyst"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "arcanus:arcane/root",
+	"criteria": {
+		"has_amethyst": {
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:amethyst_shard"
+						]
+					}
+				]
+			},
+			"trigger": "minecraft:inventory_changed"
+		}
+	},
+	"display": {
+		"announce_to_chat": true,
+		"description": {
+			"translate": "advancements.arcanus.arcane.a_magical_crystal.description"
+		},
+		"frame": "goal",
+		"hidden": false,
+		"icon": {
+			"item": "minecraft:amethyst_shard"
+		},
+		"show_toast": true,
+		"title": {
+			"translate": "advancements.arcanus.arcane.a_magical_crystal.title"
+		}
+	},
+	"requirements": [
+		[
+			"has_amethyst"
+		]
+	],
+	"sends_telemetry_event": true
 }

@@ -16,8 +16,8 @@ public abstract class PersistentProjectileEntityMixin extends Projectile {
 	}
 
 	@ModifyExpressionValue(method = "tick", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/player/Player;canHarmPlayer(Lnet/minecraft/world/entity/player/Player;)Z"
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/player/Player;canHarmPlayer(Lnet/minecraft/world/entity/player/Player;)Z"
 	))
 	private boolean ignorePvpFlag(boolean original) {
 		return original || ((Object) this) instanceof MagicProjectileEntity;

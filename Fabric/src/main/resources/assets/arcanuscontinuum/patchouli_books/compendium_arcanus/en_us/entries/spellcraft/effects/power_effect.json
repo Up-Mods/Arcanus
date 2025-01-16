@@ -1,20 +1,20 @@
 {
-  "name": "Power Effect",
-  "icon": "arcanus:textures/spell_components/effects/colored/power_effect.png",
-  "category": "arcanus:spellcraft",
-  "sortnum": 302,
-  "advancement": "arcanus:arcane/wizard_level_4",
-  "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "Weight: None$(br)Mana Cost: 2$(br)Cool Down: 0 seconds$(br2)Description:$(br)Applies a redstone pulse to any targeted blocks that can accept it. Chaining the effect makes it stronger."
-    },
-    {
-      "type": "patchouli:image",
-      "border": true,
-      "images": [
-        "arcanus:textures/gui/patchouli/entries/effects/power_effect.png"
-      ]
-    }
-  ]
+	"name": "Power Effect",
+	"icon": "arcanus:textures/spell_components/effects/colored/power_effect.png",
+	"category": "arcanus:spellcraft",
+	"sortnum": 302,
+	"advancement": "arcanus:arcane/wizard_level_4",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "Weight: None$(br)Mana Cost: 2$(br)Cool Down: 0 seconds$(br2)Description:$(br)Applies a redstone pulse to any targeted blocks that can accept it. Chaining the effect makes it stronger."
+		},
+		{
+			"type": "patchouli:image",
+			"border": true,
+			"images": [
+				"arcanus:textures/gui/patchouli/entries/effects/power_effect.png"
+			]
+		}
+	]
 }

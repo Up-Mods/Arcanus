@@ -13,8 +13,8 @@ import java.util.stream.Stream;
 @Mixin(FabricDynamicRegistryProvider.Entries.class)
 public class FabricDynamicRegistryProviderEntriesMixin {
 	@WrapOperation(method = "<init>", at = @At(
-		value = "INVOKE",
-		target = "Ljava/util/List;stream()Ljava/util/stream/Stream;"
+			value = "INVOKE",
+			target = "Ljava/util/List;stream()Ljava/util/stream/Stream;"
 	))
 	private Stream<RegistryDataLoader.RegistryData<?>> arcanus$wrapStream(List<RegistryDataLoader.RegistryData<?>> instance, Operation<Stream<RegistryDataLoader.RegistryData<?>>> original) {
 		return Stream.concat(original.call(instance), RegistryDataLoader.DIMENSION_REGISTRIES.stream());

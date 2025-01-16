@@ -4,9 +4,7 @@ import dev.cammiescorner.arcanus.fabric.common.compat.ArcanusCompat;
 import dev.cammiescorner.arcanus.fabric.common.util.datagen.DynamicRegistryEntryProvider;
 import dev.cammiescorner.arcanus.fabric.datagen.client.ArcanusEnglishLanguageProvider;
 import dev.cammiescorner.arcanus.fabric.datagen.client.ArcanusModelProvider;
-import dev.cammiescorner.arcanus.datagen.common.*;
 import dev.cammiescorner.arcanus.fabric.datagen.common.*;
-import dev.cammiescorner.fabric.datagen.common.*;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.RegistrySetBuilder;
@@ -23,11 +21,11 @@ public class ArcanusDataGenerator implements DataGeneratorEntrypoint {
 	@Override
 	public void buildRegistry(RegistrySetBuilder builder) {
 		DynamicRegistryEntryProvider.builder()
-			.add(ArcanusBiomeProvider::new)
-			.add(ArcanusDamageTypeProvider::new)
-			.add(ArcanusDimensionProvider::new)
-			.add(ArcanusStructureProvider::new)
-			.build(builder);
+				.add(ArcanusBiomeProvider::new)
+				.add(ArcanusDamageTypeProvider::new)
+				.add(ArcanusDimensionProvider::new)
+				.add(ArcanusStructureProvider::new)
+				.build(builder);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanus.fabric.common.packets.s2c;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.spells.SpellEffect;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusSpellComponents;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,6 +34,6 @@ public class SyncScalePacket {
 		double strength = buf.readDouble();
 
 		client.execute(() ->
-			ArcanusComponents.setScale(client.level.getEntity(entityId), effect, strength));
+				ArcanusComponents.setScale(client.level.getEntity(entityId), effect, strength));
 	}
 }

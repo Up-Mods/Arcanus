@@ -31,8 +31,8 @@ public class PlayerManagerMixin {
 	@Shadow @Final private LayeredRegistryAccess<RegistryLayer> registries;
 
 	@ModifyReceiver(method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V", at = @At(
-		value = "INVOKE",
-		target = "Ljava/util/List;iterator()Ljava/util/Iterator;"
+			value = "INVOKE",
+			target = "Ljava/util/List;iterator()Ljava/util/Iterator;"
 	))
 	private List<ServerPlayer> arcanus$restrictMagicDoorChatMessage(List<ServerPlayer> original, PlayerChatMessage chatMessage, Predicate<ServerPlayer> predicate, @Nullable ServerPlayer player, ChatType.Bound parameters) {
 		if(player != null && this.registries.compositeAccess().registryOrThrow(Registries.CHAT_TYPE).getResourceKey(parameters.chatType()).map(key -> key.equals(ChatType.CHAT)).orElse(false)) {

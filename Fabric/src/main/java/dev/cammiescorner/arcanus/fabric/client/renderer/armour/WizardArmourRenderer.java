@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanus.fabric.client.renderer.armour;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.client.models.armour.WizardArmourModel;
 import dev.cammiescorner.arcanus.fabric.common.items.WizardRobesArmorItem;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;

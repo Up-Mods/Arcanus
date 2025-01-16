@@ -1,16 +1,16 @@
 {
-  "name": "Staves",
-  "icon": "arcanus:wooden_staff",
-  "category": "arcanus:artifice",
-  "advancement": "arcanus:arcane/wizard_level_1",
-  "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "Wizards require something to focus their mana in order to cast. This most commonly comes in the form of various staves, but can come in all kinds of shapes and sizes."
-    },
-    {
-      "type": "patchouli:crafting",
-      "recipe": "arcanus:crafting_table/crystal_staff"
-    }
-  ]
+	"name": "Staves",
+	"icon": "arcanus:wooden_staff",
+	"category": "arcanus:artifice",
+	"advancement": "arcanus:arcane/wizard_level_1",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "Wizards require something to focus their mana in order to cast. This most commonly comes in the form of various staves, but can come in all kinds of shapes and sizes."
+		},
+		{
+			"type": "patchouli:crafting",
+			"recipe": "arcanus:crafting_table/crystal_staff"
+		}
+	]
 }

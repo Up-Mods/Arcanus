@@ -3,13 +3,14 @@ package dev.cammiescorner.arcanus.fabric.common.components.entity;
 import dev.cammiescorner.arcanus.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusCriteriaTriggers;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public class WizardLevelComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		level = Mth.clamp(tag.getInt("WizardLevel"), 0, getMaxLevel());
 		AttributeInstance manaAttr = entity.getAttribute(ArcanusEntityAttributes.MAX_MANA.get());
 
@@ -33,7 +34,7 @@ public class WizardLevelComponent implements AutoSyncedComponent {
 			if(manaAttr.getModifier(MANA_MODIFIER) != null)
 				manaAttr.removeModifier(MANA_MODIFIER);
 
-			manaAttr.addPermanentModifier(new AttributeModifier(MANA_MODIFIER, "Wizard Level Modifier", Math.max(level - 1, 0) * 10, AttributeModifier.Operation.ADDITION));
+			manaAttr.addPermanentModifier(new AttributeModifier(MANA_MODIFIER, "Wizard Level Modifier", Math.max(level - 1, 0) * 10, AttributeModifier.Operation.ADD_VALUE));
 		}
 
 		if(entity instanceof ServerPlayer serverPlayer) {
@@ -42,7 +43,7 @@ public class WizardLevelComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		tag.putInt("WizardLevel", level);
 	}
 
@@ -62,7 +63,7 @@ public class WizardLevelComponent implements AutoSyncedComponent {
 			if(manaAttr.getModifier(MANA_MODIFIER) != null)
 				manaAttr.removeModifier(MANA_MODIFIER);
 
-			manaAttr.addPermanentModifier(new AttributeModifier(MANA_MODIFIER, "Wizard Level Modifier", Math.max(level - 1, 0) * 10, AttributeModifier.Operation.ADDITION));
+			manaAttr.addPermanentModifier(new AttributeModifier(MANA_MODIFIER, "Wizard Level Modifier", Math.max(level - 1, 0) * 10, AttributeModifier.Operation.ADD_VALUE));
 		}
 
 		ArcanusComponents.WIZARD_LEVEL_COMPONENT.sync(entity);

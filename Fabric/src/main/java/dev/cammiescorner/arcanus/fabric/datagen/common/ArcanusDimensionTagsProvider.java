@@ -19,6 +19,6 @@ public class ArcanusDimensionTagsProvider extends FabricTagProvider<DimensionTyp
 	@Override
 	protected void addTags(HolderLookup.Provider arg) {
 		getOrCreateTagBuilder(ArcanusDimensionTags.WARDING_NOT_ALLOWED)
-			.add(ArcanusDimensionTypes.POCKET_DIMENSION);
+				.add(ArcanusDimensionTypes.POCKET_DIMENSION);
 	}
 }

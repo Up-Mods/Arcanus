@@ -1,11 +1,12 @@
 package dev.cammiescorner.arcanus.fabric.common.components.entity;
 
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
+import org.ladysnake.cca.api.v3.component.tick.ServerTickingComponent;
 
 public class BoltTargetComponent implements AutoSyncedComponent, ServerTickingComponent {
 	private final LivingEntity entity;
@@ -26,13 +27,13 @@ public class BoltTargetComponent implements AutoSyncedComponent, ServerTickingCo
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		pos = new Vec3(tag.getDouble("PosX"), tag.getDouble("PosY"), tag.getDouble("PosZ"));
 		shouldRender = tag.getBoolean("ShouldRender");
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		tag.putDouble("PosX", pos.x());
 		tag.putDouble("PosY", pos.y());
 		tag.putDouble("PosZ", pos.z());

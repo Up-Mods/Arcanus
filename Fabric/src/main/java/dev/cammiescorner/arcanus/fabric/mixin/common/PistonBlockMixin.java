@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PistonBaseBlock.class)
 public class PistonBlockMixin {
 	@Inject(method = "isPushable", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"
 	))
 	private static void arcanus$dontMoveWardedBlocks(BlockState state, Level level, BlockPos pos, Direction movementDirection, boolean allowDestroy, Direction pistonFacing, CallbackInfoReturnable<Boolean> cir) {
 		if(ArcanusComponents.isBlockWarded(level, pos))

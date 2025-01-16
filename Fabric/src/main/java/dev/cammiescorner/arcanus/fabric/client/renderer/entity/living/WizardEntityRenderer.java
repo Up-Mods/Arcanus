@@ -1,10 +1,10 @@
 package dev.cammiescorner.arcanus.fabric.client.renderer.entity.living;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.client.models.entity.living.WizardEntityModel;
 import dev.cammiescorner.arcanus.fabric.client.renderer.feature.WizardHeldItemFeatureRenderer;
 import dev.cammiescorner.arcanus.fabric.common.entities.living.WizardEntity;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

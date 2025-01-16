@@ -24,35 +24,35 @@ public class ArcanusTradeOffers {
 	public static final Int2ObjectMap<VillagerTrades.ItemListing[]> WIZARD_TRADES = Util.make(() -> {
 		List<VillagerTrades.ItemListing> factories = new ArrayList<>(32);
 		Collections.addAll(factories,
-			new SellItemFactory(Items.GLOWSTONE_DUST, 3, 3, 100, 1),
-			new SellItemFactory(Items.LAPIS_LAZULI, 3, 3, 100, 1),
-			new SellItemFactory(Items.GUNPOWDER, 3, 5, 100, 1),
-			new SellItemFactory(Items.REDSTONE, 3, 5, 100, 1),
-			new SellItemFactory(ArcanusItems.WOODEN_STAFF.get(), 5, 1, 100, 3),
-			new SellItemFactory(ArcanusItems.CRYSTAL_STAFF.get(), 5, 1, 100, 3),
-			new SellItemFactory(ArcanusItems.DIVINATION_STAFF.get(), 5, 1, 100, 3),
-			new SellItemFactory(ArcanusItems.CRESCENT_STAFF.get(), 5, 1, 100, 3),
-			new SellItemFactory(ArcanusItems.ANCIENT_STAFF.get(), 5, 1, 100, 3),
-			new SellItemFactory(ArcanusItems.MAGIC_TOME.get(), 5, 1, 100, 3),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.INVISIBILITY), 10, 100, 5),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.NIGHT_VISION), 10, 100, 5),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LEAPING), 10, 100, 5),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.FIRE_RESISTANCE), 10, 100, 5),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SWIFTNESS), 10, 100, 5),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER_BREATHING), 10, 100, 5),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_REGENERATION), 10, 100, 5),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRENGTH), 10, 100, 5),
-			new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SLOW_FALLING), 10, 100, 5)
+				new SellItemFactory(Items.GLOWSTONE_DUST, 3, 3, 100, 1),
+				new SellItemFactory(Items.LAPIS_LAZULI, 3, 3, 100, 1),
+				new SellItemFactory(Items.GUNPOWDER, 3, 5, 100, 1),
+				new SellItemFactory(Items.REDSTONE, 3, 5, 100, 1),
+				new SellItemFactory(ArcanusItems.WOODEN_STAFF.get(), 5, 1, 100, 3),
+				new SellItemFactory(ArcanusItems.CRYSTAL_STAFF.get(), 5, 1, 100, 3),
+				new SellItemFactory(ArcanusItems.DIVINATION_STAFF.get(), 5, 1, 100, 3),
+				new SellItemFactory(ArcanusItems.CRESCENT_STAFF.get(), 5, 1, 100, 3),
+				new SellItemFactory(ArcanusItems.ANCIENT_STAFF.get(), 5, 1, 100, 3),
+				new SellItemFactory(ArcanusItems.MAGIC_TOME.get(), 5, 1, 100, 3),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.INVISIBILITY), 10, 100, 5),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.NIGHT_VISION), 10, 100, 5),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LEAPING), 10, 100, 5),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.FIRE_RESISTANCE), 10, 100, 5),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SWIFTNESS), 10, 100, 5),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER_BREATHING), 10, 100, 5),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_REGENERATION), 10, 100, 5),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRENGTH), 10, 100, 5),
+				new SellItemFactory(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.SLOW_FALLING), 10, 100, 5)
 		);
 		ArcanusCompat.PATCHOULI.ifEnabled(() -> () -> factories.add(0, new SellItemFactory(PatchouliCompat.getCompendiumArcanus(), 2, 100, 1)));
 
 		return new Int2ObjectOpenHashMap<>(
-			ImmutableMap.of(
-				1, factories.toArray(VillagerTrades.ItemListing[]::new),
-				2, new VillagerTrades.ItemListing[]{
-					new SellItemFactory(ArcanusItems.SCROLL_OF_KNOWLEDGE.get(), 64, 1, 100, 10)
-				}
-			)
+				ImmutableMap.of(
+						1, factories.toArray(VillagerTrades.ItemListing[]::new),
+						2, new VillagerTrades.ItemListing[]{
+								new SellItemFactory(ArcanusItems.SCROLL_OF_KNOWLEDGE.get(), 64, 1, 100, 10)
+						}
+				)
 		);
 	});
 

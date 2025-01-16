@@ -27,10 +27,10 @@ public abstract class DynamicRegistryEntryProvider {
 			protected void configure(HolderLookup.Provider registries, Entries entries) {
 				if(fabricBuilderHack != null) {
 					fabricBuilderHack.getEntries().stream()
-						.map(RegistrySetBuilder.RegistryStub::key)
-						.distinct()
-						.map(registries::lookupOrThrow)
-						.forEach(entries::addAll);
+							.map(RegistrySetBuilder.RegistryStub::key)
+							.distinct()
+							.map(registries::lookupOrThrow)
+							.forEach(entries::addAll);
 				}
 			}
 

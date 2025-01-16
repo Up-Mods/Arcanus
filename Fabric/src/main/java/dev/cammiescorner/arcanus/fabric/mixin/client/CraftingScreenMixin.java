@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus.fabric.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.items.StaffItem;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
@@ -21,8 +21,8 @@ public abstract class CraftingScreenMixin extends AbstractContainerScreen<Crafti
 	}
 
 	@Inject(method = "render", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/client/gui/screens/inventory/CraftingScreen;renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V"
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/gui/screens/inventory/CraftingScreen;renderTooltip(Lnet/minecraft/client/gui/GuiGraphics;II)V"
 	))
 	private void arcanus$render(GuiGraphics gui, int mouseX, int mouseY, float delta, CallbackInfo info) {
 		PoseStack matrices = gui.pose();

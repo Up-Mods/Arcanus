@@ -1,14 +1,14 @@
 package dev.cammiescorner.arcanus.fabric.common.components.entity;
 
 import com.mojang.datafixers.util.Pair;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanus.fabric.common.entities.magic.PocketDimensionPortalEntity;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanus.fabric.common.util.ArcanusHelper;
-import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.ladysnake.cca.api.v3.component.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class PocketDimensionPortalComponent implements Component {
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		ListTag list = tag.getList("PortalIds", Tag.TAG_COMPOUND);
 		portalIds.clear();
 
@@ -49,7 +50,7 @@ public class PocketDimensionPortalComponent implements Component {
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		ListTag list = new ListTag();
 
 		for(ResourceKey<Level> levelKey : portalIds.keySet()) {

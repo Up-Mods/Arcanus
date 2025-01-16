@@ -16,9 +16,9 @@ import java.util.UUID;
 public record PocketDimensionPlot(UUID ownerId, BlockPos min, BlockPos max) {
 
 	public static final Codec<PocketDimensionPlot> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		UUIDUtil.CODEC.fieldOf("owner_id").forGetter(PocketDimensionPlot::ownerId),
-		BlockPos.CODEC.fieldOf("min").forGetter(PocketDimensionPlot::min),
-		BlockPos.CODEC.fieldOf("max").forGetter(PocketDimensionPlot::max)
+			UUIDUtil.CODEC.fieldOf("owner_id").forGetter(PocketDimensionPlot::ownerId),
+			BlockPos.CODEC.fieldOf("min").forGetter(PocketDimensionPlot::min),
+			BlockPos.CODEC.fieldOf("max").forGetter(PocketDimensionPlot::max)
 	).apply(instance, PocketDimensionPlot::new));
 
 	public CompoundTag toNbt() {

@@ -122,8 +122,8 @@ public class NecroSkeletonEntity extends AbstractSkeleton implements Summon {
 
 	public static AttributeSupplier.Builder createAttributes() {
 		return AbstractSkeleton.createAttributes()
-			.add(Attributes.ATTACK_DAMAGE, 1)
-			.add(Attributes.MAX_HEALTH, 0);
+				.add(Attributes.ATTACK_DAMAGE, 1)
+				.add(Attributes.MAX_HEALTH, 0);
 	}
 
 	@Override

@@ -1,32 +1,32 @@
 {
-  "parent": "arcanus:arcane/magical_meet_and_greet",
-  "criteria": {
-    "has_level_1": {
-      "conditions": {
-        "level": 1
-      },
-      "trigger": "arcanus:wizard_level"
-    }
-  },
-  "display": {
-    "announce_to_chat": true,
-    "description": {
-      "translate": "advancements.arcanus.arcane.wizard_level_1.description"
-    },
-    "frame": "task",
-    "hidden": false,
-    "icon": {
-      "item": "arcanus:scroll_of_knowledge"
-    },
-    "show_toast": true,
-    "title": {
-      "translate": "advancements.arcanus.arcane.wizard_level_1.title"
-    }
-  },
-  "requirements": [
-    [
-      "has_level_1"
-    ]
-  ],
-  "sends_telemetry_event": true
+	"parent": "arcanus:arcane/magical_meet_and_greet",
+	"criteria": {
+		"has_level_1": {
+			"conditions": {
+				"level": 1
+			},
+			"trigger": "arcanus:wizard_level"
+		}
+	},
+	"display": {
+		"announce_to_chat": true,
+		"description": {
+			"translate": "advancements.arcanus.arcane.wizard_level_1.description"
+		},
+		"frame": "task",
+		"hidden": false,
+		"icon": {
+			"item": "arcanus:scroll_of_knowledge"
+		},
+		"show_toast": true,
+		"title": {
+			"translate": "advancements.arcanus.arcane.wizard_level_1.title"
+		}
+	},
+	"requirements": [
+		[
+			"has_level_1"
+		]
+	],
+	"sends_telemetry_event": true
 }

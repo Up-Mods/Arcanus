@@ -2,11 +2,9 @@ package dev.cammiescorner.arcanus.fabric.datagen.common;
 
 import com.mojang.datafixers.util.Pair;
 import dev.cammiescorner.arcanus.fabric.common.data.*;
-import dev.cammiescorner.fabric.common.data.*;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
-import dev.cammiescorner.arcanus.common.data.*;
 import dev.cammiescorner.arcanus.fabric.common.structures.WizardTowerProcessor;
 import dev.cammiescorner.arcanus.fabric.common.util.datagen.DynamicRegistryEntryProvider;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.Pools;
@@ -49,12 +47,12 @@ public class ArcanusStructureProvider extends DynamicRegistryEntryProvider {
 			var pools = context.lookup(Registries.TEMPLATE_POOL);
 
 			context.register(ArcanusStructures.WIZARD_TOWER, new JigsawStructure(
-				Structures.structure(biomes.getOrThrow(ArcanusBiomeTags.HAS_WIZARD_TOWER), TerrainAdjustment.BEARD_THIN),
-				pools.getOrThrow(ArcanusStructurePools.WIZARD_TOWER),
-				1,
-				ConstantHeight.of(VerticalAnchor.absolute(0)),
-				false,
-				Heightmap.Types.WORLD_SURFACE_WG
+					Structures.structure(biomes.getOrThrow(ArcanusBiomeTags.HAS_WIZARD_TOWER), TerrainAdjustment.BEARD_THIN),
+					pools.getOrThrow(ArcanusStructurePools.WIZARD_TOWER),
+					1,
+					ConstantHeight.of(VerticalAnchor.absolute(0)),
+					false,
+					Heightmap.Types.WORLD_SURFACE_WG
 			));
 		});
 

@@ -61,7 +61,7 @@ public class MagicDoorBlock extends DoorBlock implements EntityBlock, BlockItemP
 
 				door.setPassword(password);
 				player.displayClientMessage(Component.translatable("door.arcanus.password_set", password)
-					.withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC), true);
+						.withStyle(ChatFormatting.GOLD, ChatFormatting.ITALIC), true);
 			}
 			else
 				player.displayClientMessage(Component.translatable("door.arcanus.not_owner").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC), true);

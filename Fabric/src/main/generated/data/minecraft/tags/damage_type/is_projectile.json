@@ -1,6 +1,6 @@
 {
-  "replace": false,
-  "values": [
-    "arcanus:magic_projectile"
-  ]
+	"replace": false,
+	"values": [
+		"arcanus:magic_projectile"
+	]
 }

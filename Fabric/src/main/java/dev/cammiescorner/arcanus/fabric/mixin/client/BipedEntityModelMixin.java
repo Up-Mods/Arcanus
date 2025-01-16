@@ -26,9 +26,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
 	@Shadow @Final public ModelPart head;
 
 	@Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(
-		value = "INVOKE_ASSIGN",
-		target = "Lnet/minecraft/util/Mth;cos(F)F",
-		ordinal = 1
+			value = "INVOKE_ASSIGN",
+			target = "Lnet/minecraft/util/Mth;cos(F)F",
+			ordinal = 1
 	))
 	private void arcanus$modifyArmSwing(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo info) {
 		if(!livingEntity.isSprinting() && !livingEntity.isSwimming() && !livingEntity.isFallFlying()) {
@@ -69,9 +69,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
 	}
 
 	@Inject(method = "poseRightArm", at = @At(
-		value = "FIELD",
-		target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
-		ordinal = 2
+			value = "FIELD",
+			target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
+			ordinal = 2
 	), cancellable = true)
 	private void arcanus$positionRightArm(T entity, CallbackInfo info) {
 		Minecraft client = Minecraft.getInstance();
@@ -117,9 +117,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Agea
 	}
 
 	@Inject(method = "poseLeftArm", at = @At(
-		value = "FIELD",
-		target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
-		ordinal = 2
+			value = "FIELD",
+			target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
+			ordinal = 2
 	), cancellable = true)
 	private void arcanus$positionLeftArm(T entity, CallbackInfo info) {
 		Minecraft client = Minecraft.getInstance();

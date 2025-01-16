@@ -1,15 +1,15 @@
 {
-  "replace": false,
-  "values": [
-    "arcanus:wooden_staff",
-    "arcanus:crystal_staff",
-    "arcanus:divination_staff",
-    "arcanus:crescent_staff",
-    "arcanus:ancient_staff",
-    "arcanus:wand",
-    "arcanus:thaumaturges_gauntlet",
-    "arcanus:mind_staff",
-    "arcanus:magic_tome",
-    "arcanus:mage_pistol"
-  ]
+	"replace": false,
+	"values": [
+		"arcanus:wooden_staff",
+		"arcanus:crystal_staff",
+		"arcanus:divination_staff",
+		"arcanus:crescent_staff",
+		"arcanus:ancient_staff",
+		"arcanus:wand",
+		"arcanus:thaumaturges_gauntlet",
+		"arcanus:mind_staff",
+		"arcanus:magic_tome",
+		"arcanus:mage_pistol"
+	]
 }

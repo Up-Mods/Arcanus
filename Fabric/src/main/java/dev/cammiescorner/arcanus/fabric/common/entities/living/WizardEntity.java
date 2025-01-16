@@ -183,11 +183,11 @@ public class WizardEntity extends AbstractVillager implements NeutralMob {
 	private ItemStack getRandomStaff(RandomSource random) {
 		// TODO use a tag for this
 		List<Item> staves = List.of(
-			ArcanusItems.WOODEN_STAFF.get(),
-			ArcanusItems.CRYSTAL_STAFF.get(),
-			ArcanusItems.DIVINATION_STAFF.get(),
-			ArcanusItems.CRESCENT_STAFF.get(),
-			ArcanusItems.ANCIENT_STAFF.get()
+				ArcanusItems.WOODEN_STAFF.get(),
+				ArcanusItems.CRYSTAL_STAFF.get(),
+				ArcanusItems.DIVINATION_STAFF.get(),
+				ArcanusItems.CRESCENT_STAFF.get(),
+				ArcanusItems.ANCIENT_STAFF.get()
 		);
 
 		return new ItemStack(staves.get(random.nextInt(staves.size())));
@@ -205,31 +205,31 @@ public class WizardEntity extends AbstractVillager implements NeutralMob {
 		// Rare Colors
 		if(random.nextDouble() <= 0.1) {
 			var list = List.of(
-				0xff005a, // Folly Red
-				0xf2dd50 // Lotus Gold
+					0xff005a, // Folly Red
+					0xf2dd50 // Lotus Gold
 			);
 			return list.get(random.nextInt(list.size()));
 		}
 
 		// Normal Colors
 		var list = List.of(
-			0xffffff,
-			0xf9801d,
-			0xc74ebd,
-			0x3ab3da,
-			0xfed83d,
-			0x80c71f,
-			0xf38baa,
-			0x474f52,
-			0x9d9d97,
-			0x169c9c,
-			0x8932b8,
-			0x52392a,
-			0x3c44aa,
-			0x5e7c16,
-			0xb02e26,
-			0x1d1d21,
-			0xfcc973
+				0xffffff,
+				0xf9801d,
+				0xc74ebd,
+				0x3ab3da,
+				0xfed83d,
+				0x80c71f,
+				0xf38baa,
+				0x474f52,
+				0x9d9d97,
+				0x169c9c,
+				0x8932b8,
+				0x52392a,
+				0x3c44aa,
+				0x5e7c16,
+				0xb02e26,
+				0x1d1d21,
+				0xfcc973
 		);
 
 		return list.get(random.nextInt(list.size()));

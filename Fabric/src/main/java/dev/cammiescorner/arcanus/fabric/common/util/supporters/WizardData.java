@@ -2,8 +2,8 @@ package dev.cammiescorner.arcanus.fabric.common.util.supporters;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.upcraft.datasync.api.util.Entitlements;
 import net.minecraft.resources.ResourceLocation;
 
@@ -14,8 +14,8 @@ public record WizardData(Color magicColor, Color pocketDimensionColor) {
 	private static final WizardData EMPTY = new WizardData(FabricMain.DEFAULT_MAGIC_COLOUR, FabricMain.DEFAULT_MAGIC_COLOUR);
 
 	public static final Codec<WizardData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		Color.CODEC.fieldOf("magic_color").forGetter(WizardData::magicColor),
-		Color.CODEC.optionalFieldOf("pocket_dimension_color", FabricMain.DEFAULT_MAGIC_COLOUR).forGetter(WizardData::pocketDimensionColor)
+			Color.CODEC.fieldOf("magic_color").forGetter(WizardData::magicColor),
+			Color.CODEC.optionalFieldOf("pocket_dimension_color", FabricMain.DEFAULT_MAGIC_COLOUR).forGetter(WizardData::pocketDimensionColor)
 	).apply(instance, WizardData::new));
 
 	public static WizardData empty() {

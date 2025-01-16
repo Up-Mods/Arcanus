@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus.fabric.datagen.client;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusItems;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.models.BlockModelGenerators;

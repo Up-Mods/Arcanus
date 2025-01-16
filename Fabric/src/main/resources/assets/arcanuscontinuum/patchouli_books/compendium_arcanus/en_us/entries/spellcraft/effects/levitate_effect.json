@@ -1,20 +1,20 @@
 {
-  "name": "Levitate Effect",
-  "icon": "arcanus:textures/spell_components/effects/colored/levitate_effect.png",
-  "category": "arcanus:spellcraft",
-  "sortnum": 401,
-  "advancement": "arcanus:arcane/wizard_level_6",
-  "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "Weight: None$(br)Mana Cost: 3$(br)Cool Down: 0 seconds$(br2)Description:$(br)Applies the Levitation effect to the target for a short while. Chaining the effect makes it last longer."
-    },
-    {
-      "type": "patchouli:image",
-      "border": true,
-      "images": [
-        "arcanus:textures/gui/patchouli/entries/effects/levitate_effect.png"
-      ]
-    }
-  ]
+	"name": "Levitate Effect",
+	"icon": "arcanus:textures/spell_components/effects/colored/levitate_effect.png",
+	"category": "arcanus:spellcraft",
+	"sortnum": 401,
+	"advancement": "arcanus:arcane/wizard_level_6",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "Weight: None$(br)Mana Cost: 3$(br)Cool Down: 0 seconds$(br2)Description:$(br)Applies the Levitation effect to the target for a short while. Chaining the effect makes it last longer."
+		},
+		{
+			"type": "patchouli:image",
+			"border": true,
+			"images": [
+				"arcanus:textures/gui/patchouli/entries/effects/levitate_effect.png"
+			]
+		}
+	]
 }

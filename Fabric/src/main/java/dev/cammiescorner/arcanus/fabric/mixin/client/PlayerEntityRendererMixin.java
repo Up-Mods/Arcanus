@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanus.fabric.mixin.client;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.client.renderer.feature.HaloFeatureRenderer;
 import dev.cammiescorner.arcanus.fabric.client.renderer.feature.SpellPatternFeatureRenderer;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusMobEffects;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

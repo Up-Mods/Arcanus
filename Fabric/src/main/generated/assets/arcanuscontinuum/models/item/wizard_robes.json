@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "arcanus:item/wizard_robes",
-    "layer1": "arcanus:item/wizard_robes_trim"
-  }
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "arcanus:item/wizard_robes",
+		"layer1": "arcanus:item/wizard_robes_trim"
+	}
 }

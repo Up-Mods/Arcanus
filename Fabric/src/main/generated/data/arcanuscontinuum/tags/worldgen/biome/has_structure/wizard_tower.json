@@ -1,22 +1,22 @@
 {
-  "replace": false,
-  "values": [
-    {
-      "id": "#c:has_structure/village",
-      "required": false
-    },
-    "#minecraft:has_structure/pillager_outpost",
-    "#minecraft:has_structure/swamp_hut",
-    "#minecraft:has_structure/woodland_mansion",
-    "#minecraft:is_hill",
-    "#minecraft:is_mountain",
-    "#minecraft:is_taiga",
-    "#minecraft:is_jungle",
-    "#minecraft:is_forest",
-    "#minecraft:is_savanna",
-    "minecraft:mushroom_fields",
-    "minecraft:ice_spikes",
-    "minecraft:sunflower_plains",
-    "minecraft:mangrove_swamp"
-  ]
+	"replace": false,
+	"values": [
+		{
+			"id": "#c:has_structure/village",
+			"required": false
+		},
+		"#minecraft:has_structure/pillager_outpost",
+		"#minecraft:has_structure/swamp_hut",
+		"#minecraft:has_structure/woodland_mansion",
+		"#minecraft:is_hill",
+		"#minecraft:is_mountain",
+		"#minecraft:is_taiga",
+		"#minecraft:is_jungle",
+		"#minecraft:is_forest",
+		"#minecraft:is_savanna",
+		"minecraft:mushroom_fields",
+		"minecraft:ice_spikes",
+		"minecraft:sunflower_plains",
+		"minecraft:mangrove_swamp"
+	]
 }

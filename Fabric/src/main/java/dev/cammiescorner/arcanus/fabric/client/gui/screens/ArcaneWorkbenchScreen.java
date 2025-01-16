@@ -2,12 +2,12 @@ package dev.cammiescorner.arcanus.fabric.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.client.gui.widgets.ChangeModeButtonWidget;
 import dev.cammiescorner.arcanus.fabric.client.gui.widgets.CycleTemplatesButtonWidget;
 import dev.cammiescorner.arcanus.fabric.common.items.StaffItem;
 import dev.cammiescorner.arcanus.fabric.common.screens.ArcaneWorkbenchScreenHandler;
 import dev.cammiescorner.arcanus.fabric.common.util.WorkbenchMode;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;

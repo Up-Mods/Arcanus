@@ -1,20 +1,20 @@
 {
-  "name": "Warding Effect",
-  "icon": "arcanus:textures/spell_components/effects/colored/warding_effect.png",
-  "category": "arcanus:spellcraft",
-  "sortnum": 309,
-  "advancement": "arcanus:arcane/wizard_level_6",
-  "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "Weight: None$(br)Mana Cost: 4$(br)Cool Down: 0 seconds$(br2)Description:$(br)Wards the target block against damage or use by others. Chaining the effect does nothing."
-    },
-    {
-      "type": "patchouli:image",
-      "border": true,
-      "images": [
-        "arcanus:textures/gui/patchouli/entries/effects/warding_effect.png"
-      ]
-    }
-  ]
+	"name": "Warding Effect",
+	"icon": "arcanus:textures/spell_components/effects/colored/warding_effect.png",
+	"category": "arcanus:spellcraft",
+	"sortnum": 309,
+	"advancement": "arcanus:arcane/wizard_level_6",
+	"pages": [
+		{
+			"type": "patchouli:text",
+			"text": "Weight: None$(br)Mana Cost: 4$(br)Cool Down: 0 seconds$(br2)Description:$(br)Wards the target block against damage or use by others. Chaining the effect does nothing."
+		},
+		{
+			"type": "patchouli:image",
+			"border": true,
+			"images": [
+				"arcanus:textures/gui/patchouli/entries/effects/warding_effect.png"
+			]
+		}
+	]
 }

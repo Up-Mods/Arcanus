@@ -12,13 +12,13 @@ import org.jetbrains.annotations.Nullable;
 public class SpatialRiftWallBlock extends Block implements EntityBlock {
 	public SpatialRiftWallBlock() {
 		super(BlockBehaviour.Properties.copy(Blocks.BEDROCK)
-			.sound(SoundType.GLASS)
-			.lightLevel(value -> 12)
-			.noOcclusion()
-			.isValidSpawn(Blocks::never)
-			.isRedstoneConductor(Blocks::never)
-			.isSuffocating(Blocks::never)
-			.isViewBlocking(Blocks::never)
+				.sound(SoundType.GLASS)
+				.lightLevel(value -> 12)
+				.noOcclusion()
+				.isValidSpawn(Blocks::never)
+				.isRedstoneConductor(Blocks::never)
+				.isSuffocating(Blocks::never)
+				.isViewBlocking(Blocks::never)
 		);
 	}
 

@@ -1,15 +1,15 @@
 {
-  "textures": [
-    "arcanus:collapse_0",
-    "arcanus:collapse_1",
-    "arcanus:collapse_2",
-    "arcanus:collapse_3",
-    "arcanus:collapse_4",
-    "arcanus:collapse_5",
-    "arcanus:collapse_5",
-    "arcanus:collapse_5",
-    "arcanus:collapse_6",
-    "arcanus:collapse_7",
-    "arcanus:collapse_8"
-  ]
+	"textures": [
+		"arcanus:collapse_0",
+		"arcanus:collapse_1",
+		"arcanus:collapse_2",
+		"arcanus:collapse_3",
+		"arcanus:collapse_4",
+		"arcanus:collapse_5",
+		"arcanus:collapse_5",
+		"arcanus:collapse_5",
+		"arcanus:collapse_6",
+		"arcanus:collapse_7",
+		"arcanus:collapse_8"
+	]
 }

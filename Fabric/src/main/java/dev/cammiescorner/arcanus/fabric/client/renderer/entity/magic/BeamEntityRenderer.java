@@ -2,11 +2,11 @@ package dev.cammiescorner.arcanus.fabric.client.renderer.entity.magic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
 import dev.cammiescorner.arcanus.fabric.common.entities.magic.BeamEntity;
 import dev.cammiescorner.arcanus.fabric.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

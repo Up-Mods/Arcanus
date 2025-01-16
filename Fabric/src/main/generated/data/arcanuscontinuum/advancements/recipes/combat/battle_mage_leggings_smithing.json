@@ -1,35 +1,35 @@
 {
-  "parent": "minecraft:recipes/root",
-  "criteria": {
-    "has_amethyst": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "minecraft:amethyst_shard"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "has_the_recipe": {
-      "conditions": {
-        "recipe": "minecraft:battle_mage_leggings_smithing"
-      },
-      "trigger": "minecraft:recipe_unlocked"
-    }
-  },
-  "requirements": [
-    [
-      "has_amethyst",
-      "has_the_recipe"
-    ]
-  ],
-  "rewards": {
-    "recipes": [
-      "minecraft:battle_mage_leggings_smithing"
-    ]
-  },
-  "sends_telemetry_event": false
+	"parent": "minecraft:recipes/root",
+	"criteria": {
+		"has_amethyst": {
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:amethyst_shard"
+						]
+					}
+				]
+			},
+			"trigger": "minecraft:inventory_changed"
+		},
+		"has_the_recipe": {
+			"conditions": {
+				"recipe": "minecraft:battle_mage_leggings_smithing"
+			},
+			"trigger": "minecraft:recipe_unlocked"
+		}
+	},
+	"requirements": [
+		[
+			"has_amethyst",
+			"has_the_recipe"
+		]
+	],
+	"rewards": {
+		"recipes": [
+			"minecraft:battle_mage_leggings_smithing"
+		]
+	},
+	"sends_telemetry_event": false
 }

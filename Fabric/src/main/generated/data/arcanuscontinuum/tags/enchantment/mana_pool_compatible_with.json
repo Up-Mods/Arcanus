@@ -1,7 +1,7 @@
 {
-  "replace": false,
-  "values": [
-    "minecraft:unbreaking",
-    "minecraft:mending"
-  ]
+	"replace": false,
+	"values": [
+		"minecraft:unbreaking",
+		"minecraft:mending"
+	]
 }

@@ -1,15 +1,15 @@
 {
-  "type": "minecraft:smithing_transform",
-  "addition": {
-    "item": "minecraft:amethyst_shard"
-  },
-  "base": {
-    "item": "minecraft:diamond_helmet"
-  },
-  "result": {
-    "item": "arcanus:battle_mage_helmet"
-  },
-  "template": {
-    "item": "arcanus:battle_mage_upgrade_smithing_template"
-  }
+	"type": "minecraft:smithing_transform",
+	"addition": {
+		"item": "minecraft:amethyst_shard"
+	},
+	"base": {
+		"item": "minecraft:diamond_helmet"
+	},
+	"result": {
+		"item": "arcanus:battle_mage_helmet"
+	},
+	"template": {
+		"item": "arcanus:battle_mage_upgrade_smithing_template"
+	}
 }

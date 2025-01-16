@@ -1,52 +1,52 @@
 name: Build Status
 
 on:
-  push:
-    branches:
-      - '*'
-  pull_request:
+    push:
+        branches:
+            - '*'
+    pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'microsoft'
-          java-version: 21
-          cache: 'gradle'
-      - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v4
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-      - name: Build with Gradle
-        run: ./gradlew build
-        env:
-          GRADLE_BUILD_CACHE_USER: ${{ secrets.GRADLE_BUILD_CACHE_USER }}
-          GRADLE_BUILD_CACHE_TOKEN: ${{ secrets.GRADLE_BUILD_CACHE_TOKEN }}
-      - name: Upload build artifacts (Common)
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-Common-${{ github.sha }}
-          path: |
-            Common/build/libs/*.jar
-            !Common/build/libs/*-dev.jar
-      - name: Upload build artifacts (Fabric)
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-Fabric-${{ github.sha }}
-          path: |
-            Fabric/build/libs/*.jar
-            !Fabric/build/libs/*-dev.jar
-      - name: Upload build artifacts (NeoForge)
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ github.event.repository.name }}-NeoForge-${{ github.sha }}
-          path: |
-            NeoForge/build/libs/*.jar
-            !NeoForge/build/libs/*-dev.jar
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v4
+            -   name: Set up JDK 21
+                uses: actions/setup-java@v4
+                with:
+                    distribution: 'microsoft'
+                    java-version: 21
+                    cache: 'gradle'
+            -   name: Validate Gradle Wrapper
+                uses: gradle/actions/wrapper-validation@v4
+            -   name: Grant execute permission for gradlew
+                run: chmod +x ./gradlew
+            -   name: Build with Gradle
+                run: ./gradlew build
+                env:
+                    GRADLE_BUILD_CACHE_USER: ${{ secrets.GRADLE_BUILD_CACHE_USER }}
+                    GRADLE_BUILD_CACHE_TOKEN: ${{ secrets.GRADLE_BUILD_CACHE_TOKEN }}
+            -   name: Upload build artifacts (Common)
+                continue-on-error: true
+                uses: actions/upload-artifact@v4
+                with:
+                    name: ${{ github.event.repository.name }}-Common-${{ github.sha }}
+                    path: |
+                        Common/build/libs/*.jar
+                        !Common/build/libs/*-dev.jar
+            -   name: Upload build artifacts (Fabric)
+                continue-on-error: true
+                uses: actions/upload-artifact@v4
+                with:
+                    name: ${{ github.event.repository.name }}-Fabric-${{ github.sha }}
+                    path: |
+                        Fabric/build/libs/*.jar
+                        !Fabric/build/libs/*-dev.jar
+            -   name: Upload build artifacts (NeoForge)
+                continue-on-error: true
+                uses: actions/upload-artifact@v4
+                with:
+                    name: ${{ github.event.repository.name }}-NeoForge-${{ github.sha }}
+                    path: |
+                        NeoForge/build/libs/*.jar
+                        !NeoForge/build/libs/*-dev.jar

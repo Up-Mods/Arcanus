@@ -1,9 +1,10 @@
 package dev.cammiescorner.arcanus.fabric.common.criterion;
 
 import com.google.gson.JsonObject;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
-import net.minecraft.advancements.critereon.*;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.GsonHelper;

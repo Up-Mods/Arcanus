@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanus.fabric.common.packets.c2s;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.fabric.common.entities.magic.AggressorbEntity;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

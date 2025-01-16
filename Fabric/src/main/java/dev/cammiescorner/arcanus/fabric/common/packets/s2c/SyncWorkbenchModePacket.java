@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanus.fabric.common.packets.s2c;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.client.gui.screens.ArcaneWorkbenchScreen;
 import dev.cammiescorner.arcanus.fabric.common.util.WorkbenchMode;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

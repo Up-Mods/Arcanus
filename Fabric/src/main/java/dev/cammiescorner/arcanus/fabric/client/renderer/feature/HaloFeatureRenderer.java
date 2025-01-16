@@ -2,8 +2,6 @@ package dev.cammiescorner.arcanus.fabric.client.renderer.feature;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
 import dev.cammiescorner.arcanus.fabric.client.models.feature.HaloModel;
 import dev.cammiescorner.arcanus.fabric.common.items.StaffItem;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
@@ -11,6 +9,8 @@ import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusMobEffects;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
 import dev.cammiescorner.arcanus.fabric.common.util.StaffType;
 import dev.cammiescorner.arcanus.fabric.common.util.supporters.HaloData;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.LightTexture;

@@ -17,8 +17,8 @@ public abstract class ThrownEntityMixin extends Projectile {
 
 	@SuppressWarnings("ConstantValue")
 	@ModifyArg(method = "tick", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/phys/Vec3;scale(D)Lnet/minecraft/world/phys/Vec3;"
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/phys/Vec3;scale(D)Lnet/minecraft/world/phys/Vec3;"
 	))
 	private double arcanus$noWaterDrag(double value) {
 		return ((Object) this) instanceof AggressorbEntity && this.isInWater() ? 0.99f : value;

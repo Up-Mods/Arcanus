@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanus.fabric.client.renderer.feature;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;

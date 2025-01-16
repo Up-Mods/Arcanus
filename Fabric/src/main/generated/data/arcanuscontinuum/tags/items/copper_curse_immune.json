@@ -1,18 +1,18 @@
 {
-  "replace": false,
-  "values": [
-    "#minecraft:tools",
-    "minecraft:fishing_rod",
-    "#c:bows",
-    "#c:shields",
-    "#c:spears",
-    "#c:shears",
-    "#minecraft:trimmable_armor",
-    "minecraft:elytra",
-    "#minecraft:trim_templates",
-    "minecraft:netherite_upgrade_smithing_template",
-    "arcanus:battle_mage_upgrade_smithing_template",
-    "#minecraft:decorated_pot_sherds",
-    "#arcanus:wizard_armor"
-  ]
+	"replace": false,
+	"values": [
+		"#minecraft:tools",
+		"minecraft:fishing_rod",
+		"#c:bows",
+		"#c:shields",
+		"#c:spears",
+		"#c:shears",
+		"#minecraft:trimmable_armor",
+		"minecraft:elytra",
+		"#minecraft:trim_templates",
+		"minecraft:netherite_upgrade_smithing_template",
+		"arcanus:battle_mage_upgrade_smithing_template",
+		"#minecraft:decorated_pot_sherds",
+		"#arcanus:wizard_armor"
+	]
 }

@@ -29,7 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LecternBlockEntityMixin extends BlockEntity implements Clearable, MenuProvider, ExtendedScreenHandlerFactory {
 	@Shadow @Final private Container bookAccess;
 
-	@Shadow public abstract ItemStack getBook();
+	@Shadow
+	public abstract ItemStack getBook();
 
 	public LecternBlockEntityMixin(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
 		super(blockEntityType, blockPos, blockState);

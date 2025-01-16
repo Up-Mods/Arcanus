@@ -3,9 +3,9 @@ package dev.cammiescorner.arcanus.fabric.common.compat;
 import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.fabric.client.gui.screens.ArcanusConfigScreen;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 
 public class ModMenuCompat implements ModMenuApi {
 	@Override

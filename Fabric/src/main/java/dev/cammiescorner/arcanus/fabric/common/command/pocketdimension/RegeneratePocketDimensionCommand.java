@@ -17,12 +17,12 @@ public class RegeneratePocketDimensionCommand {
 
 	public static void register(RequiredArgumentBuilder<CommandSourceStack, EntitySelector> builder) {
 		builder.then(Commands.literal("regenerate")
-			.requires(serverCommandSource -> serverCommandSource.hasPermission(Commands.LEVEL_ADMINS))
-			.executes(context -> RegeneratePocketDimensionCommand.regeneratePocket(context, PocketDimensionCommand.getPlayerProfile(context), PocketDimensionComponent.RegenerateType.FULL))
+				.requires(serverCommandSource -> serverCommandSource.hasPermission(Commands.LEVEL_ADMINS))
+				.executes(context -> RegeneratePocketDimensionCommand.regeneratePocket(context, PocketDimensionCommand.getPlayerProfile(context), PocketDimensionComponent.RegenerateType.FULL))
 		);
 		builder.then(Commands.literal("repair_walls")
-			.requires(serverCommandSource -> serverCommandSource.hasPermission(Commands.LEVEL_ADMINS))
-			.executes(context -> RegeneratePocketDimensionCommand.regeneratePocket(context, PocketDimensionCommand.getPlayerProfile(context), PocketDimensionComponent.RegenerateType.WALLS_ONLY))
+				.requires(serverCommandSource -> serverCommandSource.hasPermission(Commands.LEVEL_ADMINS))
+				.executes(context -> RegeneratePocketDimensionCommand.regeneratePocket(context, PocketDimensionCommand.getPlayerProfile(context), PocketDimensionComponent.RegenerateType.WALLS_ONLY))
 		);
 	}
 
@@ -38,9 +38,9 @@ public class RegeneratePocketDimensionCommand {
 
 		context.getSource().sendSuccess(() -> switch(regenerateType) {
 			case WALLS_ONLY ->
-				Component.translatable("command.arcanus.pocket_dimension.regenerate.success.walls_only", target.getName());
+					Component.translatable("command.arcanus.pocket_dimension.regenerate.success.walls_only", target.getName());
 			case FULL ->
-				Component.translatable("command.arcanus.pocket_dimension.regenerate.success.full", target.getName());
+					Component.translatable("command.arcanus.pocket_dimension.regenerate.success.full", target.getName());
 			default -> throw new UnsupportedOperationException();
 		}, true);
 		return Command.SINGLE_SUCCESS;

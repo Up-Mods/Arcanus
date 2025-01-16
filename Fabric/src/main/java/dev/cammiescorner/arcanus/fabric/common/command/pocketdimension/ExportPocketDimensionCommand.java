@@ -4,10 +4,10 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.command.PocketDimensionCommand;
 import dev.cammiescorner.arcanus.fabric.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanus.fabric.common.data.ArcanusDimensions;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.selector.EntitySelector;
@@ -22,8 +22,8 @@ public class ExportPocketDimensionCommand {
 
 	public static void register(RequiredArgumentBuilder<CommandSourceStack, EntitySelector> builder) {
 		builder.then(Commands.literal("export")
-			.requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
-			.executes(context -> ExportPocketDimensionCommand.export(context, PocketDimensionCommand.getPlayerProfile(context)))
+				.requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.executes(context -> ExportPocketDimensionCommand.export(context, PocketDimensionCommand.getPlayerProfile(context)))
 		);
 	}
 

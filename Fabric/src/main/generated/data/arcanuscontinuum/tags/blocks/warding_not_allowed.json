@@ -1,8 +1,8 @@
 {
-  "replace": false,
-  "values": [
-    "minecraft:piston_head",
-    "minecraft:moving_piston",
-    "arcanus:magic_block"
-  ]
+	"replace": false,
+	"values": [
+		"minecraft:piston_head",
+		"minecraft:moving_piston",
+		"arcanus:magic_block"
+	]
 }

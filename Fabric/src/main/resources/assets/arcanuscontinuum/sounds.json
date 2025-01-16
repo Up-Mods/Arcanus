@@ -1,8 +1,8 @@
 {
-  "smite": {
-    "subtitle": "subtitles.arcanus.smite",
-    "sounds": [
-      "arcanus:smite"
-    ]
-  }
+	"smite": {
+		"subtitle": "subtitles.arcanus.smite",
+		"sounds": [
+			"arcanus:smite"
+		]
+	}
 }

@@ -2,13 +2,14 @@ package dev.cammiescorner.arcanus.fabric.common.components.entity;
 
 import dev.cammiescorner.arcanus.api.spells.Pattern;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class PatternComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		list.clear();
 		ListTag nbtList = tag.getList("Pattern", Tag.TAG_INT);
 
@@ -31,7 +32,7 @@ public class PatternComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		ListTag nbtList = new ListTag();
 
 		for(Pattern pattern : list)

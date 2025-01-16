@@ -1,10 +1,5 @@
 package dev.cammiescorner.arcanus.fabric.common.registry;
 
-import dev.cammiescorner.arcanus.fabric.common.components.entity.*;
-import dev.cammiescorner.arcanus.fabric.common.entities.magic.*;
-import dev.cammiescorner.fabric.common.components.entity.*;
-import dev.cammiescorner.fabric.common.entities.magic.*;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.spells.Pattern;
 import dev.cammiescorner.arcanus.api.spells.SpellEffect;
 import dev.cammiescorner.arcanus.api.spells.SpellGroup;
@@ -16,22 +11,11 @@ import dev.cammiescorner.arcanus.fabric.common.components.MagicColorComponent;
 import dev.cammiescorner.arcanus.fabric.common.components.chunk.WardedBlocksComponent;
 import dev.cammiescorner.arcanus.fabric.common.components.color.GenericMagicColorComponent;
 import dev.cammiescorner.arcanus.fabric.common.components.color.PlayerMagicColorComponent;
-import dev.cammiescorner.arcanus.common.components.entity.*;
+import dev.cammiescorner.arcanus.fabric.common.components.entity.*;
 import dev.cammiescorner.arcanus.fabric.common.components.level.PocketDimensionComponent;
-import dev.cammiescorner.arcanus.common.entities.magic.*;
+import dev.cammiescorner.arcanus.fabric.common.entities.magic.*;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
-import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer;
-import dev.onyxstudios.cca.api.v3.chunk.ChunkComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.chunk.ChunkComponentInitializer;
-import dev.onyxstudios.cca.api.v3.component.Component;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
-import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -44,6 +28,18 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.EmptyLevelChunk;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.ladysnake.cca.api.v3.block.BlockComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.block.BlockComponentInitializer;
+import org.ladysnake.cca.api.v3.chunk.ChunkComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.chunk.ChunkComponentInitializer;
+import org.ladysnake.cca.api.v3.component.Component;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer;
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy;
+import org.ladysnake.cca.api.v3.scoreboard.ScoreboardComponentFactoryRegistry;
+import org.ladysnake.cca.api.v3.scoreboard.ScoreboardComponentInitializer;
 
 import java.util.List;
 import java.util.Map;
@@ -81,8 +77,8 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 	@Override
 	public void registerBlockComponentFactories(BlockComponentFactoryRegistry registry) {
 		registry.beginRegistration(AbstractMagicBlockEntity.class, MAGIC_COLOR)
-			.impl(GenericMagicColorComponent.class)
-			.end(GenericMagicColorComponent::new);
+				.impl(GenericMagicColorComponent.class)
+				.end(GenericMagicColorComponent::new);
 	}
 
 	@Override
@@ -110,19 +106,19 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 		registry.beginRegistration(LivingEntity.class, COUNTER_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(CounterComponent::new);
 
 		List.of(
-			AggressorbEntity.class,
-			AreaOfEffectEntity.class,
-			BeamEntity.class,
-			GuardianOrbEntity.class,
-			MagicProjectileEntity.class,
-			MagicRuneEntity.class,
-			ManaShieldEntity.class,
-			PocketDimensionPortalEntity.class,
-			SmiteEntity.class
+				AggressorbEntity.class,
+				AreaOfEffectEntity.class,
+				BeamEntity.class,
+				GuardianOrbEntity.class,
+				MagicProjectileEntity.class,
+				MagicRuneEntity.class,
+				ManaShieldEntity.class,
+				PocketDimensionPortalEntity.class,
+				SmiteEntity.class
 		).forEach(type ->
-			registry.beginRegistration(type, MAGIC_COLOR)
-				.impl(GenericMagicColorComponent.class)
-				.end(GenericMagicColorComponent::new)
+				registry.beginRegistration(type, MAGIC_COLOR)
+						.impl(GenericMagicColorComponent.class)
+						.end(GenericMagicColorComponent::new)
 		);
 		registry.registerForPlayers(MAGIC_COLOR, PlayerMagicColorComponent::new, RespawnCopyStrategy.NEVER_COPY);
 

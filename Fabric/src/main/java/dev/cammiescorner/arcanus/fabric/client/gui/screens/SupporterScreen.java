@@ -1,11 +1,11 @@
 package dev.cammiescorner.arcanus.fabric.client.gui.screens;
 
 import com.mojang.authlib.GameProfile;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
 import dev.cammiescorner.arcanus.fabric.common.util.StandardColors;
 import dev.cammiescorner.arcanus.fabric.common.util.supporters.HaloData;
 import dev.cammiescorner.arcanus.fabric.common.util.supporters.WizardData;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.upcraft.datasync.api.util.Entitlements;
 import dev.upcraft.datasync.api.util.GameProfileHelper;
 import net.minecraft.ChatFormatting;

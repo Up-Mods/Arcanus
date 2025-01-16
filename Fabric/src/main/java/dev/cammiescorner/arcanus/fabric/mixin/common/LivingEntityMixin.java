@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanus.fabric.mixin.common;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanus.api.entities.Targetable;
@@ -12,6 +11,7 @@ import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.fabric.common.items.StaffItem;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusMobEffects;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -57,16 +57,35 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 
 	@Shadow protected boolean jumping;
 
-	@Shadow public abstract @Nullable AttributeInstance getAttribute(Attribute attribute);
-	@Shadow public abstract ItemStack getMainHandItem();
-	@Shadow public abstract boolean hasEffect(MobEffect effect);
-	@Shadow public abstract MobEffectInstance getEffect(MobEffect effect);
-	@Shadow public abstract boolean removeEffect(MobEffect type);
-	@Shadow public abstract boolean isDamageSourceBlocked(DamageSource source);
-	@Shadow public abstract boolean removeAllEffects();
-	@Shadow public abstract boolean addEffect(MobEffectInstance effect);
-	@Shadow public abstract float getSpeed();
-	@Shadow public abstract boolean randomTeleport(double x, double y, double z, boolean particleEffects);
+	@Shadow
+	public abstract @Nullable AttributeInstance getAttribute(Attribute attribute);
+
+	@Shadow
+	public abstract ItemStack getMainHandItem();
+
+	@Shadow
+	public abstract boolean hasEffect(MobEffect effect);
+
+	@Shadow
+	public abstract MobEffectInstance getEffect(MobEffect effect);
+
+	@Shadow
+	public abstract boolean removeEffect(MobEffect type);
+
+	@Shadow
+	public abstract boolean isDamageSourceBlocked(DamageSource source);
+
+	@Shadow
+	public abstract boolean removeAllEffects();
+
+	@Shadow
+	public abstract boolean addEffect(MobEffectInstance effect);
+
+	@Shadow
+	public abstract float getSpeed();
+
+	@Shadow
+	public abstract boolean randomTeleport(double x, double y, double z, boolean particleEffects);
 
 	public LivingEntityMixin(EntityType<?> type, Level world) {
 		super(type, world);
@@ -105,9 +124,9 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 						for(int i = 0; i < 16; ++i) {
 							double g = getX() + (random.nextDouble() - 0.5) * 16.0;
 							double h = Mth.clamp(
-								getY() + random.nextInt(16) - 8,
-								world.getMinBuildHeight(),
-								world.getMinBuildHeight() + world.getLogicalHeight() - 1
+									getY() + random.nextInt(16) - 8,
+									world.getMinBuildHeight(),
+									world.getMinBuildHeight() + world.getLogicalHeight() - 1
 							);
 							double j = getZ() + (random.nextDouble() - 0.5) * 16.0;
 
@@ -211,20 +230,20 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 		ArcanusEntityAttributes.registerAll();
 
 		return builder
-			.add(ArcanusEntityAttributes.MAX_MANA.get())
-			.add(ArcanusEntityAttributes.MANA_REGEN.get())
-			.add(ArcanusEntityAttributes.BURNOUT_REGEN.get())
-			.add(ArcanusEntityAttributes.MANA_LOCK.get())
-			.add(ArcanusEntityAttributes.SPELL_POTENCY.get())
-			.add(ArcanusEntityAttributes.MAGIC_RESISTANCE.get())
-			.add(ArcanusEntityAttributes.MANA_COST.get())
-			.add(ArcanusEntityAttributes.SPELL_COOL_DOWN.get());
+				.add(ArcanusEntityAttributes.MAX_MANA.get())
+				.add(ArcanusEntityAttributes.MANA_REGEN.get())
+				.add(ArcanusEntityAttributes.BURNOUT_REGEN.get())
+				.add(ArcanusEntityAttributes.MANA_LOCK.get())
+				.add(ArcanusEntityAttributes.SPELL_POTENCY.get())
+				.add(ArcanusEntityAttributes.MAGIC_RESISTANCE.get())
+				.add(ArcanusEntityAttributes.MANA_COST.get())
+				.add(ArcanusEntityAttributes.SPELL_COOL_DOWN.get());
 	}
 
 	@WrapOperation(method = "handleRelativeFrictionAndCalculateMovement", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
-		ordinal = 1
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
+			ordinal = 1
 	))
 	private Vec3 arcanus$floatAround(LivingEntity livingEntity, Operation<Vec3> original, Vec3 movementInput, float slipperiness) {
 		// FIXME smooth out vertical movement, currently a bit jolting

@@ -1,6 +1,6 @@
 plugins {
-    id 'idea'
-    id 'maven-publish'
+	id 'idea'
+	id 'maven-publish'
 }
 
 def javaVersion = 21
@@ -24,22 +24,22 @@ subprojects {
 	project.group = rootProject.group
 	project.version = rootProject.version
 
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(javaVersion)
-            vendor = JvmVendorSpec.MICROSOFT
-        }
-        withSourcesJar()
-        withJavadocJar()
-    }
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(javaVersion)
+			vendor = JvmVendorSpec.MICROSOFT
+		}
+		withSourcesJar()
+		withJavadocJar()
+	}
 
 	javadoc {
 		options.tags = ["reason"]
 	}
 
-    base {
-	    archivesName = "${rootProject.name}-${project.name}"
-    }
+	base {
+		archivesName = "${rootProject.name}-${project.name}"
+	}
 
 	jar {
 		from(rootProject.file("LICENSE.md")) {
@@ -47,15 +47,15 @@ subprojects {
 		}
 		manifest {
 			attributes([
-				'Specification-Title'       : rootProject.name,
-				'Specification-Version'     : project.version,
-				'Implementation-Title'      : "${rootProject.name}-${project.name}",
-                'Maven-Artifact'            : "${maven_group_id}:${rootProject.name}-${project.name}:${project.version}",
-				'Implementation-Version'    : project.version,
-				'Implementation-Timestamp'  : NOW.format("yyyy-MM-dd'T'HH:mm:ssZ"),
-				'Timestamp'                 : NOW.toInstant().toEpochMilli(),
-				'Built-On-Java'             : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-				'Built-On-Minecraft'        : libs.versions.minecraft.get()
+					'Specification-Title'     : rootProject.name,
+					'Specification-Version'   : project.version,
+					'Implementation-Title'    : "${rootProject.name}-${project.name}",
+					'Maven-Artifact'          : "${maven_group_id}:${rootProject.name}-${project.name}:${project.version}",
+					'Implementation-Version'  : project.version,
+					'Implementation-Timestamp': NOW.format("yyyy-MM-dd'T'HH:mm:ssZ"),
+					'Timestamp'               : NOW.toInstant().toEpochMilli(),
+					'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+					'Built-On-Minecraft'      : libs.versions.minecraft.get()
 			])
 		}
 	}
@@ -72,25 +72,25 @@ subprojects {
 	}
 
 	processResources {
-        filteringCharset "UTF-8"
+		filteringCharset "UTF-8"
 
 		def expandProps = [
-			"version"                       : version,
-			"maven_group_id"                : maven_group_id,
-			"mod_id"                        : mod_id,
-			"mod_display_name"              : mod_display_name,
-			"mod_description"               : mod_description,
-			"sources_url"                   : sources_url,
-            "issues_url"                    : issues_url,
-			"license_url"					: license_url,
-			"discord_url"                   : discord_url,
-			"homepage_url"                  : homepage_url,
-			"minecraft_version"             : libs.versions.minecraft.get(),
-			"curseforge_id"					: curseforge_id,
-			"modrinth_id"					: modrinth_id,
+				"version"              : version,
+				"maven_group_id"       : maven_group_id,
+				"mod_id"               : mod_id,
+				"mod_display_name"     : mod_display_name,
+				"mod_description"      : mod_description,
+				"sources_url"          : sources_url,
+				"issues_url"           : issues_url,
+				"license_url"          : license_url,
+				"discord_url"          : discord_url,
+				"homepage_url"         : homepage_url,
+				"minecraft_version"    : libs.versions.minecraft.get(),
+				"curseforge_id"        : curseforge_id,
+				"modrinth_id"          : modrinth_id,
 
-			"fabric_loader_version"         : fabric.versions.fabric.loader.get(),
-			"java_version" 				    : javaVersion
+				"fabric_loader_version": fabric.versions.fabric.loader.get(),
+				"java_version"         : javaVersion
 		]
 
 		filesMatching(['pack.mcmeta', '*.mod.json', 'META-INF/*mods.toml', '*.mixins.json']) {
@@ -99,14 +99,14 @@ subprojects {
 		inputs.properties(expandProps)
 	}
 
-    publishing {
-        publications {
-            "mavenJava${project.name}"(MavenPublication) {
+	publishing {
+		publications {
+			"mavenJava${project.name}"(MavenPublication) {
 				artifactId "${rootProject.name}-${project.name}"
 				from components.java
 			}
-        }
-    }
+		}
+	}
 
 	// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
 	idea {
@@ -118,17 +118,17 @@ subprojects {
 }
 
 publishing {
-    repositories {
-        if (ENV.MAVEN_UPLOAD_URL) {
-            maven {
-                url = ENV.MAVEN_UPLOAD_URL
-                credentials {
-                    username = ENV.MAVEN_UPLOAD_USERNAME
-                    password = ENV.MAVEN_UPLOAD_PASSWORD
-                }
-            }
-        }
-    }
+	repositories {
+		if (ENV.MAVEN_UPLOAD_URL) {
+			maven {
+				url = ENV.MAVEN_UPLOAD_URL
+				credentials {
+					username = ENV.MAVEN_UPLOAD_USERNAME
+					password = ENV.MAVEN_UPLOAD_PASSWORD
+				}
+			}
+		}
+	}
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.

@@ -37,45 +37,45 @@ public class ArcanusChestLootProvider extends SimpleFabricLootTableProvider {
 	public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
 		output.accept(ArcanusLootTables.WIZARD_TOWER_CHEST, LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootTableReference.lootTableReference(BuiltInLootTables.IGLOO_CHEST))));
 		output.accept(ArcanusLootTables.WIZARD_TOWER_BOOKSHELF, LootTable.lootTable()
-			.withPool(LootPool.lootPool()
-				.setRolls(UniformGenerator.between(0, 6))
-				.add(AlternativesEntry.alternatives(
-					LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
-						.apply(SetNbtFunction.setTag(healSelfSpell()))
-						.when(LootItemRandomChanceCondition.randomChance(0.25F)),
-					LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
-						.apply(SetNbtFunction.setTag(healAllySpell()))
-						.when(LootItemRandomChanceCondition.randomChance(0.25F)),
-					LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
-						.apply(SetNbtFunction.setTag(paladinsShieldSpell()))
-						.when(LootItemRandomChanceCondition.randomChance(0.25F)),
-					LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
-						.apply(SetNbtFunction.setTag(fireballSpell()))
-						.when(LootItemRandomChanceCondition.randomChance(0.25F)),
-					LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
-						.apply(SetNbtFunction.setTag(magicMissileSpell()))
-						.when(LootItemRandomChanceCondition.randomChance(0.25F)),
-					LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
-						.apply(SetNbtFunction.setTag(smiteSpell()))
-						.when(LootItemRandomChanceCondition.randomChance(0.25F)),
-					LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
-						.apply(SetNbtFunction.setTag(blinkSpell()))
-						.when(LootItemRandomChanceCondition.randomChance(0.25F)),
-					LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
-						.apply(SetNbtFunction.setTag(zoomiesSpell()))
-						.when(LootItemRandomChanceCondition.randomChance(0.25F))
-				))
-				//-----------
-				// TODO written books?
-				//-----------
-				.add(LootItem.lootTableItem(Items.WRITABLE_BOOK).setWeight(5))
-				.add(LootItem.lootTableItem(Items.BOOK).setWeight(5))
-				.add(LootItem.lootTableItem(Items.BOOK).setWeight(3).apply(EnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(1, 3))))
-				.add(LootItem.lootTableItem(Items.BOOK).setWeight(2).apply(EnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(11, 20))))
-				.add(LootItem.lootTableItem(Items.BOOK).setWeight(1).apply(EnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(21, 30))))
+				.withPool(LootPool.lootPool()
+						.setRolls(UniformGenerator.between(0, 6))
+						.add(AlternativesEntry.alternatives(
+								LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
+										.apply(SetNbtFunction.setTag(healSelfSpell()))
+										.when(LootItemRandomChanceCondition.randomChance(0.25F)),
+								LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
+										.apply(SetNbtFunction.setTag(healAllySpell()))
+										.when(LootItemRandomChanceCondition.randomChance(0.25F)),
+								LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
+										.apply(SetNbtFunction.setTag(paladinsShieldSpell()))
+										.when(LootItemRandomChanceCondition.randomChance(0.25F)),
+								LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
+										.apply(SetNbtFunction.setTag(fireballSpell()))
+										.when(LootItemRandomChanceCondition.randomChance(0.25F)),
+								LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
+										.apply(SetNbtFunction.setTag(magicMissileSpell()))
+										.when(LootItemRandomChanceCondition.randomChance(0.25F)),
+								LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
+										.apply(SetNbtFunction.setTag(smiteSpell()))
+										.when(LootItemRandomChanceCondition.randomChance(0.25F)),
+								LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
+										.apply(SetNbtFunction.setTag(blinkSpell()))
+										.when(LootItemRandomChanceCondition.randomChance(0.25F)),
+								LootItem.lootTableItem(ArcanusItems.SPELL_BOOK.get())
+										.apply(SetNbtFunction.setTag(zoomiesSpell()))
+										.when(LootItemRandomChanceCondition.randomChance(0.25F))
+						))
+						//-----------
+						// TODO written books?
+						//-----------
+						.add(LootItem.lootTableItem(Items.WRITABLE_BOOK).setWeight(5))
+						.add(LootItem.lootTableItem(Items.BOOK).setWeight(5))
+						.add(LootItem.lootTableItem(Items.BOOK).setWeight(3).apply(EnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(1, 3))))
+						.add(LootItem.lootTableItem(Items.BOOK).setWeight(2).apply(EnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(11, 20))))
+						.add(LootItem.lootTableItem(Items.BOOK).setWeight(1).apply(EnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(21, 30))))
 
 
-			)
+				)
 		);
 	}
 
@@ -91,8 +91,8 @@ public class ArcanusChestLootProvider extends SimpleFabricLootTableProvider {
 
 	private static CompoundTag paladinsShieldSpell() {
 		var spell = new Spell(List.of(
-			new SpellGroup(ArcanusSpellComponents.SELF.get(), List.of(ArcanusSpellComponents.MANA_SHIELD.get()), List.of(new Vector2i(119, 40), new Vector2i(172, 68))),
-			new SpellGroup(ArcanusSpellComponents.AOE.get(), List.of(ArcanusSpellComponents.HEAL.get(), ArcanusSpellComponents.HEAL.get(), ArcanusSpellComponents.HEAL.get()), List.of(new Vector2i(146, 120), new Vector2i(94, 133), new Vector2i(67, 76), new Vector2i(120, 85)))
+				new SpellGroup(ArcanusSpellComponents.SELF.get(), List.of(ArcanusSpellComponents.MANA_SHIELD.get()), List.of(new Vector2i(119, 40), new Vector2i(172, 68))),
+				new SpellGroup(ArcanusSpellComponents.AOE.get(), List.of(ArcanusSpellComponents.HEAL.get(), ArcanusSpellComponents.HEAL.get(), ArcanusSpellComponents.HEAL.get()), List.of(new Vector2i(146, 120), new Vector2i(94, 133), new Vector2i(67, 76), new Vector2i(120, 85)))
 		), "Paladin's Shield");
 		return spell.toNbt();
 	}
@@ -109,8 +109,8 @@ public class ArcanusChestLootProvider extends SimpleFabricLootTableProvider {
 
 	private static CompoundTag smiteSpell() {
 		var spell = new Spell(List.of(
-			new SpellGroup(ArcanusSpellComponents.SMITE.get(), List.of(ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get()), List.of(new Vector2i(117, 46), new Vector2i(173, 73), new Vector2i(144, 128), new Vector2i(77, 124), new Vector2i(60, 65))),
-			new SpellGroup(ArcanusSpellComponents.EXPLOSION.get(), List.of(), List.of(new Vector2i(117, 91)))
+				new SpellGroup(ArcanusSpellComponents.SMITE.get(), List.of(ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get(), ArcanusSpellComponents.DAMAGE.get()), List.of(new Vector2i(117, 46), new Vector2i(173, 73), new Vector2i(144, 128), new Vector2i(77, 124), new Vector2i(60, 65))),
+				new SpellGroup(ArcanusSpellComponents.EXPLOSION.get(), List.of(), List.of(new Vector2i(117, 91)))
 		), "Smite");
 		return spell.toNbt();
 	}

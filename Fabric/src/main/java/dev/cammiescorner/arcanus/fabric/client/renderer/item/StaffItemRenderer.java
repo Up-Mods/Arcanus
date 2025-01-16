@@ -54,11 +54,11 @@ public class StaffItemRenderer implements BuiltinItemRendererRegistry.DynamicIte
 
 		switch(mode) {
 			case FIRST_PERSON_LEFT_HAND, THIRD_PERSON_LEFT_HAND ->
-				itemRenderer.render(stack, mode, true, matrices, vertexConsumers, light, overlay, worldItemModel);
+					itemRenderer.render(stack, mode, true, matrices, vertexConsumers, light, overlay, worldItemModel);
 			case FIRST_PERSON_RIGHT_HAND, THIRD_PERSON_RIGHT_HAND ->
-				itemRenderer.render(stack, mode, false, matrices, vertexConsumers, light, overlay, worldItemModel);
+					itemRenderer.render(stack, mode, false, matrices, vertexConsumers, light, overlay, worldItemModel);
 			default ->
-				itemRenderer.render(stack, mode, false, matrices, vertexConsumers, light, overlay, inventoryItemModel);
+					itemRenderer.render(stack, mode, false, matrices, vertexConsumers, light, overlay, inventoryItemModel);
 		}
 	}
 }

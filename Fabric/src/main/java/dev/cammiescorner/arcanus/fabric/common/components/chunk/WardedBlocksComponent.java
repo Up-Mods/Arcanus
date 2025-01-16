@@ -1,18 +1,19 @@
 package dev.cammiescorner.arcanus.fabric.common.components.chunk;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.upcraft.sparkweave.api.SparkweaveApi;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import org.ladysnake.cca.api.v3.component.sync.AutoSyncedComponent;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class WardedBlocksComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		ListTag nbtList = tag.getList("WardedBlocksMap", Tag.TAG_COMPOUND);
 		wardedBlocks.clear();
 
@@ -49,7 +50,7 @@ public class WardedBlocksComponent implements AutoSyncedComponent {
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		ListTag nbtList = new ListTag();
 		Map<UUID, ListTag> map = new HashMap<>();
 

@@ -1,9 +1,7 @@
 package dev.cammiescorner.arcanus.fabric.mixin.client;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.api.spells.Pattern;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
 import dev.cammiescorner.arcanus.fabric.client.utils.ClientUtils;
 import dev.cammiescorner.arcanus.fabric.common.entities.magic.AggressorbEntity;
 import dev.cammiescorner.arcanus.fabric.common.items.StaffItem;
@@ -12,6 +10,8 @@ import dev.cammiescorner.arcanus.fabric.common.packets.c2s.SetCastingPacket;
 import dev.cammiescorner.arcanus.fabric.common.packets.c2s.ShootOrbsPacket;
 import dev.cammiescorner.arcanus.fabric.common.packets.c2s.SyncPatternPacket;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -47,9 +47,11 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	@Shadow @Final public Options options;
 	@Shadow @Nullable public ClientLevel level;
 
-	@Shadow public abstract float getFrameTime();
+	@Shadow
+	public abstract float getFrameTime();
 
-	@Shadow public abstract boolean isLocalServer();
+	@Shadow
+	public abstract boolean isLocalServer();
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void arcanus$tick(CallbackInfo info) {
@@ -108,8 +110,8 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"
 	), cancellable = true)
 	public void arcanus$onBlockBreak(CallbackInfo info) {
 		if(isCasting)
@@ -117,9 +119,9 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/client/Minecraft;startAttack()Z",
-		ordinal = 0
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/Minecraft;startAttack()Z",
+			ordinal = 0
 	), cancellable = true)
 	public void arcanus$onLeftClick(CallbackInfo info) {
 		if(isCasting)
@@ -153,9 +155,9 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
-		ordinal = 0
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
+			ordinal = 0
 	), cancellable = true)
 	public void arcanus$onRightClick(CallbackInfo info) {
 		if(isCasting)
@@ -179,9 +181,9 @@ public abstract class MinecraftClientMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
-		ordinal = 1
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
+			ordinal = 1
 	), cancellable = true)
 	public void arcanus$onRightClickBlock(CallbackInfo info) {
 		if(isCasting || (player != null && !player.isSpectator() && player.getMainHandItem().getItem() instanceof StaffItem))

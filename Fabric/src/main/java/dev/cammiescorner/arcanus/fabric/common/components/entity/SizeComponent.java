@@ -4,13 +4,14 @@ import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.api.spells.SpellEffect;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusSpellComponents;
-import dev.onyxstudios.cca.api.v3.component.tick.CommonTickingComponent;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
+import org.ladysnake.cca.api.v3.component.tick.CommonTickingComponent;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.api.ScaleModifier;
 import virtuoel.pehkui.api.ScaleType;
@@ -48,7 +49,7 @@ public class SizeComponent implements CommonTickingComponent {
 						else {
 							scaleTicks--;
 							SUPPORTED_SCALE_TYPES.forEach(scaleType ->
-								scaleType.getScaleData(entity).onUpdate());
+									scaleType.getScaleData(entity).onUpdate());
 						}
 					}
 				}
@@ -56,7 +57,7 @@ public class SizeComponent implements CommonTickingComponent {
 					if(scaleTicks < 10) {
 						scaleTicks++;
 						SUPPORTED_SCALE_TYPES.forEach(scaleType ->
-							scaleType.getScaleData(entity).onUpdate());
+								scaleType.getScaleData(entity).onUpdate());
 					}
 
 					timer--;
@@ -69,13 +70,13 @@ public class SizeComponent implements CommonTickingComponent {
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag) {
+	public void readFromNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		timer = tag.getInt("Timer");
 		scaleTicks = tag.getInt("ScaleTicks");
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag) {
+	public void writeToNbt(CompoundTag tag, HolderLookup.Provider registryLookup) {
 		tag.putInt("Timer", timer);
 		tag.putInt("ScaleTicks", scaleTicks);
 	}

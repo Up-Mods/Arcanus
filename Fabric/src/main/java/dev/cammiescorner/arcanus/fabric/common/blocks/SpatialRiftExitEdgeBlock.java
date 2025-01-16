@@ -18,8 +18,8 @@ public class SpatialRiftExitEdgeBlock extends HorizontalDirectionalBlock impleme
 
 	public SpatialRiftExitEdgeBlock() {
 		super(BlockBehaviour.Properties.copy(ArcanusBlocks.SPATIAL_RIFT_WALL.get())
-			.sound(SoundType.STONE)
-			.lightLevel(value -> 9)
+				.sound(SoundType.STONE)
+				.lightLevel(value -> 9)
 		);
 		registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(CORNER, false));
 	}

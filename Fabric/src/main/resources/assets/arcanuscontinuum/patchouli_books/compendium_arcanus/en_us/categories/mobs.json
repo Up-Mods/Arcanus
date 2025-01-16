@@ -1,6 +1,6 @@
 {
-  "name": "Mobs",
-  "description": "",
-  "sortnum": 4,
-  "icon": "arcanus:opossum_spawn_egg"
+	"name": "Mobs",
+	"description": "",
+	"sortnum": 4,
+	"icon": "arcanus:opossum_spawn_egg"
 }

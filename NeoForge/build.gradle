@@ -1,167 +1,167 @@
 plugins {
-    id 'net.neoforged.moddev'
-    id 'net.neoforged.moddev.repositories'
+	id 'net.neoforged.moddev'
+	id 'net.neoforged.moddev.repositories'
 }
 
 configurations {
-    runtimeClasspath.extendsFrom localRuntime
+	runtimeClasspath.extendsFrom localRuntime
 }
 
 dependencies {
-    compileOnly project(":Common")
+	compileOnly project(":Common")
 
-    // sparkweave
-    implementation libs.sparkweave.neoforge
+	// sparkweave
+	implementation libs.sparkweave.neoforge
 
-    // resourceful config
-    implementation libs.resourcefulconfig.neoforge
+	// resourceful config
+	implementation libs.resourcefulconfig.neoforge
 
-    // emi
-    compileOnly "${libs.emi.neoforge.get()}:api"
-    localRuntime libs.emi.neoforge
+	// emi
+	compileOnly "${libs.emi.neoforge.get()}:api"
+	localRuntime libs.emi.neoforge
 
-    // sodium
-    compileOnly libs.sodium.neoforge
-    localRuntime libs.sodium.neoforge
+	// sodium
+	compileOnly libs.sodium.neoforge
+	localRuntime libs.sodium.neoforge
 
-    // iris
-    compileOnly libs.iris.neoforge
-    localRuntime libs.iris.neoforge
+	// iris
+	compileOnly libs.iris.neoforge
+	localRuntime libs.iris.neoforge
 
-    // patchouli
-    compileOnly libs.patchouli.neoforge
-    localRuntime libs.patchouli.neoforge
+	// patchouli
+	compileOnly libs.patchouli.neoforge
+	localRuntime libs.patchouli.neoforge
 }
 
 repositories {
-    mavenCentral()
-    maven {
-        name = 'Fabric'
-        url = 'https://maven.fabricmc.net'
-    }
-    maven {
-        name = 'NeoForge'
-        url = 'https://maven.neoforged.net/releases'
-    }
-    maven {
-        name = "Sponge"
-        url = "https://repo.spongepowered.org/repository/maven-public"
-        content {
-            includeGroupAndSubgroups "org.spongepowered"
-        }
-    }
-    maven {
-        name = "ParchmentMC"
-        url = "https://maven.parchmentmc.org"
-        content {
-            includeGroupAndSubgroups "org.parchmentmc"
-        }
-    }
-    maven {
-        name = "Up Mods"
-        url = "https://maven.uuid.gg/releases"
-    }
-    maven {
-        name = "Team Resourceful"
-        url = "https://nexus.resourcefulbees.com/repository/maven-public/"
-    }
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
-        }
-    }
-    maven {
-        name = "CurseMaven"
-        url = "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-    maven {
-        name = "JitPack"
-        url = "https://jitpack.io"
-    }
+	mavenCentral()
+	maven {
+		name = 'Fabric'
+		url = 'https://maven.fabricmc.net'
+	}
+	maven {
+		name = 'NeoForge'
+		url = 'https://maven.neoforged.net/releases'
+	}
+	maven {
+		name = "Sponge"
+		url = "https://repo.spongepowered.org/repository/maven-public"
+		content {
+			includeGroupAndSubgroups "org.spongepowered"
+		}
+	}
+	maven {
+		name = "ParchmentMC"
+		url = "https://maven.parchmentmc.org"
+		content {
+			includeGroupAndSubgroups "org.parchmentmc"
+		}
+	}
+	maven {
+		name = "Up Mods"
+		url = "https://maven.uuid.gg/releases"
+	}
+	maven {
+		name = "Team Resourceful"
+		url = "https://nexus.resourcefulbees.com/repository/maven-public/"
+	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+	maven {
+		name = "CurseMaven"
+		url = "https://cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
+	maven {
+		name = "JitPack"
+		url = "https://jitpack.io"
+	}
 }
 
 neoForge {
-    version = neoforge.versions.neoforge.get()
+	version = neoforge.versions.neoforge.get()
 
-    parchment {
-        minecraftVersion = libs.versions.parchment.minecraft.get()
-        mappingsVersion = libs.versions.parchment.mappings.get()
-    }
+	parchment {
+		minecraftVersion = libs.versions.parchment.minecraft.get()
+		mappingsVersion = libs.versions.parchment.mappings.get()
+	}
 
-    accessTransformers {
-        def atFile = project(":Common").file("src/main/resources/META-INF/accesstransformer.cfg")
-        from atFile
-        publish atFile
-    }
+	accessTransformers {
+		def atFile = project(":Common").file("src/main/resources/META-INF/accesstransformer.cfg")
+		from atFile
+		publish atFile
+	}
 
-    interfaceInjectionData {
-        def itfFile = project(":Common").file("interfaces.json")
-        from itfFile
-        publish itfFile
-    }
+	interfaceInjectionData {
+		def itfFile = project(":Common").file("interfaces.json")
+		from itfFile
+		publish itfFile
+	}
 
-    mods {
-        "${project.mod_id}" {
-            sourceSet sourceSets.main
-            sourceSet project(":Common").sourceSets.main
-        }
-    }
+	mods {
+		"${project.mod_id}" {
+			sourceSet sourceSets.main
+			sourceSet project(":Common").sourceSets.main
+		}
+	}
 
-    runs {
-        configureEach {
-            logLevel = org.slf4j.event.Level.DEBUG
+	runs {
+		configureEach {
+			logLevel = org.slf4j.event.Level.DEBUG
 
-            systemProperty 'forge.logging.markers', 'REGISTRIES'
+			systemProperty 'forge.logging.markers', 'REGISTRIES'
 
-            gameDirectory = project.file('run')
-        }
-        client {
-            client()
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+			gameDirectory = project.file('run')
+		}
+		client {
+			client()
+			systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
 
-            if (rootProject.hasProperty('mc_uuid')) {
-                programArgument "--uuid=${rootProject.mc_uuid}"
-            }
+			if (rootProject.hasProperty('mc_uuid')) {
+				programArgument "--uuid=${rootProject.mc_uuid}"
+			}
 
-            if (rootProject.hasProperty('mc_username')) {
-                programArgument "--username=${rootProject.mc_username}"
-            }
+			if (rootProject.hasProperty('mc_username')) {
+				programArgument "--username=${rootProject.mc_username}"
+			}
 
-            if (rootProject.hasProperty('mc_java_agent_path')) {
-                jvmArgument "-javaagent:${rootProject.mc_java_agent_path}"
-            }
-        }
+			if (rootProject.hasProperty('mc_java_agent_path')) {
+				jvmArgument "-javaagent:${rootProject.mc_java_agent_path}"
+			}
+		}
 
-        server {
-            server()
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
-            programArgument '--nogui'
-        }
+		server {
+			server()
+			systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+			programArgument '--nogui'
+		}
 
-        data {
-            data()
-            programArguments.addAll('--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').absolutePath, '--existing', file('src/main/resources/').absolutePath)
-        }
-    }
+		data {
+			data()
+			programArguments.addAll('--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').absolutePath, '--existing', file('src/main/resources/').absolutePath)
+		}
+	}
 }
 
 tasks.named("compileJava", JavaCompile) {
-    source(project(":Common").sourceSets.main.allJava)
+	source(project(":Common").sourceSets.main.allJava)
 }
 
 tasks.named("javadoc", Javadoc) {
-    source(project(":Common").sourceSets.main.allJava)
+	source(project(":Common").sourceSets.main.allJava)
 }
 
 tasks.named("sourcesJar", Jar) {
-    from(project(":Common").sourceSets.main.allSource)
+	from(project(":Common").sourceSets.main.allSource)
 }
 
 processResources {
-    from project(":Common").sourceSets.main.resources
+	from project(":Common").sourceSets.main.resources
 }

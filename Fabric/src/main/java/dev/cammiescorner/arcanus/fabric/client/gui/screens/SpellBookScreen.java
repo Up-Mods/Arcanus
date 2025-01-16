@@ -2,11 +2,10 @@ package dev.cammiescorner.arcanus.fabric.client.gui.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import dev.cammiescorner.fabric.api.spells.*;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.spells.*;
 import dev.cammiescorner.arcanus.fabric.common.items.SpellBookItem;
 import dev.cammiescorner.arcanus.fabric.common.screens.SpellBookScreenHandler;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

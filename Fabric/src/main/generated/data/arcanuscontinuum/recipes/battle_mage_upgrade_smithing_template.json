@@ -1,24 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "key": {
-    "#": {
-      "item": "minecraft:copper_block"
-    },
-    "A": {
-      "item": "minecraft:amethyst_shard"
-    },
-    "S": {
-      "item": "minecraft:stone"
-    }
-  },
-  "pattern": [
-    "#A#",
-    "#S#",
-    "###"
-  ],
-  "result": {
-    "item": "arcanus:battle_mage_upgrade_smithing_template"
-  },
-  "show_notification": true
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"key": {
+		"#": {
+			"item": "minecraft:copper_block"
+		},
+		"A": {
+			"item": "minecraft:amethyst_shard"
+		},
+		"S": {
+			"item": "minecraft:stone"
+		}
+	},
+	"pattern": [
+		"#A#",
+		"#S#",
+		"###"
+	],
+	"result": {
+		"item": "arcanus:battle_mage_upgrade_smithing_template"
+	},
+	"show_notification": true
 }

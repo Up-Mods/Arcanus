@@ -25,16 +25,16 @@ public abstract class ClientWorldMixin extends Level {
 	}
 
 	@WrapWithCondition(method = "levelEvent", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/client/renderer/LevelRenderer;levelEvent(ILnet/minecraft/core/BlockPos;I)V"
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/LevelRenderer;levelEvent(ILnet/minecraft/core/BlockPos;I)V"
 	))
 	private boolean arcanus$noBreakingSoundsOrParticles(LevelRenderer target, int eventId, BlockPos pos, int data) {
 		return eventId != 2001 || !ArcanusComponents.isBlockWarded(this, pos);
 	}
 
 	@WrapWithCondition(method = "tickNonPassenger", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/Entity;tick()V"
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;tick()V"
 	))
 	private boolean arcanus$blockEntityTick(Entity entity) {
 		return !ArcanusComponents.areUpdatesBlocked(entity);

@@ -1,10 +1,10 @@
 package dev.cammiescorner.arcanus.fabric.common.util;
 
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.entities.Targetable;
 import dev.cammiescorner.arcanus.fabric.common.components.MagicColorComponent;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanus.fabric.common.util.supporters.WizardData;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TraceableEntity;

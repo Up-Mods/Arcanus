@@ -1,6 +1,6 @@
 {
-  "replace": false,
-  "values": [
-    "arcanus:magic_block"
-  ]
+	"replace": false,
+	"values": [
+		"arcanus:magic_block"
+	]
 }

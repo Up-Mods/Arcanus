@@ -24,7 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ArmorStand.class)
 public abstract class ArmorStandEntityMixin extends LivingEntity {
-	@Shadow protected abstract EquipmentSlot getClickedSlot(Vec3 hitPos);
+	@Shadow
+	protected abstract EquipmentSlot getClickedSlot(Vec3 hitPos);
 
 	protected ArmorStandEntityMixin(EntityType<? extends LivingEntity> entityType, Level world) {
 		super(entityType, world);

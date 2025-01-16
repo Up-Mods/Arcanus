@@ -1,7 +1,7 @@
 {
-  "processors": [
-    {
-      "processor_type": "arcanus:wizard_tower_processor"
-    }
-  ]
+	"processors": [
+		{
+			"processor_type": "arcanus:wizard_tower_processor"
+		}
+	]
 }

@@ -1,6 +1,6 @@
 {
-  "replace": false,
-  "values": [
-    "#arcanus:staves"
-  ]
+	"replace": false,
+	"values": [
+		"#arcanus:staves"
+	]
 }

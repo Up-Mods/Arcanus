@@ -7,7 +7,7 @@ import net.neoforged.fml.common.Mod;
 @Mod(Arcanus.MOD_ID)
 public class Main {
 
-    public Main(IEventBus modBus) {
+	public Main(IEventBus modBus) {
 
-    }
+	}
 }

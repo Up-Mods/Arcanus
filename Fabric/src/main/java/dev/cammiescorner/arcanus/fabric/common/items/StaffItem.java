@@ -4,10 +4,10 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
-import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.api.spells.Spell;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
 import dev.cammiescorner.arcanus.fabric.common.util.StaffType;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -48,9 +48,9 @@ public class StaffItem extends Item {
 	public StaffItem(StaffType staffType, Color defaultPrimaryColor, Color defaultSecondaryColor, boolean isDonorOnly) {
 		super(new Item.Properties().stacksTo(1));
 		this.attributeModifiers = Suppliers.memoize(() -> ImmutableMultimap.<Attribute, AttributeModifier>builder()
-			.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -1, AttributeModifier.Operation.ADDITION))
-			.put(ReachEntityAttributes.ATTACK_RANGE, new AttributeModifier(ATTACK_RANGE_MODIFIER_ID, "Weapon modifier", 0.5, AttributeModifier.Operation.ADDITION))
-			.build()
+				.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -1, AttributeModifier.Operation.ADDITION))
+				.put(ReachEntityAttributes.ATTACK_RANGE, new AttributeModifier(ATTACK_RANGE_MODIFIER_ID, "Weapon modifier", 0.5, AttributeModifier.Operation.ADDITION))
+				.build()
 		);
 		this.staffType = staffType;
 		this.defaultPrimaryColor = defaultPrimaryColor;

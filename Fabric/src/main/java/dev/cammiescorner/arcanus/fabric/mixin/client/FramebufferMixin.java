@@ -24,7 +24,9 @@ public abstract class FramebufferMixin implements StencilBuffer {
 
 	@Shadow public int width;
 	@Shadow public int height;
-	@Shadow public abstract void resize(int width, int height, boolean clearError);
+
+	@Shadow
+	public abstract void resize(int width, int height, boolean clearError);
 
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void arcanus$init(boolean useDepth, CallbackInfo info) {
@@ -32,9 +34,9 @@ public abstract class FramebufferMixin implements StencilBuffer {
 	}
 
 	@ModifyArgs(method = "createBuffers", at = @At(
-		value = "INVOKE",
-		target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
-		remap = false
+			value = "INVOKE",
+			target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
+			remap = false
 	))
 	private void arcanus$modifyTexImage2D(Args args) {
 		if(Objects.equals(args.get(2), GL11.GL_DEPTH_COMPONENT) && isStencilBufferEnabled) {
@@ -45,9 +47,9 @@ public abstract class FramebufferMixin implements StencilBuffer {
 	}
 
 	@ModifyArgs(method = "createBuffers", at = @At(
-		value = "INVOKE",
-		target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V",
-		remap = false
+			value = "INVOKE",
+			target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V",
+			remap = false
 	))
 	private void arcanus$modifyFrameBufferTexture2D(Args args) {
 		if(Objects.equals(args.get(1), GL30C.GL_DEPTH_ATTACHMENT))
