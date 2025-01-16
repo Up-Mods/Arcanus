@@ -2,8 +2,6 @@ package dev.cammiescorner.arcanus.fabric.common.components.level;
 
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
-import dev.cammiescorner.arcanus.common.MainHelper;
-import dev.cammiescorner.arcanus.fabric.common.FabricMainDuck;
 import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.fabric.common.blocks.SpatialRiftExitBlock;
@@ -11,6 +9,7 @@ import dev.cammiescorner.arcanus.fabric.common.blocks.SpatialRiftExitEdgeBlock;
 import dev.cammiescorner.arcanus.fabric.common.data.ArcanusDimensions;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanus.fabric.common.util.PlayerHelper;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -146,7 +145,7 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 	}
 
 	public boolean teleportOutOfPocketDimension(Entity entity) {
-		if(MainHelper.isFakePlayer(entity) || entity.level().isClientSide() || entity.level().dimension() != ArcanusDimensions.POCKET_DIMENSION)
+		if(PlayerHelper.isFakePlayer(entity) || entity.level().isClientSide() || entity.level().dimension() != ArcanusDimensions.POCKET_DIMENSION)
 			return false;
 
 		UUID ownerId = existingPlots.values().stream().filter(plot -> entity.getBoundingBox().intersects(AABB.of(plot.getBounds()))).map(PocketDimensionPlot::ownerId).findFirst().orElse(null);
@@ -274,7 +273,7 @@ public class PocketDimensionComponent implements dev.onyxstudios.cca.api.v3.comp
 
 		if(regenerateType.clearInterior()) {
 			pocketDim.getEntitiesOfClass(Entity.class, AABB.of(plot.getBounds())).forEach(entity -> {
-				if(MainHelper.isFakePlayer(entity) || !(entity instanceof ServerPlayer player)) {
+				if(PlayerHelper.isFakePlayer(entity) || !(entity instanceof ServerPlayer player)) {
 					entity.discard();
 					return;
 				}

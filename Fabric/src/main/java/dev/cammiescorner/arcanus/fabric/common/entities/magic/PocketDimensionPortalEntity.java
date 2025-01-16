@@ -2,11 +2,10 @@ package dev.cammiescorner.arcanus.fabric.common.entities.magic;
 
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.api.entities.Targetable;
-import dev.cammiescorner.arcanus.common.MainHelper;
-import dev.cammiescorner.arcanus.fabric.common.FabricMainDuck;
 import dev.cammiescorner.arcanus.fabric.common.components.level.PocketDimensionComponent;
 import dev.cammiescorner.arcanus.fabric.common.data.ArcanusEntityTags;
 import dev.cammiescorner.arcanus.fabric.common.registry.ArcanusComponents;
+import dev.cammiescorner.arcanus.fabric.common.util.PlayerHelper;
 import net.minecraft.Util;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -146,7 +145,7 @@ public class PocketDimensionPortalEntity extends Entity implements Targetable {
 	}
 
 	private static boolean canTeleportSafely(Entity entity) {
-		if(entity.isSpectator() || !entity.isAlive() || !entity.canChangeDimensions() || MainHelper.isFakePlayer(entity))
+		if(entity.isSpectator() || !entity.isAlive() || !entity.canChangeDimensions() || PlayerHelper.isFakePlayer(entity))
 			return false;
 
 		return !entity.getType().is(ArcanusEntityTags.SPATIAL_RIFT_IMMUNE);
