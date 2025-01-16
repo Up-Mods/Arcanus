@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class MagicProjectileEntityModel extends EntityModel<MagicProjectileEntity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("magic_projectile"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("magic_projectile"), "main");
 	private final ModelPart base;
 	public final ModelPart ring1;
 	public final ModelPart ring2;

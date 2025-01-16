@@ -19,8 +19,8 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
 public class OpossumEntityRenderer extends MobRenderer<OpossumEntity, OpossumEntityModel> {
-	public static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/living/opossum.png");
-	public static final ResourceLocation HAT_TEXTURE = FabricMain.id("textures/entity/living/opossum_hat.png");
+	public static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/living/opossum.png");
+	public static final ResourceLocation HAT_TEXTURE = Arcanus.id("textures/entity/living/opossum_hat.png");
 
 	public OpossumEntityRenderer(EntityRendererProvider.Context context) {
 		super(context, new OpossumEntityModel(Minecraft.getInstance().getEntityModels().bakeLayer(OpossumEntityModel.MODEL_LAYER)), 0.3F);

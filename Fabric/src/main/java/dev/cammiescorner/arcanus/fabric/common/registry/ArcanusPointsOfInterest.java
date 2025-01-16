@@ -14,6 +14,6 @@ public class ArcanusPointsOfInterest {
 	}
 
 	public static ResourceKey<PoiType> create(String id) {
-		return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, FabricMain.id(id));
+		return ResourceKey.create(Registries.POINT_OF_INTEREST_TYPE, Arcanus.id(id));
 	}
 }

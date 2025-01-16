@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.UUID;
 
 public record WizardData(Color magicColor, Color pocketDimensionColor) {
-	public static final ResourceLocation ID = FabricMain.id("wizard_data");
+	public static final ResourceLocation ID = Arcanus.id("wizard_data");
 	private static final WizardData EMPTY = new WizardData(FabricMain.DEFAULT_MAGIC_COLOUR, FabricMain.DEFAULT_MAGIC_COLOUR);
 
 	public static final Codec<WizardData> CODEC = RecordCodecBuilder.create(instance -> instance.group(

@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
 
 public class PocketDimensionPortalEntityModel extends EntityModel<Entity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("pocket_dimension_portal"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("pocket_dimension_portal"), "main");
 	private final ModelPart box;
 	public final ModelPart skybox;
 

@@ -15,7 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 
 public class WizardEntityModel extends EntityModel<WizardEntity> implements ArmedModel, HeadedModel {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("wizard"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("wizard"), "main");
 	public final ModelPart head;
 	public final ModelPart leftArm;
 	public final ModelPart rightArm;

@@ -16,7 +16,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class SyncStaffTemplatePacket {
-	public static final ResourceLocation ID = FabricMain.id("sync_staff_template");
+	public static final ResourceLocation ID = Arcanus.id("sync_staff_template");
 
 	public static void send(ServerPlayer receiver, Item item) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());

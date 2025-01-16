@@ -15,7 +15,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 
 public class ArcanusEntities {
-	public static final RegistryHandler<EntityType<?>> ENTITY_TYPES = RegistryHandler.create(Registries.ENTITY_TYPE, FabricMain.MOD_ID);
+	public static final RegistryHandler<EntityType<?>> ENTITY_TYPES = RegistryHandler.create(Registries.ENTITY_TYPE, Arcanus.MOD_ID);
 
 	public static final RegistrySupplier<EntityType<WizardEntity>> WIZARD = ENTITY_TYPES.register("wizard", () -> FabricEntityTypeBuilder.createMob().entityFactory(WizardEntity::new).defaultAttributes(WizardEntity::createMobAttributes).dimensions(EntityDimensions.scalable(0.7F, 1.8F)).build());
 	public static final RegistrySupplier<EntityType<OpossumEntity>> OPOSSUM = ENTITY_TYPES.register("opossum", () -> FabricEntityTypeBuilder.createMob().entityFactory(OpossumEntity::new).defaultAttributes(OpossumEntity::createMobAttributes).dimensions(EntityDimensions.scalable(0.6F, 0.7F)).build());

@@ -17,8 +17,8 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.DyeColor;
 
 public class WizardEntityRenderer extends MobRenderer<WizardEntity, WizardEntityModel> {
-	public static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/living/wizard.png");
-	public static final ResourceLocation ROBES_TEXTURE = FabricMain.id("textures/entity/living/wizard_overlay.png");
+	public static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/living/wizard.png");
+	public static final ResourceLocation ROBES_TEXTURE = Arcanus.id("textures/entity/living/wizard_overlay.png");
 
 	public WizardEntityRenderer(EntityRendererProvider.Context context) {
 		super(context, new WizardEntityModel(Minecraft.getInstance().getEntityModels().bakeLayer(WizardEntityModel.MODEL_LAYER)), 0.6F);

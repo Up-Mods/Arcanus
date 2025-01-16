@@ -10,8 +10,8 @@ import net.minecraft.world.entity.projectile.Projectile;
 import org.jetbrains.annotations.Nullable;
 
 public class ArcanusDamageTypes {
-	public static final ResourceKey<DamageType> MAGIC = ResourceKey.create(Registries.DAMAGE_TYPE, FabricMain.id("magic"));
-	public static final ResourceKey<DamageType> MAGIC_PROJECTILE = ResourceKey.create(Registries.DAMAGE_TYPE, FabricMain.id("magic_projectile"));
+	public static final ResourceKey<DamageType> MAGIC = ResourceKey.create(Registries.DAMAGE_TYPE, Arcanus.id("magic"));
+	public static final ResourceKey<DamageType> MAGIC_PROJECTILE = ResourceKey.create(Registries.DAMAGE_TYPE, Arcanus.id("magic_projectile"));
 
 	public static DamageSource getMagicDamage(Entity source) {
 		return source.damageSources().source(MAGIC, source);

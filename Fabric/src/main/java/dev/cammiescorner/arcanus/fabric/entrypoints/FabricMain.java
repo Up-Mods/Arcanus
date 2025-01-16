@@ -61,12 +61,11 @@ import java.util.UUID;
 
 public class FabricMain implements ModInitializer {
 	public static final Configurator configurator = new Configurator();
-	public static final String MOD_ID = Arcanus.MOD_ID;
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final Logger LOGGER = LoggerFactory.getLogger(Arcanus.MOD_ID);
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##,####.##");
 
-	public static final ResourceKey<Registry<SpellComponent>> SPELL_COMPONENTS_REGISTRY_KEY = ResourceKey.createRegistryKey(id("spell_components"));
-	public static final DefaultedRegistry<SpellComponent> SPELL_COMPONENTS = FabricRegistryBuilder.createDefaulted(SPELL_COMPONENTS_REGISTRY_KEY, id("empty")).buildAndRegister();
+	public static final ResourceKey<Registry<SpellComponent>> SPELL_COMPONENTS_REGISTRY_KEY = ResourceKey.createRegistryKey(Arcanus.id("spell_components"));
+	public static final DefaultedRegistry<SpellComponent> SPELL_COMPONENTS = FabricRegistryBuilder.createDefaulted(SPELL_COMPONENTS_REGISTRY_KEY, Arcanus.id("empty")).buildAndRegister();
 	public static final Color DEFAULT_MAGIC_COLOUR = Color.fromInt(0x68e1ff, Color.Ordering.RGB);
 
 	public static final SyncToken<WizardData> WIZARD_DATA = DataSyncAPI.register(WizardData.class, WizardData.ID, WizardData.CODEC);
@@ -212,10 +211,6 @@ public class FabricMain implements ModInitializer {
 //		});
 	}
 
-	public static ResourceLocation id(String name) {
-		return new ResourceLocation(MOD_ID, name);
-	}
-
 	public static String format(double d) {
 		return DECIMAL_FORMAT.format(d);
 	}
@@ -262,6 +257,6 @@ public class FabricMain implements ModInitializer {
 			default -> "ERROR";
 		};
 
-		return Component.literal(string).withStyle(style -> style.withFont(FabricMain.id("magic_symbols")));
+		return Component.literal(string).withStyle(style -> style.withFont(Arcanus.id("magic_symbols")));
 	}
 }

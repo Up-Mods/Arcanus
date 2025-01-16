@@ -17,7 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
 public class SyncExplosionParticlesPacket {
-	public static final ResourceLocation ID = FabricMain.id("sync_explosion_particles");
+	public static final ResourceLocation ID = Arcanus.id("sync_explosion_particles");
 
 	public static void send(ServerPlayer player, double x, double y, double z, float strength, boolean didDestroyBlocks) {
 		FriendlyByteBuf buf = PacketByteBufs.create();

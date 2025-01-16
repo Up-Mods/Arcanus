@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class MagicLobEntityModel extends EntityModel<MagicProjectileEntity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("magic_lob"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("magic_lob"), "main");
 	public final ModelPart cube1;
 	public final ModelPart cube2;
 	public final ModelPart cube3;

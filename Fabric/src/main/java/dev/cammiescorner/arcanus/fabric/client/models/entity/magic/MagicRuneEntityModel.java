@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class MagicRuneEntityModel extends EntityModel<MagicRuneEntity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("magic_rune"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("magic_rune"), "main");
 	public final ModelPart rune;
 
 	public MagicRuneEntityModel(ModelPart root) {

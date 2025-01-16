@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class GuardianOrbEntityRenderer extends EntityRenderer<GuardianOrbEntity> {
-	private static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/magic/lob.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/magic/lob.png");
 	private final GuardianOrbEntityModel model;
 
 	public GuardianOrbEntityRenderer(EntityRendererProvider.Context context) {

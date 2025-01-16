@@ -35,7 +35,7 @@ public class WizardTowerProcessor extends StructureProcessor {
 			return absoluteBlockInfo;
 
 		SimpleContainer inventory = new SimpleContainer(6);
-		ResourceLocation lootTableId = FabricMain.id("bookshelves/wizard_tower");
+		ResourceLocation lootTableId = Arcanus.id("bookshelves/wizard_tower");
 		long lootTableSeed = placementData.getRandom(absoluteBlockInfo.pos()).nextLong();
 		BlockState blockState = absoluteBlockInfo.state();
 

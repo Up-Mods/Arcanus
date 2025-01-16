@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.LivingEntity;
 
 public class WizardArmourModel<T extends LivingEntity> extends HumanoidModel<T> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("wizard_robes"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("wizard_robes"), "main");
 	public final ModelPart wizardHat;
 	public final ModelPart robes;
 	public final ModelPart rightSleeve;

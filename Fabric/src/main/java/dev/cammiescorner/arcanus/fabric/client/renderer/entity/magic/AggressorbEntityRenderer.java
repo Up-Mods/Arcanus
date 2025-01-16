@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class AggressorbEntityRenderer extends EntityRenderer<AggressorbEntity> {
-	private static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/magic/lob.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/magic/lob.png");
 	private final AggressorbEntityModel model;
 
 	public AggressorbEntityRenderer(EntityRendererProvider.Context context) {

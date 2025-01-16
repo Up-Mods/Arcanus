@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public class SetCastingPacket {
-	public static final ResourceLocation ID = FabricMain.id("set_casting");
+	public static final ResourceLocation ID = Arcanus.id("set_casting");
 
 	public static void send(boolean casting) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());

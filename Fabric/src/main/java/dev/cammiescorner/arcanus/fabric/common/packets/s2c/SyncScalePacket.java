@@ -17,7 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public class SyncScalePacket {
-	public static final ResourceLocation ID = FabricMain.id("sync_scale");
+	public static final ResourceLocation ID = Arcanus.id("sync_scale");
 
 	public static void send(ServerPlayer receiver, Entity target, SpellEffect effect, double strength) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());

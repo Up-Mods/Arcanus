@@ -7,7 +7,7 @@ import vazkii.patchouli.api.PatchouliAPI;
 public class PatchouliCompat {
 
 	public static ItemStack getCompendiumArcanus() {
-		return PatchouliAPI.get().getBookStack(FabricMain.id("compendium_arcanus"));
+		return PatchouliAPI.get().getBookStack(Arcanus.id("compendium_arcanus"));
 	}
 
 }

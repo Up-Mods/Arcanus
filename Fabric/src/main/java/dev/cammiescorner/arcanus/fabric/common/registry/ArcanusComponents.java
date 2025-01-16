@@ -129,7 +129,7 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 	}
 
 	private static <T extends Component> ComponentKey<T> createComponent(String name, Class<T> component) {
-		return ComponentRegistry.getOrCreate(FabricMain.id(name), component);
+		return ComponentRegistry.getOrCreate(Arcanus.id(name), component);
 	}
 
 	@Nullable

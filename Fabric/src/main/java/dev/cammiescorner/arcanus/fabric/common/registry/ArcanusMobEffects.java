@@ -11,7 +11,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public class ArcanusMobEffects {
-	public static final RegistryHandler<MobEffect> MOB_EFFECTS = RegistryHandler.create(Registries.MOB_EFFECT, FabricMain.MOD_ID);
+	public static final RegistryHandler<MobEffect> MOB_EFFECTS = RegistryHandler.create(Registries.MOB_EFFECT, Arcanus.MOD_ID);
 
 	public static final RegistrySupplier<MobEffect> MANA_LOCK = MOB_EFFECTS.register("mana_lock", () -> new ArcanusStatusEffect(MobEffectCategory.HARMFUL, 0xa89d9b).addAttributeModifier(ArcanusEntityAttributes.MANA_LOCK.get(), "c5fa384f-c7f3-479b-9448-2843ff80a588", 7, AttributeModifier.Operation.ADDITION));
 	public static final RegistrySupplier<MobEffect> VULNERABILITY = MOB_EFFECTS.register("vulnerability", () -> new ArcanusStatusEffect(MobEffectCategory.HARMFUL, 0x3a8e99));

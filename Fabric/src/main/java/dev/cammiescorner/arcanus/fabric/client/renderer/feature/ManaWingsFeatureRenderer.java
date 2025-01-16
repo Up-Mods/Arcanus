@@ -18,7 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 
 public class ManaWingsFeatureRenderer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-	private static final ResourceLocation TEXTURE = FabricMain.id("/textures/entity/feature/mana_wings.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("/textures/entity/feature/mana_wings.png");
 	private final ElytraModel<T> model;
 
 	public ManaWingsFeatureRenderer(RenderLayerParent<T, M> context) {

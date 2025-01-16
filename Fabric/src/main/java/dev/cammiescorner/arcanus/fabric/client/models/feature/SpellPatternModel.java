@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.List;
 
 public class SpellPatternModel<T extends Player> extends HumanoidModel<T> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("spell_pattern"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("spell_pattern"), "main");
 	private final Minecraft client = Minecraft.getInstance();
 	private final ModelPart base;
 	public final ModelPart first;

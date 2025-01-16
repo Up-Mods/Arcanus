@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class AggressorbEntityModel extends EntityModel<AggressorbEntity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("aggressorb"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("aggressorb"), "main");
 	public final ModelPart cube1;
 	public final ModelPart cube2;
 	public final ModelPart cube3;

@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class GuardianOrbEntityModel extends EntityModel<GuardianOrbEntity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("guardian_orb"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("guardian_orb"), "main");
 	public final ModelPart cube1;
 	public final ModelPart cube2;
 	public final ModelPart cube3;

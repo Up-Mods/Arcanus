@@ -20,8 +20,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class WizardArmourRenderer implements ArmorRenderer {
 	private final Minecraft client = Minecraft.getInstance();
-	private final ResourceLocation mainTexture = FabricMain.id("textures/entity/armor/wizard_robes.png");
-	private final ResourceLocation overlayTexture = FabricMain.id("textures/entity/armor/wizard_robes_overlay.png");
+	private final ResourceLocation mainTexture = Arcanus.id("textures/entity/armor/wizard_robes.png");
+	private final ResourceLocation overlayTexture = Arcanus.id("textures/entity/armor/wizard_robes_overlay.png");
 	private WizardArmourModel<LivingEntity> model;
 
 	@Override

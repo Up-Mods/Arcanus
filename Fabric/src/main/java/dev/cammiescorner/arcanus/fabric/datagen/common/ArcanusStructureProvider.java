@@ -39,7 +39,7 @@ public class ArcanusStructureProvider extends DynamicRegistryEntryProvider {
 			var emptyPool = pools.getOrThrow(Pools.EMPTY);
 			var wizardTowerProcessors = processorLists.getOrThrow(ArcanusStructureProcessors.WIZARD_TOWER_PROCESSORS);
 
-			context.register(ArcanusStructurePools.WIZARD_TOWER, new StructureTemplatePool(emptyPool, List.of(Pair.of(StructurePoolElement.single(FabricMain.id("wizard_tower").toString(), wizardTowerProcessors), 1)), StructureTemplatePool.Projection.RIGID));
+			context.register(ArcanusStructurePools.WIZARD_TOWER, new StructureTemplatePool(emptyPool, List.of(Pair.of(StructurePoolElement.single(Arcanus.id("wizard_tower").toString(), wizardTowerProcessors), 1)), StructureTemplatePool.Projection.RIGID));
 		});
 
 		builder.add(Registries.STRUCTURE, context -> {

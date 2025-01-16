@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 
 public class OpossumEntityModel extends EntityModel<OpossumEntity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("opossum"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("opossum"), "main");
 	public final ModelPart head;
 	public final ModelPart hat;
 	public final ModelPart body;

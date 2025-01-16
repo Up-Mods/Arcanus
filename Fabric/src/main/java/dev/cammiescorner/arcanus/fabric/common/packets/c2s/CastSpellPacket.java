@@ -27,7 +27,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CastSpellPacket {
-	public static final ResourceLocation ID = FabricMain.id("cast_spell");
+	public static final ResourceLocation ID = Arcanus.id("cast_spell");
 
 	public static void send(int index) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
@@ -40,7 +40,7 @@ public class CastSpellPacket {
 
 		server.execute(() -> {
 			ItemStack stack = player.getMainHandItem();
-			CompoundTag tag = stack.getOrCreateTagElement(FabricMain.MOD_ID);
+			CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 
 			if(stack.getItem() instanceof StaffItem staff) {
 				ListTag list = tag.getList("Spells", Tag.TAG_COMPOUND);

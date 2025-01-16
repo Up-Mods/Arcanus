@@ -80,7 +80,7 @@ public class SpellBindingRecipe extends CustomRecipe {
 			return ItemStack.EMPTY;
 		}
 
-		CompoundTag tag = result.getOrCreateTagElement(FabricMain.MOD_ID);
+		CompoundTag tag = result.getOrCreateTagElement(Arcanus.MOD_ID);
 		ListTag list = tag.getList("Spells", Tag.TAG_COMPOUND);
 
 		var spells = new Spell[8];

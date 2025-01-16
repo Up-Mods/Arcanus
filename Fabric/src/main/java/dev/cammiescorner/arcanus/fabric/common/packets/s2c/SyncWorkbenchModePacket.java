@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class SyncWorkbenchModePacket {
-	public static final ResourceLocation ID = FabricMain.id("sync_workbench_mode");
+	public static final ResourceLocation ID = Arcanus.id("sync_workbench_mode");
 
 	public static void send(ServerPlayer receiver, WorkbenchMode mode) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());

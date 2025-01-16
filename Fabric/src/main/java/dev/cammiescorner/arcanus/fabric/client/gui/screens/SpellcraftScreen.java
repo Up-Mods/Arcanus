@@ -39,8 +39,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class SpellcraftScreen extends AbstractContainerScreen<SpellcraftScreenHandler> {
-	public static final ResourceLocation BOOK_TEXTURE = FabricMain.id("textures/gui/spell_book.png");
-	public static final ResourceLocation PANEL_TEXTURE = FabricMain.id("textures/gui/spell_crafting.png");
+	public static final ResourceLocation BOOK_TEXTURE = Arcanus.id("textures/gui/spell_book.png");
+	public static final ResourceLocation PANEL_TEXTURE = Arcanus.id("textures/gui/spell_crafting.png");
 	private static final Vector4i VALID_BOUNDS = new Vector4i(30, 40, 197, 114);
 	private static List<SpellComponent> spellShapes;
 	private static List<SpellComponent> spellEffects;

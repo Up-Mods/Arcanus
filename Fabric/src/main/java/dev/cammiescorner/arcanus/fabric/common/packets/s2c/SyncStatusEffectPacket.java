@@ -18,7 +18,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 
 public class SyncStatusEffectPacket {
-	public static final ResourceLocation ID = FabricMain.id("sync_status_effect");
+	public static final ResourceLocation ID = Arcanus.id("sync_status_effect");
 
 	public static void sendToAll(LivingEntity entity, MobEffect status, boolean hasEffect) {
 		PlayerLookup.tracking(entity).forEach(player -> sendTo(player, entity, status, hasEffect));

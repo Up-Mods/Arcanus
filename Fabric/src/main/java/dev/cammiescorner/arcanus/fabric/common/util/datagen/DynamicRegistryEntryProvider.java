@@ -36,7 +36,7 @@ public abstract class DynamicRegistryEntryProvider {
 
 			@Override
 			public String getName() {
-				return FabricMain.id("dynamic_registries").toString();
+				return Arcanus.id("dynamic_registries").toString();
 			}
 		};
 	}

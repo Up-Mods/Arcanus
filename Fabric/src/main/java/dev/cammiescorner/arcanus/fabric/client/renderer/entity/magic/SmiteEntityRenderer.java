@@ -20,7 +20,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 public class SmiteEntityRenderer extends EntityRenderer<SmiteEntity> {
-	private static final ResourceLocation TEXTURE = FabricMain.id("textures/block/magic_block.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/block/magic_block.png");
 
 	public SmiteEntityRenderer(EntityRendererProvider.Context ctx) {
 		super(ctx);

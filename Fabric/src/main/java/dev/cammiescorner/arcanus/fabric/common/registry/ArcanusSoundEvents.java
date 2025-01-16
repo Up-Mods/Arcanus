@@ -21,14 +21,14 @@ public class ArcanusSoundEvents {
 	}
 
 	private static SoundEvent create(String name) {
-		SoundEvent sound = SoundEvent.createVariableRangeEvent(FabricMain.id(name));
-		SOUNDS.put(sound, FabricMain.id(name));
+		SoundEvent sound = SoundEvent.createVariableRangeEvent(Arcanus.id(name));
+		SOUNDS.put(sound, Arcanus.id(name));
 		return sound;
 	}
 
 	private static SoundEvent create(String name, float range) {
-		SoundEvent sound = SoundEvent.createFixedRangeEvent(FabricMain.id(name), range);
-		SOUNDS.put(sound, FabricMain.id(name));
+		SoundEvent sound = SoundEvent.createFixedRangeEvent(Arcanus.id(name), range);
+		SOUNDS.put(sound, Arcanus.id(name));
 		return sound;
 	}
 }

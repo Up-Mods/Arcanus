@@ -11,7 +11,7 @@ import net.minecraft.util.GsonHelper;
 
 public class WizardLevelCriterion extends SimpleCriterionTrigger<WizardLevelCriterion.TriggerInstance> {
 
-	public static final ResourceLocation ID = FabricMain.id("wizard_level");
+	public static final ResourceLocation ID = Arcanus.id("wizard_level");
 
 	@Override
 	protected TriggerInstance createInstance(JsonObject json, ContextAwarePredicate predicate, DeserializationContext deserializationContext) {

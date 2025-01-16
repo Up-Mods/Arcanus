@@ -7,5 +7,5 @@ import net.minecraft.world.level.dimension.DimensionType;
 
 public class ArcanusDimensionTags {
 
-	public static final TagKey<DimensionType> WARDING_NOT_ALLOWED = TagKey.create(Registries.DIMENSION_TYPE, FabricMain.id("warding_not_allowed"));
+	public static final TagKey<DimensionType> WARDING_NOT_ALLOWED = TagKey.create(Registries.DIMENSION_TYPE, Arcanus.id("warding_not_allowed"));
 }

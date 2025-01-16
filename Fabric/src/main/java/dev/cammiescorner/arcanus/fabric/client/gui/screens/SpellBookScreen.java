@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class SpellBookScreen extends AbstractContainerScreen<SpellBookScreenHandler> {
-	public static final ResourceLocation BOOK_TEXTURE = FabricMain.id("textures/gui/spell_book.png");
-	public static final ResourceLocation PANEL_TEXTURE = FabricMain.id("textures/gui/spell_crafting.png");
+	public static final ResourceLocation BOOK_TEXTURE = Arcanus.id("textures/gui/spell_book.png");
+	public static final ResourceLocation PANEL_TEXTURE = Arcanus.id("textures/gui/spell_crafting.png");
 	public final LinkedList<SpellGroup> SPELL_GROUPS = new LinkedList<>();
 
 	public SpellBookScreen(SpellBookScreenHandler screenHandler, Inventory playerInventory, Component text) {

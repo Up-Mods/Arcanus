@@ -31,6 +31,6 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	@Inject(method = "getTextureLocation(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/resources/ResourceLocation;", at = @At("HEAD"), cancellable = true)
 	private void arcanus$getTexture(AbstractClientPlayer player, CallbackInfoReturnable<ResourceLocation> info) {
 		if(player.hasEffect(ArcanusMobEffects.ANONYMITY.get()))
-			info.setReturnValue(FabricMain.id("textures/entity/player/anonymous.png"));
+			info.setReturnValue(Arcanus.id("textures/entity/player/anonymous.png"));
 	}
 }

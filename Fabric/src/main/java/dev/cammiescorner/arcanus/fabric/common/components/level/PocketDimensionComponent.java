@@ -138,7 +138,7 @@ public class PocketDimensionComponent implements org.ladysnake.cca.api.v3.compon
 				}
 
 				var bottomCenterPos = Vec3.atBottomCenterOf(plot.getBounds().getCenter().atY(plot.min().getY() + 1));
-				FabricDimensions.teleport(entity, pocketDim, new PortalInfo(bottomCenterPos, Vec3.ZERO, entity.getYRot(), entity.getXRot()));
+				entity.teleportTo(pocketDim, bottomCenterPos.x(), bottomCenterPos.y(), bottomCenterPos.z(), Set.of(), entity.getYRot(), entity.getXRot());
 			}
 		}
 	}
@@ -163,7 +163,7 @@ public class PocketDimensionComponent implements org.ladysnake.cca.api.v3.compon
 					targetPos = Vec3.atBottomCenterOf(targetWorld.getSharedSpawnPos());
 				}
 
-				FabricDimensions.teleport(entity, targetWorld, new PortalInfo(targetPos, Vec3.ZERO, entity.getYRot(), entity.getXRot()));
+				entity.teleportTo(targetWorld, targetPos.x(), targetPos.y(), targetPos.z(), Set.of(), entity.getYRot(), entity.getXRot());
 				return true;
 			}
 		}
@@ -182,7 +182,8 @@ public class PocketDimensionComponent implements org.ladysnake.cca.api.v3.compon
 				angle = entity.getYRot();
 			}
 
-			FabricDimensions.teleport(entity, world, new PortalInfo(Vec3.atBottomCenterOf(spawnPos), Vec3.ZERO, angle, entity.getXRot()));
+			Vec3 targetPos = Vec3.atBottomCenterOf(spawnPos);
+			entity.teleportTo(world, targetPos.x(), targetPos.y(), targetPos.z(), Set.of(), angle, entity.getXRot());
 		}
 
 		FabricMain.LOGGER.warn("Unable to teleport entity out of pocket dimension: {} ({})", entity.getScoreboardName(), entity.getUUID());
@@ -279,7 +280,8 @@ public class PocketDimensionComponent implements org.ladysnake.cca.api.v3.compon
 
 				var overworld = server.overworld();
 
-				FabricDimensions.teleport(player, overworld, new PortalInfo(Vec3.atBottomCenterOf(overworld.getSharedSpawnPos()), Vec3.ZERO, overworld.getSharedSpawnAngle(), 0.0F));
+				Vec3 targetPos = Vec3.atBottomCenterOf(overworld.getSharedSpawnPos());
+				entity.teleportTo(overworld, targetPos.x(), targetPos.y(), targetPos.z(), Set.of(), overworld.getSharedSpawnAngle(), 0f);
 				player.sendSystemMessage(Component.translatable("command.arcanus.pocket_dimension.regenerate.warn.teleport"));
 			});
 		}

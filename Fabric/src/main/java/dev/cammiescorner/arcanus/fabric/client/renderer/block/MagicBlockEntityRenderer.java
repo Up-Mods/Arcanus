@@ -22,7 +22,7 @@ import java.util.function.Function;
 import static dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient.renderSide;
 
 public class MagicBlockEntityRenderer<T extends AbstractMagicBlockEntity> implements BlockEntityRenderer<T> {
-	private static final RenderType LAYER = FabricClient.getMagicCircles(FabricMain.id("textures/block/magic_block.png"));
+	private static final RenderType LAYER = FabricClient.getMagicCircles(Arcanus.id("textures/block/magic_block.png"));
 
 	private final Function<T, Color> colorGetter;
 

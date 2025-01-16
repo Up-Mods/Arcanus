@@ -80,7 +80,7 @@ public class NotSupporterScreen extends Screen {
 	}
 
 	private static void openLink(String target) {
-		var container = FabricLoader.getInstance().getModContainer(FabricMain.MOD_ID).orElseThrow();
+		var container = FabricLoader.getInstance().getModContainer(Arcanus.MOD_ID).orElseThrow();
 		var meta = container.getMetadata();
 		try {
 			var uri = new URIBuilder(target).addParameter("source", "mod:%s/%s".formatted(meta.getId(), meta.getVersion())).build();

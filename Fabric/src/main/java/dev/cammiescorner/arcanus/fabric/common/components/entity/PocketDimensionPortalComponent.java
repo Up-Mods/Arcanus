@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PocketDimensionPortalComponent implements Component {
-	public static final ResourceKey<Level> POCKET_DIMENSION_WORLD_KEY = ResourceKey.create(Registries.DIMENSION, FabricMain.id("pocket_dimension"));
+	public static final ResourceKey<Level> POCKET_DIMENSION_WORLD_KEY = ResourceKey.create(Registries.DIMENSION, Arcanus.id("pocket_dimension"));
 	private final Player player;
 	private final Map<ResourceKey<Level>, Pair<UUID, Vec3>> portalIds = new HashMap<>();
 

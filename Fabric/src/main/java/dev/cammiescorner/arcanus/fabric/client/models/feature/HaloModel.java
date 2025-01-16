@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.player.Player;
 
 public class HaloModel<T extends Player> extends HumanoidModel<T> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("halo"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("halo"), "main");
 	public final ModelPart halo;
 	public final ModelPart spinny;
 

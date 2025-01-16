@@ -19,12 +19,12 @@ import net.minecraft.world.item.ItemStack;
 public class BattleMageArmourRenderer implements ArmorRenderer {
 	private final Minecraft client = Minecraft.getInstance();
 	private final ResourceLocation[] mainTextures = {
-			FabricMain.id("textures/entity/armor/battle_mage_armor_stage_0.png"),
-			FabricMain.id("textures/entity/armor/battle_mage_armor_stage_1.png"),
-			FabricMain.id("textures/entity/armor/battle_mage_armor_stage_2.png"),
-			FabricMain.id("textures/entity/armor/battle_mage_armor_stage_3.png")
+			Arcanus.id("textures/entity/armor/battle_mage_armor_stage_0.png"),
+			Arcanus.id("textures/entity/armor/battle_mage_armor_stage_1.png"),
+			Arcanus.id("textures/entity/armor/battle_mage_armor_stage_2.png"),
+			Arcanus.id("textures/entity/armor/battle_mage_armor_stage_3.png")
 	};
-	private final ResourceLocation overlayTexture = FabricMain.id("textures/entity/armor/battle_mage_armor_overlay.png");
+	private final ResourceLocation overlayTexture = Arcanus.id("textures/entity/armor/battle_mage_armor_overlay.png");
 	private BattleMageArmourModel<LivingEntity> model;
 
 	@Override

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class ShootOrbsPacket {
-	public static final ResourceLocation ID = FabricMain.id("shoot_orb");
+	public static final ResourceLocation ID = Arcanus.id("shoot_orb");
 
 	public static void send(List<UUID> orbIds, UUID ownerId) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());

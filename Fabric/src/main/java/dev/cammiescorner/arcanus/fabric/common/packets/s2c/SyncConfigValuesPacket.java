@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 public class SyncConfigValuesPacket {
-	public static final ResourceLocation ID = FabricMain.id("sync_config_values");
+	public static final ResourceLocation ID = Arcanus.id("sync_config_values");
 
 	public static void send(ServerPlayer player) {
 		FriendlyByteBuf buf = PacketByteBufs.create();

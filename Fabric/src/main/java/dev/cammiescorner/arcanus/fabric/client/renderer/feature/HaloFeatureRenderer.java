@@ -24,7 +24,7 @@ import net.minecraft.world.entity.player.Player;
 
 public class HaloFeatureRenderer<T extends Player, M extends EntityModel<T>> extends RenderLayer<T, M> {
 
-	private static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/feature/halo.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/feature/halo.png");
 	private final HaloModel<T> model;
 
 	public HaloFeatureRenderer(RenderLayerParent<T, M> context) {

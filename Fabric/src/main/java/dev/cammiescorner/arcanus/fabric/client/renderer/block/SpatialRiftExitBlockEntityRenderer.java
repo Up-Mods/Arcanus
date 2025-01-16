@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.level.Level;
 
 public class SpatialRiftExitBlockEntityRenderer implements BlockEntityRenderer<SpatialRiftExitBlockEntity> {
-	private static final RenderType LAYER = FabricClient.getMagicCircles(FabricMain.id("textures/entity/magic/spatial_rift_sigil.png"));
+	private static final RenderType LAYER = FabricClient.getMagicCircles(Arcanus.id("textures/entity/magic/spatial_rift_sigil.png"));
 	private final SpatialRiftEntitySigilModel sigilModel;
 
 	public SpatialRiftExitBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {

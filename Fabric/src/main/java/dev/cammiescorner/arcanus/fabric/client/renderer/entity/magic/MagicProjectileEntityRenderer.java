@@ -19,8 +19,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class MagicProjectileEntityRenderer extends ArrowRenderer<MagicProjectileEntity> {
-	private static final ResourceLocation PROJECTILE_TEXTURE = FabricMain.id("textures/entity/magic/projectile.png");
-	private static final ResourceLocation LOB_TEXTURE = FabricMain.id("textures/entity/magic/lob.png");
+	private static final ResourceLocation PROJECTILE_TEXTURE = Arcanus.id("textures/entity/magic/projectile.png");
+	private static final ResourceLocation LOB_TEXTURE = Arcanus.id("textures/entity/magic/lob.png");
 	private final MagicLobEntityModel lobModel;
 	private final MagicProjectileEntityModel projectileModel;
 

@@ -29,6 +29,6 @@ public class ArcanusLevelStemProvider extends FabricCodecDataProvider<LevelStem>
 
 	@Override
 	public String getName() {
-		return FabricMain.id("level_stems").toString();
+		return Arcanus.id("level_stems").toString();
 	}
 }

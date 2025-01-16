@@ -35,7 +35,7 @@ public class ArcanusRecipeProvider extends FabricRecipeProvider {
 				.define('#', ItemTags.PLANKS)
 				.define('X', ItemTags.WOODEN_SLABS)
 				.unlockedBy("has_book", has(ItemTags.BOOKSHELF_BOOKS))
-				.save(exporter, FabricMain.id("chiseled_bookshelf"));
+				.save(exporter, Arcanus.id("chiseled_bookshelf"));
 
 		ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ArcanusBlocks.ARCANE_WORKBENCH.get())
 				.pattern("CCC")
@@ -115,24 +115,24 @@ public class ArcanusRecipeProvider extends FabricRecipeProvider {
 				.requires(ArcanusItemTags.C_FEATHERS)
 				.requires(Items.GLOW_INK_SAC)
 				.unlockedBy("has_glow_ink", has(Items.GLOW_INK_SAC))
-				.group(FabricMain.id("spell_book").toString())
+				.group(Arcanus.id("spell_book").toString())
 				.save(exporter);
 
 		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ArcanusItems.SPELL_BOOK.get())
 				.requires(Items.WRITABLE_BOOK)
 				.requires(Items.GLOW_INK_SAC)
 				.unlockedBy("has_glow_ink", has(Items.GLOW_INK_SAC))
-				.group(FabricMain.id("spell_book").toString())
-				.save(exporter, FabricMain.id("spell_book_from_writable_book"));
+				.group(Arcanus.id("spell_book").toString())
+				.save(exporter, Arcanus.id("spell_book_from_writable_book"));
 
 		battleMageSmithing(exporter, Items.DIAMOND_HELMET, RecipeCategory.COMBAT, ArcanusItems.BATTLE_MAGE_HELMET.get());
 		battleMageSmithing(exporter, Items.DIAMOND_CHESTPLATE, RecipeCategory.COMBAT, ArcanusItems.BATTLE_MAGE_CHESTPLATE.get());
 		battleMageSmithing(exporter, Items.DIAMOND_LEGGINGS, RecipeCategory.COMBAT, ArcanusItems.BATTLE_MAGE_LEGGINGS.get());
 		battleMageSmithing(exporter, Items.DIAMOND_BOOTS, RecipeCategory.COMBAT, ArcanusItems.BATTLE_MAGE_BOOTS.get());
 
-		SpecialRecipeBuilder.special(ArcanusRecipes.SPELL_BINDING.get()).save(exporter, FabricMain.id("spell_binding").toString());
+		SpecialRecipeBuilder.special(ArcanusRecipes.SPELL_BINDING.get()).save(exporter, Arcanus.id("spell_binding").toString());
 
-		ShapelessBookRecipeBuilder.book(RecipeCategory.MISC, FabricMain.id("compendium_arcanus")).requires(Items.BOOK).requires(Items.AMETHYST_SHARD, 3).unlockedBy("has_amethyst", has(Items.AMETHYST_SHARD)).save(withConditions(exporter, DefaultResourceConditions.allModsLoaded(ArcanusCompat.PATCHOULI.modid())));
+		ShapelessBookRecipeBuilder.book(RecipeCategory.MISC, Arcanus.id("compendium_arcanus")).requires(Items.BOOK).requires(Items.AMETHYST_SHARD, 3).unlockedBy("has_amethyst", has(Items.AMETHYST_SHARD)).save(withConditions(exporter, DefaultResourceConditions.allModsLoaded(ArcanusCompat.PATCHOULI.modid())));
 	}
 
 	public static void battleMageSmithing(Consumer<FinishedRecipe> finishedRecipeConsumer, Item ingredientItem, RecipeCategory category, Item resultItem) {

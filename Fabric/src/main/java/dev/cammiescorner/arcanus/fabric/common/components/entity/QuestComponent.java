@@ -12,7 +12,7 @@ import java.util.List;
 
 public class QuestComponent implements AutoSyncedComponent {
 	private final Player player;
-	private final List<ResourceLocation> questIds = List.of(FabricMain.id("start"));
+	private final List<ResourceLocation> questIds = List.of(Arcanus.id("start"));
 	private long lastCompletedQuestTime;
 
 	public QuestComponent(Player player) {

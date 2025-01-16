@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ArcanusSpellComponents {
-	public static final RegistryHandler<SpellComponent> SPELL_COMPONENTS = RegistryHandler.create(FabricMain.SPELL_COMPONENTS_REGISTRY_KEY, FabricMain.MOD_ID);
+	public static final RegistryHandler<SpellComponent> SPELL_COMPONENTS = RegistryHandler.create(FabricMain.SPELL_COMPONENTS_REGISTRY_KEY, Arcanus.MOD_ID);
 
 	//-----Empty Spell-----//
 	/**

@@ -7,5 +7,5 @@ import net.minecraft.world.level.biome.Biome;
 
 public class ArcanusBiomes {
 
-	public static final ResourceKey<Biome> POCKET_DIMENSION = ResourceKey.create(Registries.BIOME, FabricMain.id("pocket_dimension"));
+	public static final ResourceKey<Biome> POCKET_DIMENSION = ResourceKey.create(Registries.BIOME, Arcanus.id("pocket_dimension"));
 }

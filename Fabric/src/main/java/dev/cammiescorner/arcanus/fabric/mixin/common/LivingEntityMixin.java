@@ -208,7 +208,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 			if(speedAttr != null) {
 				if(stack.getItem() instanceof StaffItem && ArcanusComponents.isCasting((LivingEntity) (Object) this) && pattern.size() == 3) {
 					int index = FabricMain.getSpellIndex(pattern);
-					CompoundTag tag = stack.getOrCreateTagElement(FabricMain.MOD_ID);
+					CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 					ListTag list = tag.getList("Spells", Tag.TAG_COMPOUND);
 
 					if(!list.isEmpty() && index < list.size()) {

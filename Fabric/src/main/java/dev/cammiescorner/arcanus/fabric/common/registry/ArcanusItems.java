@@ -22,8 +22,8 @@ import java.util.UUID;
 
 public class ArcanusItems {
 
-	public static final RegistryHandler<CreativeModeTab> ITEM_GROUPS = RegistryHandler.create(Registries.CREATIVE_MODE_TAB, FabricMain.MOD_ID);
-	public static final RegistryHandler<Item> ITEMS = RegistryHandler.create(Registries.ITEM, FabricMain.MOD_ID);
+	public static final RegistryHandler<CreativeModeTab> ITEM_GROUPS = RegistryHandler.create(Registries.CREATIVE_MODE_TAB, Arcanus.MOD_ID);
+	public static final RegistryHandler<Item> ITEMS = RegistryHandler.create(Registries.ITEM, Arcanus.MOD_ID);
 
 	public static final RegistrySupplier<Item> WOODEN_STAFF = ITEMS.register("wooden_staff", () -> new StaffItem(StaffType.STAFF, Color.fromRGB(255, 255, 255), Color.fromRGB(81, 48, 26)));
 	public static final RegistrySupplier<Item> CRYSTAL_STAFF = ITEMS.register("crystal_staff", () -> new StaffItem(StaffType.STAFF, Color.fromRGB(255, 255, 255), Color.fromRGB(81, 48, 26)));

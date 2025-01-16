@@ -23,7 +23,7 @@ import org.joml.Vector3i;
 import java.util.List;
 
 public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
-	private static final ResourceLocation TEXTURE = FabricMain.id("textures/block/magic_block.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/block/magic_block.png");
 	private static final RenderType LAYER = FabricClient.getMagicCirclesTri(TEXTURE);
 	public static final List<Vector3f> VERTICES = List.of(
 			new Vector3f(0, 0, 1), new Vector3f(0.894F, 0F, 0.447F), new Vector3f(0.276F, 0.851F, 0.447F),

@@ -4,7 +4,7 @@ import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import net.minecraft.resources.ResourceLocation;
 
 public enum WorkbenchMode {
-	SPELLBINDING(FabricMain.id("textures/gui/arcane_workbench_spellbinding.png")), CUSTOMIZE(FabricMain.id("textures/gui/arcane_workbench_customize.png"));
+	SPELLBINDING(Arcanus.id("textures/gui/arcane_workbench_spellbinding.png")), CUSTOMIZE(Arcanus.id("textures/gui/arcane_workbench_customize.png"));
 
 	final ResourceLocation texture;
 

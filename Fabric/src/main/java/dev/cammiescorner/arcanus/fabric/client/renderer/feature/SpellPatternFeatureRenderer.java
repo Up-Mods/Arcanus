@@ -24,7 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class SpellPatternFeatureRenderer<T extends Player, M extends EntityModel<T>> extends RenderLayer<T, M> {
-	private static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/feature/magic_circles.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/feature/magic_circles.png");
 	private final Minecraft client = Minecraft.getInstance();
 	private final SpellPatternModel<Player> model;
 

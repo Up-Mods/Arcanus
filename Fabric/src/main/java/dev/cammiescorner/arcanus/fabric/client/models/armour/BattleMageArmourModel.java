@@ -12,7 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.LivingEntity;
 
 public class BattleMageArmourModel<T extends LivingEntity> extends HumanoidModel<T> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("battle_mage_armor"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("battle_mage_armor"), "main");
 	public final ModelPart helmet;
 	public final ModelPart chestplate;
 	public final ModelPart surcoatFront;

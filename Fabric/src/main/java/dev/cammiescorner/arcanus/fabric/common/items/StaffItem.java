@@ -66,7 +66,7 @@ public class StaffItem extends Item {
 	@Override
 	public void onCraftedBy(ItemStack stack, Level world, Player player) {
 		if(!world.isClientSide()) {
-			CompoundTag tag = stack.getOrCreateTagElement(FabricMain.MOD_ID);
+			CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 
 			if(tag.isEmpty()) {
 				ListTag list = new ListTag();
@@ -84,7 +84,7 @@ public class StaffItem extends Item {
 	@Override
 	public void inventoryTick(ItemStack stack, Level world, Entity entity, int slot, boolean selected) {
 		if(!world.isClientSide()) {
-			CompoundTag tag = stack.getOrCreateTagElement(FabricMain.MOD_ID);
+			CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 
 			if(tag.isEmpty()) {
 				ListTag list = new ListTag();
@@ -99,7 +99,7 @@ public class StaffItem extends Item {
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
-		CompoundTag tag = stack.getTagElement(FabricMain.MOD_ID);
+		CompoundTag tag = stack.getTagElement(Arcanus.MOD_ID);
 		int primaryColour = getPrimaryColorRGB(stack);
 		int secondaryColour = getSecondaryColorRGB(stack);
 
@@ -135,12 +135,12 @@ public class StaffItem extends Item {
 	}
 
 	public static void setPrimaryColor(ItemStack stack, Color color) {
-		stack.getOrCreateTagElement(FabricMain.MOD_ID).putInt("PrimaryColor", color.asInt(Color.Ordering.RGB));
+		stack.getOrCreateTagElement(Arcanus.MOD_ID).putInt("PrimaryColor", color.asInt(Color.Ordering.RGB));
 	}
 
 	public static Color getPrimaryColor(ItemStack stack) {
 		var color = ((StaffItem) stack.getItem()).defaultPrimaryColor;
-		var tag = stack.getTagElement(FabricMain.MOD_ID);
+		var tag = stack.getTagElement(Arcanus.MOD_ID);
 
 		if(tag != null && tag.contains("PrimaryColor", Tag.TAG_INT)) {
 			color = Color.fromInt(tag.getInt("PrimaryColor"), Color.Ordering.RGB);
@@ -154,12 +154,12 @@ public class StaffItem extends Item {
 	}
 
 	public static void setSecondaryColor(ItemStack stack, Color color) {
-		stack.getOrCreateTagElement(FabricMain.MOD_ID).putInt("SecondaryColor", color.asInt(Color.Ordering.RGB));
+		stack.getOrCreateTagElement(Arcanus.MOD_ID).putInt("SecondaryColor", color.asInt(Color.Ordering.RGB));
 	}
 
 	public static Color getSecondaryColor(ItemStack stack) {
 		var color = ((StaffItem) stack.getItem()).defaultSecondaryColor;
-		var tag = stack.getTagElement(FabricMain.MOD_ID);
+		var tag = stack.getTagElement(Arcanus.MOD_ID);
 		if(tag != null && tag.contains("SecondaryColor", Tag.TAG_INT)) {
 			color = Color.fromInt(tag.getInt("SecondaryColor"), Color.Ordering.RGB);
 		}
@@ -172,7 +172,7 @@ public class StaffItem extends Item {
 	}
 
 	public static ItemStack setCraftedBy(ItemStack stack, UUID uuid) {
-		CompoundTag tag = stack.getOrCreateTagElement(FabricMain.MOD_ID);
+		CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 		tag.putUUID("OwnerId", uuid);
 		return stack;
 	}

@@ -37,7 +37,7 @@ public class ArcanusModelProvider extends FabricModelProvider {
 
 	@Override
 	public void generateItemModels(ItemModelGenerators gen) {
-		var compendium = FabricMain.id("compendium_arcanus").withPrefix("item/");
+		var compendium = Arcanus.id("compendium_arcanus").withPrefix("item/");
 		ModelTemplates.FLAT_ITEM.create(compendium, TextureMapping.layer0(compendium), gen.output);
 
 		gen.generateFlatItem(ArcanusItems.SPELL_BOOK.get(), ModelTemplates.FLAT_ITEM);

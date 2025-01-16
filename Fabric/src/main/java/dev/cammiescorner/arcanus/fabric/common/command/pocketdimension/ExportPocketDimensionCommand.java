@@ -42,12 +42,12 @@ public class ExportPocketDimensionCommand {
 			return 0;
 		}
 
-		var structureId = FabricMain.id("pocket_dimensions/%s/pocket_dimensions_%s".formatted(targetProfile.getId(), date));
+		var structureId = Arcanus.id("pocket_dimensions/%s/pocket_dimensions_%s".formatted(targetProfile.getId(), date));
 		FabricMain.LOGGER.info("Saving pocket dimension for player {} ({}) as '{}'", targetProfile.getName(), targetProfile.getId(), structureId);
 
 		var templateManager = pocketDim.getStructureManager();
 		var structure = templateManager.getOrCreate(structureId);
-		structure.setAuthor("%s_pocket_dimension_%s_%s".formatted(FabricMain.MOD_ID, targetProfile.getId(), date));
+		structure.setAuthor("%s_pocket_dimension_%s_%s".formatted(Arcanus.MOD_ID, targetProfile.getId(), date));
 		structure.fillFromWorld(pocketDim, plot.min(), plot.max().offset(1, 1, 1).subtract(plot.min()), true, null);
 		templateManager.save(structureId);
 

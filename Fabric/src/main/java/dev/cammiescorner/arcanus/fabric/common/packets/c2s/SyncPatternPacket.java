@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SyncPatternPacket {
-	public static final ResourceLocation ID = FabricMain.id("sync_pattern");
+	public static final ResourceLocation ID = Arcanus.id("sync_pattern");
 
 	public static void send(List<Pattern> pattern) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
@@ -56,7 +56,7 @@ public class SyncPatternPacket {
 
 			if(pattern.size() >= 3) {
 				ItemStack stack = player.getMainHandItem();
-				CompoundTag tag = stack.getOrCreateTagElement(FabricMain.MOD_ID);
+				CompoundTag tag = stack.getOrCreateTagElement(Arcanus.MOD_ID);
 				int index = FabricMain.getSpellIndex(pattern);
 
 				if(stack.getItem() instanceof StaffItem staff) {

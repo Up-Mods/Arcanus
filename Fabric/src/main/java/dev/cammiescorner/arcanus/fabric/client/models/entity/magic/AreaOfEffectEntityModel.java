@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
 public class AreaOfEffectEntityModel extends EntityModel<AreaOfEffectEntity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(FabricMain.id("area_of_effect"), "main");
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("area_of_effect"), "main");
 	public final ModelPart base;
 	public final ModelPart pillar;
 	public final ModelPart walls;

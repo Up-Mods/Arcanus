@@ -21,8 +21,8 @@ import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL31;
 
 public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDimensionPortalEntity> {
-	private static final ResourceLocation PORTAL_TEXTURE = FabricMain.id("textures/entity/magic/pocket_dimension_portal.png");
-	private static final ResourceLocation SIGIL_TEXTURE = FabricMain.id("textures/entity/magic/spatial_rift_sigil.png");
+	private static final ResourceLocation PORTAL_TEXTURE = Arcanus.id("textures/entity/magic/pocket_dimension_portal.png");
+	private static final ResourceLocation SIGIL_TEXTURE = Arcanus.id("textures/entity/magic/spatial_rift_sigil.png");
 	private final Minecraft client = Minecraft.getInstance();
 	private final Tesselator tesselator = Tesselator.getInstance();
 	private final PocketDimensionPortalEntityModel portalModel;

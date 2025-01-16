@@ -14,6 +14,6 @@ public class PehkuiCompat {
 	}
 
 	public static void registerModifiers() {
-		ScaleRegistries.register(ScaleRegistries.SCALE_MODIFIERS, FabricMain.id("size_modifier"), SizeComponent.ArcanusScaleModifier.INSTANCE);
+		ScaleRegistries.register(ScaleRegistries.SCALE_MODIFIERS, Arcanus.id("size_modifier"), SizeComponent.ArcanusScaleModifier.INSTANCE);
 	}
 }

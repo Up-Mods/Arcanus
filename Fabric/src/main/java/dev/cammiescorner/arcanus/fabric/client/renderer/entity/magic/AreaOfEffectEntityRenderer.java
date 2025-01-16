@@ -16,7 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class AreaOfEffectEntityRenderer extends EntityRenderer<AreaOfEffectEntity> {
-	private static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/magic/area_of_effect.png");
+	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/magic/area_of_effect.png");
 	private final AreaOfEffectEntityModel model;
 
 	public AreaOfEffectEntityRenderer(EntityRendererProvider.Context ctx) {

@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 
 public class SaveBookDataPacket {
-	public static final ResourceLocation ID = FabricMain.id("save_book_data");
+	public static final ResourceLocation ID = Arcanus.id("save_book_data");
 
 	public static void send(BlockPos pos, Spell spell) {
 		FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());

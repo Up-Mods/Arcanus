@@ -7,5 +7,5 @@ import net.minecraft.world.level.dimension.DimensionType;
 
 public class ArcanusDimensionTypes {
 
-	public static final ResourceKey<DimensionType> POCKET_DIMENSION = ResourceKey.create(Registries.DIMENSION_TYPE, FabricMain.id("pocket_dimension"));
+	public static final ResourceKey<DimensionType> POCKET_DIMENSION = ResourceKey.create(Registries.DIMENSION_TYPE, Arcanus.id("pocket_dimension"));
 }
