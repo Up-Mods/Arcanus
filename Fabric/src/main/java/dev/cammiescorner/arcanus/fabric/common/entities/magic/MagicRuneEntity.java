@@ -1,5 +1,7 @@
 package dev.cammiescorner.arcanus.fabric.common.entities.magic;
 
+import dev.cammiescorner.arcanus.common.MainHelper;
+import dev.cammiescorner.arcanus.fabric.common.FabricMainDuck;
 import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.api.entities.Targetable;
@@ -7,7 +9,6 @@ import dev.cammiescorner.arcanus.api.spells.SpellEffect;
 import dev.cammiescorner.arcanus.api.spells.SpellGroup;
 import dev.cammiescorner.arcanus.api.spells.SpellShape;
 import dev.cammiescorner.arcanus.fabric.common.data.ArcanusEntityTags;
-import dev.cammiescorner.arcanus.fabric.common.util.PlayerHelper;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -141,7 +142,7 @@ public class MagicRuneEntity extends Entity implements Targetable {
 	}
 
 	private static boolean isValidTarget(LivingEntity livingEntity) {
-		if(!livingEntity.isAlive() || livingEntity.isSpectator() || livingEntity.isIgnoringBlockTriggers() || PlayerHelper.isFakePlayer(livingEntity)) {
+		if(!livingEntity.isAlive() || livingEntity.isSpectator() || livingEntity.isIgnoringBlockTriggers() || MainHelper.isFakePlayer(livingEntity)) {
 			return false;
 		}
 
