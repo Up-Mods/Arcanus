@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanus.fabric.common.compat;
 
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import dev.cammiescorner.arcanus.ArcanusConfig;

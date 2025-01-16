@@ -1,13 +1,11 @@
 package dev.cammiescorner.arcanus.fabric.entrypoints;
 
-import com.teamresourceful.resourcefulconfig.common.config.Configurator;
+import com.teamresourceful.resourcefulconfig.api.loader.Configurator;
 import dev.cammiescorner.arcanus.Arcanus;
 import dev.cammiescorner.arcanus.ArcanusConfig;
 import dev.cammiescorner.arcanus.api.entities.ArcanusEntityAttributes;
 import dev.cammiescorner.arcanus.api.spells.Pattern;
 import dev.cammiescorner.arcanus.api.spells.SpellComponent;
-import dev.cammiescorner.arcanus.common.packets.c2s.*;
-import dev.cammiescorner.arcanus.common.registry.*;
 import dev.cammiescorner.arcanus.fabric.common.blocks.MagicDoorBlock;
 import dev.cammiescorner.arcanus.fabric.common.blocks.entities.MagicDoorBlockEntity;
 import dev.cammiescorner.arcanus.fabric.common.enchantments.ManaPoolEnchantment;
@@ -18,18 +16,15 @@ import dev.cammiescorner.arcanus.fabric.common.registry.*;
 import dev.cammiescorner.arcanus.fabric.common.util.Color;
 import dev.cammiescorner.arcanus.fabric.common.util.supporters.HaloData;
 import dev.cammiescorner.arcanus.fabric.common.util.supporters.WizardData;
-import dev.cammiescorner.fabric.common.packets.c2s.*;
-import dev.cammiescorner.fabric.common.registry.*;
 import dev.upcraft.datasync.api.DataSyncAPI;
 import dev.upcraft.datasync.api.SyncToken;
-import dev.upcraft.sparkweave.api.registry.RegistryService;
+import dev.upcraft.sparkweave.api.platform.services.RegistryService;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.fabricmc.fabric.api.item.v1.ModifyItemAttributeModifiersCallback;
 import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -40,7 +35,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -60,7 +54,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class FabricMain implements ModInitializer {
-	public static final Configurator configurator = new Configurator();
+	public static final Configurator configurator = new Configurator(Arcanus.MOD_ID);
 	public static final Logger LOGGER = LoggerFactory.getLogger(Arcanus.MOD_ID);
 	public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##,####.##");
 
@@ -74,7 +68,7 @@ public class FabricMain implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		configurator.registerConfig(ArcanusConfig.class);
+		configurator.register(ArcanusConfig.class);
 
 		RegistryService registryService = RegistryService.get();
 		ArcanusEntityAttributes.registerAll();

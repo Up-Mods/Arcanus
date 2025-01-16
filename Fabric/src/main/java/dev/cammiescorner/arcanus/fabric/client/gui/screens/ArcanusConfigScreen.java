@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanus.fabric.client.gui.screens;
 
+import com.teamresourceful.resourcefulconfig.api.types.ResourcefulConfig;
 import com.teamresourceful.resourcefulconfig.client.ConfigScreen;
-import com.teamresourceful.resourcefulconfig.common.config.ResourcefulConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
