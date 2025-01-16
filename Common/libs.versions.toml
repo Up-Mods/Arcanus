@@ -1,0 +1,68 @@
+[versions]
+minecraft = "1.21.1"
+
+# The latest versions are available at https://parchmentmc.org/docs/getting-started
+parchment_minecraft = "1.21.1"
+parchment_mappings = "2024.11.17"
+
+# https://projects.neoforged.net/neoforged/moddevgradle
+moddevgradle = "2.0.74"
+# https://projects.neoforged.net/neoforged/neoform
+neoform = "1.21.1-20240808.144430"
+
+# minecraft dependencies
+mixin = "0.15.2+mixin.0.8.7"
+mixin_extras = "0.4.1"
+asm = "9.7"
+jetbrains_annotations = "25.0.0"
+
+# other dependencies
+sparkweave = "0.507.0" # https://www.curseforge.com/minecraft/mc-mods/sparkweave/files/all
+resourcefulconfig = "3.0.8" # https://www.curseforge.com/minecraft/mc-mods/resourceful-config/files/all
+patchouli_fabric = "1.21-87-FABRIC" # https://www.curseforge.com/minecraft/mc-mods/patchouli-fabric
+patchouli_neoforge = "1.21-87-NEOFORGE" # https://www.curseforge.com/minecraft/mc-mods/patchouli
+emi = "1.1.19+1.21.1" # https://www.curseforge.com/minecraft/mc-mods/emi/files/all
+sodium_fabric = "mc1.21.1-0.6.5-fabric" # https://modrinth.com/mod/sodium/versions
+sodium_neoforge = "mc1.21.1-0.6.5-neoforge" # https://modrinth.com/mod/sodium/versions
+iris_fabric = "1.8.1+1.21.1-fabric" # https://modrinth.com/mod/iris/versions
+iris_neoforge = "1.8.1+1.21.1-neoforge" # https://modrinth.com/mod/iris/versions
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+parchment_mappings = { module = "org.parchmentmc.data:parchment-1.21", version.ref = "parchment_mappings" }
+mixin = { module = "net.fabricmc:sponge-mixin", version.ref = "mixin" }
+mixin_extras = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixin_extras" }
+asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
+asm_analysis = { module = "org.ow2.asm:asm-analysis", version.ref = "asm" }
+asm_commons = { module = "org.ow2.asm:asm-commons", version.ref = "asm" }
+asm_tree = { module = "org.ow2.asm:asm-tree", version.ref = "asm" }
+asm_util = { module = "org.ow2.asm:asm-util", version.ref = "asm" }
+jetbrains_annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains_annotations" }
+
+sparkweave = { module = "dev.upcraft.sparkweave:Sparkweave-Common", version.ref = "sparkweave" }
+sparkweave_fabric = { module = "dev.upcraft.sparkweave:Sparkweave-Fabric", version.ref = "sparkweave" }
+sparkweave_neoforge = { module = "dev.upcraft.sparkweave:Sparkweave-NeoForge", version.ref = "sparkweave" }
+
+resourcefulconfig = { module = "com.teamresourceful.resourcefulconfig:resourcefulconfig-common-1.21", version.ref = "resourcefulconfig" }
+resourcefulconfig_fabric = { module = "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-1.21", version.ref = "resourcefulconfig" }
+resourcefulconfig_neoforge = { module = "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-1.21", version.ref = "resourcefulconfig" }
+
+patchouli_fabric = { module = "vazkii.patchouli:Patchouli", version.ref = "patchouli_fabric" }
+patchouli_neoforge = { module = "vazkii.patchouli:Patchouli", version.ref = "patchouli_neoforge" }
+
+emi = { module = "dev.emi:emi-xplat-mojmap", version.ref = "emi" }
+emi_fabric = { module = "dev.emi:emi-fabric", version.ref = "emi" }
+emi_neoforge = { module = "dev.emi:emi-neoforge", version.ref = "emi" }
+
+sodium_fabric = { module = "maven.modrinth:sodium", version.ref = "sodium_fabric" }
+sodium_neoforge = { module = "maven.modrinth:sodium", version.ref = "sodium_neoforge" }
+
+iris_fabric = { module = "maven.modrinth:iris", version.ref = "iris_fabric" }
+iris_neoforge = { module = "maven.modrinth:iris", version.ref = "iris_neoforge" }
+
+[bundles]
+mixin = ["mixin", "mixin_extras", "asm", "asm_analysis", "asm_commons", "asm_tree", "asm_util"]
+
+[plugins]
+moddevgradle = { id = "net.neoforged.moddev", version.ref = "moddevgradle" }
+repositories = { id = "net.neoforged.moddev.repositories", version.ref = "moddevgradle" }

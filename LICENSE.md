@@ -1,4 +1,4 @@
-Copyright (C) 2023 Cammie
+Copyright (C) 2025 Cammie
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the "Software"), to use, copy, modify, and/or merge copies of the
@@ -14,7 +14,7 @@ restrictions:
 4) The Software does not make up a substantial portion of your own projects.
 
 If more than 2 years have passed without any source code change on the origin repository for the Software
-(https://github.com/CammiePone/Arcanus), then all but the first 2 restrictions are void, and may be ignored
+(https://github.com/CammiePone/Arcanus-Continuum), then all but the first 2 restrictions are void, and may be ignored
 when using, copying, modifying, and/or merging copies of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT

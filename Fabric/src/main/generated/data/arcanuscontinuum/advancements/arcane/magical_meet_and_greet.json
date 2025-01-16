@@ -1,0 +1,43 @@
+{
+  "parent": "arcanus:arcane/a_magical_crystal",
+  "criteria": {
+    "discovered_wizard_tower": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structure": "arcanus:wizard_tower"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.arcanus.arcane.magical_meet_and_greet.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "arcanus:wizard_hat",
+      "nbt": "{Damage:0}"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.arcanus.arcane.magical_meet_and_greet.title"
+    }
+  },
+  "requirements": [
+    [
+      "discovered_wizard_tower"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,188 @@
+plugins {
+    alias fabric.plugins.loom
+}
+
+dependencies {
+    minecraft libs.minecraft
+    mappings(loom.layered {
+        it.officialMojangMappings()
+        it.parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip")
+    })
+    compileOnly project(":Common")
+
+    modImplementation fabric.fabric.loader
+    modImplementation fabric.fabric.api
+
+    // sparkweave
+    modImplementation libs.sparkweave.fabric
+
+    // resourceful config
+    modImplementation libs.resourcefulconfig.fabric
+
+    // cardinal components
+    modImplementation fabric.bundles.cca
+
+    // trinkets
+    modImplementation fabric.trinkets
+
+    // datasync
+    modImplementation fabric.datasync
+    include fabric.datasync
+
+    // first person model
+    modCompileOnly fabric.firstperson
+
+    // explosive enhancement
+    modCompileOnly fabric.explosive.enhancement
+
+    // lambdynamiclights
+    modCompileOnly fabric.lambdynamiclights
+    modLocalRuntime fabric.bundles.lambdynamiclights.runtime
+
+    // modmenu
+    modCompileOnly fabric.modmenu
+    modLocalRuntime fabric.modmenu
+
+    // emi
+    modCompileOnly "${libs.emi.fabric.get()}:api"
+    modLocalRuntime libs.emi.fabric
+
+    // sodium
+    modCompileOnly libs.sodium.fabric
+    modLocalRuntime libs.sodium.fabric
+
+    // iris
+    modCompileOnly libs.iris.fabric
+    modLocalRuntime libs.iris.fabric
+
+    // patchouli
+    modCompileOnly libs.patchouli.fabric
+    modLocalRuntime libs.patchouli.fabric
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'Fabric'
+        url = 'https://maven.fabricmc.net'
+    }
+    maven {
+        name = 'NeoForge'
+        url = 'https://maven.neoforged.net/releases'
+    }
+    maven {
+        name = "Sponge"
+        url = "https://repo.spongepowered.org/repository/maven-public"
+        content {
+            includeGroupAndSubgroups "org.spongepowered"
+        }
+    }
+    maven {
+        name = "ParchmentMC"
+        url = "https://maven.parchmentmc.org"
+        content {
+            includeGroupAndSubgroups "org.parchmentmc"
+        }
+    }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com"
+    }
+    maven {
+        name = "Ladysnake"
+        url = "https://maven.ladysnake.org/releases"
+    }
+    maven {
+        name = "Up Mods"
+        url = "https://maven.uuid.gg/releases"
+    }
+    maven {
+        name = "Team Resourceful"
+        url = "https://nexus.resourcefulbees.com/repository/maven-public/"
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven {
+        name = "CurseMaven"
+        url = "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "SonaType Snapshots"
+        url = "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    maven {
+        name = 'Gegy'
+        url = 'https://maven.gegy.dev'
+    }
+    maven {
+        name = "JitPack"
+        url = "https://jitpack.io"
+    }
+}
+
+loom {
+    mods {
+        "${mod_id}" {
+            sourceSet("main")
+            project(":Common").sourceSets.main
+        }
+    }
+
+    accessWidenerPath.set(file("src/main/resources/${mod_id}.accesswidener"))
+
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+
+    runs {
+        client {
+            client()
+            setConfigName("Fabric Client")
+            ideConfigGenerated(true)
+            runDir("run")
+
+            if (rootProject.hasProperty('mc_uuid')) {
+                programArgs("--uuid", rootProject.mc_uuid)
+            }
+
+            if (rootProject.hasProperty('mc_username')) {
+                programArgs("--username", rootProject.mc_username)
+            }
+
+            if (rootProject.hasProperty('mc_java_agent_path')) {
+                vmArg("-javaagent:${rootProject.mc_java_agent_path}")
+            }
+        }
+
+        server {
+            server()
+            setConfigName("Fabric Server")
+            ideConfigGenerated(true)
+            runDir("run/server")
+        }
+    }
+}
+
+tasks.named("compileJava", JavaCompile) {
+    source(project(":Common").sourceSets.main.allJava)
+}
+
+tasks.named("javadoc", Javadoc) {
+    source(project(":Common").sourceSets.main.allJava)
+}
+
+tasks.named("sourcesJar", Jar) {
+    from(project(":Common").sourceSets.main.allSource)
+}
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Regenerate Effect",
+  "icon": "arcanus:textures/spell_components/effects/colored/regenerate_effect.png",
+  "category": "arcanus:spellcraft",
+  "sortnum": 202,
+  "advancement": "arcanus:arcane/wizard_level_7",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Weight: None$(br)Mana Cost: 6$(br)Cool Down: 0 seconds$(br2)Description:$(br)Applies the Regeneration effect to the target for a short while. Chaining the effect makes it stronger."
+    },
+    {
+      "type": "patchouli:image",
+      "border": true,
+      "images": [
+        "arcanus:textures/gui/patchouli/entries/effects/regenerate_effect.png"
+      ]
+    }
+  ]
+}

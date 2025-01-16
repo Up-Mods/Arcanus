@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom_right",
+  "textures": {
+    "bottom": "arcanus:block/magic_door_bottom",
+    "top": "arcanus:block/magic_door_top"
+  }
+}

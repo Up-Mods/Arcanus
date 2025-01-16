@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "arcanus:item/staff_icons/mage_pistol_focus",
+    "layer1": "arcanus:item/staff_icons/mage_pistol_barrel",
+    "layer2": "arcanus:item/staff_icons/mage_pistol_handle"
+  }
+}

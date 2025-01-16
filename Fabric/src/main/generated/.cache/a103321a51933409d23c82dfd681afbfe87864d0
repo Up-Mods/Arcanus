@@ -1,0 +1,8 @@
+// 1.20.1	2025-01-15T13:06:03.8272725	Arcanus/Tags for minecraft:block
+ef83716fd456e2f8e6e759dc0914c7b49112394d data\minecraft\tags\blocks\wither_immune.json
+543b7bc5b50991a683db068edcffb4903431fd0d data\c\tags\blocks\movement_restricted.json
+ef83716fd456e2f8e6e759dc0914c7b49112394d data\minecraft\tags\blocks\dragon_immune.json
+d117e72a0082a3ece93dd9b2d34328b4697ab02f data\minecraft\tags\blocks\mineable\axe.json
+400d0a5c8663cdf222d2f02bf2d44f20e85cb080 data\arcanus\tags\blocks\warding_not_allowed.json
+4e7aea9ec1223d6c94c337a7897ec0672c522b54 data\minecraft\tags\blocks\dragon_transparent.json
+543b7bc5b50991a683db068edcffb4903431fd0d data\minecraft\tags\blocks\impermeable.json

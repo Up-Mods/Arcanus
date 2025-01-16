@@ -1,0 +1,32 @@
+{
+  "parent": "arcanus:arcane/wizard_level_7",
+  "criteria": {
+    "has_level_8": {
+      "conditions": {
+        "level": 8
+      },
+      "trigger": "arcanus:wizard_level"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "description": {
+      "translate": "advancements.arcanus.arcane.wizard_level_8.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "arcanus:scroll_of_knowledge"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.arcanus.arcane.wizard_level_8.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_level_8"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,4 @@
+// 1.20.1	2025-01-15T13:06:03.8282805	Arcanus/Tags for minecraft:damage_type
+d1ccab8c98778dac87a31a88e19755f6c9f191aa data\minecraft\tags\damage_type\is_projectile.json
+b001068c4b00bd0926b857cdd22af120cdde5746 data\minecraft\tags\damage_type\witch_resistant_to.json
+b001068c4b00bd0926b857cdd22af120cdde5746 data\minecraft\tags\damage_type\avoids_guardian_thorns.json

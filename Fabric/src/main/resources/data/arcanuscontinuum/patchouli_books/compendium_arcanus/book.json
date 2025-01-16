@@ -1,0 +1,14 @@
+{
+  "name": "item.arcanus.compendium_arcanus",
+  "version": "${book_version}",
+  "creative_tab": "arcanus:general",
+  "landing_text": "item.arcanus.compendium_arcanus.landing_text",
+  "model": "arcanus:compendium_arcanus",
+  "book_texture": "arcanus:textures/gui/patchouli/book.png",
+  "filler_texture": "arcanus:textures/gui/patchouli/filler.png",
+  "index_icon": "arcanus:textures/gui/patchouli/search.png",
+  "link_color": "0000ff",
+  "link_hover_color": "0066ff",
+  "progress_bar_color": "68e1ff",
+  "use_resource_pack": true
+}

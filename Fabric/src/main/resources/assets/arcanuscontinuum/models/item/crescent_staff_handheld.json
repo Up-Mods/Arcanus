@@ -1,0 +1,7 @@
+{
+  "parent": "arcanus:item/staff_handheld",
+  "textures": {
+    "layer0": "arcanus:item/crescent_staff_focus",
+    "layer1": "arcanus:item/crescent_staff_handle"
+  }
+}

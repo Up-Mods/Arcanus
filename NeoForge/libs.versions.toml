@@ -1,0 +1,5 @@
+[versions]
+# The latest versions are available at https://projects.neoforged.net/neoforged/neoforge
+neoforge = "21.1.95"
+
+# [libraries]

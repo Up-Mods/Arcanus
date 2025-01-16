@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "arcanuscontinuum:item/staff_icons/crystal_staff_focus",
-    "layer1": "arcanuscontinuum:item/staff_icons/crystal_staff_handle"
-  }
-}

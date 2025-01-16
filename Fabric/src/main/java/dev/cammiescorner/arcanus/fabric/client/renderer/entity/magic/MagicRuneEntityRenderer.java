@@ -1,0 +1,63 @@
+package dev.cammiescorner.arcanus.fabric.client.renderer.entity.magic;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricMain;
+import dev.cammiescorner.arcanus.fabric.entrypoints.FabricClient;
+import dev.cammiescorner.arcanus.fabric.client.models.entity.magic.MagicRuneEntityModel;
+import dev.cammiescorner.arcanus.fabric.common.entities.magic.MagicRuneEntity;
+import dev.cammiescorner.arcanus.fabric.common.util.ArcanusHelper;
+import dev.cammiescorner.arcanus.fabric.common.util.Color;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+
+public class MagicRuneEntityRenderer extends EntityRenderer<MagicRuneEntity> {
+	private static final ResourceLocation TEXTURE = FabricMain.id("textures/entity/magic/rune.png");
+	private final MagicRuneEntityModel model;
+	private final int[] keyFrames = {
+		16, 16, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+		4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 16
+	};
+
+	public MagicRuneEntityRenderer(EntityRendererProvider.Context ctx) {
+		super(ctx);
+		model = new MagicRuneEntityModel(Minecraft.getInstance().getEntityModels().bakeLayer(MagicRuneEntityModel.MODEL_LAYER));
+	}
+
+	@Override
+	public void render(MagicRuneEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
+		super.render(entity, yaw, tickDelta, matrices, vertices, light);
+		Color color = ArcanusHelper.getMagicColor(entity);
+		float alpha = keyFrames[entity.tickCount % keyFrames.length] / 16F;
+		float r = color.redF() * alpha;
+		float g = color.greenF() * alpha;
+		float b = color.blueF() * alpha;
+		color = Color.fromFloatsRGB(r, g, b);
+
+		matrices.pushPose();
+		matrices.translate(0, Math.sin((entity.tickCount + tickDelta) * 0.125) * 0.05, 0);
+		matrices.mulPose(Axis.YP.rotationDegrees(entity.tickCount + tickDelta));
+		model.renderToBuffer(matrices, vertices.getBuffer(FabricClient.getMagicCircles(TEXTURE)), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, color.redF(), color.greenF(), color.blueF(), color.alphaF());
+		matrices.popPose();
+	}
+
+	@Override
+	public ResourceLocation getTextureLocation(MagicRuneEntity entity) {
+		return TEXTURE;
+	}
+}

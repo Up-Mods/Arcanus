@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "tick": {
+      "conditions": {},
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "description": {
+      "translate": "advancements.arcanus.arcane.root.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "arcanus:crystal_staff"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancements.arcanus.arcane.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "tick"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

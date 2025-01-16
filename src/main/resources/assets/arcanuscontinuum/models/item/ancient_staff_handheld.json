@@ -1,7 +1,0 @@
-{
-  "parent": "arcanuscontinuum:item/staff_handheld",
-  "textures": {
-    "layer0": "arcanuscontinuum:item/ancient_staff_focus",
-    "layer1": "arcanuscontinuum:item/ancient_staff_handle"
-  }
-}
