@@ -7,6 +7,6 @@ import net.minecraft.world.entity.Entity;
 public class FabricMainDuck implements MainDuck {
 	@Override
 	public boolean isFakePlayer(Entity entity) {
-		return entity instanceof FakePlayer;
+		return entity instanceof FakePlayer;;
 	}
 }
