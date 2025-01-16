@@ -1,0 +1,19 @@
+{
+  "criteria": {
+    "tick": {
+      "conditions": {},
+      "trigger": "minecraft:tick"
+    }
+  },
+  "requirements": [
+    [
+      "tick"
+    ]
+  ],
+  "rewards": {
+    "loot": [
+      "arcanuscontinuum:compendium_arcanus"
+    ]
+  },
+  "sends_telemetry_event": false
+}

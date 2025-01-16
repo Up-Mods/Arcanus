@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:builtin/entity",
+  "base": {
+    "parent": "arcanuscontinuum:item/thaumaturges_gauntlet_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "arcanuscontinuum:item/thaumaturges_gauntlet_gui"
+    },
+    "fixed": {
+      "parent": "arcanuscontinuum:item/thaumaturges_gauntlet_gui"
+    }
+  }
+}

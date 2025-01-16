@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:builtin/entity",
+  "base": {
+    "parent": "arcanuscontinuum:item/magic_tome_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "arcanuscontinuum:item/magic_tome_gui"
+    },
+    "fixed": {
+      "parent": "arcanuscontinuum:item/magic_tome_gui"
+    }
+  }
+}

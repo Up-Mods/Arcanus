@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "arcanuscontinuum:spatial_rift_wall",
+    "arcanuscontinuum:spatial_rift_exit",
+    "arcanuscontinuum:spatial_rift_exit_edge"
+  ]
+}

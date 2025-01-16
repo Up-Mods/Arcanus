@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:leather"
+    },
+    "G": {
+      "tag": "c:gold_ingots"
+    }
+  },
+  "pattern": [
+    "G G",
+    "# #"
+  ],
+  "result": {
+    "item": "arcanuscontinuum:wizard_boots"
+  },
+  "show_notification": true
+}

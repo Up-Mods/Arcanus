@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "arcanuscontinuum:item/staff_icons/magic_tome_stitching",
+    "layer1": "arcanuscontinuum:item/staff_icons/magic_tome_cover",
+    "layer2": "arcanuscontinuum:item/staff_icons/magic_tome_pages"
+  }
+}

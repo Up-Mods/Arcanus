@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "arcanuscontinuum:item/battle_mage_surcoat",
+    "layer1": "arcanuscontinuum:item/weathered_battle_mage_chestplate"
+  }
+}

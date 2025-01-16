@@ -1,7 +1,0 @@
-{
-  "parent": "arcanus:item/staff_handheld",
-  "textures": {
-    "layer0": "arcanus:item/wooden_staff",
-    "layer1": "arcanus:item/wooden_staff"
-  }
-}

@@ -1,134 +1,279 @@
 plugins {
-    id 'idea'
-    id 'maven-publish'
+	id 'idea'
+	id 'maven-publish'
+	alias libs.plugins.fabric.loom
 }
-
-def javaVersion = 21
-
-group = maven_group_id
 
 def ENV = System.getenv()
 def NOW = new Date()
-def buildTime = ENV.BUILD_TIME ?: NOW.format('yyyyMMddHHmmss')
+def buildTime = ENV.BUILD_TIME ?: NOW.format('yy.MMdd.HHmm')
+
+def javaVersion = 17
+
+//TODO increment when updating the compendium
+def book_version = 2
+
+group = maven_group_id
 
 boolean isPreviewBuild = !ENV.TAG || ENV.TAG.matches(".+-.+")
-def buildNumber = !ENV.TAG ? ("${ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" : buildTime}") : ""
-version = (ENV.TAG ?: "${libs.versions.minecraft.get()}-development") + ((isPreviewBuild && !ENV.TAG) ? "+${buildNumber}" : "")
-
-def mod_name = rootProject.name.replaceAll("-", "_").toLowerCase(Locale.ROOT)
+def buildNumber = !ENV.TAG ? ("${ENV.BUILD_NUMBER ? "build.${ENV.BUILD_NUMBER}" : buildTime}-${libs.versions.minecraft.get()}") : ""
+version = (ENV.TAG ?: "development") + ((isPreviewBuild && !ENV.TAG) ? "+${buildNumber}" : "")
 
 println("Building ${project.name} ${version}")
 
-subprojects {
-	apply plugin: 'java-library'
-	project.group = rootProject.group
-	project.version = rootProject.version
-
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(javaVersion)
-            vendor = JvmVendorSpec.MICROSOFT
-        }
-        withSourcesJar()
-        withJavadocJar()
-    }
-
-	javadoc {
-		options.tags = ["reason"]
+repositories {
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
 	}
-
-    base {
-	    archivesName = "${rootProject.name}-${project.name}"
-    }
-
-	jar {
-		from(rootProject.file("LICENSE.md")) {
-			rename { "LICENSE_${mod_name}.md" }
-		}
-		manifest {
-			attributes([
-				'Specification-Title'       : rootProject.name,
-				'Specification-Version'     : project.version,
-				'Implementation-Title'      : "${rootProject.name}-${project.name}",
-                'Maven-Artifact'            : "${maven_group_id}:${rootProject.name}-${project.name}:${project.version}",
-				'Implementation-Version'    : project.version,
-				'Implementation-Timestamp'  : NOW.format("yyyy-MM-dd'T'HH:mm:ssZ"),
-				'Timestamp'                 : NOW.toInstant().toEpochMilli(),
-				'Built-On-Java'             : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-				'Built-On-Minecraft'        : libs.versions.minecraft.get()
-			])
+	maven {
+		url = "https://maven.shedaniel.me"
+	}
+	maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com"
+	}
+	maven {
+		name = "Ladysnake"
+		url = "https://maven.ladysnake.org/releases"
+	}
+	maven {
+		url = "https://maven.blamejared.com"
+	}
+	maven {
+		url = "https://maven.kosmx.dev"
+	}
+	maven {
+		url = "https://maven.jamieswhiteshirt.com/libs-release"
+	}
+	maven {
+		url = "https://maven.uuid.gg/releases"
+	}
+	maven {
+		url = "https://nexus.resourcefulbees.com/repository/maven-public/"
+	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
 		}
 	}
+	maven {
+		name = "CurseMaven"
+		url = "https://cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
+	}
+	maven {
+		name = "SonaType Snapshots"
+		url = "https://oss.sonatype.org/content/repositories/snapshots"
+	}
+	maven {
+		name = 'Gegy'
+		url = 'https://maven.gegy.dev'
+	}
+	maven {
+		name = "JitPack"
+		url = "https://jitpack.io"
+	}
+}
 
-	sourcesJar {
-		from(rootProject.file("LICENSE.md")) {
-			rename { "LICENSE_${mod_name}.md" }
+dependencies {
+	minecraft libs.minecraft
+
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment "org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip"
+	}
+
+	compileOnly libs.jetbrains.annotations
+
+	modImplementation libs.fabric.loader
+	modImplementation libs.fabric.api
+
+	modImplementation libs.sparkweave
+
+	modImplementation libs.bundles.cca
+
+	modCompileOnly libs.patchouli
+	modLocalRuntime libs.patchouli
+
+	modImplementation libs.trinkets
+
+	modImplementation libs.resourceful.config
+
+	modImplementation libs.reach.attr
+	include libs.reach.attr
+
+	modImplementation libs.datasync.fabric
+	include libs.datasync.fabric
+
+	// first person model
+	modCompileOnly libs.firstperson
+
+	// sodium
+	modCompileOnly libs.sodium
+	modLocalRuntime libs.sodium
+
+	// iris
+	modCompileOnly libs.iris
+	modLocalRuntime libs.iris
+
+	// explosive enhancement
+	modCompileOnly libs.explosive.enhancement
+//	modLocalRuntime libs.explosive.enhancement
+
+	// pehkui
+	modCompileOnly libs.pehkui
+	modLocalRuntime libs.bundles.pehkui.runtime
+
+	// lambdynamiclights
+	modCompileOnly libs.lambdynamiclights
+	modLocalRuntime libs.bundles.lambdynamiclights.runtime
+
+	// modmenu
+	modCompileOnly libs.modmenu
+	modLocalRuntime libs.modmenu
+
+	// emi
+	modCompileOnly variantOf(libs.emi) { classifier 'api' }
+	modLocalRuntime libs.emi
+
+	// LazyDFU
+	modLocalRuntime libs.lazydfu
+}
+
+loom {
+	mods {
+		"${mod_id}" {
+			// Tell Loom about each source set used by your mod here. This ensures that your mod's classes are properly transformed by Loader.
+			sourceSet("main")
 		}
 	}
 
-	tasks.withType(JavaCompile).configureEach {
-		it.options.encoding = "UTF-8"
-		it.options.release.set(javaVersion)
-	}
+	accessWidenerPath.set(project.file("src/main/resources/${mod_id}.accesswidener"))
 
-	processResources {
-        filteringCharset "UTF-8"
+	runs {
+		client {
+			ideConfigGenerated(true)
+			runDir("run")
 
-		def expandProps = [
-			"version"                       : version,
-			"maven_group_id"                : maven_group_id,
-			"mod_id"                        : mod_id,
-			"mod_display_name"              : mod_display_name,
-			"mod_description"               : mod_description,
-			"sources_url"                   : sources_url,
-            "issues_url"                    : issues_url,
-			"license_url"					: license_url,
-			"discord_url"                   : discord_url,
-			"homepage_url"                  : homepage_url,
-			"minecraft_version"             : libs.versions.minecraft.get(),
-			"curseforge_id"					: curseforge_id,
-			"modrinth_id"					: modrinth_id,
-
-			"fabric_loader_version"         : fabric.versions.fabric.loader.get(),
-			"java_version" 				    : javaVersion
-		]
-
-		filesMatching(['pack.mcmeta', '*.mod.json', 'META-INF/*mods.toml', '*.mixins.json']) {
-			expand expandProps
-		}
-		inputs.properties(expandProps)
-	}
-
-    publishing {
-        publications {
-            "mavenJava${project.name}"(MavenPublication) {
-				artifactId "${rootProject.name}-${project.name}"
-				from components.java
+			if (project.hasProperty('mc_uuid')) {
+				programArg("--uuid=${project.findProperty('mc_uuid')}")
 			}
-        }
-    }
 
-	// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
-	idea {
-		module {
-			downloadSources = true
-			downloadJavadoc = true
+			if (project.hasProperty('mc_username')) {
+				programArg("--username=${project.findProperty('mc_username')}")
+			}
+
+			if (project.hasProperty('mc_java_agent_path')) {
+				vmArg("-javaagent:${project.findProperty('mc_java_agent_path')}")
+			}
 		}
+	}
+}
+
+fabricApi {
+	configureDataGeneration()
+}
+
+processResources {
+	filteringCharset "UTF-8"
+
+	def expandProps = [
+		"version"              : version,
+		"maven_group_id"       : maven_group_id,
+		"mod_id"               : mod_id,
+		"mod_display_name"     : mod_display_name,
+		"mod_description"      : mod_description,
+		"sources_url"          : sources_url,
+		"issues_url"           : issues_url,
+		"license_url"          : license_url,
+		"discord_url"          : discord_url,
+		"homepage_url"         : homepage_url,
+
+		"minecraft_version"    : libs.versions.minecraft.get(),
+		"fabric_loader_version": libs.versions.fabric.loader.get(),
+		"java_version"         : "${javaVersion}",
+	]
+
+	filesMatching(["fabric.mod.json", "*.mixins.json"]) {
+		expand expandProps
+	}
+	filesMatching("**/patchouli_books/compendium_arcanus/book.json") {
+		expand "book_version": book_version
+	}
+
+	inputs.property "book_version", book_version
+	inputs.properties(expandProps)
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	it.options.release.set(javaVersion)
+}
+
+base {
+	archivesName = "${project.name}-Fabric"
+}
+
+java {
+	withSourcesJar()
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(javaVersion)
+		vendor = JvmVendorSpec.MICROSOFT
+	}
+}
+
+jar {
+	from(layout.projectDirectory) {
+		include "LICENSE.md"
+		rename "LICENSE.md", "LICENSE_${mod_id}.md"
+	}
+
+	manifest {
+		attributes([
+			'Specification-Title'     : rootProject.name,
+			'Specification-Version'   : project.version,
+			'Implementation-Title'    : "${project.name}",
+			'Maven-Artifact'          : "${maven_group_id}:${project.name}:${project.version}",
+			'Implementation-Version'  : project.version,
+			'Implementation-Timestamp': NOW.format("yyyy-MM-dd'T'HH:mm:ssZ"),
+			'Timestamp'               : NOW.toInstant().toEpochMilli(),
+			'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+			'Built-On-Minecraft'      : libs.versions.minecraft.get()
+		])
+	}
+}
+
+sourcesJar {
+	from(layout.projectDirectory) {
+		include "LICENSE.md"
+		rename "LICENSE.md", "LICENSE_${mod_id}.md"
 	}
 }
 
 publishing {
-    repositories {
-        if (ENV.MAVEN_UPLOAD_URL) {
-            maven {
-                url = ENV.MAVEN_UPLOAD_URL
-                credentials {
-                    username = ENV.MAVEN_UPLOAD_USERNAME
-                    password = ENV.MAVEN_UPLOAD_PASSWORD
-                }
-            }
-        }
-    }
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = "Arcanus-Continuum-Fabric"
+			from components.java
+		}
+	}
+
+	repositories {
+		if (ENV.MAVEN_UPLOAD_URL) {
+			maven {
+				url = ENV.MAVEN_UPLOAD_URL
+				credentials {
+					username = ENV.MAVEN_UPLOAD_USERNAME
+					password = ENV.MAVEN_UPLOAD_PASSWORD
+				}
+			}
+		}
+	}
 }
 
 // IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.

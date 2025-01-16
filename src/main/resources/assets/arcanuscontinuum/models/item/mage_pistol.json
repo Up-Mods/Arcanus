@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:builtin/entity",
+  "base": {
+    "parent": "arcanuscontinuum:item/mage_pistol_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "arcanuscontinuum:item/mage_pistol_gui"
+    },
+    "fixed": {
+      "parent": "arcanuscontinuum:item/mage_pistol_gui"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "arcanuscontinuum:item/battle_mage_surcoat",
+    "layer1": "arcanuscontinuum:item/battle_mage_chestplate"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "arcanuscontinuum:oxidation": 0.1
+      },
+      "model": "arcanuscontinuum:item/exposed_battle_mage_chestplate"
+    },
+    {
+      "predicate": {
+        "arcanuscontinuum:oxidation": 0.2
+      },
+      "model": "arcanuscontinuum:item/weathered_battle_mage_chestplate"
+    },
+    {
+      "predicate": {
+        "arcanuscontinuum:oxidation": 0.3
+      },
+      "model": "arcanuscontinuum:item/oxidized_battle_mage_chestplate"
+    }
+  ]
+}

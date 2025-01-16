@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "arcanus:magic_block",
-    "arcanus:spatial_rift_wall",
-    "arcanus:spatial_rift_exit",
-    "arcanus:spatial_rift_exit_edge"
-  ]
-}

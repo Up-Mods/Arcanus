@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "arcanuscontinuum:item/battle_mage_leggings"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "arcanuscontinuum:oxidation": 0.1
+      },
+      "model": "arcanuscontinuum:item/exposed_battle_mage_leggings"
+    },
+    {
+      "predicate": {
+        "arcanuscontinuum:oxidation": 0.2
+      },
+      "model": "arcanuscontinuum:item/weathered_battle_mage_leggings"
+    },
+    {
+      "predicate": {
+        "arcanuscontinuum:oxidation": 0.3
+      },
+      "model": "arcanuscontinuum:item/oxidized_battle_mage_leggings"
+    }
+  ]
+}

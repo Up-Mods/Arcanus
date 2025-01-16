@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:builtin/entity",
+  "base": {
+    "parent": "arcanuscontinuum:item/mind_staff_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "arcanuscontinuum:item/mind_staff_gui"
+    },
+    "fixed": {
+      "parent": "arcanuscontinuum:item/mind_staff_gui"
+    }
+  }
+}

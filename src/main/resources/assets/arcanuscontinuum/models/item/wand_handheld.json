@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "arcanuscontinuum:item/wand_focus",
+    "layer1": "arcanuscontinuum:item/wand"
+  }
+}

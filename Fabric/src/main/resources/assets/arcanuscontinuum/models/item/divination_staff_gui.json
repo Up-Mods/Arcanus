@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "arcanus:item/staff_icons/divination_staff_focus",
-    "layer1": "arcanus:item/staff_icons/divination_staff_handle"
-  }
-}

@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-	modImplementation "dev.cammiescorner.arcanus:Arcanus-Continuum-Fabric:<VERSION>"
+	modImplementation "dev.cammiescorner.arcanuscontinuum:Arcanus-Continuum-Fabric:<VERSION>"
 }
 ```
 

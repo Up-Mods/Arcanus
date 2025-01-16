@@ -1,8 +1,0 @@
-// 1.20.1	2025-01-15T13:06:03.8257646	Arcanus/Tags for minecraft:worldgen/biome
-9c35f714db6e6ce86ea20d6ae3b9b6439c7d5a3c data\minecraft\tags\worldgen\biome\without_wandering_trader_spawns.json
-9c35f714db6e6ce86ea20d6ae3b9b6439c7d5a3c data\arcanus\tags\worldgen\biome\is_pocket_dimension.json
-9c35f714db6e6ce86ea20d6ae3b9b6439c7d5a3c data\minecraft\tags\worldgen\biome\without_zombie_sieges.json
-9c35f714db6e6ce86ea20d6ae3b9b6439c7d5a3c data\minecraft\tags\worldgen\biome\mineshaft_blocking.json
-4613217331691a2d2bc91d3b289736e9ce238f36 data\c\tags\worldgen\biome\has_structure\village.json
-9c35f714db6e6ce86ea20d6ae3b9b6439c7d5a3c data\minecraft\tags\worldgen\biome\without_patrol_spawns.json
-e5002b38162266c05fc2dd4b5d076e9deddb3d3a data\arcanus\tags\worldgen\biome\has_structure\wizard_tower.json

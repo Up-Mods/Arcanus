@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "arcanus:item/exposed_battle_mage_helmet"
-  }
-}

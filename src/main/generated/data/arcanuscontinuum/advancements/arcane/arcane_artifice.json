@@ -1,0 +1,38 @@
+{
+  "parent": "arcanuscontinuum:arcane/a_magical_crystal",
+  "criteria": {
+    "has_arcane_workbench": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "arcanuscontinuum:arcane_workbench"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.arcanuscontinuum.arcane.arcane_artifice.description"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "item": "arcanuscontinuum:arcane_workbench"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.arcanuscontinuum.arcane.arcane_artifice.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_arcane_workbench"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "arcanuscontinuum:arcane/magical_meet_and_greet",
+  "criteria": {
+    "has_level_1": {
+      "conditions": {
+        "level": 1
+      },
+      "trigger": "arcanuscontinuum:wizard_level"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.arcanuscontinuum.arcane.wizard_level_1.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "arcanuscontinuum:scroll_of_knowledge"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.arcanuscontinuum.arcane.wizard_level_1.title"
+    }
+  },
+  "requirements": [
+    [
+      "has_level_1"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

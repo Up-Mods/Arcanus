@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "arcanus:item/staff_icons/wooden_staff",
-    "layer1": "arcanus:item/staff_icons/wooden_staff"
-  }
-}

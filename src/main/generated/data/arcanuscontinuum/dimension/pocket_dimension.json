@@ -1,0 +1,12 @@
+{
+  "type": "arcanuscontinuum:pocket_dimension",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "arcanuscontinuum:pocket_dimension",
+      "features": false,
+      "lakes": false,
+      "layers": []
+    }
+  }
+}

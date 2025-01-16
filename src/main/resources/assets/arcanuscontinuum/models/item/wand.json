@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:builtin/entity",
+  "base": {
+    "parent": "arcanuscontinuum:item/wand_handheld"
+  },
+  "perspectives": {
+    "gui": {
+      "parent": "arcanuscontinuum:item/wand_gui"
+    },
+    "fixed": {
+      "parent": "arcanuscontinuum:item/wand_gui"
+    }
+  }
+}

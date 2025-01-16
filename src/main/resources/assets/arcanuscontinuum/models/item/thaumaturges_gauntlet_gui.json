@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "arcanuscontinuum:item/staff_icons/thaumaturges_gauntlet_focus",
+    "layer1": "arcanuscontinuum:item/staff_icons/thaumaturges_gauntlet_metal",
+    "layer2": "arcanuscontinuum:item/staff_icons/thaumaturges_gauntlet_strap"
+  }
+}

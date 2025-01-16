@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "arcanus:item/wizard_hat",
-    "layer1": "arcanus:item/wizard_hat_trim"
-  }
-}
