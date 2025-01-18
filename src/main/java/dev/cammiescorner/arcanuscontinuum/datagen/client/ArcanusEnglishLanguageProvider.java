@@ -224,6 +224,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		spell(builder, ArcanusSpellComponents.SMITE, "Smite Shape");
 		spell(builder, ArcanusSpellComponents.AOE, "Area Of Effect Shape");
 		spell(builder, ArcanusSpellComponents.BURST, "Burst Shape");
+		spell(builder, ArcanusSpellComponents.GUIDED_SHOT, "Guided Shot Shape");
 		spell(builder, ArcanusSpellComponents.COUNTER, "Counter Shape");
 		spell(builder, ArcanusSpellComponents.GUARDIAN_ORB, "Guardian Orb Shape");
 		spell(builder, ArcanusSpellComponents.AGGRESSORB, "Aggressorb Shape");
@@ -253,6 +254,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		spell(builder, ArcanusSpellComponents.LEVITATE, "Levitate Effect");
 		spell(builder, ArcanusSpellComponents.GROWTH, "Growth Effect");
 		spell(builder, ArcanusSpellComponents.MANA_SHIELD, "Mana Shield Effect");
+		spell(builder, ArcanusSpellComponents.TEMPORAL_DILATION, "Temporal Dilation Effect");
 		spell(builder, ArcanusSpellComponents.SPEED, "Speed Effect");
 		spell(builder, ArcanusSpellComponents.SHRINK, "Shrink Effect");
 		spell(builder, ArcanusSpellComponents.ENLARGE, "Enlarge Effect");
