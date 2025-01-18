@@ -5,9 +5,11 @@
   "plugin": "dev.cammiescorner.arcanuscontinuum.ArcanusMixinConfig",
   "compatibilityLevel": "JAVA_${java_version}",
   "mixins": [
+    "common.AbstractArrowMixin",
     "common.AbstractBlockStateMixin",
     "common.ArmorStandEntityMixin",
     "common.EnderDragonPartMixin",
+    "common.EntityMixin",
     "common.EntityViewMixin",
     "common.ExplosionMixin",
     "common.FallingBlockMixin",
@@ -48,5 +50,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+	}
 }
