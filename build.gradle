@@ -10,7 +10,7 @@ def buildTime = ENV.BUILD_TIME ?: NOW.format('yy.MMdd.HHmm')
 
 def javaVersion = 17
 
-//TODO increment when updating the compendium
+// TODO increment when updating the compendium
 def book_version = 2
 
 group = maven_group_id

@@ -98,7 +98,7 @@
               "functions": [
                 {
                   "function": "minecraft:set_nbt",
-                  "tag": "{ComponentGroups:[{Effects:[\"arcanuscontinuum:damage_effect\",\"arcanuscontinuum:damage_effect\",\"arcanuscontinuum:damage_effect\",\"arcanuscontinuum:damage_effect\"],Positions:[{X:117,Y:46},{X:173,Y:73},{X:144,Y:128},{X:77,Y:124},{X:60,Y:65}],Shape:\"arcanuscontinuum:smite_shape\"},{Effects:[],Positions:[{X:117,Y:91}],Shape:\"arcanuscontinuum:explosion_shape\"}],Name:\"Smite\"}"
+                  "tag": "{ComponentGroups:[{Effects:[\"arcanuscontinuum:damage_effect\",\"arcanuscontinuum:damage_effect\",\"arcanuscontinuum:damage_effect\",\"arcanuscontinuum:damage_effect\"],Positions:[{X:117,Y:46},{X:173,Y:73},{X:144,Y:128},{X:77,Y:124},{X:60,Y:65}],Shape:\"arcanuscontinuum:smite_shape\"},{Effects:[],Positions:[{X:117,Y:91}],Shape:\"arcanuscontinuum:burst_shape\"}],Name:\"Smite\"}"
                 }
               ],
               "name": "arcanuscontinuum:spell_book"

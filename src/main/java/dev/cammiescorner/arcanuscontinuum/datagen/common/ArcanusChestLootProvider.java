@@ -65,9 +65,6 @@ public class ArcanusChestLootProvider extends SimpleFabricLootTableProvider {
 						.apply(SetNbtFunction.setTag(zoomiesSpell()))
 						.when(LootItemRandomChanceCondition.randomChance(0.25F))
 				))
-				//-----------
-				// TODO written books?
-				//-----------
 				.add(LootItem.lootTableItem(Items.WRITABLE_BOOK).setWeight(5))
 				.add(LootItem.lootTableItem(Items.BOOK).setWeight(5))
 				.add(LootItem.lootTableItem(Items.BOOK).setWeight(3).apply(EnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(1, 3))))

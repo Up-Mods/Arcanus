@@ -25,12 +25,16 @@ public class ScrollOfKnowledgeItem extends Item {
 			if(component.getLevel() < component.getMaxLevel()) {
 				component.setLevel(component.getLevel() + 1);
 
-				if(!user.isCreative()) {
+				if(!user.isCreative())
 					stack.shrink(1);
-				}
 
 				user.displayClientMessage(Component.translatable("text.arcanuscontinuum.use_item.scroll_of_knowledge").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC), true);
 			}
+		}
+
+		if(component.getLevel() >= component.getMaxLevel()) {
+			user.displayClientMessage(Component.translatable("text.arcanuscontinuum.use_item.scroll_of_knowledge.max_level").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC), true);
+			return InteractionResultHolder.fail(stack);
 		}
 
 		return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());

@@ -41,13 +41,13 @@ public class ArcanusSpellComponents {
 	public static final RegistrySupplier<SpellShape> BOLT = SPELL_COMPONENTS.register("bolt_shape", BoltSpellShape::new);
 	public static final RegistrySupplier<SpellShape> BEAM = SPELL_COMPONENTS.register("beam_shape", BeamSpellShape::new);
 	public static final RegistrySupplier<SpellShape> RUNE = SPELL_COMPONENTS.register("rune_shape", RuneSpellShape::new);
-	public static final RegistrySupplier<SpellShape> BURST = SPELL_COMPONENTS.register("explosion_shape", BurstSpellShape::new);
+	public static final RegistrySupplier<SpellShape> BURST = SPELL_COMPONENTS.register("burst_shape", BurstSpellShape::new);
 	public static final RegistrySupplier<SpellShape> GUIDED_SHOT = SPELL_COMPONENTS.register("guided_shot_shape", GuidedShotSpellShape::new);
 	public static final RegistrySupplier<SpellShape> COUNTER = SPELL_COMPONENTS.register("counter_shape", CounterSpellShape::new);
 	public static final RegistrySupplier<SpellShape> AOE = SPELL_COMPONENTS.register("aoe_shape", AreaOfEffectSpellShape::new);
 	public static final RegistrySupplier<SpellShape> SMITE = SPELL_COMPONENTS.register("smite_shape", SmiteSpellShape::new);
-	public static final RegistrySupplier<SpellShape> GUARDIAN_ORB = SPELL_COMPONENTS.register("guardian_orb_shape", GuardianOrbSpellShape::new); // TODO replace name with something better
-	public static final RegistrySupplier<SpellShape> AGGRESSORB = SPELL_COMPONENTS.register("aggressorb_shape", AggressorbSpellShape::new); // TODO replace name with something better
+	public static final RegistrySupplier<SpellShape> GUARDIAN_ORB = SPELL_COMPONENTS.register("guardian_orb_shape", GuardianOrbSpellShape::new); // TODO replace name with something better. also change the texture file
+	public static final RegistrySupplier<SpellShape> AGGRESSORB = SPELL_COMPONENTS.register("aggressorb_shape", AggressorbSpellShape::new); // TODO replace name with something better. also change the texture file
 
 	//-----Spell Effects-----//
 	public static final RegistrySupplier<SpellEffect> DAMAGE = SPELL_COMPONENTS.register("damage_effect", DamageSpellEffect::new);

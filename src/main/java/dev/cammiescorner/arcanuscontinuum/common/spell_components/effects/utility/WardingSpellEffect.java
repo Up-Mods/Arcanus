@@ -40,6 +40,7 @@ public class WardingSpellEffect extends SpellEffect {
 
 			if(level.mayInteract(player, pos)) {
 				var isWarded = ArcanusComponents.isBlockWarded(level, pos);
+
 				if(isWarded || !state.getCollisionShape(level, pos).isEmpty()) {
 					if(isWarded) {
 						ArcanusComponents.removeWardedBlock(player, pos);
@@ -47,17 +48,13 @@ public class WardingSpellEffect extends SpellEffect {
 					else {
 						var dimensionTypes = level.registryAccess().lookupOrThrow(Registries.DIMENSION_TYPE);
 						var dimensionHolder = dimensionTypes.getOrThrow(level.dimensionTypeId());
-						if(dimensionHolder.is(ArcanusDimensionTags.WARDING_NOT_ALLOWED)) {
-							// TODO make translatable
-							player.sendSystemMessage(Component.literal("Cannot ward blocks in this dimension!"));
-						}
-						else if(state.is(ArcanusBlockTags.WARDING_NOT_ALLOWED)) {
-							// TODO make translatable
-							player.sendSystemMessage(Component.literal("Cannot ward this block!"));
-						}
-						else {
+
+						if(dimensionHolder.is(ArcanusDimensionTags.WARDING_NOT_ALLOWED))
+							player.sendSystemMessage(Component.translatable("text.arcanuscontinuum.cannot_ward_in_dimension"));
+						else if(state.is(ArcanusBlockTags.WARDING_NOT_ALLOWED))
+							player.sendSystemMessage(Component.translatable("text.arcanuscontinuum.cannot_ward_block"));
+						else
 							ArcanusComponents.addWardedBlock(player, pos);
-						}
 					}
 				}
 			}

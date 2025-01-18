@@ -228,25 +228,22 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	))
 	private Vec3 arcanuscontinuum$floatAround(LivingEntity livingEntity, Operation<Vec3> original, Vec3 movementInput, float slipperiness) {
 		// FIXME smooth out vertical movement, currently a bit jolting
-		if(hasEffect(ArcanusMobEffects.FLOAT.get())) {
+		if(hasEffect(ArcanusMobEffects.FLOAT.get()))
 			return getDeltaMovement().add(0, jumping ? getSpeed() : isShiftKeyDown() ? -getSpeed() : 0, 0);
-		}
 
 		return original.call(livingEntity);
 	}
 
 	@Inject(method = "onEffectRemoved", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$cantRemoveCurse(MobEffectInstance effect, CallbackInfo info) {
-		if(effect.getEffect() == ArcanusMobEffects.COPPER_CURSE.get()) {
+		if(effect.getEffect() == ArcanusMobEffects.COPPER_CURSE.get())
 			info.cancel();
-		}
 	}
 
 	@ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
 	public Vec3 arcanuscontinuum$invertInput(Vec3 movementInput) {
-		if(!(self instanceof Player) && hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get())) {
+		if(!(self instanceof Player) && hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get()))
 			movementInput = movementInput.multiply(-1, 1, -1);
-		}
 
 		return movementInput;
 	}

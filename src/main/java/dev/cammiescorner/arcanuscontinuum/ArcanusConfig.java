@@ -276,7 +276,7 @@ public final class ArcanusConfig {
 			public static float strength = 3.5f;
 		}
 
-		// TODO uncomment this when we have guided shot done
+		// TODO uncomment this when we have guided shot done & set enabled to true
 //		@Category(id = "guidedShotShapeProperties", translation = "config.arcanuscontinuum.guidedShotShapeProperties")
 		public static final class GuidedShotShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config.arcanuscontinuum.enabled")
@@ -967,7 +967,7 @@ public final class ArcanusConfig {
 			public static double baseChanceToActivate = 0.035;
 		}
 
-		// TODO uncomment this when we get temporal dilation working
+		// TODO uncomment this when we get temporal dilation working & set enabled to true
 //		@Category(id = "temporalDilationEffectProperties", translation = "config.arcanuscontinuum.temporalDilationEffectProperties", sortOrder = 7)
 		public static final class TemporalDilationEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config.arcanuscontinuum.enabled")

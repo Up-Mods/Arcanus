@@ -157,10 +157,13 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		tag(builder, ArcanusItemTags.WIZARD_ARMOR, "Wizard Armor");
 
 		builder.add("text.arcanuscontinuum.block_is_warded", "This block is warded.");
+		builder.add("text.arcanuscontinuum.cannot_ward_in_dimension", "Cannot ward blocks in this dimension!");
+		builder.add("text.arcanuscontinuum.cannot_ward_block", "Cannot ward this block!");
 		builder.add("text.arcanuscontinuum.disabled_component", "This spell contains one or more disabled spell components. Aborting spell.");
 		builder.add("text.arcanuscontinuum.too_many_orbs", "That target already has the maximum amount of Aggressorbs!");
 
 		builder.add("text.arcanuscontinuum.use_item.scroll_of_knowledge", "You feel a little smarter...");
+		builder.add("text.arcanuscontinuum.use_item.scroll_of_knowledge.max_level", "You have learned everything you can.");
 
 		builder.add("text.arcanuscontinuum.wizard_dialogue.no_wizard_armor", "Come back to me when you look like a wizard.");
 		builder.add("tooltip.arcanuscontinuum.wizard_dialogue.no_wizard_armor", "Maybe wearing Wizard Robes will help...");

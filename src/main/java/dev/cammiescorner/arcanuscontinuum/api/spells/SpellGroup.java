@@ -21,9 +21,19 @@ public record SpellGroup(SpellShape shape, List<SpellEffect> effects, List<Vecto
 		ListTag nbtEffects = tag.getList("Effects", Tag.TAG_STRING);
 		ListTag nbtPoses = tag.getList("Positions", Tag.TAG_COMPOUND);
 
-		for(int i = 0; i < nbtEffects.size(); i++)
-			if(Arcanus.SPELL_COMPONENTS.get(new ResourceLocation(nbtEffects.getString(i))) instanceof SpellEffect effect)
+		for(int i = 0; i < nbtEffects.size(); i++) {
+			// TODO remove in 1.21.1
+			String nbtId = nbtEffects.getString(i);
+			ResourceLocation correctedId = switch(nbtId) {
+				case "arcanuscontinuum:explosion_shape" -> ArcanusSpellComponents.BURST.getId();
+				case "arcanuscontinuum:guardian_orb_shape" -> ArcanusSpellComponents.GUARDIAN_ORB.getId();
+				case "arcanuscontinuum:aggressorb_shape" -> ArcanusSpellComponents.AGGRESSORB.getId();
+				default -> new ResourceLocation(nbtId);
+			};
+
+			if(Arcanus.SPELL_COMPONENTS.get(correctedId) instanceof SpellEffect effect)
 				effects.add(effect);
+		}
 
 		for(int i = 0; i < nbtPoses.size(); i++) {
 			CompoundTag nbt = nbtPoses.getCompound(i);
