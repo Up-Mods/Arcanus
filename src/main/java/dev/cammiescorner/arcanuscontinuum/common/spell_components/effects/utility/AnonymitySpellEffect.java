@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.utili
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,8 +17,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class AnonymitySpellEffect extends SpellEffect {
-	public AnonymitySpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public AnonymitySpellEffect() {
+		super(
+			ArcanusConfig.UtilityEffects.AnonymityEffectProperties.enabled,
+			SpellType.UTILITY,
+			ArcanusConfig.UtilityEffects.AnonymityEffectProperties.weight,
+			ArcanusConfig.UtilityEffects.AnonymityEffectProperties.manaCost,
+			ArcanusConfig.UtilityEffects.AnonymityEffectProperties.coolDown,
+			ArcanusConfig.UtilityEffects.AnonymityEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

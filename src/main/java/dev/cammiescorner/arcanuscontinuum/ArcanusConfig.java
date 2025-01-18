@@ -245,8 +245,8 @@ public final class ArcanusConfig {
 			public static int delay = 60;
 		}
 
-		@Category(id = "explosionShapeProperties", translation = "config.arcanuscontinuum.explosionShapeProperties", sortOrder = 7)
-		public static final class ExplosionShapeProperties {
+		@Category(id = "burstShapeProperties", translation = "config.arcanuscontinuum.burstShapeProperties", sortOrder = 7)
+		public static final class BurstShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config.arcanuscontinuum.enabled")
 			public static boolean enabled = true;
 
@@ -274,6 +274,34 @@ public final class ArcanusConfig {
 			@ConfigEntry(id = "strength", type = EntryType.FLOAT, translation = "config.arcanuscontinuum.strength")
 			@FloatRange(min = 0, max = 10)
 			public static float strength = 3.5f;
+		}
+
+		// TODO uncomment this when we have guided shot done
+//		@Category(id = "guidedShotShapeProperties", translation = "config.arcanuscontinuum.guidedShotShapeProperties")
+		public static final class GuidedShotShapeProperties {
+			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config.arcanuscontinuum.enabled")
+			public static boolean enabled = false;
+
+			@ConfigEntry(id = "weight", type = EntryType.ENUM, translation = "config.arcanuscontinuum.weight")
+			public static Weight weight = Weight.HEAVY;
+
+			@ConfigEntry(id = "manaCost", type = EntryType.DOUBLE, translation = "config.arcanuscontinuum.manaCost")
+			@DoubleRange(min = 0, max = 200)
+			public static double manaCost = 0;
+
+			@ConfigEntry(id = "manaMultiplier", type = EntryType.DOUBLE, translation = "config.arcanuscontinuum.manaMultiplier")
+			public static double manaMultiplier = 1.2;
+
+			@ConfigEntry(id = "coolDown", type = EntryType.INTEGER, translation = "config.arcanuscontinuum.coolDown")
+			@IntRange(min = 0, max = 24000)
+			public static int coolDown = 300;
+
+			@ConfigEntry(id = "minimumLevel", type = EntryType.INTEGER, translation = "config.arcanuscontinuum.minimumLevel")
+			@IntRange(min = 0, max = 10)
+			public static int minimumLevel = 7;
+
+			@ConfigEntry(id = "potencyModifier", type = EntryType.DOUBLE, translation = "config.arcanuscontinuum.potencyModifier")
+			public static double potencyModifier = 0;
 		}
 
 		@Category(id = "counterShapeProperties", translation = "config.arcanuscontinuum.counterShapeProperties", sortOrder = 8)
@@ -937,6 +965,28 @@ public final class ArcanusConfig {
 			@ConfigEntry(id = "baseChanceToActivate", type = EntryType.DOUBLE, translation = "config.arcanuscontinuum.baseChanceToActivate")
 			@DoubleRange(min = 0, max = 1)
 			public static double baseChanceToActivate = 0.035;
+		}
+
+		// TODO uncomment this when we get temporal dilation working
+//		@Category(id = "temporalDilationEffectProperties", translation = "config.arcanuscontinuum.temporalDilationEffectProperties", sortOrder = 7)
+		public static final class TemporalDilationEffectProperties {
+			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config.arcanuscontinuum.enabled")
+			public static boolean enabled = false;
+
+			@ConfigEntry(id = "weight", type = EntryType.ENUM, translation = "config.arcanuscontinuum.weight")
+			public static Weight weight = Weight.NONE;
+
+			@ConfigEntry(id = "manaCost", type = EntryType.DOUBLE, translation = "config.arcanuscontinuum.manaCost")
+			@DoubleRange(min = 0, max = 200)
+			public static double manaCost = 8;
+
+			@ConfigEntry(id = "coolDown", type = EntryType.INTEGER, translation = "config.arcanuscontinuum.coolDown")
+			@IntRange(min = 0, max = 24000)
+			public static int coolDown = 0;
+
+			@ConfigEntry(id = "minimumLevel", type = EntryType.INTEGER, translation = "config.arcanuscontinuum.minimumLevel")
+			@IntRange(min = 1, max = 10)
+			public static int minimumLevel = 10;
 		}
 	}
 

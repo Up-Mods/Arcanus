@@ -22,16 +22,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.List;
 
-public class ProjectileSpellShape extends SpellShape {
-	public ProjectileSpellShape() {
+public class LobSpellShape extends SpellShape {
+	public LobSpellShape() {
 		super(
-			ArcanusConfig.SpellShapes.ProjectileShapeProperties.enabled,
-			ArcanusConfig.SpellShapes.ProjectileShapeProperties.weight,
-			ArcanusConfig.SpellShapes.ProjectileShapeProperties.manaCost,
-			ArcanusConfig.SpellShapes.ProjectileShapeProperties.manaMultiplier,
-			ArcanusConfig.SpellShapes.ProjectileShapeProperties.coolDown,
-			ArcanusConfig.SpellShapes.ProjectileShapeProperties.minimumLevel,
-			ArcanusConfig.SpellShapes.ProjectileShapeProperties.potencyModifier
+			ArcanusConfig.SpellShapes.LobShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.LobShapeProperties.weight,
+			ArcanusConfig.SpellShapes.LobShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.LobShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.LobShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.LobShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.LobShapeProperties.potencyModifier
 		);
 	}
 

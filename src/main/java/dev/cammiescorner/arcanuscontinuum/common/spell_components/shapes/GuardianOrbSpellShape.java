@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.GuardianOrbEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import net.minecraft.server.level.ServerLevel;
@@ -16,8 +16,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GuardianOrbSpellShape extends SpellShape {
-	public GuardianOrbSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public GuardianOrbSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.weight,
+			ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.potencyModifier
+		);
 	}
 
 	@Override

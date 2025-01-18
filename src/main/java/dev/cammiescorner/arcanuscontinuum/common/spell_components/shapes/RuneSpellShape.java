@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicRuneEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
@@ -18,8 +18,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class RuneSpellShape extends SpellShape {
-	public RuneSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public RuneSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.RuneShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.RuneShapeProperties.weight,
+			ArcanusConfig.SpellShapes.RuneShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.RuneShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.RuneShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.RuneShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.RuneShapeProperties.potencyModifier
+		);
 	}
 
 	@Override

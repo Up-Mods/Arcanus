@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.support;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -13,8 +13,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TemporalDilationSpellEffect extends SpellEffect {
-	public TemporalDilationSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public TemporalDilationSpellEffect() {
+		super(
+			ArcanusConfig.SupportEffects.TemporalDilationEffectProperties.enabled,
+			SpellType.SUPPORT,
+			ArcanusConfig.SupportEffects.TemporalDilationEffectProperties.weight,
+			ArcanusConfig.SupportEffects.TemporalDilationEffectProperties.manaCost,
+			ArcanusConfig.SupportEffects.TemporalDilationEffectProperties.coolDown,
+			ArcanusConfig.SupportEffects.TemporalDilationEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

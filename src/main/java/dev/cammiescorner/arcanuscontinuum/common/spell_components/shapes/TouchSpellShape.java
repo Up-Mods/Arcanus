@@ -1,10 +1,10 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -20,8 +20,16 @@ import java.util.HashSet;
 import java.util.List;
 
 public class TouchSpellShape extends SpellShape {
-	public TouchSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public TouchSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.TouchShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.TouchShapeProperties.weight,
+			ArcanusConfig.SpellShapes.TouchShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.TouchShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.TouchShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.TouchShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.TouchShapeProperties.potencyModifier
+		);
 	}
 
 	@Override

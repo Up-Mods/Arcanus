@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.utili
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlockEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusBlocks;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
@@ -22,8 +21,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class BuildSpellEffect extends SpellEffect {
-	public BuildSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public BuildSpellEffect() {
+		super(
+			ArcanusConfig.UtilityEffects.BuildEffectProperties.enabled,
+			SpellType.UTILITY,
+			ArcanusConfig.UtilityEffects.BuildEffectProperties.weight,
+			ArcanusConfig.UtilityEffects.BuildEffectProperties.manaCost,
+			ArcanusConfig.UtilityEffects.BuildEffectProperties.coolDown,
+			ArcanusConfig.UtilityEffects.BuildEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

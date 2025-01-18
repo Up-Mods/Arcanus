@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.movem
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -19,8 +18,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class TeleportSpellEffect extends SpellEffect {
-	public TeleportSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public TeleportSpellEffect() {
+		super(
+			ArcanusConfig.MovementEffects.TeleportEffectProperties.enabled,
+			SpellType.MOVEMENT,
+			ArcanusConfig.MovementEffects.TeleportEffectProperties.weight,
+			ArcanusConfig.MovementEffects.TeleportEffectProperties.manaCost,
+			ArcanusConfig.MovementEffects.TeleportEffectProperties.coolDown,
+			ArcanusConfig.MovementEffects.TeleportEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

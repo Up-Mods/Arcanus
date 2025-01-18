@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.attac
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -19,8 +18,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class WitheringSpellEffect extends SpellEffect {
-	public WitheringSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public WitheringSpellEffect() {
+		super(
+			ArcanusConfig.AttackEffects.WitheringEffectProperties.enabled,
+			SpellType.ATTACK,
+			ArcanusConfig.AttackEffects.WitheringEffectProperties.weight,
+			ArcanusConfig.AttackEffects.WitheringEffectProperties.manaCost,
+			ArcanusConfig.AttackEffects.WitheringEffectProperties.coolDown,
+			ArcanusConfig.AttackEffects.WitheringEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,8 +17,16 @@ import java.util.HashSet;
 import java.util.List;
 
 public class SelfSpellShape extends SpellShape {
-	public SelfSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public SelfSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.SelfShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.SelfShapeProperties.weight,
+			ArcanusConfig.SpellShapes.SelfShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.SelfShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.SelfShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.SelfShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.SelfShapeProperties.potencyModifier
+		);
 	}
 
 	@Override

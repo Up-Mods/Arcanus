@@ -4,7 +4,6 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.BeamEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
@@ -21,8 +20,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class BeamSpellShape extends SpellShape {
-	public BeamSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public BeamSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.BeamShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.BeamShapeProperties.weight,
+			ArcanusConfig.SpellShapes.BeamShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.BeamShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.BeamShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.BeamShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.BeamShapeProperties.potencyModifier
+		);
 	}
 
 	@Override

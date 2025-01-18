@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.support;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusEntityTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
@@ -19,8 +19,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class DispelSpellEffect extends SpellEffect {
-	public DispelSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public DispelSpellEffect() {
+		super(
+			ArcanusConfig.SupportEffects.DispelEffectProperties.enabled,
+			SpellType.SUPPORT,
+			ArcanusConfig.SupportEffects.DispelEffectProperties.weight,
+			ArcanusConfig.SupportEffects.DispelEffectProperties.manaCost,
+			ArcanusConfig.SupportEffects.DispelEffectProperties.coolDown,
+			ArcanusConfig.SupportEffects.DispelEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

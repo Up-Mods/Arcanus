@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.suppo
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShieldEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
@@ -20,8 +19,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class ManaShieldSpellEffect extends SpellEffect {
-	public ManaShieldSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public ManaShieldSpellEffect() {
+		super(
+			ArcanusConfig.SupportEffects.ManaShieldEffectProperties.enabled,
+			SpellType.SUPPORT,
+			ArcanusConfig.SupportEffects.ManaShieldEffectProperties.weight,
+			ArcanusConfig.SupportEffects.ManaShieldEffectProperties.manaCost,
+			ArcanusConfig.SupportEffects.ManaShieldEffectProperties.coolDown,
+			ArcanusConfig.SupportEffects.ManaShieldEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

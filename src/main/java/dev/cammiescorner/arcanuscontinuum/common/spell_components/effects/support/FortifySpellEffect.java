@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.suppo
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusMobEffects;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -18,8 +17,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FortifySpellEffect extends SpellEffect {
-	public FortifySpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public FortifySpellEffect() {
+		super(
+			ArcanusConfig.SupportEffects.FortifyEffectProperties.enabled,
+			SpellType.SUPPORT,
+			ArcanusConfig.SupportEffects.FortifyEffectProperties.weight,
+			ArcanusConfig.SupportEffects.FortifyEffectProperties.manaCost,
+			ArcanusConfig.SupportEffects.FortifyEffectProperties.coolDown,
+			ArcanusConfig.SupportEffects.FortifyEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

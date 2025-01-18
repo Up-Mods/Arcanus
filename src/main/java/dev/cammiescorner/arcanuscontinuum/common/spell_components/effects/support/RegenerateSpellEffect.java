@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.suppo
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -18,8 +17,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class RegenerateSpellEffect extends SpellEffect {
-	public RegenerateSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public RegenerateSpellEffect() {
+		super(
+			ArcanusConfig.SupportEffects.RegenerateEffectProperties.enabled,
+			SpellType.SUPPORT,
+			ArcanusConfig.SupportEffects.RegenerateEffectProperties.weight,
+			ArcanusConfig.SupportEffects.RegenerateEffectProperties.manaCost,
+			ArcanusConfig.SupportEffects.RegenerateEffectProperties.coolDown,
+			ArcanusConfig.SupportEffects.RegenerateEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

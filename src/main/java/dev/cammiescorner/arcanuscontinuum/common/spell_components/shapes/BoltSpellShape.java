@@ -4,7 +4,6 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -23,8 +22,16 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class BoltSpellShape extends SpellShape {
-	public BoltSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public BoltSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.BoltShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.BoltShapeProperties.weight,
+			ArcanusConfig.SpellShapes.BoltShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.BoltShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.BoltShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.BoltShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.BoltShapeProperties.potencyModifier
+		);
 	}
 
 	@Override

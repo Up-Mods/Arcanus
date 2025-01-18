@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.SmiteEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
@@ -18,8 +18,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SmiteSpellShape extends SpellShape {
-	public SmiteSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public SmiteSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.SmiteShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.SmiteShapeProperties.weight,
+			ArcanusConfig.SpellShapes.SmiteShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.SmiteShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.SmiteShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.SmiteShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.SmiteShapeProperties.potencyModifier
+		);
 	}
 
 	@Override

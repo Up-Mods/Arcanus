@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.suppo
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -18,8 +17,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class HasteSpellEffect extends SpellEffect {
-	public HasteSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public HasteSpellEffect() {
+		super(
+			ArcanusConfig.SupportEffects.HasteEffectProperties.enabled,
+			SpellType.SUPPORT,
+			ArcanusConfig.SupportEffects.HasteEffectProperties.weight,
+			ArcanusConfig.SupportEffects.HasteEffectProperties.manaCost,
+			ArcanusConfig.SupportEffects.HasteEffectProperties.coolDown,
+			ArcanusConfig.SupportEffects.HasteEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.attac
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.living.NecroSkeletonEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
@@ -23,8 +22,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class NecromancySpellEffect extends SpellEffect {
-	public NecromancySpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public NecromancySpellEffect() {
+		super(
+			ArcanusConfig.AttackEffects.NecromancyEffectProperties.enabled,
+			SpellType.ATTACK,
+			ArcanusConfig.AttackEffects.NecromancyEffectProperties.weight,
+			ArcanusConfig.AttackEffects.NecromancyEffectProperties.manaCost,
+			ArcanusConfig.AttackEffects.NecromancyEffectProperties.coolDown,
+			ArcanusConfig.AttackEffects.NecromancyEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.attac
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,8 +23,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FireSpellEffect extends SpellEffect {
-	public FireSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public FireSpellEffect() {
+		super(
+			ArcanusConfig.AttackEffects.FireEffectProperties.enabled,
+			SpellType.ATTACK,
+			ArcanusConfig.AttackEffects.FireEffectProperties.weight,
+			ArcanusConfig.AttackEffects.FireEffectProperties.manaCost,
+			ArcanusConfig.AttackEffects.FireEffectProperties.coolDown,
+			ArcanusConfig.AttackEffects.FireEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.utility;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -17,8 +17,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SpatialRiftSpellEffect extends SpellEffect {
-	public SpatialRiftSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public SpatialRiftSpellEffect() {
+		super(
+			ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.enabled,
+			SpellType.UTILITY,
+			ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.weight,
+			ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.manaCost,
+			ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.coolDown,
+			ArcanusConfig.UtilityEffects.SpatialRiftEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

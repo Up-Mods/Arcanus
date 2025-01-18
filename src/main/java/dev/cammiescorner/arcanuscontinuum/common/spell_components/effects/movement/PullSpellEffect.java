@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.movem
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,8 +15,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class PullSpellEffect extends SpellEffect {
-	public PullSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public PullSpellEffect() {
+		super(
+			ArcanusConfig.MovementEffects.PullEffectProperties.enabled,
+			SpellType.MOVEMENT,
+			ArcanusConfig.MovementEffects.PullEffectProperties.weight,
+			ArcanusConfig.MovementEffects.PullEffectProperties.manaCost,
+			ArcanusConfig.MovementEffects.PullEffectProperties.coolDown,
+			ArcanusConfig.MovementEffects.PullEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

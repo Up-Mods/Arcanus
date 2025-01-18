@@ -223,7 +223,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		spell(builder, ArcanusSpellComponents.RUNE, "Rune Shape");
 		spell(builder, ArcanusSpellComponents.SMITE, "Smite Shape");
 		spell(builder, ArcanusSpellComponents.AOE, "Area Of Effect Shape");
-		spell(builder, ArcanusSpellComponents.EXPLOSION, "Explosion Shape");
+		spell(builder, ArcanusSpellComponents.BURST, "Burst Shape");
 		spell(builder, ArcanusSpellComponents.COUNTER, "Counter Shape");
 		spell(builder, ArcanusSpellComponents.GUARDIAN_ORB, "Guardian Orb Shape");
 		spell(builder, ArcanusSpellComponents.AGGRESSORB, "Aggressorb Shape");
@@ -371,7 +371,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("config.arcanuscontinuum.boltShapeProperties", "Bolt Shape");
 		builder.add("config.arcanuscontinuum.beamShapeProperties", "Beam Shape");
 		builder.add("config.arcanuscontinuum.runeShapeProperties", "Rune Shape");
-		builder.add("config.arcanuscontinuum.explosionShapeProperties", "Explosion Shape");
+		builder.add("config.arcanuscontinuum.burstShapeProperties", "Burst Shape");
 		builder.add("config.arcanuscontinuum.counterShapeProperties", "Counter Shape");
 		builder.add("config.arcanuscontinuum.aoeShapeProperties", "Area Of Effect Shape");
 		builder.add("config.arcanuscontinuum.smiteShapeProperties", "Smite Shape");

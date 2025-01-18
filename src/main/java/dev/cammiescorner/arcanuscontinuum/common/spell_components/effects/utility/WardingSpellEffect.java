@@ -1,8 +1,8 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.utility;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusBlockTags;
 import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusDimensionTags;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
@@ -20,8 +20,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class WardingSpellEffect extends SpellEffect {
-	public WardingSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public WardingSpellEffect() {
+		super(
+			ArcanusConfig.UtilityEffects.WardingEffectProperties.enabled,
+			SpellType.UTILITY,
+			ArcanusConfig.UtilityEffects.WardingEffectProperties.weight,
+			ArcanusConfig.UtilityEffects.WardingEffectProperties.manaCost,
+			ArcanusConfig.UtilityEffects.WardingEffectProperties.coolDown,
+			ArcanusConfig.UtilityEffects.WardingEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

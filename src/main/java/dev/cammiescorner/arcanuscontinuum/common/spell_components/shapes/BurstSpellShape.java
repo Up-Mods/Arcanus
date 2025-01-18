@@ -5,7 +5,6 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.packets.s2c.SyncExplosionParticlesPacket;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -31,16 +30,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ExplosionSpellShape extends SpellShape {
-	public ExplosionSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+public class BurstSpellShape extends SpellShape {
+	public BurstSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.BurstShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.BurstShapeProperties.weight,
+			ArcanusConfig.SpellShapes.BurstShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.BurstShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.BurstShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.BurstShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.BurstShapeProperties.potencyModifier
+		);
 	}
 
 	@Override
 	public void cast(@Nullable LivingEntity caster, Vec3 castFrom, @Nullable Entity castSource, ServerLevel world, ItemStack stack, List<SpellEffect> effects, List<SpellGroup> spellGroups, int groupIndex, double potency) {
 		Entity sourceEntity = castSource != null ? castSource : caster;
 		potency += getPotencyModifier();
-		float strength = ArcanusConfig.SpellShapes.ExplosionShapeProperties.strength;
+		float strength = ArcanusConfig.SpellShapes.BurstShapeProperties.strength;
 
 		world.gameEvent(caster, GameEvent.EXPLODE, new Vec3(castFrom.x(), castFrom.y(), castFrom.z()));
 		Set<BlockPos> affectedBlocks = Sets.newHashSet();

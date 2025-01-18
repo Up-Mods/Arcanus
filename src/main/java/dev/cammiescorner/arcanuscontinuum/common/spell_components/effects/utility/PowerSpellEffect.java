@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.utili
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -21,8 +20,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class PowerSpellEffect extends SpellEffect {
-	public PowerSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public PowerSpellEffect() {
+		super(
+			ArcanusConfig.UtilityEffects.PowerEffectProperties.enabled,
+			SpellType.UTILITY,
+			ArcanusConfig.UtilityEffects.PowerEffectProperties.weight,
+			ArcanusConfig.UtilityEffects.PowerEffectProperties.manaCost,
+			ArcanusConfig.UtilityEffects.PowerEffectProperties.coolDown,
+			ArcanusConfig.UtilityEffects.PowerEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

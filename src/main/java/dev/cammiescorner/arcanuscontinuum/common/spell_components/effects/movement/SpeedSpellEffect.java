@@ -3,7 +3,6 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.movem
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -18,8 +17,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SpeedSpellEffect extends SpellEffect {
-	public SpeedSpellEffect(boolean isEnabled, SpellType type, Weight weight, double manaCost, int coolDown, int minLevel) {
-		super(isEnabled, type, weight, manaCost, coolDown, minLevel);
+	public SpeedSpellEffect() {
+		super(
+			ArcanusConfig.MovementEffects.SpeedEffectProperties.enabled,
+			SpellType.MOVEMENT,
+			ArcanusConfig.MovementEffects.SpeedEffectProperties.weight,
+			ArcanusConfig.MovementEffects.SpeedEffectProperties.manaCost,
+			ArcanusConfig.MovementEffects.SpeedEffectProperties.coolDown,
+			ArcanusConfig.MovementEffects.SpeedEffectProperties.minimumLevel
+		);
 	}
 
 	@Override

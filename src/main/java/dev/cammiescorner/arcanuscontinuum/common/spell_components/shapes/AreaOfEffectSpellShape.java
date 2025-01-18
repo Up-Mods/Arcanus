@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
@@ -18,8 +18,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class AreaOfEffectSpellShape extends SpellShape {
-	public AreaOfEffectSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public AreaOfEffectSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.AOEShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.AOEShapeProperties.weight,
+			ArcanusConfig.SpellShapes.AOEShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.AOEShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.AOEShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.AOEShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.AOEShapeProperties.potencyModifier
+		);
 	}
 
 	@Override

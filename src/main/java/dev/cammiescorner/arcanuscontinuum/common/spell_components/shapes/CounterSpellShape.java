@@ -1,9 +1,9 @@
 package dev.cammiescorner.arcanuscontinuum.common.spell_components.shapes;
 
+import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.api.spells.Weight;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -16,8 +16,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class CounterSpellShape extends SpellShape {
-	public CounterSpellShape(boolean isEnabled, Weight weight, double manaCost, double manaMultiplier, int coolDown, int minLevel, double potencyModifier) {
-		super(isEnabled, weight, manaCost, manaMultiplier, coolDown, minLevel, potencyModifier);
+	public CounterSpellShape() {
+		super(
+			ArcanusConfig.SpellShapes.CounterShapeProperties.enabled,
+			ArcanusConfig.SpellShapes.CounterShapeProperties.weight,
+			ArcanusConfig.SpellShapes.CounterShapeProperties.manaCost,
+			ArcanusConfig.SpellShapes.CounterShapeProperties.manaMultiplier,
+			ArcanusConfig.SpellShapes.CounterShapeProperties.coolDown,
+			ArcanusConfig.SpellShapes.CounterShapeProperties.minimumLevel,
+			ArcanusConfig.SpellShapes.CounterShapeProperties.potencyModifier
+		);
 	}
 
 	@Override
