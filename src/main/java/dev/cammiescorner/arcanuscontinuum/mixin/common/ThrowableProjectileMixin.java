@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 @Mixin(ThrowableProjectile.class)
-public abstract class ThrownEntityMixin extends Projectile {
-	public ThrownEntityMixin(EntityType<? extends Projectile> entityType, Level world) {
+public abstract class ThrowableProjectileMixin extends Projectile {
+	public ThrowableProjectileMixin(EntityType<? extends Projectile> entityType, Level world) {
 		super(entityType, world);
 	}
 

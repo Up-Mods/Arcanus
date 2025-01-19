@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
-public class AbstractBlockStateMixin {
+public class BlockStateBaseMixin {
 	@Inject(method = "getDestroyProgress", at = @At("HEAD"), cancellable = true)
 	private void arcanuscontinuum$wardedBlockBreakStatus(Player player, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> info) {
 		if(ArcanusComponents.isBlockWarded((Level) world, pos))

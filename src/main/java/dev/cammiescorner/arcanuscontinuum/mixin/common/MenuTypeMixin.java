@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MenuType.class)
-public class ScreenHandlerTypeMixin {
+public class MenuTypeMixin {
 	@Inject(method = "register(Ljava/lang/String;Lnet/minecraft/world/inventory/MenuType$MenuSupplier;)Lnet/minecraft/world/inventory/MenuType;", at = @At("HEAD"), cancellable = true)
 	private static void arcanuscontinuum$register(String id, MenuType.MenuSupplier<AbstractContainerMenu> factory, CallbackInfoReturnable<MenuType<AbstractContainerMenu>> info) {
 		if("lectern".equals(id))

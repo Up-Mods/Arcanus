@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FoodData.class)
-public class HungerManagerMixin {
+public class FoodDataMixin {
 	@WrapOperation(method = "tick", at = @At(
 		value = "INVOKE",
 		target = "Lnet/minecraft/world/level/GameRules;getBoolean(Lnet/minecraft/world/level/GameRules$Key;)Z",

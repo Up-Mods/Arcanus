@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PistonBaseBlock.class)
-public class PistonBlockMixin {
+public class PistonBaseBlockMixin {
 	@Inject(method = "isPushable", at = @At(
 		value = "INVOKE",
 		target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"

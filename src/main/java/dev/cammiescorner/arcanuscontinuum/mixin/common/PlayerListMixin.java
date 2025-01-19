@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @Mixin(PlayerList.class)
-public class PlayerManagerMixin {
+public class PlayerListMixin {
 	@Shadow @Final private LayeredRegistryAccess<RegistryLayer> registries;
 
 	@ModifyReceiver(method = "broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Ljava/util/function/Predicate;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V", at = @At(

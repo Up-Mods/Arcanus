@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(EntityGetter.class)
-public interface EntityViewMixin {
+public interface EntityGetterMixin {
 	@Inject(method = "getEntityCollisions", at = @At("HEAD"))
 	private void arcanuscontinuum$collidesWithHead(@Nullable Entity entity, AABB box, CallbackInfoReturnable<List<VoxelShape>> info) {
 		ManaShieldEntity.COLLIDING_ENTITY.set(entity);
