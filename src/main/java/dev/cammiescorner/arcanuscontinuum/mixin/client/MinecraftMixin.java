@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Mixin(Minecraft.class)
-public abstract class MinecraftClientMixin implements ClientUtils {
+public abstract class MinecraftMixin implements ClientUtils {
 	@Unique private boolean isCasting = false;
 	@Unique private int timer = 0;
 	@Unique private int mouseDownTimer = 0;

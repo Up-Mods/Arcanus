@@ -33,19 +33,20 @@
     "datagen.RegistrySetBuilderMixin"
   ],
   "client": [
-    "client.BipedEntityModelMixin",
-    "client.ClientWorldMixin",
+    "client.AbstractClientPlayerMixin",
+    "client.ClientLevelMixin",
     "client.CraftingScreenMixin",
-    "client.FramebufferMixin",
-    "client.HeldItemFeatureRendererMixin",
-    "client.HeldItemRendererMixin",
-    "client.InGameHudMixin",
+    "client.GuiMixin",
+    "client.HumanoidModelMixin",
+    "client.ItemInHandLayerMixin",
+    "client.ItemInHandRendererMixin",
     "client.ItemRendererMixin",
+    "client.LevelRendererMixin",
     "client.LivingEntityRendererMixin",
-    "client.MinecraftClientMixin",
-    "client.MouseMixin",
-    "client.PlayerEntityRendererMixin",
-    "client.WorldRendererMixin"
+    "client.MinecraftMixin",
+    "client.MouseHandlerMixin",
+    "client.PlayerRendererMixin",
+    "client.RenderTargetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
-public abstract class HeldItemRendererMixin {
+public abstract class ItemInHandRendererMixin {
 	@Shadow @Final private Minecraft minecraft;
 	@Shadow private ItemStack mainHandItem;
 	@Shadow private float oMainHandHeight;

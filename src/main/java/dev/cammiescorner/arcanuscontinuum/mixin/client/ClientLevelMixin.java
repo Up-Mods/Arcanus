@@ -19,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.function.Supplier;
 
 @Mixin(ClientLevel.class)
-public abstract class ClientWorldMixin extends Level {
-	protected ClientWorldMixin(WritableLevelData worldProperties, ResourceKey<Level> registryKey, RegistryAccess registryManager, Holder<DimensionType> dimension, Supplier<ProfilerFiller> profiler, boolean client, boolean debug, long seed, int maxChainedNeighborUpdates) {
+public abstract class ClientLevelMixin extends Level {
+	protected ClientLevelMixin(WritableLevelData worldProperties, ResourceKey<Level> registryKey, RegistryAccess registryManager, Holder<DimensionType> dimension, Supplier<ProfilerFiller> profiler, boolean client, boolean debug, long seed, int maxChainedNeighborUpdates) {
 		super(worldProperties, registryKey, registryManager, dimension, profiler, client, debug, seed, maxChainedNeighborUpdates);
 	}
 

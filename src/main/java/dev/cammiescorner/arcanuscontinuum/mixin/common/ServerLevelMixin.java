@@ -28,6 +28,7 @@ public abstract class ServerLevelMixin extends Level {
 		// TODO tie to being in a time dilation entity
 		if(getGameTime() % 2 == 0) {
 			entity.setOldPosAndRot();
+			entity.tickCount++;
 			return false;
 		}
 

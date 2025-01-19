@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Gui.class)
-public class InGameHudMixin {
+public class GuiMixin {
 	@Shadow private int screenWidth;
 	@Shadow private int screenHeight;
 

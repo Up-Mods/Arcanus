@@ -10,29 +10,40 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(MouseHandler.class)
-public class MouseMixin {
+public class MouseHandlerMixin {
 	@Shadow @Final private Minecraft minecraft;
 
-	@ModifyArg(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), index = 0)
-	public double arcanuscontinuum$invertMouseX(double x) {
-		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get()))
-			return -x;
-
-		return x;
+	@ModifyArgs(method = "turnPlayer", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"
+	))
+	private void slowMouse(Args args) {
+		double x = args.get(0);
+		double y = args.get(1);
+		args.setAll(x * 0.5, y * 0.5);
 	}
 
-	@ModifyArg(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"), index = 1)
-	public double arcanuscontinuum$invertMouseY(double y) {
-		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get()))
-			return -y;
-
-		return y;
+	@ModifyArgs(method = "turnPlayer", at = @At(
+		value = "INVOKE",
+		target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"
+	))
+	public void invertMouseMovements(Args args) {
+		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get())) {
+			double x = args.get(0);
+			double y = args.get(1);
+			args.setAll(-x, -y);
+		}
 	}
 
-	@ModifyArg(method = "onPress", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants$Type;getOrCreate(I)Lcom/mojang/blaze3d/platform/InputConstants$Key;"), index = 0)
-	public int arcanuscontinuum$invertMouseButtons(int i) {
+	@ModifyArg(method = "onPress", at = @At(
+		value = "INVOKE",
+		target = "Lcom/mojang/blaze3d/platform/InputConstants$Type;getOrCreate(I)Lcom/mojang/blaze3d/platform/InputConstants$Key;"
+	), index = 0)
+	public int invertMouseButtons(int i) {
 		if(minecraft.player != null && minecraft.player.hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get())) {
 			return switch(i) {
 				case 0 -> {

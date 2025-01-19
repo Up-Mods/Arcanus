@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 import java.util.Objects;
 
 @Mixin(RenderTarget.class)
-public abstract class FramebufferMixin implements StencilBuffer {
+public abstract class RenderTargetMixin implements StencilBuffer {
 	@Unique private boolean isStencilBufferEnabled;
 
 	@Shadow public int width;
