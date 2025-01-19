@@ -15,7 +15,7 @@ public class ExplosionMixin {
 		value = "INVOKE",
 		target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"
 	))
-	private boolean arcanuscontinuum$captureDamageReturn(boolean original, @Share("tookDamage") LocalBooleanRef ref) {
+	private boolean captureDamageReturn(boolean original, @Share("tookDamage") LocalBooleanRef ref) {
 		ref.set(original);
 		return original;
 	}
@@ -27,7 +27,7 @@ public class ExplosionMixin {
 		value = "NEW",
 		target = "(DDD)Lnet/minecraft/world/phys/Vec3;"
 	))
-	private Vec3 arcanuscontinuum$noKnockback(Vec3 original, @Share("tookDamage") LocalBooleanRef ref) {
+	private Vec3 noKnockback(Vec3 original, @Share("tookDamage") LocalBooleanRef ref) {
 		return !ref.get() ? Vec3.ZERO : original;
 	}
 }

@@ -18,7 +18,7 @@ public abstract class PlayerMixin extends LivingEntity {
 	}
 
 	@ModifyReturnValue(method = "getName", at = @At("RETURN"))
-	private Component arcanuscontinuum$getName(Component original) {
+	private Component getName(Component original) {
 		if(hasEffect(ArcanusMobEffects.ANONYMITY.get()))
 			return Component.literal("Yog-Sothoth").withStyle(ChatFormatting.OBFUSCATED);
 
@@ -26,7 +26,7 @@ public abstract class PlayerMixin extends LivingEntity {
 	}
 
 	@ModifyReturnValue(method = "getScoreboardName", at = @At("RETURN"))
-	private String arcanuscontinuum$getEntityName(String original) {
+	private String getEntityName(String original) {
 		if(hasEffect(ArcanusMobEffects.ANONYMITY.get()))
 			return "Yog-Sothoth";
 

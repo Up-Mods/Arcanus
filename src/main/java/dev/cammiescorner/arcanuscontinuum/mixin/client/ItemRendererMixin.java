@@ -21,7 +21,7 @@ public class ItemRendererMixin {
 	@Shadow @Final private ItemModelShaper itemModelShaper;
 
 	@Inject(method = "getModel", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$getHeldItemModel(ItemStack stack, Level world, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
+	private void getHeldItemModel(ItemStack stack, Level world, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
 		if(stack.getItem() instanceof StaffItem) {
 			BakedModel bakedModel = itemModelShaper.getModelManager().getModel(new ModelResourceLocation("minecraft", "trident_in_hand", "inventory"));
 			ClientLevel clientWorld = world instanceof ClientLevel cWorld ? cWorld : null;

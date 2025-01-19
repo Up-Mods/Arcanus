@@ -30,7 +30,7 @@ public abstract class HumanoidModelMixin<T extends LivingEntity> extends Ageable
 		target = "Lnet/minecraft/util/Mth;cos(F)F",
 		ordinal = 1
 	))
-	private void arcanuscontinuum$modifyArmSwing(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo info) {
+	private void modifyArmSwing(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo info) {
 		if(!livingEntity.isSprinting() && !livingEntity.isSwimming() && !livingEntity.isFallFlying()) {
 			Minecraft client = Minecraft.getInstance();
 			ItemStack rightStack = client.options.mainHand().get() == HumanoidArm.RIGHT ? livingEntity.getMainHandItem() : livingEntity.getOffhandItem();
@@ -44,7 +44,7 @@ public abstract class HumanoidModelMixin<T extends LivingEntity> extends Ageable
 	}
 
 	@Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
-	private void arcanuscontinuum$staffRunningAnim(T entity, float f, float g, float h, float i, float j, CallbackInfo info) {
+	private void staffRunningAnim(T entity, float f, float g, float h, float i, float j, CallbackInfo info) {
 		if(entity.isSprinting() && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(entity) && !ArcanusComponents.isCasting(entity) && !entity.isSwimming() && !entity.isFallFlying()) {
 			Minecraft client = Minecraft.getInstance();
 			ItemStack rightStack = client.options.mainHand().get() == HumanoidArm.RIGHT ? entity.getMainHandItem() : entity.getOffhandItem();
@@ -73,7 +73,7 @@ public abstract class HumanoidModelMixin<T extends LivingEntity> extends Ageable
 		target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
 		ordinal = 2
 	), cancellable = true)
-	private void arcanuscontinuum$positionRightArm(T entity, CallbackInfo info) {
+	private void positionRightArm(T entity, CallbackInfo info) {
 		Minecraft client = Minecraft.getInstance();
 		ItemStack rightStack = client.options.mainHand().get() == HumanoidArm.RIGHT ? entity.getMainHandItem() : entity.getOffhandItem();
 
@@ -121,7 +121,7 @@ public abstract class HumanoidModelMixin<T extends LivingEntity> extends Ageable
 		target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F",
 		ordinal = 2
 	), cancellable = true)
-	private void arcanuscontinuum$positionLeftArm(T entity, CallbackInfo info) {
+	private void positionLeftArm(T entity, CallbackInfo info) {
 		Minecraft client = Minecraft.getInstance();
 		ItemStack leftStack = client.options.mainHand().get() == HumanoidArm.RIGHT ? entity.getOffhandItem() : entity.getMainHandItem();
 

@@ -58,8 +58,8 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 		matrices.scale(scale, 1, scale);
 		matrices.mulPose(Axis.ZP.rotationDegrees(90));
 
-		if(!stencilBuffer.arcanuscontinuum$isStencilBufferEnabled())
-			stencilBuffer.arcanuscontinuum$enableStencilBufferAndReload(true);
+		if(!stencilBuffer.arcanus$isStencilBufferEnabled())
+			stencilBuffer.arcanus$enableStencilBufferAndReload(true);
 
 		GL31.glEnable(GL31.GL_STENCIL_TEST);
 

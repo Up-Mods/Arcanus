@@ -17,7 +17,7 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 
 	@ModifyVariable(method = "causeFallDamage", at = @At("HEAD"), index = 1, argsOnly = true)
-	private float arcanuscontinuum$alterFallDistance(float fallDistance) {
+	private float alterFallDistance(float fallDistance) {
 		float scale = ScaleTypes.MOTION.getScaleData(this).getScale();
 
 		if(scale < 1)

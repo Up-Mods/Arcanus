@@ -145,6 +145,6 @@ public class MagicRuneEntity extends Entity implements Targetable {
 			return false;
 		}
 
-		return livingEntity.arcanuscontinuum$canBeTargeted() && !livingEntity.getType().is(ArcanusEntityTags.RUNE_TRIGGER_IGNORED);
+		return livingEntity.arcanus$canBeTargeted() && !livingEntity.getType().is(ArcanusEntityTags.RUNE_TRIGGER_IGNORED);
 	}
 }

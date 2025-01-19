@@ -39,7 +39,7 @@ public class DiscombobulateSpellEffect extends SpellEffect {
 				return;
 			}
 
-			if(entity instanceof LivingEntity livingEntity && livingEntity.arcanuscontinuum$canBeTargeted()) {
+			if(entity instanceof LivingEntity livingEntity && livingEntity.arcanus$canBeTargeted()) {
 				livingEntity.addEffect(new MobEffectInstance(ArcanusMobEffects.DISCOMBOBULATE.get(), ArcanusConfig.AttackEffects.DiscombobulateEffectProperties.baseEffectDuration + (int) (ArcanusConfig.AttackEffects.DiscombobulateEffectProperties.effectDurationModifier * effects.stream().filter(ArcanusSpellComponents.DISCOMBOBULATE::is).count() * potency), 0, true, false));
 			}
 		}

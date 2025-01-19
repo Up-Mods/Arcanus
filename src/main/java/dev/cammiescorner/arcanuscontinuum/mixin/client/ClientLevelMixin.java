@@ -28,7 +28,7 @@ public abstract class ClientLevelMixin extends Level {
 		value = "INVOKE",
 		target = "Lnet/minecraft/client/renderer/LevelRenderer;levelEvent(ILnet/minecraft/core/BlockPos;I)V"
 	))
-	private boolean arcanuscontinuum$noBreakingSoundsOrParticles(LevelRenderer target, int eventId, BlockPos pos, int data) {
+	private boolean noBreakingSoundsOrParticles(LevelRenderer target, int eventId, BlockPos pos, int data) {
 		return eventId != 2001 || !ArcanusComponents.isBlockWarded(this, pos);
 	}
 
@@ -36,7 +36,7 @@ public abstract class ClientLevelMixin extends Level {
 		value = "INVOKE",
 		target = "Lnet/minecraft/world/entity/Entity;tick()V"
 	))
-	private boolean arcanuscontinuum$blockEntityTick(Entity entity) {
+	private boolean blockEntityTick(Entity entity) {
 		return !ArcanusComponents.areUpdatesBlocked(entity);
 	}
 }

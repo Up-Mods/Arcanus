@@ -35,7 +35,7 @@ public abstract class ItemInHandRendererMixin {
 		target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderArmWithItem(Lnet/minecraft/client/player/AbstractClientPlayer;FFLnet/minecraft/world/InteractionHand;FLnet/minecraft/world/item/ItemStack;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
 		ordinal = 0
 	))
-	private void arcanuscontinuum$animateStaff(float tickDelta, PoseStack matrices, MultiBufferSource.BufferSource vertexConsumers, LocalPlayer player, int light, CallbackInfo info) {
+	private void animateStaff(float tickDelta, PoseStack matrices, MultiBufferSource.BufferSource vertexConsumers, LocalPlayer player, int light, CallbackInfo info) {
 		boolean isCasting = ((ClientUtils) minecraft).isCasting();
 
 		if(minecraft.player != null && isCasting && mainHandItem.getItem() instanceof StaffItem item) {

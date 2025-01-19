@@ -77,7 +77,7 @@ public class AreaOfEffectEntity extends Entity implements Targetable {
 						if(effect.shouldTriggerOnceOnExplosion())
 							continue;
 
-						level().getEntitiesOfClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted()).forEach(entity -> {
+						level().getEntitiesOfClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanus$canBeTargeted()).forEach(entity -> {
 							effect.effect(getCaster(), this, level(), new EntityHitResult(entity), effects, stack, potency);
 						});
 					}

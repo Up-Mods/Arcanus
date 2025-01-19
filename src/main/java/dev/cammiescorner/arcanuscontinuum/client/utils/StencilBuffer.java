@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.client.utils;
 
 public interface StencilBuffer {
-	boolean arcanuscontinuum$isStencilBufferEnabled();
+	boolean arcanus$isStencilBufferEnabled();
 
-	void arcanuscontinuum$enableStencilBufferAndReload(boolean cond);
+	void arcanus$enableStencilBufferAndReload(boolean cond);
 }

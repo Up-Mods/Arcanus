@@ -18,7 +18,7 @@ public abstract class MobMixin extends LivingEntity {
 	}
 
 	@Inject(method = "doHurtTarget", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$tryAttack(Entity target, CallbackInfoReturnable<Boolean> info) {
+	private void tryAttack(Entity target, CallbackInfoReturnable<Boolean> info) {
 		if(ArcanusComponents.getStunTimer(this) > 0)
 			info.setReturnValue(false);
 	}

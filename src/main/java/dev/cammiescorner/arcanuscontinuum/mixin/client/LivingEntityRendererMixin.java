@@ -35,7 +35,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void arcanuscontinuum$init(EntityRendererProvider.Context ctx, EntityModel model, float shadowRadius, CallbackInfo ci) {
+	private void init(EntityRendererProvider.Context ctx, EntityModel model, float shadowRadius, CallbackInfo ci) {
 		addLayer(new ManaWingsFeatureRenderer<>(this));
 		addLayer(new CounterFeatureRenderer<>(this));
 	}
@@ -44,7 +44,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		value = "INVOKE",
 		target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
 	))
-	private void arcanuscontinuum$boltRenderer(T livingEntity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light, CallbackInfo info) {
+	private void boltRenderer(T livingEntity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light, CallbackInfo info) {
 		Vec3 offset = new Vec3(Mth.lerp(tickDelta, livingEntity.xOld, livingEntity.getX()), Mth.lerp(tickDelta, livingEntity.yOld, livingEntity.getY()), Mth.lerp(tickDelta, livingEntity.zOld, livingEntity.getZ())).add(getRenderOffset(livingEntity, tickDelta));
 
 		matrices.pushPose();
@@ -57,7 +57,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		value = "INVOKE",
 		target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getAttackAnim(Lnet/minecraft/world/entity/LivingEntity;F)F"
 	))
-	private void arcanuscontinuum$render(T livingEntity, float f, float g, PoseStack matrices, MultiBufferSource vertexConsumerProvider, int i, CallbackInfo info) {
+	private void render(T livingEntity, float f, float g, PoseStack matrices, MultiBufferSource vertexConsumerProvider, int i, CallbackInfo info) {
 		if(livingEntity instanceof Player player && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(livingEntity) && livingEntity.getMainHandItem().getItem() instanceof StaffItem item && item.staffType == StaffType.STAFF && ArcanusComponents.isCasting(livingEntity))
 			matrices.mulPose(Axis.YP.rotationDegrees(player.getMainArm() == HumanoidArm.RIGHT ? 65 : -65));
 	}

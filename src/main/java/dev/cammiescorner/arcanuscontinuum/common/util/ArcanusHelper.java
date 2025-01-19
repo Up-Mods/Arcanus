@@ -85,7 +85,7 @@ public class ArcanusHelper {
 
 		endPos = hitResult.getLocation();
 		maxDistance *= maxDistance;
-		HitResult entityHitResult = ProjectileUtil.getEntityHitResult(origin, startPos, endPos, origin.getBoundingBox().expandTowards(rotation.scale(maxDistance)).inflate(1.0D, 1D, 1D), entity -> !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted(), maxDistance);
+		HitResult entityHitResult = ProjectileUtil.getEntityHitResult(origin, startPos, endPos, origin.getBoundingBox().expandTowards(rotation.scale(maxDistance)).inflate(1.0D, 1D, 1D), entity -> !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanus$canBeTargeted(), maxDistance);
 
 		if(includeEntities && entityHitResult != null)
 			hitResult = entityHitResult;

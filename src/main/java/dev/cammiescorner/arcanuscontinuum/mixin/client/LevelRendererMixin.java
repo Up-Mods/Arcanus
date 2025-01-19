@@ -13,7 +13,7 @@ public class LevelRendererMixin {
 		value = "INVOKE",
 		target = "Lnet/minecraft/client/multiplayer/ClientLevel;entitiesForRendering()Ljava/lang/Iterable;"
 	))
-	private Iterable<Entity> arcanuscontinuum$sortEntitiesForRendering(Iterable<Entity> entities) {
+	private Iterable<Entity> sortEntitiesForRendering(Iterable<Entity> entities) {
 		return EntityRendererSorter.ENTITY_ORDERING.sortedCopy(entities);
 	}
 }

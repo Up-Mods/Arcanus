@@ -73,7 +73,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	}
 
 	@Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
+	private void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> info) {
 		if(amount > 0 && !isDamageSourceBlocked(source)) {
 			if(ArcanusComponents.isCounterActive(self) && source.getDirectEntity() instanceof LivingEntity attacker)
 				ArcanusComponents.castCounter(self, attacker);
@@ -134,7 +134,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	}
 
 	@ModifyVariable(method = "hurt", at = @At("HEAD"), argsOnly = true)
-	private float arcanuscontinuum$modifyDamage(float amount, DamageSource source) {
+	private float modifyDamage(float amount, DamageSource source) {
 		AttributeInstance attributeInstance = getAttribute(ArcanusEntityAttributes.MAGIC_RESISTANCE.get());
 
 		if(attributeInstance != null && source.is(DamageTypeTags.WITCH_RESISTANT_TO))
@@ -152,7 +152,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	}
 
 	@ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/particles/BlockParticleOption;<init>(Lnet/minecraft/core/particles/ParticleType;Lnet/minecraft/world/level/block/state/BlockState;)V"))
-	private BlockState arcanuscontinuum$bouncy(BlockState value) {
+	private BlockState bouncy(BlockState value) {
 		if(hasEffect(ArcanusMobEffects.BOUNCY.get()))
 			return Blocks.SLIME_BLOCK.defaultBlockState();
 		if(hasEffect(ArcanusMobEffects.FLOAT.get()))
@@ -162,7 +162,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	}
 
 	@Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$negateFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
+	private void negateFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> info) {
 		if(prevVelocity != null && !damageSources().source(DamageTypes.STALAGMITE).equals(damageSource) && fallDistance > getMaxFallDistance() && hasEffect(ArcanusMobEffects.BOUNCY.get())) {
 			if(!level().isClientSide) {
 				level().playSound(null, this, SoundEvents.SLIME_BLOCK_FALL, getSoundSource(), 1, 1);
@@ -178,7 +178,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	}
 
 	@Inject(method = "tick", at = @At("HEAD"))
-	private void arcanuscontinuum$tick(CallbackInfo info) {
+	private void tick(CallbackInfo info) {
 		if(!level().isClientSide() && ArcanusComponents.PATTERN_COMPONENT.isProvidedBy(this) && ArcanusComponents.CASTING_COMPONENT.isProvidedBy(this)) {
 			prevVelocity = getDeltaMovement();
 
@@ -207,7 +207,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	}
 
 	@ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
-	private static AttributeSupplier.Builder arcanuscontinuum$createPlayerAttributes(AttributeSupplier.Builder builder) {
+	private static AttributeSupplier.Builder createPlayerAttributes(AttributeSupplier.Builder builder) {
 		ArcanusEntityAttributes.registerAll();
 
 		return builder
@@ -226,7 +226,7 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 		target = "Lnet/minecraft/world/entity/LivingEntity;getDeltaMovement()Lnet/minecraft/world/phys/Vec3;",
 		ordinal = 1
 	))
-	private Vec3 arcanuscontinuum$floatAround(LivingEntity livingEntity, Operation<Vec3> original, Vec3 movementInput, float slipperiness) {
+	private Vec3 floatAround(LivingEntity livingEntity, Operation<Vec3> original, Vec3 movementInput, float slipperiness) {
 		// FIXME smooth out vertical movement, currently a bit jolting
 		if(hasEffect(ArcanusMobEffects.FLOAT.get()))
 			return getDeltaMovement().add(0, jumping ? getSpeed() : isShiftKeyDown() ? -getSpeed() : 0, 0);
@@ -235,13 +235,13 @@ public abstract class LivingEntityMixin extends Entity implements Targetable {
 	}
 
 	@Inject(method = "onEffectRemoved", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$cantRemoveCurse(MobEffectInstance effect, CallbackInfo info) {
+	private void cantRemoveCurse(MobEffectInstance effect, CallbackInfo info) {
 		if(effect.getEffect() == ArcanusMobEffects.COPPER_CURSE.get())
 			info.cancel();
 	}
 
 	@ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
-	public Vec3 arcanuscontinuum$invertInput(Vec3 movementInput) {
+	public Vec3 invertInput(Vec3 movementInput) {
 		if(!(self instanceof Player) && hasEffect(ArcanusMobEffects.DISCOMBOBULATE.get()))
 			movementInput = movementInput.multiply(-1, 1, -1);
 

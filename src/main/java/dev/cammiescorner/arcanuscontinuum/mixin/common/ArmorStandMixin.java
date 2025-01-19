@@ -31,7 +31,7 @@ public abstract class ArmorStandMixin extends LivingEntity {
 	}
 
 	@Inject(method = "interactAt", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$waxOnWaxOff(Player player, Vec3 hitPos, InteractionHand hand, CallbackInfoReturnable<InteractionResult> info) {
+	private void waxOnWaxOff(Player player, Vec3 hitPos, InteractionHand hand, CallbackInfoReturnable<InteractionResult> info) {
 		EquipmentSlot slot = getClickedSlot(hitPos);
 		ItemStack stack = getItemBySlot(slot);
 		ItemStack heldStack = player.getItemInHand(hand);

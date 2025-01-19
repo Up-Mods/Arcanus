@@ -23,13 +23,13 @@ public abstract class PlayerRendererMixin extends LivingEntityRenderer<AbstractC
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void arcanuscontinuum$init(EntityRendererProvider.Context context, boolean bl, CallbackInfo info) {
+	private void init(EntityRendererProvider.Context context, boolean bl, CallbackInfo info) {
 		addLayer(new SpellPatternFeatureRenderer<>(this));
 		addLayer(new HaloFeatureRenderer<>(this));
 	}
 
 	@Inject(method = "getTextureLocation(Lnet/minecraft/client/player/AbstractClientPlayer;)Lnet/minecraft/resources/ResourceLocation;", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$getTexture(AbstractClientPlayer player, CallbackInfoReturnable<ResourceLocation> info) {
+	private void getTexture(AbstractClientPlayer player, CallbackInfoReturnable<ResourceLocation> info) {
 		if(player.hasEffect(ArcanusMobEffects.ANONYMITY.get()))
 			info.setReturnValue(Arcanus.id("textures/entity/player/anonymous.png"));
 	}

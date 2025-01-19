@@ -27,7 +27,7 @@ public abstract class RenderTargetMixin implements StencilBuffer {
 	@Shadow public abstract void resize(int width, int height, boolean clearError);
 
 	@Inject(method = "<init>", at = @At("RETURN"))
-	private void arcanuscontinuum$init(boolean useDepth, CallbackInfo info) {
+	private void init(boolean useDepth, CallbackInfo info) {
 		isStencilBufferEnabled = false;
 	}
 
@@ -36,7 +36,7 @@ public abstract class RenderTargetMixin implements StencilBuffer {
 		target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V",
 		remap = false
 	))
-	private void arcanuscontinuum$modifyTexImage2D(Args args) {
+	private void modifyTexImage2D(Args args) {
 		if(Objects.equals(args.get(2), GL11.GL_DEPTH_COMPONENT) && isStencilBufferEnabled) {
 			args.set(2, GL31.GL_DEPTH24_STENCIL8);
 			args.set(6, ARBFramebufferObject.GL_DEPTH_STENCIL);
@@ -49,19 +49,19 @@ public abstract class RenderTargetMixin implements StencilBuffer {
 		target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V",
 		remap = false
 	))
-	private void arcanuscontinuum$modifyFrameBufferTexture2D(Args args) {
+	private void modifyFrameBufferTexture2D(Args args) {
 		if(Objects.equals(args.get(1), GL30C.GL_DEPTH_ATTACHMENT))
 			if(isStencilBufferEnabled)
 				args.set(1, GL31.GL_DEPTH_STENCIL_ATTACHMENT);
 	}
 
 	@Override
-	public boolean arcanuscontinuum$isStencilBufferEnabled() {
+	public boolean arcanus$isStencilBufferEnabled() {
 		return isStencilBufferEnabled;
 	}
 
 	@Override
-	public void arcanuscontinuum$enableStencilBufferAndReload(boolean cond) {
+	public void arcanus$enableStencilBufferAndReload(boolean cond) {
 		if(isStencilBufferEnabled != cond) {
 			isStencilBufferEnabled = cond;
 			resize(width, height, Minecraft.ON_OSX);

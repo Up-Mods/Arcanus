@@ -16,7 +16,7 @@ public class GuiMixin {
 	@Shadow private int screenHeight;
 
 	@WrapOperation(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V", ordinal = 0))
-	private void arcanuscontinuum$moveCrosshair(GuiGraphics instance, ResourceLocation id, int x, int y, int u, int v, int w, int h, Operation<Void> original) {
+	private void moveCrosshair(GuiGraphics instance, ResourceLocation id, int x, int y, int u, int v, int w, int h, Operation<Void> original) {
 		PoseStack matrices = instance.pose();
 		matrices.pushPose();
 		matrices.translate((screenWidth - 15) / 2F, (screenHeight - 15) / 2F, 0);

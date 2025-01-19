@@ -12,7 +12,7 @@ public abstract class EnderDragonPartMixin implements Targetable {
 	@Shadow @Final public EnderDragon parentMob;
 
 	@Override
-	public boolean arcanuscontinuum$canBeTargeted() {
-		return parentMob.arcanuscontinuum$canBeTargeted();
+	public boolean arcanus$canBeTargeted() {
+		return parentMob.arcanus$canBeTargeted();
 	}
 }

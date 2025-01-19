@@ -16,7 +16,7 @@ public class FoodDataMixin {
 		target = "Lnet/minecraft/world/level/GameRules;getBoolean(Lnet/minecraft/world/level/GameRules$Key;)Z",
 		ordinal = 0
 	))
-	public boolean arcanuscontinuum$hasBurnout(GameRules instance, GameRules.Key<GameRules.BooleanValue> gameRuleKey, Operation<Boolean> original, Player player) {
+	public boolean hasBurnout(GameRules instance, GameRules.Key<GameRules.BooleanValue> gameRuleKey, Operation<Boolean> original, Player player) {
 		return original.call(instance, gameRuleKey) && ArcanusComponents.getBurnout(player) <= 0.0D;
 	}
 }

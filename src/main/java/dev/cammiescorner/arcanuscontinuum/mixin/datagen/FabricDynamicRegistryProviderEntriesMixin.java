@@ -16,7 +16,7 @@ public class FabricDynamicRegistryProviderEntriesMixin {
 		value = "INVOKE",
 		target = "Ljava/util/List;stream()Ljava/util/stream/Stream;"
 	))
-	private Stream<RegistryDataLoader.RegistryData<?>> arcanuscontinuum$wrapStream(List<RegistryDataLoader.RegistryData<?>> instance, Operation<Stream<RegistryDataLoader.RegistryData<?>>> original) {
+	private Stream<RegistryDataLoader.RegistryData<?>> wrapStream(List<RegistryDataLoader.RegistryData<?>> instance, Operation<Stream<RegistryDataLoader.RegistryData<?>>> original) {
 		return Stream.concat(original.call(instance), RegistryDataLoader.DIMENSION_REGISTRIES.stream());
 	}
 }

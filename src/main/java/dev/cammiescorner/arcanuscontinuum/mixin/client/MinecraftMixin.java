@@ -52,7 +52,7 @@ public abstract class MinecraftMixin implements ClientUtils {
 	@Shadow public abstract boolean isLocalServer();
 
 	@Inject(method = "tick", at = @At("HEAD"))
-	public void arcanuscontinuum$tick(CallbackInfo info) {
+	public void tick(CallbackInfo info) {
 		if(player == null)
 			return;
 
@@ -102,7 +102,7 @@ public abstract class MinecraftMixin implements ClientUtils {
 	}
 
 	@Inject(method = "handleKeybinds", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$handleInputEvents(CallbackInfo info) {
+	private void handleInputEvents(CallbackInfo info) {
 		if(ArcanusComponents.getStunTimer(player) > 0)
 			info.cancel();
 	}
@@ -111,7 +111,7 @@ public abstract class MinecraftMixin implements ClientUtils {
 		value = "INVOKE",
 		target = "Lnet/minecraft/client/Minecraft;continueAttack(Z)V"
 	), cancellable = true)
-	public void arcanuscontinuum$onBlockBreak(CallbackInfo info) {
+	public void onBlockBreak(CallbackInfo info) {
 		if(isCasting)
 			info.cancel();
 	}
@@ -121,7 +121,7 @@ public abstract class MinecraftMixin implements ClientUtils {
 		target = "Lnet/minecraft/client/Minecraft;startAttack()Z",
 		ordinal = 0
 	), cancellable = true)
-	public void arcanuscontinuum$onLeftClick(CallbackInfo info) {
+	public void onLeftClick(CallbackInfo info) {
 		if(isCasting)
 			info.cancel();
 
@@ -157,7 +157,7 @@ public abstract class MinecraftMixin implements ClientUtils {
 		target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
 		ordinal = 0
 	), cancellable = true)
-	public void arcanuscontinuum$onRightClick(CallbackInfo info) {
+	public void onRightClick(CallbackInfo info) {
 		if(isCasting)
 			info.cancel();
 
@@ -183,7 +183,7 @@ public abstract class MinecraftMixin implements ClientUtils {
 		target = "Lnet/minecraft/client/Minecraft;startUseItem()V",
 		ordinal = 1
 	), cancellable = true)
-	public void arcanuscontinuum$onRightClickBlock(CallbackInfo info) {
+	public void onRightClickBlock(CallbackInfo info) {
 		if(isCasting || (player != null && !player.isSpectator() && player.getMainHandItem().getItem() instanceof StaffItem))
 			info.cancel();
 	}

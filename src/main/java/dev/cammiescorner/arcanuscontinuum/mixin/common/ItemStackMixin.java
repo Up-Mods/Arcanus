@@ -31,7 +31,7 @@ public abstract class ItemStackMixin {
 		value = "INVOKE",
 		target = "Ljava/util/Map$Entry;getValue()Ljava/lang/Object;"
 	), locals = LocalCapture.CAPTURE_FAILSOFT)
-	private void arcanuscontinuum$captureEntry(Player player, TooltipFlag context, CallbackInfoReturnable<List<Component>> cir, List list, MutableComponent mutableText, int i, EquipmentSlot[] var6, int var7, int var8, EquipmentSlot equipmentSlot, Multimap multimap, Iterator var11, Map.Entry<Attribute, AttributeModifier> entry, @Share("entry") LocalRef<Map.Entry<Attribute, AttributeModifier>> ref) {
+	private void captureEntry(Player player, TooltipFlag context, CallbackInfoReturnable<List<Component>> cir, List list, MutableComponent mutableText, int i, EquipmentSlot[] var6, int var7, int var8, EquipmentSlot equipmentSlot, Multimap multimap, Iterator var11, Map.Entry<Attribute, AttributeModifier> entry, @Share("entry") LocalRef<Map.Entry<Attribute, AttributeModifier>> ref) {
 		ref.set(entry);
 	}
 
@@ -42,7 +42,7 @@ public abstract class ItemStackMixin {
 		value = "INVOKE",
 		target = "Lnet/minecraft/network/chat/MutableComponent;withStyle(Lnet/minecraft/ChatFormatting;)Lnet/minecraft/network/chat/MutableComponent;"
 	))
-	private ChatFormatting arcanuscontinuum$switchColour(ChatFormatting formatting, @Share("entry") LocalRef<Map.Entry<Attribute, AttributeModifier>> ref) {
+	private ChatFormatting switchColour(ChatFormatting formatting, @Share("entry") LocalRef<Map.Entry<Attribute, AttributeModifier>> ref) {
 		return ref.get() != null && (ref.get().getKey() == ArcanusEntityAttributes.MANA_COST.get() || ref.get().getKey() == ArcanusEntityAttributes.SPELL_COOL_DOWN.get()) ? (formatting == ChatFormatting.BLUE ? ChatFormatting.RED : ChatFormatting.BLUE) : formatting;
 	}
 }

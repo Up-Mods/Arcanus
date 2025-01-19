@@ -55,7 +55,7 @@ public class SmiteEntity extends Entity implements Targetable {
 						continue;
 					}
 
-					level().getEntitiesOfClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted()).forEach(entity -> {
+					level().getEntitiesOfClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanus$canBeTargeted()).forEach(entity -> {
 						if(!hasHit.contains(entity.getUUID())) {
 							effect.effect(getCaster(), this, level(), new EntityHitResult(entity), effects, stack, potency);
 

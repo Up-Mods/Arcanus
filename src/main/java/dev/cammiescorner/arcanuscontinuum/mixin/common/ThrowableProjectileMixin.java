@@ -20,7 +20,7 @@ public abstract class ThrowableProjectileMixin extends Projectile {
 		value = "INVOKE",
 		target = "Lnet/minecraft/world/phys/Vec3;scale(D)Lnet/minecraft/world/phys/Vec3;"
 	))
-	private double arcanuscontinuum$noWaterDrag(double value) {
+	private double noWaterDrag(double value) {
 		return ((Object) this) instanceof AggressorbEntity && this.isInWater() ? 0.99f : value;
 	}
 }

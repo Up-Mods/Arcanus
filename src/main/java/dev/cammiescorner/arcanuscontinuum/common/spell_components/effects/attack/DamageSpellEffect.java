@@ -40,7 +40,7 @@ public class DamageSpellEffect extends SpellEffect {
 			if(entity instanceof Player playerTarget && caster instanceof Player playerCaster && !playerCaster.canHarmPlayer(playerTarget))
 				return;
 
-			if(caster != null && entity instanceof Targetable targetable && targetable.arcanuscontinuum$canBeTargeted()) {
+			if(caster != null && entity instanceof Targetable targetable && targetable.arcanus$canBeTargeted()) {
 				if(entity.isInWaterRainOrBubble() && effects.contains(ArcanusSpellComponents.ELECTRIC.get()))
 					damage *= AttackEffects.ElectricEffectProperties.wetEntityDamageMultiplier;
 

@@ -17,7 +17,7 @@ public class PistonBaseBlockMixin {
 		value = "INVOKE",
 		target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"
 	))
-	private static void arcanuscontinuum$dontMoveWardedBlocks(BlockState state, Level level, BlockPos pos, Direction movementDirection, boolean allowDestroy, Direction pistonFacing, CallbackInfoReturnable<Boolean> cir) {
+	private static void dontMoveWardedBlocks(BlockState state, Level level, BlockPos pos, Direction movementDirection, boolean allowDestroy, Direction pistonFacing, CallbackInfoReturnable<Boolean> cir) {
 		if(ArcanusComponents.isBlockWarded(level, pos))
 			cir.setReturnValue(false);
 	}

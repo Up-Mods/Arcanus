@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(FallingBlock.class)
 public class FallingBlockMixin {
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$wardedBlocksCantFall(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {
+	private void wardedBlocksCantFall(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {
 		if(ArcanusComponents.isBlockWarded(world, pos))
 			info.cancel();
 	}

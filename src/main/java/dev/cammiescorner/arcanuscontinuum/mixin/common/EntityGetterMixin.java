@@ -16,12 +16,12 @@ import java.util.List;
 @Mixin(EntityGetter.class)
 public interface EntityGetterMixin {
 	@Inject(method = "getEntityCollisions", at = @At("HEAD"))
-	private void arcanuscontinuum$collidesWithHead(@Nullable Entity entity, AABB box, CallbackInfoReturnable<List<VoxelShape>> info) {
+	private void collidesWithHead(@Nullable Entity entity, AABB box, CallbackInfoReturnable<List<VoxelShape>> info) {
 		ManaShieldEntity.COLLIDING_ENTITY.set(entity);
 	}
 
 	@Inject(method = "getEntityCollisions", at = @At("RETURN"))
-	private void arcanuscontinuum$collidesWithReturn(@Nullable Entity entity, AABB box, CallbackInfoReturnable<List<VoxelShape>> info) {
+	private void collidesWithReturn(@Nullable Entity entity, AABB box, CallbackInfoReturnable<List<VoxelShape>> info) {
 		ManaShieldEntity.COLLIDING_ENTITY.remove();
 	}
 }

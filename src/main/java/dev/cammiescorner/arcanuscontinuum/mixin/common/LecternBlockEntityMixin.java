@@ -36,7 +36,7 @@ public abstract class LecternBlockEntityMixin extends BlockEntity implements Cle
 	}
 
 	@Inject(method = "createMenu", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$createSpellcraftScreen(int i, Inventory playerInventory, Player playerEntity, CallbackInfoReturnable<AbstractContainerMenu> info) {
+	private void createSpellcraftScreen(int i, Inventory playerInventory, Player playerEntity, CallbackInfoReturnable<AbstractContainerMenu> info) {
 		if(getBook().getItem() instanceof SpellBookItem)
 			info.setReturnValue(new SpellcraftScreenHandler(i, bookAccess, ContainerLevelAccess.create(getLevel(), getBlockPos()), getBlockPos(), getBook()));
 	}

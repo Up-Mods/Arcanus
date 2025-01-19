@@ -17,13 +17,13 @@ public abstract class LevelMixin {
 	@Shadow public abstract BlockState getBlockState(BlockPos pos);
 
 	@Inject(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$noReplacingWardedBlocks(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> info) {
+	private void noReplacingWardedBlocks(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> info) {
 		if(state.isAir() && ArcanusComponents.isBlockWarded((Level) (Object) this, pos))
 			info.setReturnValue(false);
 	}
 
 	@Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
-	private void arcanuscontinuum$noBreakingWardedBlocks(BlockPos pos, boolean drop, Entity breakingEntity, int maxUpdateDepth, CallbackInfoReturnable<Boolean> info) {
+	private void noBreakingWardedBlocks(BlockPos pos, boolean drop, Entity breakingEntity, int maxUpdateDepth, CallbackInfoReturnable<Boolean> info) {
 		BlockState state = getBlockState(pos);
 
 		if(state.isAir() && ArcanusComponents.isBlockWarded((Level) (Object) this, pos))
