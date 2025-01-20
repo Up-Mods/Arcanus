@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.WritableLevelData;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -26,7 +27,7 @@ public abstract class ServerLevelMixin extends Level {
 	))
 	private boolean slowTime(ServerLevel instance, Consumer<?> consumer, Entity entity) {
 		// TODO tie to being in a time dilation entity
-		if(getGameTime() % 2 == 0) {
+		if(entity.position().distanceTo(new Vec3(0, 146, 0)) < 16 && getGameTime() % 2 == 0) {
 			entity.setOldPosAndRot();
 			entity.tickCount++;
 			return false;
