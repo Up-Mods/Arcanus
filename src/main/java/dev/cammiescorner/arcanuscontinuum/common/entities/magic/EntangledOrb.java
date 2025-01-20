@@ -35,9 +35,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class GuardianOrbEntity extends Entity implements Targetable {
-	private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(GuardianOrbEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> TARGET_ID = SynchedEntityData.defineId(GuardianOrbEntity.class, EntityDataSerializers.INT);
+public class EntangledOrb extends Entity implements Targetable {
+	private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(EntangledOrb.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TARGET_ID = SynchedEntityData.defineId(EntangledOrb.class, EntityDataSerializers.INT);
 	private final List<SpellEffect> effects = new ArrayList<>();
 	private final List<SpellGroup> groups = new ArrayList<>();
 	private UUID casterId = Util.NIL_UUID;
@@ -46,7 +46,7 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 	private int groupIndex = 0;
 	private double potency = 1F;
 
-	public GuardianOrbEntity(EntityType<?> variant, Level world) {
+	public EntangledOrb(EntityType<?> variant, Level world) {
 		super(variant, world);
 		this.noPhysics = true;
 	}
@@ -87,7 +87,7 @@ public class GuardianOrbEntity extends Entity implements Targetable {
 			level().addParticle(ParticleTypes.END_ROD, getX(), getY() + getBbHeight() / 2, getZ(), vel.x(), vel.y(), vel.z());
 		}
 
-		if(tickCount % 100 == 0 && ArcanusComponents.drainMana(caster, ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.baseManaDrain * effects.size(), false)) {
+		if(tickCount % 100 == 0 && ArcanusComponents.drainMana(caster, ArcanusConfig.SpellShapes.EntangledOrbShapeProperties.baseManaDrain * effects.size(), false)) {
 			EntityHitResult hitResult = new EntityHitResult(target);
 
 			for(SpellEffect effect : new HashSet<>(effects))

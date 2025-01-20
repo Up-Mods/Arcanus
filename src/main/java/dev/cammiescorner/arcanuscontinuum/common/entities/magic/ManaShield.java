@@ -19,13 +19,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-public class ManaShieldEntity extends Entity implements Targetable {
-	private static final EntityDataAccessor<Integer> MAX_AGE = SynchedEntityData.defineId(ManaShieldEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> TRUE_AGE = SynchedEntityData.defineId(ManaShieldEntity.class, EntityDataSerializers.INT);
+public class ManaShield extends Entity implements Targetable {
+	private static final EntityDataAccessor<Integer> MAX_AGE = SynchedEntityData.defineId(ManaShield.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TRUE_AGE = SynchedEntityData.defineId(ManaShield.class, EntityDataSerializers.INT);
 	public static final ThreadLocal<Entity> COLLIDING_ENTITY = new ThreadLocal<>();
 	public UUID ownerId = Util.NIL_UUID;
 
-	public ManaShieldEntity(EntityType<? extends Entity> entityType, Level world) {
+	public ManaShield(EntityType<? extends Entity> entityType, Level world) {
 		super(entityType, world);
 	}
 
@@ -36,16 +36,16 @@ public class ManaShieldEntity extends Entity implements Targetable {
 			return;
 		}
 
-		List<ManaShieldEntity> list = level().getEntitiesOfClass(ManaShieldEntity.class, getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE);
+		List<ManaShield> list = level().getEntitiesOfClass(ManaShield.class, getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE);
 
 		if(!list.isEmpty()) {
-			list.sort(Comparator.comparingInt(ManaShieldEntity::getTrueAge).reversed());
+			list.sort(Comparator.comparingInt(ManaShield::getTrueAge).reversed());
 			int i = level().getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
 
 			if(i > 0 && list.size() > i - 1) {
 				int j = 0;
 
-				for(ManaShieldEntity ignored : list)
+				for(ManaShield ignored : list)
 					++j;
 
 				if(j > i - 1) {

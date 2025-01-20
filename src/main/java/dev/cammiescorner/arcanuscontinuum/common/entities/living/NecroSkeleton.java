@@ -39,15 +39,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class NecroSkeletonEntity extends AbstractSkeleton implements Summon {
+public class NecroSkeleton extends AbstractSkeleton implements Summon {
 	private static final UUID HEALTH_UUID = UUID.fromString("65691cf4-6e7e-445f-8e5c-bb37a2b660d4");
-	private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(NecroSkeletonEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME = SynchedEntityData.defineId(NecroSkeleton.class, EntityDataSerializers.INT);
 	;
 	private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 	private UUID ownerId = Util.NIL_UUID;
 	private UUID persistentAngerTarget = Util.NIL_UUID;
 
-	public NecroSkeletonEntity(EntityType<? extends AbstractSkeleton> entityType, Level world) {
+	public NecroSkeleton(EntityType<? extends AbstractSkeleton> entityType, Level world) {
 		super(entityType, world);
 		Arrays.fill(armorDropChances, 0);
 		Arrays.fill(handDropChances, 0);
@@ -66,7 +66,7 @@ public class NecroSkeletonEntity extends AbstractSkeleton implements Summon {
 		targetSelector.addGoal(2, new CasterHurtTargetGoal<>(this));
 		targetSelector.addGoal(3, (new HurtByTargetGoal(this)).setAlertOthers());
 		targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isAngryAt));
-		targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Monster.class, true, otherEntity -> !(otherEntity instanceof NecroSkeletonEntity necroSkeleton) || !necroSkeleton.getOwnerId().equals(getOwnerId())));
+		targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Monster.class, true, otherEntity -> !(otherEntity instanceof NecroSkeleton necroSkeleton) || !necroSkeleton.getOwnerId().equals(getOwnerId())));
 		targetSelector.addGoal(6, new ResetUniversalAngerTargetGoal<>(this, true));
 	}
 

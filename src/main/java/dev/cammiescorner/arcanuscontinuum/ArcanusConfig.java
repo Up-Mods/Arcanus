@@ -393,8 +393,8 @@ public final class ArcanusConfig {
 			public static double potencyModifier = 0.5;
 		}
 
-		@Category(id = "guardianOrbShapeProperties", translation = "config.arcanuscontinuum.guardianOrbShapeProperties", sortOrder = 11)
-		public static final class GuardianOrbShapeProperties {
+		@Category(id = "entangledOrbShapeProperties", translation = "config.arcanuscontinuum.entangledOrbShapeProperties", sortOrder = 11)
+		public static final class EntangledOrbShapeProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config.arcanuscontinuum.enabled")
 			public static boolean enabled = true;
 
@@ -967,11 +967,10 @@ public final class ArcanusConfig {
 			public static double baseChanceToActivate = 0.035;
 		}
 
-		// TODO uncomment this when we get temporal dilation working & set enabled to true
-//		@Category(id = "temporalDilationEffectProperties", translation = "config.arcanuscontinuum.temporalDilationEffectProperties", sortOrder = 7)
+		@Category(id = "temporalDilationEffectProperties", translation = "config.arcanuscontinuum.temporalDilationEffectProperties", sortOrder = 7)
 		public static final class TemporalDilationEffectProperties {
 			@ConfigEntry(id = "enabled", type = EntryType.BOOLEAN, translation = "config.arcanuscontinuum.enabled")
-			public static boolean enabled = false;
+			public static boolean enabled = true;
 
 			@ConfigEntry(id = "weight", type = EntryType.ENUM, translation = "config.arcanuscontinuum.weight")
 			public static Weight weight = Weight.NONE;

@@ -3,18 +3,18 @@ package dev.cammiescorner.arcanuscontinuum.client.models.entity.magic;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicRuneEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicRune;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class MagicRuneEntityModel extends EntityModel<MagicRuneEntity> {
+public class MagicRuneModel extends EntityModel<MagicRune> {
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("magic_rune"), "main");
 	public final ModelPart rune;
 
-	public MagicRuneEntityModel(ModelPart root) {
+	public MagicRuneModel(ModelPart root) {
 		this.rune = root.getChild("rune");
 	}
 
@@ -28,7 +28,7 @@ public class MagicRuneEntityModel extends EntityModel<MagicRuneEntity> {
 	}
 
 	@Override
-	public void setupAnim(MagicRuneEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(MagicRune entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 
 	}
 

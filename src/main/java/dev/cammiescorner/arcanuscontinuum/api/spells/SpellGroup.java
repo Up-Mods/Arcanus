@@ -26,7 +26,7 @@ public record SpellGroup(SpellShape shape, List<SpellEffect> effects, List<Vecto
 			String nbtId = nbtEffects.getString(i);
 			ResourceLocation correctedId = switch(nbtId) {
 				case "arcanuscontinuum:explosion_shape" -> ArcanusSpellComponents.BURST.getId();
-				case "arcanuscontinuum:guardian_orb_shape" -> ArcanusSpellComponents.GUARDIAN_ORB.getId();
+				case "arcanuscontinuum:guardian_orb_shape" -> ArcanusSpellComponents.ENTANGLED_ORB.getId();
 				case "arcanuscontinuum:aggressorb_shape" -> ArcanusSpellComponents.AGGRESSORB.getId();
 				default -> new ResourceLocation(nbtId);
 			};

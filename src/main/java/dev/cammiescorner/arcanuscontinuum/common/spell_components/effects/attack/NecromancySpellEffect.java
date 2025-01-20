@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.attac
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.common.entities.living.NecroSkeletonEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.living.NecroSkeleton;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusItems;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
@@ -36,7 +36,7 @@ public class NecromancySpellEffect extends SpellEffect {
 	@Override
 	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(caster != null) {
-			NecroSkeletonEntity skeleton = ArcanusEntities.NECRO_SKELETON.get().create(level);
+			NecroSkeleton skeleton = ArcanusEntities.NECRO_SKELETON.get().create(level);
 			int effectCount = (int) effects.stream().filter(ArcanusSpellComponents.NECROMANCY::is).count();
 
 			if(skeleton != null) {

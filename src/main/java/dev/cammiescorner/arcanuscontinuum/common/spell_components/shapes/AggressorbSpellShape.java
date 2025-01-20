@@ -4,7 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.Aggressorb;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import net.minecraft.ChatFormatting;
@@ -39,7 +39,7 @@ public class AggressorbSpellShape extends SpellShape {
 
 		if(sourceEntity instanceof LivingEntity target) {
 			if(ArcanusComponents.aggressorbCount(target) < ArcanusConfig.SpellShapes.AggressorbShapeProperties.maximumAggressorbs) {
-				AggressorbEntity aggressorb = ArcanusEntities.AGGRESSORB.get().create(world);
+				Aggressorb aggressorb = ArcanusEntities.AGGRESSORB.get().create(world);
 
 				if(aggressorb != null) {
 					aggressorb.setProperties(caster, target, stack, effects, spellGroups, groupIndex, potency);

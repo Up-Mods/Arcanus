@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ArcanusComponents implements BlockComponentInitializer, ChunkComponentInitializer, EntityComponentInitializer, ScoreboardComponentInitializer {
-
 	public static final ComponentKey<MagicColorComponent> MAGIC_COLOR = createComponent("magic_color", MagicColorComponent.class);
 
 	// ----- Scoreboard Components ----- \\
@@ -68,7 +67,6 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 	public static final ComponentKey<SpellShapeComponent> SPELL_SHAPE = createComponent("spell_shape", SpellShapeComponent.class);
 	public static final ComponentKey<SizeComponent> SIZE = createComponent("size", SizeComponent.class);
 	public static final ComponentKey<PocketDimensionPortalComponent> POCKET_DIMENSION_PORTAL_COMPONENT = createComponent("pocket_dimension_portal", PocketDimensionPortalComponent.class);
-	public static final ComponentKey<SlowTimeComponent> SLOW_TIME_COMPONENT = createComponent("slow_time", SlowTimeComponent.class);
 	public static final ComponentKey<AggressorbComponent> AGGRESSORB_COMPONENT = createComponent("aggressorb", AggressorbComponent.class);
 	public static final ComponentKey<GuardianOrbComponent> GUARDIAN_ORB_COMPONENT = createComponent("guardian_orb", GuardianOrbComponent.class);
 	public static final ComponentKey<PortalCoolDownComponent> PORTAL_COOL_DOWN_COMPONENT = createComponent("portal_cool_down", PortalCoolDownComponent.class);
@@ -98,23 +96,23 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 		registry.beginRegistration(LivingEntity.class, STUN_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(StunComponent::new);
 		registry.beginRegistration(Player.class, QUEST_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(QuestComponent::new);
 		registry.beginRegistration(LivingEntity.class, BOLT_TARGET).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(BoltTargetComponent::new);
-		registry.beginRegistration(MagicProjectileEntity.class, SPELL_SHAPE).end(SpellShapeComponent::new);
-		registry.beginRegistration(Entity.class, SLOW_TIME_COMPONENT).end(SlowTimeComponent::new);
+		registry.beginRegistration(MagicProjectile.class, SPELL_SHAPE).end(SpellShapeComponent::new);
 		registry.beginRegistration(LivingEntity.class, AGGRESSORB_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(AggressorbComponent::new);
 		registry.beginRegistration(LivingEntity.class, GUARDIAN_ORB_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(GuardianOrbComponent::new);
 		registry.beginRegistration(Player.class, PORTAL_COOL_DOWN_COMPONENT).respawnStrategy(RespawnCopyStrategy.ALWAYS_COPY).end(PortalCoolDownComponent::new);
 		registry.beginRegistration(LivingEntity.class, COUNTER_COMPONENT).respawnStrategy(RespawnCopyStrategy.NEVER_COPY).end(CounterComponent::new);
 
 		List.of(
-			AggressorbEntity.class,
-			AreaOfEffectEntity.class,
-			BeamEntity.class,
-			GuardianOrbEntity.class,
-			MagicProjectileEntity.class,
-			MagicRuneEntity.class,
-			ManaShieldEntity.class,
-			PocketDimensionPortalEntity.class,
-			SmiteEntity.class
+			Aggressorb.class,
+			AreaOfEffect.class,
+			Beam.class,
+			EntangledOrb.class,
+			MagicProjectile.class,
+			MagicRune.class,
+			ManaShield.class,
+			PocketDimensionPortal.class,
+			Smite.class,
+			TemporalDilationField.class
 		).forEach(type ->
 			registry.beginRegistration(type, MAGIC_COLOR)
 				.impl(GenericMagicColorComponent.class)
@@ -325,35 +323,11 @@ public class ArcanusComponents implements BlockComponentInitializer, ChunkCompon
 		return POCKET_DIMENSION_PORTAL_COMPONENT.get(player).getPortalPos(level);
 	}
 
-	public static boolean isTimeSlowed(Entity entity) {
-		return entity.getComponent(SLOW_TIME_COMPONENT).isTimeSlowed();
-	}
-
-	public static void setSlowTime(Entity entity, boolean slowTime) {
-		entity.getComponent(SLOW_TIME_COMPONENT).setSlowTime(slowTime);
-	}
-
-	public static boolean areUpdatesBlocked(Entity entity) {
-		return entity.getComponent(SLOW_TIME_COMPONENT).areUpdatesBlocked();
-	}
-
-	public static void setBlockUpdates(Entity entity, boolean blockUpdates) {
-		entity.getComponent(SLOW_TIME_COMPONENT).setBlockUpdates(blockUpdates);
-	}
-
-	public static int getBlockUpdatesInterval(Entity entity) {
-		return entity.getComponent(SLOW_TIME_COMPONENT).getBlockUpdatesInterval();
-	}
-
-	public static void setBlockUpdatesInterval(Entity entity, int interval) {
-		entity.getComponent(SLOW_TIME_COMPONENT).setBlockUpdatesInterval(interval);
-	}
-
 	public static int aggressorbCount(LivingEntity entity) {
 		return entity.getComponent(AGGRESSORB_COMPONENT).orbCount();
 	}
 
-	public static int aggressorbIndex(LivingEntity entity, AggressorbEntity orb) {
+	public static int aggressorbIndex(LivingEntity entity, Aggressorb orb) {
 		return entity.getComponent(AGGRESSORB_COMPONENT).orbIndex(orb);
 	}
 

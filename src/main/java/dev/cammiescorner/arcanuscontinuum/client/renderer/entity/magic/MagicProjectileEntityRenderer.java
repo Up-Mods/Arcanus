@@ -5,9 +5,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicLobEntityModel;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicProjectileEntityModel;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectileEntity;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicLobModel;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.MagicProjectileModel;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectile;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
@@ -18,20 +18,20 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class MagicProjectileEntityRenderer extends ArrowRenderer<MagicProjectileEntity> {
+public class MagicProjectileEntityRenderer extends ArrowRenderer<MagicProjectile> {
 	private static final ResourceLocation PROJECTILE_TEXTURE = Arcanus.id("textures/entity/magic/projectile.png");
 	private static final ResourceLocation LOB_TEXTURE = Arcanus.id("textures/entity/magic/lob.png");
-	private final MagicLobEntityModel lobModel;
-	private final MagicProjectileEntityModel projectileModel;
+	private final MagicLobModel lobModel;
+	private final MagicProjectileModel projectileModel;
 
 	public MagicProjectileEntityRenderer(EntityRendererProvider.Context context) {
 		super(context);
-		lobModel = new MagicLobEntityModel(context.getModelSet().bakeLayer(MagicLobEntityModel.MODEL_LAYER));
-		projectileModel = new MagicProjectileEntityModel(context.getModelSet().bakeLayer(MagicProjectileEntityModel.MODEL_LAYER));
+		lobModel = new MagicLobModel(context.getModelSet().bakeLayer(MagicLobModel.MODEL_LAYER));
+		projectileModel = new MagicProjectileModel(context.getModelSet().bakeLayer(MagicProjectileModel.MODEL_LAYER));
 	}
 
 	@Override
-	public void render(MagicProjectileEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
+	public void render(MagicProjectile entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
 		VertexConsumer consumer = vertices.getBuffer(ArcanusClient.getMagicCircles(getTextureLocation(entity)));
 		boolean isProjectile = ArcanusSpellComponents.PROJECTILE.is(entity.getShape());
 		Color color = ArcanusHelper.getMagicColor(entity);
@@ -62,7 +62,7 @@ public class MagicProjectileEntityRenderer extends ArrowRenderer<MagicProjectile
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(MagicProjectileEntity entity) {
+	public ResourceLocation getTextureLocation(MagicProjectile entity) {
 		return ArcanusSpellComponents.PROJECTILE.is(entity.getShape()) ? PROJECTILE_TEXTURE : LOB_TEXTURE;
 	}
 }

@@ -4,7 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.BeamEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.Beam;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -40,7 +40,7 @@ public class BeamSpellShape extends SpellShape {
 		HitResult target = ArcanusHelper.raycast(sourceEntity, range, true, true);
 
 		if(target.getType() != HitResult.Type.MISS) {
-			BeamEntity beam = ArcanusEntities.BEAM.get().create(world);
+			Beam beam = ArcanusEntities.BEAM.get().create(world);
 
 			if(beam != null) {
 				beam.setProperties(caster, stack, effects, spellGroups, groupIndex, ArcanusConfig.SpellShapes.BeamShapeProperties.delay, potency, target.getType() == HitResult.Type.ENTITY);

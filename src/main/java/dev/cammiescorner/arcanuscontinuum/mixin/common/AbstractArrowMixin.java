@@ -1,7 +1,7 @@
 package dev.cammiescorner.arcanuscontinuum.mixin.common;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectileEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectile;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -20,6 +20,6 @@ public abstract class AbstractArrowMixin extends Projectile {
 		target = "Lnet/minecraft/world/entity/player/Player;canHarmPlayer(Lnet/minecraft/world/entity/player/Player;)Z"
 	))
 	private boolean ignorePvpFlag(boolean original) {
-		return original || ((Object) this) instanceof MagicProjectileEntity;
+		return original || ((Object) this) instanceof MagicProjectile;
 	}
 }

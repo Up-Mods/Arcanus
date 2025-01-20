@@ -10,12 +10,12 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
 
-public class PocketDimensionPortalEntityModel extends EntityModel<Entity> {
+public class PocketDimensionPortalModel extends EntityModel<Entity> {
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("pocket_dimension_portal"), "main");
 	private final ModelPart box;
 	public final ModelPart skybox;
 
-	public PocketDimensionPortalEntityModel(ModelPart root) {
+	public PocketDimensionPortalModel(ModelPart root) {
 		this.box = root.getChild("box");
 		this.skybox = root.getChild("skybox");
 	}

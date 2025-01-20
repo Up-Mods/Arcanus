@@ -1,6 +1,6 @@
 package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.Aggressorb;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.nbt.CompoundTag;
@@ -52,7 +52,7 @@ public class AggressorbComponent implements AutoSyncedComponent {
 		return orbs.size();
 	}
 
-	public int orbIndex(AggressorbEntity orb) {
+	public int orbIndex(Aggressorb orb) {
 		return orbs.indexOf(orb.getUUID());
 	}
 

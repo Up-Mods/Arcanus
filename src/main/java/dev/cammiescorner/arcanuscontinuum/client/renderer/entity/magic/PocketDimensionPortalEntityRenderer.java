@@ -4,10 +4,10 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.PocketDimensionPortalEntityModel;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.SpatialRiftEntitySigilModel;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.PocketDimensionPortalModel;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.SpatialRiftSigilModel;
 import dev.cammiescorner.arcanuscontinuum.client.utils.StencilBuffer;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.PocketDimensionPortalEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.PocketDimensionPortal;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.Minecraft;
@@ -20,22 +20,22 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import org.lwjgl.opengl.GL31;
 
-public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDimensionPortalEntity> {
+public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDimensionPortal> {
 	private static final ResourceLocation PORTAL_TEXTURE = Arcanus.id("textures/entity/magic/pocket_dimension_portal.png");
 	private static final ResourceLocation SIGIL_TEXTURE = Arcanus.id("textures/entity/magic/spatial_rift_sigil.png");
 	private final Minecraft client = Minecraft.getInstance();
 	private final Tesselator tesselator = Tesselator.getInstance();
-	private final PocketDimensionPortalEntityModel portalModel;
-	private final SpatialRiftEntitySigilModel sigilModel;
+	private final PocketDimensionPortalModel portalModel;
+	private final SpatialRiftSigilModel sigilModel;
 
 	public PocketDimensionPortalEntityRenderer(EntityRendererProvider.Context ctx) {
 		super(ctx);
-		portalModel = new PocketDimensionPortalEntityModel(ctx.getModelSet().bakeLayer(PocketDimensionPortalEntityModel.MODEL_LAYER));
-		sigilModel = new SpatialRiftEntitySigilModel(ctx.getModelSet().bakeLayer(SpatialRiftEntitySigilModel.MODEL_LAYER));
+		portalModel = new PocketDimensionPortalModel(ctx.getModelSet().bakeLayer(PocketDimensionPortalModel.MODEL_LAYER));
+		sigilModel = new SpatialRiftSigilModel(ctx.getModelSet().bakeLayer(SpatialRiftSigilModel.MODEL_LAYER));
 	}
 
 	@Override
-	public void render(PocketDimensionPortalEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
+	public void render(PocketDimensionPortal entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertices, light);
 		StencilBuffer stencilBuffer = ((StencilBuffer) client.getMainRenderTarget());
 		RenderType portalLayer = ArcanusClient.getMagicPortal(PORTAL_TEXTURE);
@@ -124,7 +124,7 @@ public class PocketDimensionPortalEntityRenderer extends EntityRenderer<PocketDi
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(PocketDimensionPortalEntity entity) {
+	public ResourceLocation getTextureLocation(PocketDimensionPortal entity) {
 		return PORTAL_TEXTURE;
 	}
 

@@ -33,10 +33,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class BeamEntity extends Entity implements Targetable {
-	private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> MAX_AGE = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Boolean> IS_ON_ENTITY = SynchedEntityData.defineId(BeamEntity.class, EntityDataSerializers.BOOLEAN);
+public class Beam extends Entity implements Targetable {
+	private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(Beam.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> MAX_AGE = SynchedEntityData.defineId(Beam.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> IS_ON_ENTITY = SynchedEntityData.defineId(Beam.class, EntityDataSerializers.BOOLEAN);
 	private final List<SpellEffect> effects = new ArrayList<>();
 	private final List<SpellGroup> groups = new ArrayList<>();
 	private UUID casterId = Util.NIL_UUID;
@@ -44,7 +44,7 @@ public class BeamEntity extends Entity implements Targetable {
 	private int groupIndex = 0;
 	private double potency = 1F;
 
-	public BeamEntity(EntityType<?> variant, Level world) {
+	public Beam(EntityType<?> variant, Level world) {
 		super(variant, world);
 	}
 

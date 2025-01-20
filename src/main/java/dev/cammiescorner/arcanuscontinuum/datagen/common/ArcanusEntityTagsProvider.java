@@ -29,7 +29,7 @@ public class ArcanusEntityTagsProvider extends FabricTagProvider.EntityTypeTagPr
 		getOrCreateTagBuilder(ArcanusEntityTags.DISPELLABLE)
 			.add(ArcanusEntities.AGGRESSORB.get())
 			.add(ArcanusEntities.AOE.get())
-			.add(ArcanusEntities.GUARDIAN_ORB.get())
+			.add(ArcanusEntities.ENTANGLED_ORB.get())
 			.add(ArcanusEntities.MAGIC_RUNE.get())
 			.add(ArcanusEntities.MANA_SHIELD.get())
 			.add(ArcanusEntities.NECRO_SKELETON.get())

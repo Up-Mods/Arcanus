@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.suppo
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShieldEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShield;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
@@ -33,12 +33,12 @@ public class ManaShieldSpellEffect extends SpellEffect {
 	@Override
 	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
 		if(target.getType() != HitResult.Type.MISS && caster != null) {
-			List<? extends ManaShieldEntity> list = ((ServerLevel) level).getEntities(EntityTypeTest.forClass(ManaShieldEntity.class), entity -> entity.getOwnerId().equals(caster.getUUID()));
+			List<? extends ManaShield> list = ((ServerLevel) level).getEntities(EntityTypeTest.forClass(ManaShield.class), entity -> entity.getOwnerId().equals(caster.getUUID()));
 
 			for(int i = 0; i < list.size() - 10; i++)
 				list.get(i).kill();
 
-			ManaShieldEntity manaShield = ArcanusEntities.MANA_SHIELD.get().create(level);
+			ManaShield manaShield = ArcanusEntities.MANA_SHIELD.get().create(level);
 
 			if(manaShield != null) {
 				manaShield.setProperties(caster.getUUID(), target.getLocation().add(0.0D, -0.7D, 0.0D), (int) ((ArcanusConfig.SupportEffects.ManaShieldEffectProperties.baseLifeSpan + ArcanusConfig.SupportEffects.ManaShieldEffectProperties.lifeSpanModifier * (effects.stream().filter(ArcanusSpellComponents.MANA_SHIELD::is).count() - 1)) * potency));

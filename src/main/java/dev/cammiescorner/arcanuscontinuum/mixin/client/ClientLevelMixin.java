@@ -9,7 +9,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.WritableLevelData;
@@ -30,13 +29,5 @@ public abstract class ClientLevelMixin extends Level {
 	))
 	private boolean noBreakingSoundsOrParticles(LevelRenderer target, int eventId, BlockPos pos, int data) {
 		return eventId != 2001 || !ArcanusComponents.isBlockWarded(this, pos);
-	}
-
-	@WrapWithCondition(method = "tickNonPassenger", at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/Entity;tick()V"
-	))
-	private boolean blockEntityTick(Entity entity) {
-		return !ArcanusComponents.areUpdatesBlocked(entity);
 	}
 }

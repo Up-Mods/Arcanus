@@ -3,20 +3,20 @@ package dev.cammiescorner.arcanuscontinuum.client.models.entity.magic;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectileEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.EntangledOrb;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class MagicLobEntityModel extends EntityModel<MagicProjectileEntity> {
-	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("magic_lob"), "main");
+public class EntangledOrbModel extends EntityModel<EntangledOrb> {
+	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("guardian_orb"), "main");
 	public final ModelPart cube1;
 	public final ModelPart cube2;
 	public final ModelPart cube3;
 
-	public MagicLobEntityModel(ModelPart root) {
+	public EntangledOrbModel(ModelPart root) {
 		this.cube1 = root.getChild("cube1");
 		this.cube2 = root.getChild("cube2");
 		this.cube3 = root.getChild("cube3");
@@ -41,7 +41,7 @@ public class MagicLobEntityModel extends EntityModel<MagicProjectileEntity> {
 	}
 
 	@Override
-	public void setupAnim(MagicProjectileEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+	public void setupAnim(EntangledOrb entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 
 	}
 }

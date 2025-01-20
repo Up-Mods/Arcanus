@@ -6,8 +6,6 @@ import dev.cammiescorner.arcanuscontinuum.api.entities.Targetable;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.common.data.ArcanusEntityTags;
-import dev.cammiescorner.arcanuscontinuum.common.util.PlayerHelper;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,10 +14,11 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -30,15 +29,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class MagicRuneEntity extends Entity implements Targetable {
+public class AreaOfEffect extends Entity implements Targetable {
 	private UUID casterId = Util.NIL_UUID;
 	private ItemStack stack = ItemStack.EMPTY;
 	private List<SpellEffect> effects = new ArrayList<>();
 	private List<SpellGroup> spellGroups = new ArrayList<>();
 	private int groupIndex;
 	private double potency;
+	private int trueAge;
+	private boolean isFocused = true;
 
-	public MagicRuneEntity(EntityType<?> variant, Level world) {
+	public AreaOfEffect(EntityType<?> variant, Level world) {
 		super(variant, world);
 	}
 
@@ -49,19 +50,57 @@ public class MagicRuneEntity extends Entity implements Targetable {
 			return;
 		}
 
-		if(level() instanceof ServerLevel serverWorld && tickCount > ArcanusConfig.SpellShapes.RuneShapeProperties.delay) {
-			LivingEntity entity = level().getNearestEntity(LivingEntity.class, TargetingConditions.forNonCombat().selector(MagicRuneEntity::isValidTarget), null, getX(), getY(), getZ(), new AABB(-0.5, 0, -0.5, 0.5, 0.2, 0.5).move(position()));
+		List<AreaOfEffect> list = level().getEntitiesOfClass(AreaOfEffect.class, getBoundingBox(), EntitySelector.ENTITY_STILL_ALIVE);
 
-			if(entity != null) {
-				for(SpellEffect effect : new HashSet<>(effects))
-					effect.effect(getCaster(), this, level(), new EntityHitResult(entity), effects, stack, potency);
+		if(!list.isEmpty()) {
+			int i = level().getGameRules().getInt(GameRules.RULE_MAX_ENTITY_CRAMMING);
 
-				SpellShape.castNext(getCaster(), position(), this, serverWorld, stack, spellGroups, groupIndex, potency);
-				kill();
+			if(i > 0 && list.size() > i - 1) {
+				int j = 0;
+
+				for(AreaOfEffect ignored : list)
+					++j;
+
+				if(j > i - 1) {
+					kill();
+					return;
+				}
 			}
 		}
 
+		if(!level().isClientSide()) {
+			if(trueAge <= 90 && trueAge > 0) {
+				if(trueAge % 30 == 0) {
+					AABB box = new AABB(-2, 0, -2, 2, 2.5, 2).move(position());
+
+					for(SpellEffect effect : new HashSet<>(effects)) {
+						if(effect.shouldTriggerOnceOnExplosion())
+							continue;
+
+						level().getEntitiesOfClass(Entity.class, box, entity -> entity.isAlive() && !entity.isSpectator() && entity instanceof Targetable targetable && targetable.arcanus$canBeTargeted()).forEach(entity -> {
+							effect.effect(getCaster(), this, level(), new EntityHitResult(entity), effects, stack, potency);
+						});
+					}
+
+					SpellShape.castNext(getCaster(), position(), this, (ServerLevel) level(), stack, spellGroups, groupIndex, potency);
+
+					if(!isFocused)
+						setYRot(getYRot() + 110 + random.nextInt(21));
+				}
+
+				if(trueAge % 50 == 0) {
+					for(SpellEffect effect : new HashSet<>(effects))
+						if(effect.shouldTriggerOnceOnExplosion())
+							effect.effect(getCaster(), this, level(), new EntityHitResult(this), effects, stack, potency);
+				}
+			}
+
+			if(trueAge >= ArcanusConfig.SpellShapes.AOEShapeProperties.baseLifeSpan)
+				kill();
+		}
+
 		super.tick();
+		trueAge++;
 	}
 
 	@Override
@@ -70,12 +109,12 @@ public class MagicRuneEntity extends Entity implements Targetable {
 	}
 
 	@Override
-	public boolean isPickable() {
-		return true;
+	public boolean displayFireAnimation() {
+		return false;
 	}
 
 	@Override
-	public boolean displayFireAnimation() {
+	public boolean canChangeDimensions() {
 		return false;
 	}
 
@@ -88,6 +127,7 @@ public class MagicRuneEntity extends Entity implements Targetable {
 		stack = ItemStack.of(tag.getCompound("ItemStack"));
 		groupIndex = tag.getInt("GroupIndex");
 		potency = tag.getDouble("Potency");
+		trueAge = tag.getInt("TrueAge");
 
 		ListTag effectList = tag.getList("Effects", Tag.TAG_STRING);
 		ListTag groupsList = tag.getList("SpellGroups", Tag.TAG_COMPOUND);
@@ -107,6 +147,7 @@ public class MagicRuneEntity extends Entity implements Targetable {
 		tag.put("ItemStack", stack.save(new CompoundTag()));
 		tag.putInt("GroupIndex", groupIndex);
 		tag.putDouble("Potency", potency);
+		tag.putInt("TrueAge", trueAge);
 
 		for(SpellEffect effect : effects)
 			effectList.add(StringTag.valueOf(Arcanus.SPELL_COMPONENTS.getKey(effect).toString()));
@@ -128,23 +169,21 @@ public class MagicRuneEntity extends Entity implements Targetable {
 		return null;
 	}
 
+	public int getTrueAge() {
+		return trueAge;
+	}
+
 	public void setProperties(UUID casterId, Entity sourceEntity, Vec3 pos, ItemStack stack, List<SpellEffect> effects, double potency, List<SpellGroup> groups, int groupIndex) {
 		setPosRaw(pos.x(), pos.y(), pos.z());
 		setYRot(sourceEntity.getYRot());
 		setXRot(sourceEntity.getXRot());
 		this.casterId = casterId;
+		this.isFocused = sourceEntity instanceof AreaOfEffect aoe ? aoe.isFocused : sourceEntity.getUUID().equals(casterId) && sourceEntity.isShiftKeyDown();
 		this.stack = stack;
 		this.effects = effects;
 		this.spellGroups = groups;
 		this.groupIndex = groupIndex;
 		this.potency = potency;
-	}
-
-	private static boolean isValidTarget(LivingEntity livingEntity) {
-		if(!livingEntity.isAlive() || livingEntity.isSpectator() || livingEntity.isIgnoringBlockTriggers() || PlayerHelper.isFakePlayer(livingEntity)) {
-			return false;
-		}
-
-		return livingEntity.arcanus$canBeTargeted() && !livingEntity.getType().is(ArcanusEntityTags.RUNE_TRIGGER_IGNORED);
+		this.trueAge = random.nextInt(3);
 	}
 }

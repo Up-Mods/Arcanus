@@ -40,10 +40,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class WizardEntity extends AbstractVillager implements NeutralMob {
-	private static final EntityDataAccessor<Integer> ROBE_COLOR = SynchedEntityData.defineId(WizardEntity.class, EntityDataSerializers.INT);
+public class Wizard extends AbstractVillager implements NeutralMob {
+	private static final EntityDataAccessor<Integer> ROBE_COLOR = SynchedEntityData.defineId(Wizard.class, EntityDataSerializers.INT);
 
-	public WizardEntity(EntityType<? extends AbstractVillager> entityType, Level world) {
+	public Wizard(EntityType<? extends AbstractVillager> entityType, Level world) {
 		super(entityType, world);
 		Arrays.fill(armorDropChances, 0.1f);
 		Arrays.fill(handDropChances, 0.05f);

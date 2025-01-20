@@ -30,14 +30,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class MagicProjectileEntity extends AbstractArrow implements Targetable {
+public class MagicProjectile extends AbstractArrow implements Targetable {
 	private ItemStack stack = ItemStack.EMPTY;
 	private List<SpellEffect> effects = new ArrayList<>();
 	private List<SpellGroup> spellGroups = new ArrayList<>();
 	private int groupIndex;
 	private double potency;
 
-	public MagicProjectileEntity(EntityType<? extends AbstractArrow> entityType, Level world) {
+	public MagicProjectile(EntityType<? extends AbstractArrow> entityType, Level world) {
 		super(entityType, world);
 	}
 

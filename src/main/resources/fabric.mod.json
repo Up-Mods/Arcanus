@@ -69,7 +69,6 @@
       "${mod_id}:spell_shape",
       "${mod_id}:size",
       "${mod_id}:pocket_dimension_portal",
-      "${mod_id}:slow_time",
       "${mod_id}:aggressorb",
       "${mod_id}:guardian_orb",
       "${mod_id}:portal_cool_down",

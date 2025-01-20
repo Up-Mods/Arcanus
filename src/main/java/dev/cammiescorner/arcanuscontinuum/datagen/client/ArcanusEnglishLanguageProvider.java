@@ -109,7 +109,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add(ArcanusEntities.AGGRESSORB.get(), "Aggressorb");
 		builder.add(ArcanusEntities.AOE.get(), "Area Of Effect");
 		builder.add(ArcanusEntities.BEAM.get(), "Beam");
-		builder.add(ArcanusEntities.GUARDIAN_ORB.get(), "Guardian Orb");
+		builder.add(ArcanusEntities.ENTANGLED_ORB.get(), "Entangled Orb");
 		builder.add(ArcanusEntities.MAGIC_PROJECTILE.get(), "Magic Projectile");
 		builder.add(ArcanusEntities.MAGIC_RUNE.get(), "Magic Rune");
 		builder.add(ArcanusEntities.MANA_SHIELD.get(), "Mana Shield");
@@ -229,7 +229,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		spell(builder, ArcanusSpellComponents.BURST, "Burst Shape");
 		spell(builder, ArcanusSpellComponents.GUIDED_SHOT, "Guided Shot Shape");
 		spell(builder, ArcanusSpellComponents.COUNTER, "Counter Shape");
-		spell(builder, ArcanusSpellComponents.GUARDIAN_ORB, "Guardian Orb Shape");
+		spell(builder, ArcanusSpellComponents.ENTANGLED_ORB, "Entangled Orb Shape");
 		spell(builder, ArcanusSpellComponents.AGGRESSORB, "Aggressorb Shape");
 
 		spell(builder, ArcanusSpellComponents.DAMAGE, "Damage Effect");
@@ -380,7 +380,7 @@ public class ArcanusEnglishLanguageProvider extends FabricLanguageProvider {
 		builder.add("config.arcanuscontinuum.counterShapeProperties", "Counter Shape");
 		builder.add("config.arcanuscontinuum.aoeShapeProperties", "Area Of Effect Shape");
 		builder.add("config.arcanuscontinuum.smiteShapeProperties", "Smite Shape");
-		builder.add("config.arcanuscontinuum.guardianOrbShapeProperties", "Guardian Orb Shape");
+		builder.add("config.arcanuscontinuum.entangledOrbShapeProperties", "Entangled Orb Shape");
 		builder.add("config.arcanuscontinuum.aggressorbShapeProperties", "Aggressorb Shape");
 		builder.add("config.arcanuscontinuum.damageEffectProperties", "Damage Effect");
 		builder.add("config.arcanuscontinuum.fireEffectProperties", "Fire Effect");

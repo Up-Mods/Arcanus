@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanuscontinuum.client.models.entity.living;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.common.entities.living.WizardEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.living.Wizard;
 import net.minecraft.client.model.ArmedModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HeadedModel;
@@ -14,7 +14,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 
-public class WizardEntityModel extends EntityModel<WizardEntity> implements ArmedModel, HeadedModel {
+public class WizardModel extends EntityModel<Wizard> implements ArmedModel, HeadedModel {
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("wizard"), "main");
 	public final ModelPart head;
 	public final ModelPart leftArm;
@@ -23,7 +23,7 @@ public class WizardEntityModel extends EntityModel<WizardEntity> implements Arme
 	public final ModelPart leftLeg;
 	public final ModelPart rightLeg;
 
-	public WizardEntityModel(ModelPart root) {
+	public WizardModel(ModelPart root) {
 		this.head = root.getChild("head");
 		this.leftArm = root.getChild("leftArm");
 		this.rightArm = root.getChild("rightArm");
@@ -73,7 +73,7 @@ public class WizardEntityModel extends EntityModel<WizardEntity> implements Arme
 	}
 
 	@Override
-	public void setupAnim(WizardEntity wizard, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+	public void setupAnim(Wizard wizard, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 		rightArm.xRot = Mth.cos(limbAngle * 0.6662F + (float) Math.PI) * 2.0F * limbDistance * 0.5F;
 		leftArm.xRot = Mth.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F;
 		rightArm.yRot = 0;

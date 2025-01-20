@@ -4,7 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicRuneEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicRune;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -35,12 +35,12 @@ public class RuneSpellShape extends SpellShape {
 		potency += getPotencyModifier();
 
 		if(caster != null) {
-			List<? extends MagicRuneEntity> list = world.getEntities(EntityTypeTest.forClass(MagicRuneEntity.class), entity -> caster.getUUID().equals(entity.getCasterId()));
+			List<? extends MagicRune> list = world.getEntities(EntityTypeTest.forClass(MagicRune.class), entity -> caster.getUUID().equals(entity.getCasterId()));
 
 			for(int i = 0; i < list.size() - 100; i++)
 				list.get(i).kill();
 
-			MagicRuneEntity magicRune = ArcanusEntities.MAGIC_RUNE.get().create(world);
+			MagicRune magicRune = ArcanusEntities.MAGIC_RUNE.get().create(world);
 			Entity sourceEntity = castSource != null ? castSource : caster;
 
 			if(magicRune != null) {

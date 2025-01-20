@@ -3,20 +3,20 @@ package dev.cammiescorner.arcanuscontinuum.client.models.entity.magic;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffect;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class AreaOfEffectEntityModel extends EntityModel<AreaOfEffectEntity> {
+public class AreaOfEffectModel extends EntityModel<AreaOfEffect> {
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("area_of_effect"), "main");
 	public final ModelPart base;
 	public final ModelPart pillar;
 	public final ModelPart walls;
 
-	public AreaOfEffectEntityModel(ModelPart root) {
+	public AreaOfEffectModel(ModelPart root) {
 		this.base = root.getChild("base");
 		this.pillar = base.getChild("pillar");
 		this.walls = base.getChild("walls");
@@ -41,7 +41,7 @@ public class AreaOfEffectEntityModel extends EntityModel<AreaOfEffectEntity> {
 	}
 
 	@Override
-	public void setupAnim(AreaOfEffectEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+	public void setupAnim(AreaOfEffect entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 
 	}
 }

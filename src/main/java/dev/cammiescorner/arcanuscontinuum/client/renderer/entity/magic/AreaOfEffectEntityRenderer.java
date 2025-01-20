@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.AreaOfEffectEntityModel;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.AreaOfEffectModel;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffect;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,17 +15,17 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
-public class AreaOfEffectEntityRenderer extends EntityRenderer<AreaOfEffectEntity> {
+public class AreaOfEffectEntityRenderer extends EntityRenderer<AreaOfEffect> {
 	private static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/magic/area_of_effect.png");
-	private final AreaOfEffectEntityModel model;
+	private final AreaOfEffectModel model;
 
 	public AreaOfEffectEntityRenderer(EntityRendererProvider.Context ctx) {
 		super(ctx);
-		model = new AreaOfEffectEntityModel(ctx.getModelSet().bakeLayer(AreaOfEffectEntityModel.MODEL_LAYER));
+		model = new AreaOfEffectModel(ctx.getModelSet().bakeLayer(AreaOfEffectModel.MODEL_LAYER));
 	}
 
 	@Override
-	public void render(AreaOfEffectEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
+	public void render(AreaOfEffect entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
 		super.render(entity, yaw, tickDelta, matrices, vertices, light);
 		Color color = ArcanusHelper.getMagicColor(entity);
 		float alpha = 1 - (Mth.clamp(entity.getTrueAge() - 80, 0, 20) / 20F);
@@ -45,7 +45,7 @@ public class AreaOfEffectEntityRenderer extends EntityRenderer<AreaOfEffectEntit
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(AreaOfEffectEntity entity) {
+	public ResourceLocation getTextureLocation(AreaOfEffect entity) {
 		return TEXTURE;
 	}
 }

@@ -3,21 +3,21 @@ package dev.cammiescorner.arcanuscontinuum.client.models.entity.magic;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectileEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.MagicProjectile;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 
-public class MagicProjectileEntityModel extends EntityModel<MagicProjectileEntity> {
+public class MagicProjectileModel extends EntityModel<MagicProjectile> {
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("magic_projectile"), "main");
 	private final ModelPart base;
 	public final ModelPart ring1;
 	public final ModelPart ring2;
 	public final ModelPart ring3;
 
-	public MagicProjectileEntityModel(ModelPart root) {
+	public MagicProjectileModel(ModelPart root) {
 		this.base = root.getChild("base");
 		this.ring1 = base.getChild("ring1");
 		this.ring2 = base.getChild("ring2");
@@ -42,7 +42,7 @@ public class MagicProjectileEntityModel extends EntityModel<MagicProjectileEntit
 	}
 
 	@Override
-	public void setupAnim(MagicProjectileEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+	public void setupAnim(MagicProjectile entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 
 	}
 }

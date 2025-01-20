@@ -22,8 +22,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class OpossumEntity extends TamableAnimal {
-	public OpossumEntity(EntityType<? extends TamableAnimal> entityType, Level world) {
+public class Opossum extends TamableAnimal {
+	public Opossum(EntityType<? extends TamableAnimal> entityType, Level world) {
 		super(entityType, world);
 		Arrays.fill(armorDropChances, 1f);
 	}
@@ -110,15 +110,15 @@ public class OpossumEntity extends TamableAnimal {
 
 	@Nullable
 	@Override
-	public OpossumEntity getBreedOffspring(ServerLevel world, AgeableMob entity) {
-		OpossumEntity opossumEntity = ArcanusEntities.OPOSSUM.get().create(world);
+	public Opossum getBreedOffspring(ServerLevel world, AgeableMob entity) {
+		Opossum opossum = ArcanusEntities.OPOSSUM.get().create(world);
 		UUID uUID = getOwnerUUID();
 
-		if(uUID != null && opossumEntity != null) {
-			opossumEntity.setOwnerUUID(uUID);
-			opossumEntity.setTame(true);
+		if(uUID != null && opossum != null) {
+			opossum.setOwnerUUID(uUID);
+			opossum.setTame(true);
 		}
 
-		return opossumEntity;
+		return opossum;
 	}
 }

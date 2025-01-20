@@ -2,8 +2,8 @@ package dev.cammiescorner.arcanuscontinuum.client.renderer.entity.living;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.OpossumEntityModel;
-import dev.cammiescorner.arcanuscontinuum.common.entities.living.OpossumEntity;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.OpossumModel;
+import dev.cammiescorner.arcanuscontinuum.common.entities.living.Opossum;
 import dev.cammiescorner.arcanuscontinuum.common.items.WizardRobesArmorItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,16 +18,16 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
-public class OpossumEntityRenderer extends MobRenderer<OpossumEntity, OpossumEntityModel> {
+public class OpossumEntityRenderer extends MobRenderer<Opossum, OpossumModel> {
 	public static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/living/opossum.png");
 	public static final ResourceLocation HAT_TEXTURE = Arcanus.id("textures/entity/living/opossum_hat.png");
 
 	public OpossumEntityRenderer(EntityRendererProvider.Context context) {
-		super(context, new OpossumEntityModel(Minecraft.getInstance().getEntityModels().bakeLayer(OpossumEntityModel.MODEL_LAYER)), 0.3F);
+		super(context, new OpossumModel(Minecraft.getInstance().getEntityModels().bakeLayer(OpossumModel.MODEL_LAYER)), 0.3F);
 	}
 
 	@Override
-	public void render(OpossumEntity opossum, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource verteces, int i) {
+	public void render(Opossum opossum, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource verteces, int i) {
 		ItemStack hatStack = opossum.getItemBySlot(EquipmentSlot.HEAD);
 		model.hat.visible = !hatStack.isEmpty();
 
@@ -62,7 +62,7 @@ public class OpossumEntityRenderer extends MobRenderer<OpossumEntity, OpossumEnt
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(OpossumEntity entity) {
+	public ResourceLocation getTextureLocation(Opossum entity) {
 		return TEXTURE;
 	}
 }

@@ -46,7 +46,7 @@ public class ArcanusSpellComponents {
 	public static final RegistrySupplier<SpellShape> COUNTER = SPELL_COMPONENTS.register("counter_shape", CounterSpellShape::new);
 	public static final RegistrySupplier<SpellShape> AOE = SPELL_COMPONENTS.register("aoe_shape", AreaOfEffectSpellShape::new);
 	public static final RegistrySupplier<SpellShape> SMITE = SPELL_COMPONENTS.register("smite_shape", SmiteSpellShape::new);
-	public static final RegistrySupplier<SpellShape> GUARDIAN_ORB = SPELL_COMPONENTS.register("guardian_orb_shape", GuardianOrbSpellShape::new); // TODO replace name with something better. also change the texture file
+	public static final RegistrySupplier<SpellShape> ENTANGLED_ORB = SPELL_COMPONENTS.register("entangled_orb_shape", GuardianOrbSpellShape::new);
 	public static final RegistrySupplier<SpellShape> AGGRESSORB = SPELL_COMPONENTS.register("aggressorb_shape", AggressorbSpellShape::new); // TODO replace name with something better. also change the texture file
 
 	//-----Spell Effects-----//

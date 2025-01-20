@@ -25,12 +25,12 @@ import java.util.UUID;
 
 import static dev.cammiescorner.arcanuscontinuum.common.components.entity.PocketDimensionPortalComponent.POCKET_DIMENSION_WORLD_KEY;
 
-public class PocketDimensionPortalEntity extends Entity implements Targetable {
-	private static final EntityDataAccessor<Integer> TRUE_AGE = SynchedEntityData.defineId(PocketDimensionPortalEntity.class, EntityDataSerializers.INT);
+public class PocketDimensionPortal extends Entity implements Targetable {
+	private static final EntityDataAccessor<Integer> TRUE_AGE = SynchedEntityData.defineId(PocketDimensionPortal.class, EntityDataSerializers.INT);
 	private UUID casterId = Util.NIL_UUID;
 	private double pullStrength;
 
-	public PocketDimensionPortalEntity(EntityType<?> variant, Level world) {
+	public PocketDimensionPortal(EntityType<?> variant, Level world) {
 		super(variant, world);
 	}
 

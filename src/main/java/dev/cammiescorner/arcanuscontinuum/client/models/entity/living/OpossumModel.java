@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanuscontinuum.client.models.entity.living;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.common.entities.living.OpossumEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.living.Opossum;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -11,7 +11,7 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 
-public class OpossumEntityModel extends EntityModel<OpossumEntity> {
+public class OpossumModel extends EntityModel<Opossum> {
 	public static final ModelLayerLocation MODEL_LAYER = new ModelLayerLocation(Arcanus.id("opossum"), "main");
 	public final ModelPart head;
 	public final ModelPart hat;
@@ -23,7 +23,7 @@ public class OpossumEntityModel extends EntityModel<OpossumEntity> {
 	public final ModelPart tailBase;
 	public final ModelPart tailEnd;
 
-	public OpossumEntityModel(ModelPart root) {
+	public OpossumModel(ModelPart root) {
 		this.head = root.getChild("head");
 		this.hat = head.getChild("hat");
 		this.body = root.getChild("body");
@@ -70,7 +70,7 @@ public class OpossumEntityModel extends EntityModel<OpossumEntity> {
 	}
 
 	@Override
-	public void setupAnim(OpossumEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Opossum entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		head.xRot = headPitch * 0.017453292F;
 		head.yRot = netHeadYaw * 0.017453292F;
 

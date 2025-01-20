@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.SmiteEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.Smite;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -19,7 +19,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class SmiteEntityRenderer extends EntityRenderer<SmiteEntity> {
+public class SmiteEntityRenderer extends EntityRenderer<Smite> {
 	private static final ResourceLocation TEXTURE = Arcanus.id("textures/block/magic_block.png");
 
 	public SmiteEntityRenderer(EntityRendererProvider.Context ctx) {
@@ -27,12 +27,12 @@ public class SmiteEntityRenderer extends EntityRenderer<SmiteEntity> {
 	}
 
 	@Override
-	public void render(SmiteEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource provider, int light) {
+	public void render(Smite entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource provider, int light) {
 		super.render(entity, yaw, tickDelta, matrices, provider, light);
 		renderBeam(entity, matrices, provider, 0, (float) ((entity.level().getHeight() + 2048) - entity.getY()), 0, tickDelta, OverlayTexture.NO_OVERLAY, light);
 	}
 
-	public void renderBeam(SmiteEntity entity, PoseStack matrices, MultiBufferSource provider, float x, float y, float z, float tickDelta, int overlay, int light) {
+	public void renderBeam(Smite entity, PoseStack matrices, MultiBufferSource provider, float x, float y, float z, float tickDelta, int overlay, int light) {
 		int maxQuads = 16;
 		float radius = 2.25F;
 		Color color = ArcanusHelper.getMagicColor(entity);
@@ -76,12 +76,12 @@ public class SmiteEntityRenderer extends EntityRenderer<SmiteEntity> {
 	}
 
 	@Override
-	public boolean shouldRender(SmiteEntity entity, Frustum frustum, double x, double y, double z) {
+	public boolean shouldRender(Smite entity, Frustum frustum, double x, double y, double z) {
 		return true;
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(SmiteEntity entity) {
+	public ResourceLocation getTextureLocation(Smite entity) {
 		return TEXTURE;
 	}
 }

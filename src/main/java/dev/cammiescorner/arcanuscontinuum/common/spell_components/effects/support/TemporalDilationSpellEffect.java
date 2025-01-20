@@ -3,6 +3,10 @@ package dev.cammiescorner.arcanuscontinuum.common.spell_components.effects.suppo
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellType;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.TemporalDilationField;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
+import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusSpellComponents;
+import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +30,19 @@ public class TemporalDilationSpellEffect extends SpellEffect {
 
 	@Override
 	public void effect(@Nullable LivingEntity caster, @Nullable Entity sourceEntity, Level level, HitResult target, List<SpellEffect> effects, ItemStack stack, double potency) {
+		Entity castSource = sourceEntity != null ? sourceEntity : caster;
 
+		if(!level.isClientSide() && castSource != null) {
+			TemporalDilationField dilationField = ArcanusEntities.TEMPORAL_DILATION_FIELD.get().create(level);
+			double count = effects.stream().filter(ArcanusSpellComponents.TEMPORAL_DILATION::is).count() * potency;
+
+			if(dilationField != null) {
+				dilationField.setPos(target.getLocation());
+				dilationField.setBoundingBox(dilationField.getBoundingBox().inflate(count - 1));
+				dilationField.extendMaxAge(((int) count - 1) * 20);
+				ArcanusHelper.copyMagicColor(dilationField, caster);
+				level.addFreshEntity(dilationField);
+			}
+		}
 	}
 }

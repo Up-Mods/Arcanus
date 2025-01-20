@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShieldEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.ManaShield;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -22,7 +22,7 @@ import org.joml.Vector3i;
 
 import java.util.List;
 
-public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
+public class ManaShieldEntityRenderer extends EntityRenderer<ManaShield> {
 	private static final ResourceLocation TEXTURE = Arcanus.id("textures/block/magic_block.png");
 	private static final RenderType LAYER = ArcanusClient.getMagicCirclesTri(TEXTURE);
 	public static final List<Vector3f> VERTICES = List.of(
@@ -43,7 +43,7 @@ public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
 	}
 
 	@Override
-	public void render(ManaShieldEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
+	public void render(ManaShield entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
 		float alpha = Mth.clamp(((entity.getMaxAge() - entity.getTrueAge()) - tickDelta) / 20F, 0, 1);
 
 		matrices.pushPose();
@@ -56,7 +56,7 @@ public class ManaShieldEntityRenderer extends EntityRenderer<ManaShieldEntity> {
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(ManaShieldEntity entity) {
+	public ResourceLocation getTextureLocation(ManaShield entity) {
 		return TEXTURE;
 	}
 

@@ -124,18 +124,9 @@ public class Arcanus implements ModInitializer {
 			SyncStatusEffectPacket.sendToAll(handler.player, ArcanusMobEffects.ANONYMITY.get(), handler.player.hasEffect(ArcanusMobEffects.ANONYMITY.get()));
 		});
 
-		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
-			if(ArcanusComponents.areUpdatesBlocked(handler.player))
-				ArcanusComponents.setBlockUpdates(handler.player, false);
-		});
-
 		EntityTrackingEvents.START_TRACKING.register((trackedEntity, player) -> {
 			if(trackedEntity instanceof ServerPlayer playerEntity)
 				SyncStatusEffectPacket.sendTo(player, playerEntity, ArcanusMobEffects.ANONYMITY.get(), playerEntity.hasEffect(ArcanusMobEffects.ANONYMITY.get()));
-
-			// FIXME temporal dilation no worky
-//			if(trackedEntity instanceof LivingEntity livingEntity)
-//				SyncStatusEffectPacket.sendTo(player, livingEntity, ArcanusStatusEffects.TEMPORAL_DILATION.get(), livingEntity.hasStatusEffect(ArcanusStatusEffects.TEMPORAL_DILATION.get()));
 		});
 
 		EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
@@ -185,25 +176,6 @@ public class Arcanus implements ModInitializer {
 
 			return InteractionResult.PASS;
 		});
-
-		// FIXME temporal dilation no worky
-//		ServerWorldTickEvents.END.register((server, world) -> {
-//			List<Entity> loadedEntityList = new ArrayList<>();
-//			world.iterateEntities().forEach(loadedEntityList::add);
-//			StatusEffect statusEffect = ArcanusStatusEffects.TEMPORAL_DILATION.get();
-//			float radius = 3;
-//
-//			for(Entity entity : loadedEntityList) {
-//				if(ArcanusComponents.isTimeSlowed(entity)) {
-//					List<Entity> targets = world.getOtherEntities(entity, new Box(-radius, -radius, -radius, radius, radius, radius).offset(entity.getPos()), target -> target.squaredDistanceTo(entity) <= radius * radius);
-//
-//					if(targets.stream().noneMatch(target -> target instanceof LivingEntity livingTarget && livingTarget.hasStatusEffect(statusEffect))) {
-//						ArcanusComponents.setSlowTime(entity, false);
-//						ArcanusComponents.setBlockUpdates(entity, false);
-//					}
-//				}
-//			}
-//		});
 	}
 
 	public static ResourceLocation id(String name) {

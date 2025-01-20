@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanuscontinuum.client.renderer.block;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.SpatialRiftEntitySigilModel;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.SpatialRiftSigilModel;
 import dev.cammiescorner.arcanuscontinuum.common.blocks.entities.SpatialRiftExitBlockEntity;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
@@ -16,10 +16,10 @@ import net.minecraft.world.level.Level;
 
 public class SpatialRiftExitBlockEntityRenderer implements BlockEntityRenderer<SpatialRiftExitBlockEntity> {
 	private static final RenderType LAYER = ArcanusClient.getMagicCircles(Arcanus.id("textures/entity/magic/spatial_rift_sigil.png"));
-	private final SpatialRiftEntitySigilModel sigilModel;
+	private final SpatialRiftSigilModel sigilModel;
 
 	public SpatialRiftExitBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
-		sigilModel = new SpatialRiftEntitySigilModel(ctx.bakeLayer(SpatialRiftEntitySigilModel.MODEL_LAYER));
+		sigilModel = new SpatialRiftSigilModel(ctx.bakeLayer(SpatialRiftSigilModel.MODEL_LAYER));
 	}
 
 	@Override

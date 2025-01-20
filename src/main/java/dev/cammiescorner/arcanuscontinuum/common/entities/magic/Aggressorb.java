@@ -34,9 +34,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class AggressorbEntity extends ThrowableProjectile implements Targetable {
-	private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(AggressorbEntity.class, EntityDataSerializers.INT);
-	private static final EntityDataAccessor<Integer> TARGET_ID = SynchedEntityData.defineId(AggressorbEntity.class, EntityDataSerializers.INT);
+public class Aggressorb extends ThrowableProjectile implements Targetable {
+	private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(Aggressorb.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> TARGET_ID = SynchedEntityData.defineId(Aggressorb.class, EntityDataSerializers.INT);
 	private final List<SpellEffect> effects = new ArrayList<>();
 	private final List<SpellGroup> groups = new ArrayList<>();
 	private UUID casterId = Util.NIL_UUID;
@@ -46,7 +46,7 @@ public class AggressorbEntity extends ThrowableProjectile implements Targetable 
 	private double potency = 1F;
 	private boolean boundToTarget = true;
 
-	public AggressorbEntity(EntityType<? extends ThrowableProjectile> variant, Level world) {
+	public Aggressorb(EntityType<? extends ThrowableProjectile> variant, Level world) {
 		super(variant, world);
 		noPhysics = true;
 		setNoGravity(true);

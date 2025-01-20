@@ -10,8 +10,8 @@ import dev.cammiescorner.arcanuscontinuum.client.gui.screens.SpellBookScreen;
 import dev.cammiescorner.arcanuscontinuum.client.gui.screens.SpellcraftScreen;
 import dev.cammiescorner.arcanuscontinuum.client.models.armour.BattleMageArmourModel;
 import dev.cammiescorner.arcanuscontinuum.client.models.armour.WizardArmourModel;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.OpossumEntityModel;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.WizardEntityModel;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.OpossumModel;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.WizardModel;
 import dev.cammiescorner.arcanuscontinuum.client.models.entity.magic.*;
 import dev.cammiescorner.arcanuscontinuum.client.models.feature.HaloModel;
 import dev.cammiescorner.arcanuscontinuum.client.models.feature.SpellPatternModel;
@@ -102,18 +102,19 @@ public class ArcanusClient implements ClientModInitializer {
 
 		EntityModelLayerRegistry.registerModelLayer(WizardArmourModel.MODEL_LAYER, WizardArmourModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(BattleMageArmourModel.MODEL_LAYER, BattleMageArmourModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(WizardEntityModel.MODEL_LAYER, WizardEntityModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(OpossumEntityModel.MODEL_LAYER, OpossumEntityModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(MagicLobEntityModel.MODEL_LAYER, MagicLobEntityModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(MagicProjectileEntityModel.MODEL_LAYER, MagicProjectileEntityModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(MagicRuneEntityModel.MODEL_LAYER, MagicRuneEntityModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(AreaOfEffectEntityModel.MODEL_LAYER, AreaOfEffectEntityModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(WizardModel.MODEL_LAYER, WizardModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(OpossumModel.MODEL_LAYER, OpossumModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(MagicLobModel.MODEL_LAYER, MagicLobModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(MagicProjectileModel.MODEL_LAYER, MagicProjectileModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(MagicRuneModel.MODEL_LAYER, MagicRuneModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(AreaOfEffectModel.MODEL_LAYER, AreaOfEffectModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(SpellPatternModel.MODEL_LAYER, SpellPatternModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(HaloModel.MODEL_LAYER, HaloModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(GuardianOrbEntityModel.MODEL_LAYER, GuardianOrbEntityModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(PocketDimensionPortalEntityModel.MODEL_LAYER, PocketDimensionPortalEntityModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(SpatialRiftEntitySigilModel.MODEL_LAYER, SpatialRiftEntitySigilModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(AggressorbEntityModel.MODEL_LAYER, AggressorbEntityModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(EntangledOrbModel.MODEL_LAYER, EntangledOrbModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(PocketDimensionPortalModel.MODEL_LAYER, PocketDimensionPortalModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(SpatialRiftSigilModel.MODEL_LAYER, SpatialRiftSigilModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(AggressorbModel.MODEL_LAYER, AggressorbModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(TemporalDilationFieldModel.MODEL_LAYER, TemporalDilationFieldModel::getTexturedModelData);
 
 		EntityRendererRegistry.register(ArcanusEntities.WIZARD.get(), WizardEntityRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.OPOSSUM.get(), OpossumEntityRenderer::new);
@@ -124,9 +125,10 @@ public class ArcanusClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ArcanusEntities.SMITE.get(), SmiteEntityRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.MAGIC_RUNE.get(), MagicRuneEntityRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.BEAM.get(), BeamEntityRenderer::new);
-		EntityRendererRegistry.register(ArcanusEntities.GUARDIAN_ORB.get(), GuardianOrbEntityRenderer::new);
+		EntityRendererRegistry.register(ArcanusEntities.ENTANGLED_ORB.get(), EntangledOrbEntityRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.PORTAL.get(), PocketDimensionPortalEntityRenderer::new);
 		EntityRendererRegistry.register(ArcanusEntities.AGGRESSORB.get(), AggressorbEntityRenderer::new);
+		EntityRendererRegistry.register(ArcanusEntities.TEMPORAL_DILATION_FIELD.get(), TemporalDilationFieldRenderer::new);
 
 		ArmorRenderer.register(new WizardArmourRenderer(), ArcanusItems.WIZARD_HAT.get(), ArcanusItems.WIZARD_ROBES.get(), ArcanusItems.WIZARD_PANTS.get(), ArcanusItems.WIZARD_BOOTS.get());
 		ArmorRenderer.register(new BattleMageArmourRenderer(), ArcanusItems.BATTLE_MAGE_HELMET.get(), ArcanusItems.BATTLE_MAGE_CHESTPLATE.get(), ArcanusItems.BATTLE_MAGE_LEGGINGS.get(), ArcanusItems.BATTLE_MAGE_BOOTS.get());
@@ -323,36 +325,6 @@ public class ArcanusClient implements ClientModInitializer {
 				}
 			}
 		});
-
-//		ClientEntityTickCallback.EVENT.register((entity, isPassengerTick) -> {
-//			if (ArcanusComponents.isTimeSlowed(entity)) {
-//				entity.setVelocity(entity.getVelocity().multiply(1d / 2d));
-//				entity.velocityModified = true;
-//			}
-//		});
-
-		// FIXME temporal dilation no worky
-//		ClientTickEvents.END.register(mcClient -> {
-//			ClientWorld world = mcClient.world;
-//
-//			if(world != null && !mcClient.isPaused()) {
-//				List<Entity> loadedEntityList = new ArrayList<>();
-//				world.getEntities().forEach(loadedEntityList::add);
-//				StatusEffect statusEffect = ArcanusStatusEffects.TEMPORAL_DILATION.get();
-//				float radius = 3;
-//
-//				for(Entity entity : loadedEntityList) {
-//					if(ArcanusComponents.isTimeSlowed(entity)) {
-//						List<Entity> targets = world.getOtherEntities(entity, new Box(-radius, -radius, -radius, radius, radius, radius).offset(entity.getPos()), target -> target.squaredDistanceTo(entity) <= radius * radius);
-//
-//						if(targets.stream().noneMatch(target -> target instanceof LivingEntity livingTarget && livingTarget.hasStatusEffect(statusEffect))) {
-//							ArcanusComponents.setSlowTime(entity, false);
-//							ArcanusComponents.setBlockUpdates(entity, false);
-//						}
-//					}
-//				}
-//			}
-//		});
 	}
 
 	public static void renderBolts(LivingEntity entity, Vec3 startPos, PoseStack matrices, MultiBufferSource vertices) {

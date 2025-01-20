@@ -3,7 +3,7 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 import com.mojang.datafixers.util.Pair;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.common.components.level.PocketDimensionComponent;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.PocketDimensionPortalEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.PocketDimensionPortal;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.onyxstudios.cca.api.v3.component.Component;
@@ -90,7 +90,7 @@ public class PocketDimensionPortalComponent implements Component {
 			}
 		}
 
-		PocketDimensionPortalEntity portal = ArcanusEntities.PORTAL.get().create(level);
+		PocketDimensionPortal portal = ArcanusEntities.PORTAL.get().create(level);
 
 		if(portal != null) {
 			portalIds.put(level.dimension(), new Pair<>(portal.getUUID(), pos));

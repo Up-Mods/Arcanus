@@ -4,7 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffectEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AreaOfEffect;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -35,12 +35,12 @@ public class AreaOfEffectSpellShape extends SpellShape {
 		potency += getPotencyModifier();
 
 		if(caster != null) {
-			List<? extends AreaOfEffectEntity> list = world.getEntities(EntityTypeTest.forClass(AreaOfEffectEntity.class), entity -> caster.getUUID().equals(entity.getCasterId()));
+			List<? extends AreaOfEffect> list = world.getEntities(EntityTypeTest.forClass(AreaOfEffect.class), entity -> caster.getUUID().equals(entity.getCasterId()));
 
 			for(int i = 0; i < list.size() - 20; i++)
 				list.get(i).kill();
 
-			AreaOfEffectEntity areaOfEffect = ArcanusEntities.AOE.get().create(world);
+			AreaOfEffect areaOfEffect = ArcanusEntities.AOE.get().create(world);
 			Entity sourceEntity = castSource != null ? castSource : caster;
 
 			if(areaOfEffect != null) {

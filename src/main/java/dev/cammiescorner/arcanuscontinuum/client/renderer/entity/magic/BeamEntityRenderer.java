@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.BeamEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.Beam;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import dev.cammiescorner.arcanuscontinuum.common.util.Color;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,7 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3d;
 
-public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
+public class BeamEntityRenderer extends EntityRenderer<Beam> {
 	private static final ResourceLocation BEAM_TEXTURE = Arcanus.id("textures/entity/magic/beam.png");
 	private static final RenderType LAYER = ArcanusClient.getMagicCircles(BEAM_TEXTURE);
 	private static final Vector3d UP = new Vector3d(0, 1, 0);
@@ -31,7 +31,7 @@ public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
 	}
 
 	@Override
-	public void render(BeamEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
+	public void render(Beam entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
 		LivingEntity caster = entity.getCaster();
 		Vec3 cam = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 
@@ -79,7 +79,7 @@ public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
 	}
 
 	@Override
-	public boolean shouldRender(BeamEntity entity, Frustum frustum, double x, double y, double z) {
+	public boolean shouldRender(Beam entity, Frustum frustum, double x, double y, double z) {
 		return true;
 	}
 
@@ -91,7 +91,7 @@ public class BeamEntityRenderer extends EntityRenderer<BeamEntity> {
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(BeamEntity entity) {
+	public ResourceLocation getTextureLocation(Beam entity) {
 		return BEAM_TEXTURE;
 	}
 }

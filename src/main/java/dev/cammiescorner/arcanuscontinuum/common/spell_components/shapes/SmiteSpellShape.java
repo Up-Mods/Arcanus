@@ -4,7 +4,7 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellEffect;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellGroup;
 import dev.cammiescorner.arcanuscontinuum.api.spells.SpellShape;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.SmiteEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.Smite;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusEntities;
 import dev.cammiescorner.arcanuscontinuum.common.util.ArcanusHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -36,12 +36,12 @@ public class SmiteSpellShape extends SpellShape {
 		potency += getPotencyModifier();
 
 		if(caster != null) {
-			List<? extends SmiteEntity> list = world.getEntities(EntityTypeTest.forClass(SmiteEntity.class), entity -> caster.getUUID().equals(entity.getCasterId()));
+			List<? extends Smite> list = world.getEntities(EntityTypeTest.forClass(Smite.class), entity -> caster.getUUID().equals(entity.getCasterId()));
 
 			for(int i = 0; i < list.size() - 50; i++)
 				list.get(i).kill();
 
-			SmiteEntity smite = ArcanusEntities.SMITE.get().create(world);
+			Smite smite = ArcanusEntities.SMITE.get().create(world);
 
 			if(smite != null) {
 				smite.setProperties(caster.getUUID(), sourceEntity, castFrom, stack, effects, potency);

@@ -2,9 +2,9 @@ package dev.cammiescorner.arcanuscontinuum.client.renderer.entity.living;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
-import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.WizardEntityModel;
+import dev.cammiescorner.arcanuscontinuum.client.models.entity.living.WizardModel;
 import dev.cammiescorner.arcanuscontinuum.client.renderer.feature.WizardHeldItemFeatureRenderer;
-import dev.cammiescorner.arcanuscontinuum.common.entities.living.WizardEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.living.Wizard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -16,17 +16,17 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.DyeColor;
 
-public class WizardEntityRenderer extends MobRenderer<WizardEntity, WizardEntityModel> {
+public class WizardEntityRenderer extends MobRenderer<Wizard, WizardModel> {
 	public static final ResourceLocation TEXTURE = Arcanus.id("textures/entity/living/wizard.png");
 	public static final ResourceLocation ROBES_TEXTURE = Arcanus.id("textures/entity/living/wizard_overlay.png");
 
 	public WizardEntityRenderer(EntityRendererProvider.Context context) {
-		super(context, new WizardEntityModel(Minecraft.getInstance().getEntityModels().bakeLayer(WizardEntityModel.MODEL_LAYER)), 0.6F);
+		super(context, new WizardModel(Minecraft.getInstance().getEntityModels().bakeLayer(WizardModel.MODEL_LAYER)), 0.6F);
 		addLayer(new WizardHeldItemFeatureRenderer<>(this, context.getItemInHandRenderer()));
 	}
 
 	@Override
-	public void render(WizardEntity wizard, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
+	public void render(Wizard wizard, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertices, int light) {
 		super.render(wizard, yaw, tickDelta, matrices, vertices, light);
 
 		int hexColor = wizard.getRobeColor();
@@ -56,7 +56,7 @@ public class WizardEntityRenderer extends MobRenderer<WizardEntity, WizardEntity
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(WizardEntity entity) {
+	public ResourceLocation getTextureLocation(Wizard entity) {
 		return TEXTURE;
 	}
 }

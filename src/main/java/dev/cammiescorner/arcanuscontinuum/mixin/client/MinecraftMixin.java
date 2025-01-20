@@ -5,7 +5,7 @@ import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.spells.Pattern;
 import dev.cammiescorner.arcanuscontinuum.client.ArcanusClient;
 import dev.cammiescorner.arcanuscontinuum.client.utils.ClientUtils;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.Aggressorb;
 import dev.cammiescorner.arcanuscontinuum.common.items.StaffItem;
 import dev.cammiescorner.arcanuscontinuum.common.packets.c2s.CastSpellPacket;
 import dev.cammiescorner.arcanuscontinuum.common.packets.c2s.SetCastingPacket;
@@ -196,7 +196,7 @@ public abstract class MinecraftMixin implements ClientUtils {
 	@Unique
 	private void shootOrbs(List<UUID> orbIds) {
 		for(Entity entity : level.entitiesForRendering()) {
-			if(entity instanceof AggressorbEntity orb && orbIds.get(0).equals(entity.getUUID()) && orb.isBoundToTarget()) {
+			if(entity instanceof Aggressorb orb && orbIds.get(0).equals(entity.getUUID()) && orb.isBoundToTarget()) {
 				orb.setBoundToTarget(false);
 				orb.setPos(orb.getTarget().getEyePosition());
 				orb.shootFromRotation(orb.getTarget(), orb.getTarget().getXRot(), orb.getTarget().getYRot(), 0F, ArcanusConfig.SpellShapes.AggressorbShapeProperties.projectileSpeed, 1F);

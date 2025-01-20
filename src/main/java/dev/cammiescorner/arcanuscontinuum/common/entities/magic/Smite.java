@@ -27,14 +27,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
-public class SmiteEntity extends Entity implements Targetable {
+public class Smite extends Entity implements Targetable {
 	private final List<UUID> hasHit = new ArrayList<>();
 	private UUID casterId = Util.NIL_UUID;
 	private ItemStack stack = ItemStack.EMPTY;
 	private List<SpellEffect> effects = new ArrayList<>();
 	private double potency;
 
-	public SmiteEntity(EntityType<? extends Entity> entityType, Level world) {
+	public Smite(EntityType<? extends Entity> entityType, Level world) {
 		super(entityType, world);
 	}
 

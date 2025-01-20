@@ -2,7 +2,7 @@ package dev.cammiescorner.arcanuscontinuum.common.components.entity;
 
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
 import dev.cammiescorner.arcanuscontinuum.api.entities.ArcanusEntityAttributes;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.GuardianOrbEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.EntangledOrb;
 import dev.onyxstudios.cca.api.v3.component.tick.ServerTickingComponent;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
@@ -30,7 +30,7 @@ public class GuardianOrbComponent implements ServerTickingComponent {
 			setManaLock(orbId, strength);
 
 		if(!orbId.equals(Util.NIL_UUID) && entity.level() instanceof ServerLevel world) {
-			if(world.getEntity(orbId) instanceof GuardianOrbEntity orb && entity == orb.getCaster())
+			if(world.getEntity(orbId) instanceof EntangledOrb orb && entity == orb.getCaster())
 				return;
 
 			setManaLock(Util.NIL_UUID, 0);
@@ -61,7 +61,7 @@ public class GuardianOrbComponent implements ServerTickingComponent {
 		if(manaLock != null)
 			manaLock.removeModifier(uUID);
 		if(maxMana != null && manaLock != null && !orbId.equals(Util.NIL_UUID))
-			manaLock.addPermanentModifier(new AttributeModifier(uUID, "Orb Mana Lock", maxMana.getValue() * (strength * (ArcanusConfig.SpellShapes.GuardianOrbShapeProperties.maximumManaLock / 11)), AttributeModifier.Operation.ADDITION));
+			manaLock.addPermanentModifier(new AttributeModifier(uUID, "Orb Mana Lock", maxMana.getValue() * (strength * (ArcanusConfig.SpellShapes.EntangledOrbShapeProperties.maximumManaLock / 11)), AttributeModifier.Operation.ADDITION));
 
 		this.orbId = orbId;
 		this.strength = strength;

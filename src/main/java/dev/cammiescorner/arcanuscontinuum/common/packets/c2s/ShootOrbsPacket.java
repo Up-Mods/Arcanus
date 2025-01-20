@@ -2,7 +2,7 @@ package dev.cammiescorner.arcanuscontinuum.common.packets.c2s;
 
 import dev.cammiescorner.arcanuscontinuum.Arcanus;
 import dev.cammiescorner.arcanuscontinuum.ArcanusConfig;
-import dev.cammiescorner.arcanuscontinuum.common.entities.magic.AggressorbEntity;
+import dev.cammiescorner.arcanuscontinuum.common.entities.magic.Aggressorb;
 import dev.cammiescorner.arcanuscontinuum.common.registry.ArcanusComponents;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -56,7 +56,7 @@ public class ShootOrbsPacket {
 
 	private static void shootOrb(List<UUID> orbIds, ServerLevel world, LivingEntity owner) {
 		for(UUID orbId : orbIds) {
-			if(world.getEntity(orbId) instanceof AggressorbEntity orb && owner != null && orb.isBoundToTarget()) {
+			if(world.getEntity(orbId) instanceof Aggressorb orb && owner != null && orb.isBoundToTarget()) {
 				orb.setBoundToTarget(false);
 				orb.setPos(orb.getTarget().getEyePosition());
 				orb.shootFromRotation(orb.getTarget(), orb.getTarget().getXRot(), orb.getTarget().getYRot(), 0F, ArcanusConfig.SpellShapes.AggressorbShapeProperties.projectileSpeed, 1F);
